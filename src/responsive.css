@@ -1,0 +1,209 @@
+/* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
+@media (min-width: 1399.99px) {}
+
+/* For XL Screen (Laptop - HD Ready Display) */
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {
+    .section-padding {
+        padding: 100px 0;
+    }
+}
+
+/* For LG (Large) Screen  */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .section-padding {
+        padding: 100px 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .menu-toggle-btn-area {
+        display: block;
+    }
+
+    .nav-link-area,
+    .nav-button-grp {
+        display: none;
+    }
+
+    .container-padding {
+        padding: 10px;
+    }
+
+    .nav-section {
+        padding: 35px 0 !important;
+    }
+
+    .hero-section {
+        background-size: cover;
+        background-position: center;
+    }
+
+    .footer-section {
+        background-position: unset;
+    }
+
+    .mobile-menu-section {
+        display: block;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    .mobile-menu-section.show {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+}
+
+/* For MD (Medium) Screen (ipad) */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .section-padding {
+        padding: 80px 0;
+    }
+
+    .footer-link-area.contact-detail {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        border: 1px solid #5a57b9;
+        border-radius: 20px;
+        margin-top: 20px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0px 0px 20px #b0aef718;
+        background-color: #2f2d7e;
+    }
+
+    .footer-link-area.contact-detail .footer-link-item {
+        margin-bottom: 0;
+    }
+
+    .mobile-menu-section {
+        width: 50% !important;
+        margin-left: auto;
+        transform: translateX(100%) !important;
+    }
+
+    .mobile-menu-section.show {
+        transform: translateX(0) !important;
+    }
+
+    .menu-backdrop {
+        display: block;
+    }
+}
+
+/* For SM (Small) Screen (Tab) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .section-padding {
+        padding: 80px 0;
+    }
+
+    .footer-link-area.contact-detail {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        border: 1px solid #5a57b9;
+        border-radius: 20px;
+        margin-top: 20px;
+        justify-content: center;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0px 0px 20px #b0aef718;
+        background-color: #2f2d7e;
+    }
+
+    .footer-link-area.contact-detail .footer-link-item {
+        margin-bottom: 0;
+    }
+
+    .nav-container {
+        padding: 0 20px;
+    }
+    .mobile-menu-section {
+        width: 60% !important;
+        margin-left: auto;
+        transform: translateX(100%) !important;
+    }
+
+    .mobile-menu-section.show {
+        transform: translateX(0) !important;
+    }
+
+    .menu-backdrop {
+        display: block;
+    }
+}
+
+/* For Mobile Screen */
+@media (max-width: 575px) {
+    .section-padding {
+        padding: 60px 0;
+    }
+
+    .footer-sub-section {
+        padding: 60px 0px;
+    }
+
+    .footer-link-area.contact-detail {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        border: 1px solid #5a57b9;
+        border-radius: 20px;
+        margin-top: 20px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0px 0px 20px #b0aef718;
+        background-color: #2f2d7e;
+    }
+
+    .footer-link-area.contact-detail .footer-link-item {
+        margin-bottom: 0;
+    }
+
+    .footer-social-link {
+        width: 42px;
+        height: 42px;
+    }
+
+    .container-padding {
+        padding: 10px;
+    }
+
+    .subscribe-input-area .subscribe-input,
+    .subscribe-input-area .subscribe-btn {
+        font-size: 15px;
+    }
+
+    .subscribe-input-area .subscribe-input {
+        height: 54px;
+    }
+
+    .subscribe-input-area .subscribe-btn {
+        height: 44px;
+    }
+
+    .nav-container {
+        padding: 0 15px;
+    }
+
+    .nav-section {
+        padding: 28px 0 !important;
+    }
+
+    .nav-logo-link img,
+    .nav-section.scrolled .nav-logo-link .scrolled-logo {
+        height: 55px;
+    }
+
+    .nav-section.scrolled {
+        padding: 10px 0 !important;
+    }
+
+    .back-to-top-btn {
+        width: 40px;
+        height: 40px;
+    }
+}
