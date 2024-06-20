@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home/Home';
+import AboutUs from './pages/AboutUs/AboutUs';
 
 import { PrimeReactProvider } from 'primereact/api';
 
@@ -13,6 +14,7 @@ function App() {
     <PrimeReactProvider value={value}>
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/about-us' element={<AboutUs />} />
       </Routes>
     </PrimeReactProvider>
   );
