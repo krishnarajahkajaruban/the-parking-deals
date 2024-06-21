@@ -18,6 +18,14 @@
     .breadcrumb-section {
         padding: 140px 0 80px;
     }
+
+    .section-heading {
+        font-size: 30px;
+    }
+
+    .content-margin-top {
+        margin-top: 60px !important;
+    }
 }
 
 /* For LG (Large) Screen  */
@@ -37,55 +45,16 @@
     .breadcrumb-item {
         font-size: 15px;
     }
+
+    .section-heading {
+        font-size: 30px;
+    }
+
+    .content-margin-top {
+        margin-top: 60px !important;
+    }
 }
 
-@media (max-width: 992px) {
-    .menu-toggle-btn-area {
-        display: block;
-    }
-
-    .nav-link-area,
-    .nav-button-grp {
-        display: none;
-    }
-
-    .container-padding {
-        padding: 10px;
-    }
-
-    .nav-section {
-        padding: 35px 0 !important;
-    }
-
-    .hero-section {
-        background-size: cover;
-        background-position: center;
-    }
-
-    .footer-section {
-        background-position: unset;
-    }
-
-    .mobile-menu-section {
-        display: block;
-        opacity: 0 !important;
-        visibility: hidden !important;
-    }
-
-    .mobile-menu-section.show {
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-
-    .breadcrumb-title {
-        font-size: 30px
-    }
-
-    .breadcrumb-item {
-        font-size: 15px;
-    }
-
-}
 
 /* For MD (Medium) Screen (ipad) */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -135,6 +104,18 @@
 
     .menu-backdrop {
         display: block;
+    }
+
+    .section-heading {
+        font-size: 30px;
+    }
+
+    .content-margin-top {
+        margin-top: 60px !important;
+    }
+
+    .section-image-area .about-img {
+        max-width: 40%;
     }
 }
 
@@ -186,6 +167,18 @@
 
     .menu-backdrop {
         display: block;
+    }
+
+    .section-heading {
+        font-size: 30px;
+    }
+
+    .content-margin-top {
+        margin-top: 60px !important;
+    }
+
+    .section-image-area .about-img {
+        max-width: 40%;
     }
 }
 
@@ -291,5 +284,87 @@
 
     .breadcrumb-item {
         font-size: 14px;
+    }
+
+    .section-heading {
+        font-size: 25px;
+    }
+
+    .content-margin-top {
+        margin-top: 50px !important;
+    }
+
+    .section-image-area .about-img {
+        max-width: 70%;
+    }
+
+    .section-paragraph {
+        font-size: 15px;
+    }
+
+    .content-card-head {
+        font-size: 18px;
+    }
+
+    .content-card-header {
+        margin-bottom: 15px;
+    }
+
+    .section-image-area {
+        background-color: #ebeafc;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+
+}
+
+
+/* /////////// */
+
+@media (max-width: 992px) {
+    .menu-toggle-btn-area {
+        display: block;
+    }
+
+    .nav-link-area,
+    .nav-button-grp {
+        display: none;
+    }
+
+    .container-padding {
+        padding: 10px;
+    }
+
+    .nav-section {
+        padding: 35px 0 !important;
+    }
+
+    .hero-section {
+        background-size: cover;
+        background-position: center;
+    }
+
+    .footer-section {
+        background-position: unset;
+    }
+
+    .mobile-menu-section {
+        display: block;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    .mobile-menu-section.show {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .breadcrumb-title {
+        font-size: 30px
+    }
+
+    .breadcrumb-item {
+        font-size: 15px;
     }
 }

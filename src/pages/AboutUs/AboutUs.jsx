@@ -151,7 +151,12 @@ const AboutUs = () => {
                         <div className="col-12 col-xl-6">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
-                                    <h4 className='content-card-head'>Rewards and Appreciation</h4>
+                                    <div className="content-card-header">
+                                        <div className="content-icon-area">
+                                            <img src="assets/images/about/appreciation.png" alt="Rewards and Appreciation" />
+                                        </div>
+                                        <h4 className='content-card-head'>Rewards and Appreciation</h4>
+                                    </div>
                                     <p className='content-card-desc'>
                                         We highly value your loyalty and trust. To show our gratitude, we offer exclusive discounts and rewards. Choose The Parking Deals for your parking needs and enjoy not just a service, but a relationship that rewards your loyalty.
                                     </p>
