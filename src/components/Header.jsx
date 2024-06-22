@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -15,6 +15,20 @@ const Header = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
+
+    }, []);
+
+    useEffect(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            setTimeout(() => {
+                preloader.style.transition = 'opacity 0.5s';
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.remove();
+                }, 800);
+            }, 800);
+        }
     }, []);
 
     const toggleMenu = () => {
@@ -27,6 +41,9 @@ const Header = () => {
 
     return (
         <>
+            <div className="loader-area" id="preloader">
+                <div class="loader"></div>
+            </div>
             <header>
                 <nav className={`nav-section ${scrolled ? 'scrolled' : ''}`}>
                     <div className="container-md">

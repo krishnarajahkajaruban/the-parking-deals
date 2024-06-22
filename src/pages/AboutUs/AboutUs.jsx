@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import './AboutUs.css';
 import './AboutUs-responsive.css';
 import Footer from '../../components/Footer';
@@ -6,12 +6,11 @@ import Header from '../../components/Header';
 import Tilt from 'react-parallax-tilt';
 
 const AboutUs = () => {
-
-
     return (
         <>
             <Header />
 
+            {/* Breadcrumb Section Start */}
             <section className="breadcrumb-section overflow-hidden">
                 <div className="container-md">
                     <div className="row">
@@ -30,7 +29,9 @@ const AboutUs = () => {
                     </div>
                 </div>
             </section>
+            {/* Breadcrumb Section End */}
 
+            {/* About us Section Start */}
             <section className="section-padding overflow-hidden">
                 <div className="container-md">
                     <h3 className='section-heading text-center mx-auto text-purple'>About Us</h3>
@@ -166,6 +167,7 @@ const AboutUs = () => {
                     </div>
                 </div>
             </section>
+            {/* About us Section End */}
 
             <Footer />
         </>

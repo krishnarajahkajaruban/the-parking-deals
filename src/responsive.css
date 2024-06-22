@@ -16,7 +16,7 @@
     }
 
     .breadcrumb-section {
-        padding: 140px 0 80px;
+        padding: 160px 0 80px;
     }
 
     .section-heading {
@@ -25,6 +25,14 @@
 
     .content-margin-top {
         margin-top: 60px !important;
+    }
+
+    .custom-card-tile {
+        font-size: 25px;
+    }
+
+    .section-main-image-area .section-main-image {
+        max-width: 80%;
     }
 }
 
@@ -35,7 +43,7 @@
     }
 
     .breadcrumb-section {
-        padding: 140px 0 80px;
+        padding: 160px 0 80px;
     }
 
     .breadcrumb-title {
@@ -52,6 +60,22 @@
 
     .content-margin-top {
         margin-top: 60px !important;
+    }
+
+    .custom-card {
+        padding: 25px;
+    }
+
+    .custom-card-tile {
+        font-size: 23px;
+    }
+
+    .custom-card-sub-tile {
+        font-size: 15px;
+    }
+
+    .section-main-image-area .section-main-image {
+        max-width: 85%;
     }
 }
 
@@ -117,6 +141,26 @@
     .section-image-area .about-img {
         max-width: 40%;
     }
+
+    .custom-card-tile {
+        font-size: 25px;
+    }
+
+    .custom-card-sub-tile {
+        font-size: 15px;
+    }
+
+    .section-main-image-area .section-main-image {
+        max-width: 60%;
+    }
+
+    .content-section h4 {
+        font-size: 20px;
+    }
+
+    .content-collapse-section {
+        margin-top: 20px;
+    }
 }
 
 /* For SM (Small) Screen (Tab) */
@@ -180,6 +224,26 @@
     .section-image-area .about-img {
         max-width: 40%;
     }
+
+    .custom-card-tile {
+        font-size: 25px;
+    }
+
+    .custom-card-sub-tile {
+        font-size: 15px;
+    }
+
+    .section-main-image-area .section-main-image {
+        max-width: 60%;
+    }
+
+    .content-section h4 {
+        font-size: 20px;
+    }
+
+    .content-collapse-section {
+        margin-top: 20px;
+    }
 }
 
 /* For Mobile Screen */
@@ -188,8 +252,33 @@
         padding: 60px 0;
     }
 
+    .footer-desc {
+        font-size: 15px;
+    }
+
+    .footer-link-head {
+        font-size: 16px;
+    }
+
+    .footer-link {
+        font-size: 14px;
+    }
+
+    .subscribe-input-area .subscribe-input {
+        padding: 10px 20px;
+        text-align: center;
+    }
+
+    .subscribe-input-area .subscribe-btn {
+        position: relative;
+        transform: none;
+        display: block;
+        margin: 10px auto;
+        width: 50%;
+    }
+
     .footer-sub-section {
-        padding: 60px 0px;
+        padding: 40px 0px;
     }
 
     .footer-link-area.contact-detail {
@@ -266,7 +355,7 @@
     }
 
     .sub-footer p {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .breadcrumb-section {
@@ -316,7 +405,115 @@
         padding: 20px;
     }
 
+    .custom-card-tile {
+        font-size: 20px;
+    }
 
+    .custom-card-sub-tile {
+        font-size: 14px;
+    }
+
+    .section-main-image-area .section-main-image {
+        max-width: 85%;
+    }
+
+    .custom-card {
+        padding: 20px;
+    }
+
+    .custom-card-logo-area .custom-card-logo {
+        max-width: 50%;
+    }
+
+    .custom-card-logo-area {
+        margin-bottom: 20px;
+    }
+
+    .custom-check-group .custom-check-label {
+        font-size: 13px;
+    }
+
+    .custom-check-group .custom-check-label a {
+        font-size: 14px;
+    }
+
+    .custom-form-link-area p,
+    .custom-form-link {
+        font-size: 13px;
+    }
+
+    .custom-card-form {
+        padding: 10px 0;
+        background-color: transparent !important;
+        border: none;
+    }
+
+    :root {
+        font-size: 15px;
+    }
+
+    .content-section h4 {
+        font-size: 20px;
+    }
+
+    .content-section h5 {
+        font-size: 16px;
+    }
+
+    .content-section p,
+    .content-section ul li,
+    .content-section ul li a,
+    .content-section p a,
+    .content-contact-detail a {
+        font-size: 15px;
+    }
+
+    .content-info {
+        font-size: 14px;
+        border-radius: 12px;
+    }
+
+    .content-section ul {
+        padding-left: 15px;
+    }
+
+    .content-card {
+        padding: 20px;
+    }
+
+    .content-section {
+        margin: 20px 0;
+    }
+
+    .content-section.has-bg {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .content-collapse-section {
+        margin-top: 20px;
+    }
+
+    .content-collapse-section .p-accordion .p-accordion-header .p-accordion-header-link {
+        font-size: 15px !important;
+        padding: 15px;
+    }
+
+    .content-collapse-section .p-accordion .p-accordion-content {
+        font-size: 14px !important;
+    }
+
+    .content-collapse-section .p-accordion-tab {
+        margin-bottom: 15px;
+    }
+
+    .contact-card-head {
+        font-size: 20px !important;
+    }
+
+    .contact-form-section {
+        padding: 30px 20px !important;
+    }
 }
 
 
@@ -337,7 +534,7 @@
     }
 
     .nav-section {
-        padding: 35px 0 !important;
+        padding: 35px 0;
     }
 
     .hero-section {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tooltip } from 'bootstrap';
 
 const Footer = () => {
@@ -75,13 +75,13 @@ const Footer = () => {
                                         <h6 className='footer-link-head'>Quick Links</h6>
                                         <ul className='footer-link-area'>
                                             <li className='footer-link-item'>
-                                                <a href="/about-us" className='footer-link'>Terms & Conditions</a>
+                                                <a href="/terms-and-conditions" className='footer-link'>Terms & Conditions</a>
                                             </li>
                                             <li className='footer-link-item'>
-                                                <a href="/about-us" className='footer-link'>Privacy Policy</a>
+                                                <a href="/privacy-policy" className='footer-link'>Privacy Policy</a>
                                             </li>
                                             <li className='footer-link-item'>
-                                                <a href="/about-us" className='footer-link'>FaQ</a>
+                                                <a href="/faq" className='footer-link'>FaQ</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -132,7 +132,7 @@ const Footer = () => {
                             </div>
                         </div>
 
-                        <div className="row mt-5">
+                        <div className="row mt-4 mt-sm-5">
                             <div className="col-12">
                                 <h6 className='footer-link-head text-center mb-4'>Follow us :</h6>
                                 <div className="footer-social-container">
