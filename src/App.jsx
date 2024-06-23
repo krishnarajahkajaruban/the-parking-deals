@@ -8,6 +8,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions/TermsAndConditions';
 import FaQ from './pages/FaQ/FaQ';
 import ContactUs from './pages/ContactUs/ContactUs';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import Services from './pages/Services/Services';
 
 import AOS from 'aos';
 import { PrimeReactProvider } from 'primereact/api';
@@ -39,6 +41,8 @@ function App() {
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='/faq' element={<FaQ />} />
         <Route path='/contact-us' element={<ContactUs />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/services' element={<Services />} />
       </Routes>
     </PrimeReactProvider>
   );

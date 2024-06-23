@@ -40,7 +40,7 @@ const AboutUs = () => {
                         <div className="col-12 mx-auto">
                             <div className="section-image-area">
                                 <Tilt>
-                                    <img src="assets/images/logo.png" className='about-img' alt="The Parking Deals" />
+                                    <img src="assets/images/logo.png" className='about-img animate-scale-image' alt="The Parking Deals" />
                                 </Tilt>
                             </div>
                         </div>
