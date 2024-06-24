@@ -540,6 +540,24 @@
     .back-page-btn {
         font-size: 15px;
     }
+
+    .section-heading::after {
+        height: 3px;
+    }
+
+    .custom-form-group .p-inputtext,
+    .custom-form-group .p-password-input {
+        font-size: 14px !important;
+    }
+
+    .mobile-menu-section,
+    .menu-link-area {
+        padding-top: 30px !important;
+    }
+
+    .menu-logo-link img {
+        height: 70px;
+    }
 }
 
 

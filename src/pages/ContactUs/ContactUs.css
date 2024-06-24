@@ -50,3 +50,54 @@
     position: relative;
     margin-top: 30px;
 }
+
+.contact-content-area {
+    position: relative;
+    margin-top: 30px;
+}
+
+.contact-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.contact-content i {
+    font-size: 20px;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d12788;
+    background-color: #FFF;
+    transition: ease 0.5s;
+    color: #d12788;
+}
+
+.contact-content a,
+.contact-content span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #000;
+    margin: 0;
+    padding-top: 9px;
+}
+
+.contact-content a {
+    text-decoration: none;
+    transition: ease 0.5s;
+}
+
+.contact-content a:hover {
+    color: #d12788;
+}
+
+.contact-content a:hover i {
+    background-color: #d12788 !important;
+    color: #FFF !important;
+}

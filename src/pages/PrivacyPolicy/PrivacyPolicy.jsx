@@ -47,7 +47,7 @@ const PrivacyPolicy = () => {
                         </div>
 
                         <div className="col-12 mb-4 mb-lg-5">
-                            <div className="mt-5">
+                            <div className="mt-4 mt-sm-4 mt-lg-5">
                                 <p className='section-paragraph text-center' data-aos="fade">
                                     At The Parking Deals, we are committed to protecting your privacy and ensuring the security of your personal information. We collect and store data that is necessary to provide you with our services, such as processing bookings and improving our website's functionality. This may include information such as your name, contact details, payment information, and booking history.
                                 </p>

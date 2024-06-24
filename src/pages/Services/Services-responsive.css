@@ -2,20 +2,40 @@
 @media (min-width: 1399.99px) {}
 
 /* For XL Screen (Laptop - HD Ready Display) */
-@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {}
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {
+    .service-card-body {
+        padding: 25px;
+    }
+}
 
 /* For LG (Large) Screen  */
 @media only screen and (min-width: 992px) and (max-width: 1199px) {}
 
 /* For MD (Medium) Screen (ipad) */
-@media only screen and (min-width: 768px) and (max-width: 991px) {}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .service-card-body {
+        padding: 25px;
+    }
+}
 
 /* For SM (Small) Screen (Tab) */
 @media (min-width: 576px) and (max-width: 767px) {}
 
 /* For Mobile Screen */
 @media (max-width: 575px) {
-    .content-card-desc{
+    .service-card-body {
+        padding: 25px;
+    }
+
+    .service-card-head {
+        font-size: 18px;
+    }
+
+    .service-card-head {
+        text-wrap: wrap !important;
+    }
+
+    .service-card-desc{
         font-size: 14px;
     }
 }

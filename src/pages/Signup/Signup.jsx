@@ -130,6 +130,7 @@ const Signup = () => {
             </section>
             {/* Breadcrumb Section End */}
 
+            <Toast ref={toast} />
 
             {/* Sign up Section Start */}
             <section className="section-padding overflow-hidden">
@@ -144,8 +145,6 @@ const Signup = () => {
                             </div>
                         </div>
                     </div>
-
-                    <Toast ref={toast} />
 
                     {page === 1 ? (
                         <div className="row">
@@ -206,7 +205,7 @@ const Signup = () => {
                                     <form action="" className="custom-card-form form-2">
                                         <div className="row">
                                             <div className="col-12">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
+                                                <div className="custom-form-group mb-4">
                                                     <label htmlFor="otp" className="custom-form-label form-required text-center mx-auto">Enter OTP</label>
 
                                                     <div className="otp-input-area">

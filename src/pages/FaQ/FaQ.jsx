@@ -47,7 +47,7 @@ const FaQ = () => {
                         </div>
 
                         <div className="col-12 mb-4 mb-lg-5">
-                            <div className="mt-5">
+                            <div className="mt-4 mt-sm-4 mt-lg-5">
                                 <p className='section-paragraph text-center mb-0' data-aos="fade">
                                     At The Parking Deals, we strive to address all your questions and concerns. Here are some frequently asked questions to help you navigate our services. You can easily make a reservation through our website, and we accept all major credit cards for payment. If you need to cancel or modify your reservation, our Cancellation and Refund Policy provides detailed instructions. We partner with secure parking facilities, but we recommend removing valuables from your vehicle. Complimentary shuttle service to and from the airport is typically available, and you will receive detailed instructions in your confirmation email. If your flight is delayed or you need to extend your stay, contact the parking facility directly. For any other questions or assistance, our customer service team is ready to help via email or phone. Don’t forget to sign up for our newsletter or follow us on social media for the latest discounts and promotions.
                                 </p>

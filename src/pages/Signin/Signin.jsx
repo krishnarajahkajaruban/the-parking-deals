@@ -92,7 +92,7 @@ const Signin = () => {
                                     </div>
 
                                     <div className="custom-form-group contains-float-input">
-                                        <Button label="LOGIN" className="w-100 submit-button" />
+                                        <Button label="LOGIN" className="w-100 submit-button justify-content-center" />
                                     </div>
 
                                     <div className="custom-form-link-area text-center">
