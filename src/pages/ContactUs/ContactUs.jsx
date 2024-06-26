@@ -160,7 +160,7 @@ const ContactUs = () => {
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="subject" className="custom-form-label form-required">Subject</label>
-                                                            <InputText id="subject" className="custom-form-input"/>
+                                                            <InputText id="subject" className="custom-form-input" />
                                                             {showError &&
                                                                 <small className="text-danger form-error-msg">This field is required</small>
                                                             }
@@ -193,6 +193,13 @@ const ContactUs = () => {
                 </div>
             </section>
             {/* Contact us Section End */}
+
+            <section className="pb-5 overflow-hidden">
+                <div className="w-100 map-section">
+                    <iframe width="100%" height="600" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=London+(The%20Parking%20Deals)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                    </iframe>
+                </div>
+            </section>
 
             <Footer />
         </>

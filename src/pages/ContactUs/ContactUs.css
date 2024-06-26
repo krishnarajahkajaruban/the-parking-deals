@@ -101,3 +101,9 @@
     background-color: #d12788 !important;
     color: #FFF !important;
 }
+
+.map-section{
+    border-radius: 40px;
+    overflow: hidden;
+    border: #37348b 3px solid;
+}
