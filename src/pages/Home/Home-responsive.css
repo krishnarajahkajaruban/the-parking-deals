@@ -1,19 +1,191 @@
-@media (min-width: 1399.99px) {}
-
 /* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
 @media (min-width: 1399.99px) {}
 
 /* For XL Screen (Laptop - HD Ready Display) */
-@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {}
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {
+    .hero-section {
+        padding: 80px 0;
+    }
+
+    .hero-section-title {
+        font-size: 35px;
+    }
+
+    .hero-section-para {
+        font-size: 14px;
+    }
+}
 
 /* For LG (Large) Screen  */
-@media only screen and (min-width: 992px) and (max-width: 1199px) {}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .hero-section {
+        padding: 80px 0;
+    }
+
+    .hero-section-title {
+        font-size: 30px;
+    }
+
+    .hero-section-para {
+        font-size: 14px;
+    }
+
+    .hero-section-img {
+        height: 90vh;
+    }
+
+    .hero-section-dec-img {
+        width: 15vh;
+        height: 15vh;
+        top: 17vh;
+        right: 26.5vh;
+    }
+
+}
 
 /* For MD (Medium) Screen (ipad) */
-@media only screen and (min-width: 768px) and (max-width: 991px) {}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .hero-section {
+        padding: 80px 0;
+    }
+
+    .hero-swiper-area {
+        width: 100%;
+    }
+
+    .hero-section-img {
+        width: 58vh;
+        height: auto;
+    }
+
+    .hero-section-dec-img {
+        width: 14vh;
+        height: 14vh;
+        top: 8vh;
+        right: 17vh;
+    }
+
+    .hero-section-title {
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .hero-section-para {
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .hero-slider-area {
+        align-items: flex-end;
+    }
+
+
+    .hero-section-btn-area {
+        justify-content: center;
+    }
+
+    .hero-section-title-area {
+        padding: 0px 20px;
+    }
+}
 
 /* For SM (Small) Screen (Tab) */
-@media (min-width: 576px) and (max-width: 767px) {}
+@media (min-width: 576px) and (max-width: 767px) {
+    .hero-section {
+        padding: 80px 0;
+    }
+
+    .hero-swiper-area {
+        width: 100%;
+    }
+
+    .hero-section-title {
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .hero-section-img {
+        width: 56vh;
+        height: auto;
+    }
+
+    .hero-section-dec-img {
+        width: 14vh;
+        height: 14vh;
+        top: 8vh;
+        right: 16vh;
+    }
+
+    .hero-section-para {
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .hero-slider-area {
+        align-items: flex-end;
+    }
+
+
+    .hero-section-btn-area {
+        justify-content: center;
+    }
+
+    .hero-section-title-area {
+        padding: 0px 20px;
+    }
+}
 
 /* For Mobile Screen */
-@media (max-width: 575px) {}
+@media (max-width: 575px) {
+    .hero-section {
+        padding: 60px 0;
+        height: calc(100vh - 20px);
+    }
+
+    .hero-swiper-area {
+        width: 100%;
+    }
+
+    .hero-section-title {
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .hero-section-img {
+        width: 40vh;
+        height: auto;
+        right: -20px;
+        top: 20px;
+    }
+
+    .hero-section-dec-img {
+        width: 11vh;
+        height: 11vh;
+        top: 7vh;
+        right: 8.5vh;
+    }
+
+    .hero-section-para {
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .hero-slider-area {
+        align-items: flex-end;
+    }
+
+    .hero-section-btn-area {
+        margin-top: 25px;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hero-section-title-area {
+        padding: 0px 10px;
+    }
+
+    .hero-section-btn-area .nav-link-button{
+        font-size: 14px;
+    }
+}

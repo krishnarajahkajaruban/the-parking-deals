@@ -775,6 +775,10 @@ code {
   pointer-events: all;
 }
 
+.border-top-primary {
+  border-top: 3px solid #37348b !important;
+}
+
 /*  */
 
 /* Main */
@@ -998,7 +1002,12 @@ code {
   border-color: #e1e0ff !important;
 }
 
-.custom-form-input.p-inputtext::placeholder {
+.custom-form-input.p-inputtext::placeholder,
+.p-component::placeholder {
+  color: #d7d6e2 !important;
+}
+
+.p-dropdown .p-dropdown-label.p-placeholder {
   color: #d7d6e2 !important;
 }
 
@@ -1006,8 +1015,60 @@ code {
   color: #7370ac !important;
 }
 
+.custom-form-dropdown.p-dropdown {
+  color: #495057 !important;
+  background: #ffffff !important;
+  width: 100% !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  border: 1px solid #ced4da;
+}
+
+.p-inputwrapper-focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.p-inputtext.p-component:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.custom-form-dropdown.p-dropdown .p-inputtext:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .custom-form-label.dark-theme {
   color: #d0cefc !important;
+}
+
+.form-icon-group {
+  position: relative;
+  width: 100%;
+}
+
+.p-component {
+  border-radius: 8px !important;
+}
+
+
+.form-icon-group .input-grp-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  color: var(--color-primary);
+  z-index: 2;
+  font-size: 18px;
+  pointer-events: none;
+  /* opacity: 0.5; */
+}
+
+.form-icon-group .p-dropdown,
+.form-icon-group .custom-form-input,
+.form-icon-group .p-inputtext {
+  padding-left: 40px !important;
 }
 
 .custom-form-group .p-inputtext,
@@ -1016,6 +1077,141 @@ code {
   border-radius: 8px !important;
   font-size: 15px !important;
   padding: 12px 12px;
+}
+
+.p-dropdown-panel {
+  box-shadow: 0px 10px 30px #22205723;
+  border: 2px solid #FFF !important;
+  border-radius: 8px !important;
+}
+
+.p-dropdown-panel .p-dropdown-header {
+  border-bottom: 2px solid #FFF !important;
+  background-color: #ebeafc !important;
+  border-top-right-radius: 8px !important;
+  border-top-left-radius: 8px !important;
+  padding: 12px !important;
+}
+
+.p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+  border-radius: 8px !important;
+  font-size: 15px !important;
+}
+
+.p-dropdown-panel .p-dropdown-items {
+  padding: 0;
+  margin: 0;
+  border-bottom-right-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+  overflow: hidden;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  font-size: 14px;
+  padding: 8px 20px;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-empty-message {
+  padding: 0.5rem 1.5rem;
+  color: #a7a7a7;
+  background: transparent;
+  font-size: 15px;
+}
+
+.custom-form-dropdown .p-dropdown-label {
+  padding-left: 0 !important;
+}
+
+/* .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: #e7e7f5;
+} */
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus {
+  background: #e7e7f5 !important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: #ffffff;
+  background: var(--color-primary) !important;
+}
+
+.p-dropdown-panel .p-dropdown-header .p-dropdown-filter:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+
+.p-datepicker:not(.p-datepicker-inline) {
+  box-shadow: 0px 10px 30px #22205723 !important;
+  border: 2px solid #FFF !important;
+  border-radius: 8px !important;
+}
+
+.p-datepicker .p-datepicker-header {
+  border-top-right-radius: 8px !important;
+  border-top-left-radius: 8px !important;
+  background-color: #ebeafc !important;
+}
+
+.p-datepicker * {
+  font-size: 15px !important;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year,
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  padding: 0;
+  margin: 0 10px;
+}
+
+.p-datepicker-calendar thead th {
+  text-align: center !important;
+}
+
+.p-datepicker table td>span {
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 8px !important;
+}
+
+.p-datepicker:not(.p-disabled) table td span:not(.p-highlight):not(.p-disabled):hover {
+  background: #e7e7f5 !important;
+}
+
+.p-datepicker:not(.p-disabled) .p-yearpicker .p-yearpicker-year:not(.p-disabled):not(.p-highlight):hover {
+  background: #e7e7f5 !important;
+}
+
+.p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
+  background: var(--color-primary) !important;
+}
+
+.p-yearpicker-year:focus,
+.p-monthpicker:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight {
+  background: var(--color-primary) !important;
+}
+
+
+.p-datepicker table td>span.p-highlight {
+  background: var(--color-primary) !important;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year:enabled:hover,
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month:enabled:hover {
+  color: var(--color-secondary) !important;
+}
+
+.p-datepicker table td.p-datepicker-today>span {
+  background: #e7e7f5 !important;
+  color: var(--color-primary) !important;
+}
+
+.p-datepicker-calendar tr td {
+  padding: 5px;
 }
 
 .custom-form-group .p-icon-field {
@@ -1445,6 +1641,10 @@ button.custom-form-link:disabled {
   width: 50px !important;
 }
 
+.text-no-wrap {
+  text-wrap: nowrap !important;
+}
+
 /*  */
 .back-to-top-btn {
   width: 50px;
@@ -1492,6 +1692,7 @@ button.custom-form-link:disabled {
   transition-duration: 0.3s;
   transform: translateY(-200%);
 }
+
 
 .back-to-top-btn::before {
   position: absolute;

@@ -18,8 +18,8 @@
     object-fit: contain;
     top: 0;
     right: 0;
-    max-width: 100%;
-    max-height: 98%;
+    /* width: 100vh; */
+    height: 94vh;
 }
 
 .hero-section-title-area {
@@ -32,10 +32,10 @@
 .hero-section-dec-img {
     display: block;
     position: absolute;
-    max-width: 18%;
-    max-height: 18%;
-    right: 30vh;
-    top: 17vh;
+    width: 17vh;
+    height: 17vh;
+    right: 27vh;
+    top: 16vh;
     transition: ease 0.5s;
     animation: floatingImage 6s linear infinite alternate-reverse;
 }
@@ -71,6 +71,25 @@
     padding-right: 50px;
 }
 
+.hero-slider-area {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 .hero-slider-area .swiper {
     margin-left: 0;
+}
+
+.hero-swiper-area {
+    width: 50%;
+}
+
+.custom-card-header-head{
+    color: #d12788;
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 0;
+    text-align: center;
+    display: block;
 }
