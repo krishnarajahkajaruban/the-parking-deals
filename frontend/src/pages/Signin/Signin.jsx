@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import Tilt from 'react-parallax-tilt';
@@ -7,11 +7,72 @@ import { FloatLabel } from "primereact/floatlabel";
 import { Password } from 'primereact/password';
 import { Checkbox } from "primereact/checkbox";
 import { Button } from 'primereact/button';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Toast } from 'primereact/toast';
+import { setLogin } from "../../state";
+import api from "../../api";
 
 const Signin = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const toast = useRef(null);
     const [checked, setChecked] = useState(false);
+    const [require, setRequire] = useState(false);
+
+    const initialSigInInfo = {
+        email: '',
+        password: ''
+     }
+     const [signInInfo, setSignInInfo] = useState(initialSigInInfo);
+
+     const handleInputChange = async(e) => {
+        const { name, value } = e.target;
+        setSignInInfo({...signInInfo, [name]: value });
+    };
+
+    const login = async(loginInfo) => {
+        try {
+            const response = await api.post("/api/auth/login", loginInfo);
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'Login Successful',
+                detail: "You have been logged in successfully",
+                life: 3000
+            });
+            dispatch(
+                setLogin({
+                    user: response.data.user,
+                    token: response.data.token
+                })
+            )
+        }catch(err){
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed to Logged In',
+                detail: err.response.data.error,
+                life: 3000
+            });
+        }
+    };
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        if (!signInInfo.email || !signInInfo.password) {
+            setRequire(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
+        }
+        
+       await login(signInInfo);
+       setSignInInfo(initialSigInInfo);
+    };
 
     return (
         <>
@@ -37,6 +98,8 @@ const Signin = () => {
                 </div>
             </section>
             {/* Breadcrumb Section End */}
+
+            <Toast ref={toast} />
 
             {/* Sign in Section Start */}
             <section className="section-padding overflow-hidden">
@@ -65,17 +128,43 @@ const Signin = () => {
                                 </div>
                                 <h3 className="custom-card-tile">Welcome to <span>The Parking Deals</span></h3>
                                 <h6 className="custom-card-sub-tile">Please sign in your account</h6>
-                                <form action="" className="custom-card-form">
+                                <form action="" className="custom-card-form"
+                                onSubmit={handleSubmit}
+                                >
                                     <div className="custom-form-group contains-float-input">
                                         <FloatLabel>
-                                            <InputText id="email" keyfilter="email" className="custom-form-input" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                            <InputText id="email" keyfilter="email" className="custom-form-input" name="email"
+                                            value={signInInfo.email}
+                                            onChange={handleInputChange} 
+                                            />
+                                            {require && (
+                                                <small className="text-danger form-error-msg">
+                                                    This field is required
+                                                </small>
+                                                )}
+                                            <small className="text-danger form-error-msg">
+                                            {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                                                signInInfo.email
+                                            ) && signInInfo.email
+                                                ? "Enter valid email"
+                                                : ""}
+                                            </small>
                                             <label htmlFor="email" className="custom-float-label">Email</label>
                                         </FloatLabel>
                                     </div>
 
                                     <div className="custom-form-group contains-float-input">
                                         <FloatLabel>
-                                            <Password value={password} className="custom-form-input" onChange={(e) => setPassword(e.target.value)} feedback={false} toggleMask />
+                                            <Password className="custom-form-input" 
+                                            name="password"
+                                            value={signInInfo.password}
+                                            onChange={handleInputChange} 
+                                            feedback={false} toggleMask />
+                                            {require && (
+                                                <small className="text-danger form-error-msg">
+                                                    This field is required
+                                                </small>
+                                                )}
                                             <label htmlFor="username" className="custom-float-label">Password</label>
                                         </FloatLabel>
                                     </div>

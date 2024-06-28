@@ -16,14 +16,14 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: function() {
-        return this.role.includes(["Admin", "User"]);
+        return ["Admin", "User"].includes(this.role);
       },
     },
     lastName: {
       type: String,
       set: function(value) {
         // If the role is not 'User', return undefined to prevent setting a default value
-        if (!this.role.includes(["Admin", "User"])) {
+        if (!["Admin", "User"].includes(this.role)) {
           return undefined;
         }
         // If the role is 'User', return the provided value or an empty string if not provided

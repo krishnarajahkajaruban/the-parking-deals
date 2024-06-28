@@ -11,15 +11,22 @@ router.post("/check-user-registerd", checkUserAlreadyRegistered);
 
 // register endpoint
 router.post("/register", async (req, res) => {
-    const { email, title, firstName, lastName, password, mobileNumber, address, city, country, postCode, role } = req.body;
+    const { email, title, firstName, lastName, companyName, password, mobileNumber, address, city, country, postCode, role } = req.body;
 
-    const result = await register(email, title, firstName, lastName, password, mobileNumber, address, city, country, postCode, role);
+    const result = await register(email, title, firstName, lastName, companyName, password, mobileNumber, address, city, country, postCode, role);
 
     if (result.status !== 201) {
         return res.status(result.status).json({ error: result.error });
     }
 
-    return res.status(result.status).json({ user: result.user });
+    return res.status(result.status).json({ 
+        user: result.user,
+        emailSent: result.emailSent,
+        mailMsg: result.mailMsg,
+        message: result.message,
+        info: result.info,
+        error: result.error
+     });
 });
 
 //login endpoint

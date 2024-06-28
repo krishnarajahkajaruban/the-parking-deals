@@ -2,12 +2,21 @@ const router = require("express").Router();
 const authMiddleware = require("../middleware/authMiddleware");
 
 const { 
+    sendingVerificationCodeForEmailVerify,
+    verifyingEmailVerification,
     carParkingBookingDetail,
     calculatingTotalBookingCharge,
     cancelTheBooking,
     findAllVendorDetailForUserSearchedParkingSlot,
     getAllAirports
  } = require("../controller/userController");
+
+
+//endpoint to send verification code to verify email
+router.post("/request-verify-code", sendingVerificationCodeForEmailVerify);
+
+//endpoint to verify email
+router.post("/verify-email", verifyingEmailVerification);
 
  //endpoint to create car parking booking
  router.post("/car-park-booking", carParkingBookingDetail);

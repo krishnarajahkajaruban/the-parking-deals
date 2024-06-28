@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../common/jwt");
 const sendEmail = require("../common/mailService");
+const EmailVerify = require("../models/emailVerify");
 
 /* checking user already registered using email */
 const checkUserAlreadyRegistered = async (req, res) => {
@@ -38,14 +39,30 @@ const checkUserAlreadyRegistered = async (req, res) => {
 
 /* register */
 const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, address, city, country, postCode, role) => {
+  
   try{
     // Check for required fields
-    if (!email || (role === "User" && !title) || (role.includes(["Admin", "User"]) && !firstName) || (role === 'Vendor' && !companyName) || !password || (role === "User" && !mobileNumber) || !role) {
+    if (!email || 
+      (role === "User" && !title) || 
+      (["Admin", "User"].includes(role) && !firstName) || 
+      (role === 'Vendor' && !companyName) || 
+      !password || 
+      (role === "User" && !mobileNumber) || 
+      !role) {
       return {
           error: "Please fill all required fields!",
           status: 400
       };
-    }
+  };
+
+    const isEmailVerified = await EmailVerify.findOne({ email: email.toLowerCase(), verifyStatus: true});
+
+    if(!isEmailVerified){
+      return {
+        error: "Please verify your email first!",
+        status: 400
+      };
+    };
 
     // Validate email and phone number
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -64,6 +81,13 @@ const register = async (email, title, firstName, lastName, companyName, password
             status: 400
         };
     }
+
+    if (password.length < 8) {
+      return {
+          error: "Password must be atleast 8 characters long!",
+          status: 400
+      };
+  }
 
     // Check if user is already registered
     const userAlreadyRegistered = await User.findOne({ email: email.toLowerCase() }).lean();
@@ -100,15 +124,15 @@ const register = async (email, title, firstName, lastName, companyName, password
 
     const emailResponse = await sendEmail(
       user.email,
-      'Welcome to Air Wing Parking Hub!',
+      'Welcome to The Parking Deals!',
       `
           <div style="padding: 20px; font-family: Calibri;">
               <div style="text-align: center;">
-                  <a href="webaddress"><img src="logo" alt="Shopname Logo" width="80" height="80"></a>
+                  <a href="webaddress"><img src="logo" alt="The Parking Deals Logo" width="80" height="80"></a>
               </div>
               <div style="margin-top: 40px; font-size: 15px;">
                   <p>Dear ${user.firstName || user.companyName},</p>
-                  <p>Thank you for registering in Air Wing Parking Hub! We're excited to have you on board.</p>
+                  <p>Thank you for registering in The Parking Deals! We're excited to have you on board.</p>
                   <p>If you have any questions, please contact our support team at <a href="mailto:supportaddress">supportaddress</a>.</p>
                   <p>Thank you for choosing Air Wing Parking Hub. We look forward to serving you.</p>
               </div>

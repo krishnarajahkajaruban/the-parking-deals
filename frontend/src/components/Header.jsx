@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const user = useSelector((state) => state.user);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -74,14 +76,14 @@ const Header = () => {
                                         </li>
                                     </ul>
 
-                                    <ul className='nav-button-grp'>
+                                    {!user && <ul className='nav-button-grp'>
                                         <li className='nav-button-grp-item'>
                                             <a href="/sign-up" className='nav-link-button with-outline text-uppercase letter-spaced'>Sign up</a>
                                         </li>
                                         <li className='nav-button-grp-item'>
                                             <a href="/sign-in" className='nav-link-button with-bg text-uppercase letter-spaced'>Sign in</a>
                                         </li>
-                                    </ul>
+                                    </ul>}
 
                                     <ul className='menu-toggle-btn-area'>
                                         <li className='nav-button-grp-item'>

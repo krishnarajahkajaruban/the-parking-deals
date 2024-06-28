@@ -15,6 +15,7 @@ import AOS from 'aos';
 import { PrimeReactProvider } from 'primereact/api';
 
 import "primereact/resources/themes/bootstrap4-light-purple/theme.css";
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   const value = {
@@ -35,8 +36,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about-us' element={<AboutUs />} />
-        <Route path='/sign-in' element={<Signin />} />
-        <Route path='/sign-up' element={<Signup />} />
+        <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} />
+        <Route path='/sign-up' element={<ProtectedRoute><Signup /></ProtectedRoute>} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='/faq' element={<FaQ />} />

@@ -6,6 +6,138 @@ const BookingFare = require("../models/bookingFareModel");
 const { generateToken, decodeToken } = require("../common/jwt");
 const sendEmail = require("../common/mailService");
 const AirportParkingAvailability = require("../models/airportParkingAvailability");
+const bcrypt = require("bcrypt");
+const EmailVerify = require("../models/emailVerify");
+
+// Utility function to generate a 6-digit verification code
+const generateVerificationCode = () => {
+    const charset = '0123456789';
+    let verificationCode = '';
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      verificationCode += charset[randomIndex];
+    }
+    return verificationCode;
+  };
+  
+  // Utility function to hash the verification code
+  const hashingVerificationCode = async (verificationCode) => {
+    return await bcrypt.hash(verificationCode, 12);
+  };
+  
+  // Utility function to send the verification email
+  const sendVerificationEmail = async (email, subject, content, verificationCode) => {
+    return await sendEmail(
+      email,
+      subject,
+      `
+        <div style="padding: 20px; font-family: Calibri;">
+          <div style="text-align: center;">
+            <a href="webaddress"><img src="logo" alt="The Parking Deals Logo" width="80" height="80"></a>
+          </div>
+          <div style="margin-top: 40px; font-size: 15px;">
+            <p>Dear Sir/Madam,</p>
+            <p>${content}</p>
+            <h1>${verificationCode}</h1>
+            <p>If you have any questions, please contact our support team at <a href="mailto:supportaddress">supportaddress</a>.</p>
+            <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
+          </div>
+        </div>
+      `
+    );
+  };
+  
+  // Function to handle email verification for new users
+  const sendingVerificationCodeForEmailVerify = async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      if (!email) {
+        return res.status(500).json({ error: "Please provide email" });
+      }
+  
+      // Check if email is already registered
+      const userAlreadyRegistered = await User.findOne({ email: email.toLowerCase() }).lean();
+      if (userAlreadyRegistered) {
+        return res.status(400).json({ error: 'Email already registered' });
+      }
+  
+      // Delete any existing verification code for this email
+      await EmailVerify.deleteOne({ email: email.toLowerCase() });
+  
+      // Generate and hash verification code
+      const verificationCode = generateVerificationCode();
+      const hashVerificationCode = await hashingVerificationCode(verificationCode);
+  
+      // Create a new EmailVerify entry
+      const newEmailVerify = new EmailVerify({
+        email: email.toLowerCase(),
+        verificationCode: hashVerificationCode,
+        verifyStatus: false
+      });
+  
+      await newEmailVerify.save();
+  
+      // Send the verification email
+      const emailResponse = await sendVerificationEmail(
+        email,
+        'Email Verification Code!',
+        'Please use the following code to verify your email. We\'re excited to have you on board.',
+        verificationCode
+      );
+  
+      // Return a successful response
+      return res.status(201).json({
+        emailSent: emailResponse.emailSent,
+        mailMsg: emailResponse.message,
+        message: "Verification code created successfully!",
+        info: emailResponse.info || null,
+        error: emailResponse.error || null
+      });
+  
+    } catch (err) {
+      // Return an error response
+      return res.status(500).json({ error: err.message });
+    }
+  };
+
+// Utility function to verify the provided code
+const verifyCode = async (email, verificationCode, Model) => {
+    const verificationRequest = await Model.findOne({ email: email.toLowerCase(), verifyStatus: false });
+    if (!verificationRequest) {
+      return { error: 'Please request a verification code for this email', status: 404 };
+    }
+  
+    const isMatch = await bcrypt.compare(verificationCode, verificationRequest.verificationCode);
+    if (isMatch) {
+      verificationRequest.verifyStatus = true;
+      await verificationRequest.save();
+      return { message: 'Verification successful!', status: 200 };
+    } else {
+      return { error: 'Verification failed!', status: 400 };
+    }
+  };
+
+// Function to verify the email verification code
+const verifyingEmailVerification = async (req, res) => {
+    try {
+      const { verificationCode, email } = req.body;
+  
+      if (!email || !verificationCode) {
+        return res.status(400).json({ error: "Please provide email and verification code" });
+      }
+  
+      const result = await verifyCode(email, verificationCode, EmailVerify);
+      if (result.error) {
+        return res.status(result.status).json({ error: result.error });
+      }
+      return res.status(result.status).json({ message: result.message });
+  
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  };
+
 
 /* create a document for car park booking */
 const carParkingBookingDetail = async (req, res) => {
@@ -417,6 +549,8 @@ const getAllAirports = async (req, res) => {
 
 
 module.exports = {
+    sendingVerificationCodeForEmailVerify,
+    verifyingEmailVerification,
     carParkingBookingDetail,
     calculatingTotalBookingCharge,
     cancelTheBooking,
