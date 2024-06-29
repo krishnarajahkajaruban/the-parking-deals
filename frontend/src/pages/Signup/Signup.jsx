@@ -12,12 +12,13 @@ import { InputOtp } from 'primereact/inputotp';
 
 import { Toast } from 'primereact/toast';
 import api from "../../api";
+import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 
 
 const Signup = () => {
     const navigate = useNavigate();
     const toast = useRef(null);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(3);
     const [loading, setLoading] = useState(false);
     const [reSendLoading, setReSendLoading] = useState(false);
 
@@ -75,96 +76,25 @@ const Signup = () => {
         }
     };
 
-    const handleVerifyEmail = async(e) => {
-        e?.preventDefault();
-        if (!signUpInfo.email) {
-            setShowError(true);
-            toast.current.show({
-                severity: 'error',
-                summary: 'Error in Submission.',
-                detail: 'Please fill the required fields!.',
-                life: 3000
-            });
-            return;
-        }
-        setLoading(true);
-        setReSendLoading(true);
-        try {
-            const response = await api.post("/api/user/request-verify-code", { email: signUpInfo.email });
-            console.log(response.data);
-            if(response.data?.emailSent){
-                setPage(2);
-                setSeconds(60);
-                setIsButtonDisabled(true);
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'Email sent successfully.',
-                    detail: 'Please check your email.',
-                    life: 3000
-                });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            }else{
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Email sent failed!',
-                    detail: 'Please re-verify!',
-                    life: 3000
-                });
-                setSignUpInfo({ ...signUpInfo, email: "" });
-            }
-        }catch (err){
-            console.log(err);
-            toast.current.show({
-                severity: 'error',
-                summary: 'Email sent failed!',
-                detail: err.response?.data.error,
-                life: 3000
-            });
-            setSignUpInfo({ ...signUpInfo, email: "" });
-        }finally{
-            setLoading(false);
-            setReSendLoading(false);
-        };
-    }
-
-    const handleVerifyOTP = async(e) => {
+    const handleVerifyEmail = async (e) => {
         e.preventDefault();
-        if (!otp && otp?.length < 4) {
-            setShowError(true);
-            toast.current.show({
-                severity: 'error',
-                summary: 'Error in Submission.',
-                detail: 'Please fill the required fields!.',
-                life: 3000
-            });
-            return;
-        }
-        setLoading(true);
-        try {
-            const response = await api.post("/api/user/verify-email", { verificationCode: otp, email: signUpInfo.email });
-            console.log(response.data);
-            setPage(3);
-            toast.current.show({
-                severity: 'success',
-                summary: 'OTP verified successfully.',
-                detail: 'Please register with your account.',
-                life: 3000
-            });
+        await sendVerificationEmail(
+            signUpInfo.email,
+            setLoading,
+            setReSendLoading,
+            setPage,
+            setSeconds,
+            setIsButtonDisabled,
+            null,
+            setSignUpInfo,
+            toast
+        );
+    };
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }catch (err){
-            console.log(err);
-            toast.current.show({
-                severity: 'error',
-                summary: 'Verification failed!',
-                detail: err.response?.data.error,
-                life: 3000
-            });
-        }finally{
-            setLoading(false);
-            setOTP();
-        };
-    }
+    const handleVerifyOTP = async (e) => {
+        e.preventDefault();
+       await verifyOTP(otp, setOTP, signUpInfo.email, setLoading, setPage, toast);
+    };
 
     useEffect(() => {
         if (seconds > 0) {
@@ -204,7 +134,9 @@ const Signup = () => {
                 life: 3000
             });
             // window.location.href = "/sign-in";
-            navigate("/sign-in")
+            setTimeout(() => {
+                navigate("/sign-in")
+            }, 3000);
         }catch(err){
             console.log(err);
             toast.current.show({
@@ -476,7 +408,7 @@ const Signup = () => {
                           className="w-100 submit-button justify-content-center"
                           onClick={handleVerifyOTP}
                           loading={loading}
-                          disabled={!otp || otp?.length < 4}
+                          disabled={!otp}
                         />
                       </div>
 

@@ -9,11 +9,16 @@ import { Button } from 'primereact/button';
 import { InputOtp } from 'primereact/inputotp';
 
 import { Toast } from 'primereact/toast';
+import api from "../../api";
+import { useNavigate } from "react-router-dom";
+import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 
 const ForgotPassword = () => {
     const toast = useRef(null);
+    const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [reSendLoading, setReSendLoading] = useState(false);
 
     const [otp, setOTP] = useState();
     const [seconds, setSeconds] = useState(0);
@@ -37,52 +42,38 @@ const ForgotPassword = () => {
         </>
     );
 
-    const [resetPasswordInfo, setResetPasswordInfo] = useState({
+    const initialResetPasswordInfo = {
         email: '',
-        otp: '',
         newPassword: '',
         confirmPassword: ''
-    });  
+    };
+    const [resetPasswordInfo, setResetPasswordInfo] = useState(initialResetPasswordInfo);   
 
-    const handleVerifyEmail = () => {
-        setLoading(true);
-        setShowError(true);
+    const handleInputChange = async(e) => {
+        const { name, value } = e.target;
+        setResetPasswordInfo({...resetPasswordInfo, [name]: value });
+    };
 
-        setTimeout(() => {
-            setLoading(false);
-            setShowError(false);
-            setPage(2);
-            setSeconds(60);
-            setIsButtonDisabled(true);
-            toast.current.show({
-                severity: 'success',
-                summary: 'Email sent successfully.',
-                detail: 'Please check your email.',
-                life: 3000
-            });
+    const handleVerifyEmail = async (e) => {
+        e.preventDefault();
+       await sendVerificationEmail(
+            resetPasswordInfo.email,
+            setLoading,
+            setReSendLoading,
+            setPage,
+            setSeconds,
+            setIsButtonDisabled,
+            setResetPasswordInfo,
+            null,
+            toast,
+            true
+        );
+    };
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 2000);
-    }
-
-    const handleVerifyOTP = () => {
-        setLoading(true);
-        setShowError(true);
-
-        setTimeout(() => {
-            setLoading(false);
-            setShowError(false);
-            setPage(3);
-            toast.current.show({
-                severity: 'success',
-                summary: 'OTP verified successfully.',
-                detail: 'You can reset your password',
-                life: 3000
-            });
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 2000);
-    }
+    const handleVerifyOTP = async (e) => {
+        e.preventDefault();
+        await verifyOTP(otp, setOTP, resetPasswordInfo.email, setLoading, setPage, toast, true);
+    };
 
     useEffect(() => {
         if (seconds > 0) {
@@ -96,8 +87,10 @@ const ForgotPassword = () => {
     }, [seconds]);
 
     const handleResendCode = () => {
+        setOTP();
         setSeconds(60);
         setIsButtonDisabled(true);
+        handleVerifyEmail()
     };
 
 
@@ -109,6 +102,70 @@ const ForgotPassword = () => {
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    const resettingPassword = async(resetInfo) => {
+        try {
+            const response = await api.post("/api/user/reset-password", resetInfo);
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'Reset Successfully',
+                detail: "You account password reset successfully",
+                life: 3000
+            });
+            // window.location.href = "/sign-in";
+            setTimeout(() => {
+                navigate("/sign-in")
+            }, 3000);
+        }catch(err){
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed to Reset',
+                detail: err.response.data.error,
+                life: 3000
+            });
+        }
+    };
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        if (!resetPasswordInfo.email || !resetPasswordInfo.newPassword || !resetPasswordInfo.confirmPassword) {
+            setShowError(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
+        }
+        if (resetPasswordInfo.newPassword !== resetPasswordInfo.confirmPassword) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Password & Confirm Password do not match!",
+                life: 3000
+            });
+            return;
+        }
+        if (resetPasswordInfo.newPassword.length < 8) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Password must be atleast 8 characters long!",
+                life: 3000
+            });
+            return;
+        }
+        
+        const { confirmPassword, ...updatedResetInfo } = resetPasswordInfo;
+
+        await resettingPassword(updatedResetInfo);
+ 
+       setResetPasswordInfo(initialResetPasswordInfo);
+   
+    };
 
     return (
         <>
@@ -176,17 +233,29 @@ const ForgotPassword = () => {
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="verify_email" className="custom-form-label form-required">Email</label>
-                                                    <InputText id="verify_email" keyfilter="email" className="custom-form-input" placeholder="Enter your email address" />
+                                                    <InputText id="verify_email" keyfilter="email" className="custom-form-input" placeholder="Enter your email address"
+                                                    name="email"
+                                                    value={resetPasswordInfo.email}
+                                                    onChange={handleInputChange}
+                                                     />
 
                                                     {showError &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }
+                                                    <small className="text-danger form-error-msg">
+                                                    {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                                                        resetPasswordInfo.email
+                                                    ) && resetPasswordInfo.email
+                                                        ? "Enter valid email"
+                                                        : ""}
+                                                    </small>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="custom-form-group contains-float-input mb-0">
-                                            <Button label={`${loading ? 'Processing...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" loading={loading} onClick={handleVerifyEmail} />
+                                            <Button label={`${loading ? 'Processing...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" loading={loading} onClick={handleVerifyEmail}
+                                            disabled={!resetPasswordInfo.email} />
                                         </div>
                                     </form>
                                 </article>
@@ -227,7 +296,12 @@ const ForgotPassword = () => {
                                         </div>
 
                                         <div className="custom-form-group contains-float-input">
-                                            <Button label={`${loading ? 'Verifying...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" onClick={handleVerifyOTP} loading={loading} />
+                                            <Button label={`${reSendLoading
+                                                ? "Processing..."
+                                                : loading
+                                                ? "Verifying..."
+                                                : "VERIFY"}`} className="w-100 submit-button justify-content-center" onClick={handleVerifyOTP} loading={loading} 
+                                                disabled={!otp}/>
                                         </div>
 
                                         <div className="custom-form-link-area text-center">
@@ -264,25 +338,35 @@ const ForgotPassword = () => {
                                     </div>
                                     <h3 className="custom-card-tile">Reset Your Password</h3>
                                     <h6 className="custom-card-sub-tile">Please enter your new password below.</h6>
-                                    <form action="" className="custom-card-form form-2">
+                                    <form action="" className="custom-card-form form-2"
+                                    onSubmit={handleSubmit}>
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="password" className="custom-form-label form-required">New password</label>
-                                                    <Password id="password" value={password} className="custom-form-input" onChange={(e) => setPassword(e.target.value)} header={header} footer={footer} toggleMask />
+                                                    <Password id="password" className="custom-form-input" name="newPassword"
+                                                    value={resetPasswordInfo.newPassword}
+                                                    onChange={handleInputChange} 
+                                                    header={header} footer={footer} toggleMask />
                                                     {showError &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }
+                                                    <small className='text-danger form-error-msg'>{(resetPasswordInfo.newPassword.length < 8 && resetPasswordInfo.newPassword) ? "Password must be atleast 8 characters long" : ""}</small>
                                                 </div>
                                             </div>
 
                                             <div className="col-12">
                                                 <div className="custom-form-group">
                                                     <label htmlFor="confirmPassword" className="custom-form-label form-required">Confirm password</label>
-                                                    <Password id="confirmPassword" value={confirmPassword} className="custom-form-input" onChange={(e) => setConfirmPassword(e.target.value)} feedback={false} toggleMask />
+                                                    <Password id="confirmPassword" className="custom-form-input" 
+                                                    name="confirmPassword"
+                                                    value={resetPasswordInfo.confirmPassword}
+                                                    onChange={handleInputChange}
+                                                    feedback={false} toggleMask />
                                                     {showError &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }
+                                                    <small className='text-danger text-capitalized form-error-message'>{(resetPasswordInfo.newPassword !== resetPasswordInfo.confirmPassword && resetPasswordInfo.confirmPassword) ? "Password & Confirm Password must be equal" : ""}</small>
                                                 </div>
                                             </div>
                                         </div>
