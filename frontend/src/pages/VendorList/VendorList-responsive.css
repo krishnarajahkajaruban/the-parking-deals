@@ -1,0 +1,117 @@
+/* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
+@media (min-width: 1399.99px) {}
+
+/* For XL Screen (Laptop - HD Ready Display) */
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {
+    .results-option-area {
+        padding: 25px;
+    }
+}
+
+/* For LG (Large) Screen  */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .results-option-area {
+        padding: 20px;
+    }
+
+    .results-option-data-area h5 {
+        font-size: 15px;
+    }
+
+    .results-option-data-area h6 {
+        font-size: 13px;
+    }
+
+    .results-option-data-area i {
+        font-size: 17px;
+    }
+}
+
+/* For MD (Medium) Screen (ipad) */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .results-option-section {
+        top: -80px;
+    }
+
+    .results-option-area {
+        padding: 20px;
+    }
+
+    .results-option-data-area h5 {
+        font-size: 15px;
+    }
+
+    .results-option-data-area h6 {
+        font-size: 13px;
+    }
+
+    .results-option-data-area i {
+        font-size: 17px;
+    }
+
+    .edit-float-btn i {
+        font-size: 16px;
+    }
+}
+
+/* For SM (Small) Screen (Tab) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .results-option-section {
+        top: -80px;
+        padding: 0 20px;
+    }
+
+    .results-option-area {
+        padding: 20px;
+    }
+
+    .results-option-data-area h5 {
+        font-size: 15px;
+    }
+
+    .results-option-data-area h6 {
+        font-size: 13px;
+    }
+
+    .results-option-data-area i {
+        font-size: 17px;
+    }
+
+    .edit-float-btn i {
+        font-size: 16px;
+    }
+}
+
+/* For Mobile Screen */
+@media (max-width: 575px) {
+    .results-option-section {
+        top: -80px;
+        padding: 0 10px;
+    }
+
+    .results-option-area {
+        padding: 15px;
+    }
+
+    .results-option-data-area h5 {
+        font-size: 15px;
+    }
+
+    .results-option-data-area h6 {
+        font-size: 13px;
+    }
+
+    .results-option-data-area i {
+        font-size: 17px;
+    }
+
+    .edit-float-btn i {
+        font-size: 16px;
+    }
+
+    .custom-card-form.results-option-form {
+        border-bottom: 3px #37348b solid;
+        background-color: #f3f3ff !important;
+        padding: 50px 15px 0px 15px !important;
+    }
+}

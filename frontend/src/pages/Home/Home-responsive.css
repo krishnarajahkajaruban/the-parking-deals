@@ -185,7 +185,17 @@
         padding: 0px 10px;
     }
 
-    .hero-section-btn-area .nav-link-button{
+    .hero-section-btn-area .nav-link-button {
         font-size: 14px;
+    }
+
+    .custom-card-header-head {
+        font-size: 23px;
+    }
+
+    .custom-card-form.get-quote-form {
+        border-bottom: 3px #37348b solid;
+        background-color: #f3f3ff !important;
+        padding: 20px 15px;
     }
 }

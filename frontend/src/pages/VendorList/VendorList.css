@@ -1,0 +1,81 @@
+.results-option-section {
+    position: relative;
+    top: -100px;
+}
+
+.results-option-area {
+    position: relative;
+    border-radius: 30px;
+    padding: 30px;
+    display: block;
+    box-shadow: 0px 10px 30px #22205723;
+    background: #ffffff4f;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: ease-in-out 0.5s;
+    border: none;
+    outline: none;
+}
+
+.results-option-data-area {
+    position: relative;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #ebeafc;
+    box-shadow: 0px 0px 20px #FFF;
+    border: 2px solid #FFF;
+}
+
+.results-option-data-area h5 {
+    color: #000;
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.results-option-data-area h6 {
+    color: #37348bab;
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.results-option-data-area i {
+    font-size: 18px;
+    vertical-align: text-bottom;
+}
+
+.edit-float-btn {
+    background-color: #37348b !important;
+    color: #FFF !important;
+    z-index: 2 !important;
+    border-radius: 10px!important;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border: 1px solid transparent;
+    transition: ease 0.5s;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.edit-float-btn:focus {
+    box-shadow: 0px 0px 0px 4px #37348b2c !important;
+    color: #FFF !important;
+    outline: none;
+}
+
+.edit-float-btn:hover {
+    background-color: #312e7c !important;
+}
+
+.edit-float-btn i {
+    font-size: 18px;
+}

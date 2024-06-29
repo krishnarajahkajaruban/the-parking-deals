@@ -10,6 +10,7 @@ import FaQ from './pages/FaQ/FaQ';
 import ContactUs from './pages/ContactUs/ContactUs';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import Services from './pages/Services/Services';
+import VendorList from './pages/VendorList/VendorList';
 
 import AOS from 'aos';
 import { PrimeReactProvider } from 'primereact/api';
@@ -44,6 +45,7 @@ function App() {
         <Route path='/contact-us' element={<ContactUs />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/services' element={<Services />} />
+        <Route path='/results' element={<VendorList />} />
       </Routes>
     </PrimeReactProvider>
   );

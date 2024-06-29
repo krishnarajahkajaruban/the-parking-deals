@@ -975,6 +975,13 @@ code {
   padding: 40px 20px;
   background-color: #fdfdff;
   border: 1px solid #ebeafc;
+  position: relative;
+}
+
+.custom-card-form.form-2 {
+  border-color: var(--color-primary) !important;
+  border-bottom-width: 3px;
+  background-color: #f3f3ff;
 }
 
 .custom-form-group {
@@ -1021,11 +1028,21 @@ code {
   width: 100% !important;
   border-radius: 8px !important;
   font-size: 15px !important;
-  border: 1px solid #ced4da;
+  /* border: 1px solid #ced4da; */
 }
 
 .p-inputwrapper-focus {
   border-color: var(--color-primary) !important;
+  box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.p-calendar:not(.p-calendar-disabled).p-focus>.p-inputtext {
+  box-shadow: 0px 0px 0px 4px #37348b2c !important;
+  border-color: var(--color-primary) !important;
+}
+
+.p-datepicker .p-monthpicker .p-monthpicker-month:focus,
+.p-datepicker table td>span:focus {
   box-shadow: 0px 0px 0px 4px #37348b2c !important;
 }
 
@@ -1079,10 +1096,41 @@ code {
   padding: 12px 12px;
 }
 
+.custom-form-group.input-with-icon .p-inputtext {
+  border-color: transparent;
+  box-shadow: 0px 5px 10px #37348b26;
+}
+
+.custom-form-group.input-with-icon .p-dropdown-label.p-inputtext {
+  box-shadow: none !important;
+  /* border: transparent !important; */
+}
+
+.custom-form-group.input-with-icon .p-dropdown {
+  border-color: transparent;
+  box-shadow: 0px 5px 10px #37348b26;
+}
+
+.custom-form-group.input-with-icon .p-dropdown:focus {
+  border-color: var(--color-primary) !important;
+}
+
 .p-dropdown-panel {
   box-shadow: 0px 10px 30px #22205723;
   border: 2px solid #FFF !important;
   border-radius: 8px !important;
+}
+
+.p-inputtext.p-invalid.p-component {
+  border-color: #dc3545 !important;
+}
+
+.p-calendar.p-invalid.p-component>.p-inputtext {
+  border-color: #dc3545 !important;
+}
+
+.p-dropdown.p-invalid.p-component {
+  border-color: #dc3545 !important;
 }
 
 .p-dropdown-panel .p-dropdown-header {
@@ -1101,8 +1149,9 @@ code {
 .p-dropdown-panel .p-dropdown-items {
   padding: 0;
   margin: 0;
-  border-bottom-right-radius: 8px !important;
-  border-bottom-left-radius: 8px !important;
+  /* border-bottom-right-radius: 8px !important;
+  border-bottom-left-radius: 8px !important; */
+  border-radius: 8px;
   overflow: hidden;
 }
 

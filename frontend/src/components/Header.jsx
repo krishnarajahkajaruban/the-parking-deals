@@ -20,18 +20,18 @@ const Header = () => {
 
     }, []);
 
-    useEffect(() => {
-        const preloader = document.getElementById('preloader');
-        if (preloader) {
-            setTimeout(() => {
-                preloader.style.transition = 'opacity 0.5s';
-                preloader.style.opacity = '0';
-                setTimeout(() => {
-                    preloader.remove();
-                }, 800);
-            }, 800);
-        }
-    }, []);
+    // useEffect(() => {
+    //     const preloader = document.getElementById('preloader');
+    //     if (preloader) {
+    //         setTimeout(() => {
+    //             preloader.style.transition = 'opacity 0.5s';
+    //             preloader.style.opacity = '0';
+    //             setTimeout(() => {
+    //                 preloader.remove();
+    //             }, 800);
+    //         }, 800);
+    //     }
+    // }, []);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -43,9 +43,9 @@ const Header = () => {
 
     return (
         <>
-            <div className="loader-area" id="preloader">
+            {/* <div className="loader-area" id="preloader">
                 <div class="loader"></div>
-            </div>
+            </div> */}
             <header>
                 <nav className={`nav-section ${scrolled ? 'scrolled' : ''}`}>
                     <div className="container-md">
