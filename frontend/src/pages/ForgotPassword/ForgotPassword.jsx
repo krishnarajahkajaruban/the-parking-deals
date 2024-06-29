@@ -37,6 +37,13 @@ const ForgotPassword = () => {
         </>
     );
 
+    const [resetPasswordInfo, setResetPasswordInfo] = useState({
+        email: '',
+        otp: '',
+        newPassword: '',
+        confirmPassword: ''
+    });  
+
     const handleVerifyEmail = () => {
         setLoading(true);
         setShowError(true);

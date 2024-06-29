@@ -4,6 +4,9 @@ const authMiddleware = require("../middleware/authMiddleware");
 const { 
     sendingVerificationCodeForEmailVerify,
     verifyingEmailVerification,
+    sendVerificationCodeForPasswordReset,
+    verifyingPasswordReset,
+    resettingPassword,
     carParkingBookingDetail,
     calculatingTotalBookingCharge,
     cancelTheBooking,
@@ -17,6 +20,15 @@ router.post("/request-verify-code", sendingVerificationCodeForEmailVerify);
 
 //endpoint to verify email
 router.post("/verify-email", verifyingEmailVerification);
+
+//endpoint to send verification code to reset password
+router.post("/request-reset-password-code", sendVerificationCodeForPasswordReset);
+
+//endpoint to verify password reset
+router.post("/verify-password-reset", verifyingPasswordReset);
+
+//endpoint to reset password
+router.post("/reset-password", resettingPassword);
 
  //endpoint to create car parking booking
  router.post("/car-park-booking", carParkingBookingDetail);

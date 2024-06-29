@@ -8,7 +8,6 @@ import { Password } from 'primereact/password';
 import { Checkbox } from "primereact/checkbox";
 import { Button } from 'primereact/button';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
 import { setLogin } from "../../state";
 import api from "../../api";
@@ -76,7 +75,7 @@ const Signin = () => {
 
     return (
         <>
-            <Header />
+            {/* <Header /> */}
 
             {/* Breadcrumb Section Start */}
             <section className="breadcrumb-section overflow-hidden">
@@ -195,7 +194,7 @@ const Signin = () => {
             </section>
             {/* Sign in Section End */}
 
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }

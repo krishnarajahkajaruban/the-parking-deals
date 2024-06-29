@@ -17,7 +17,7 @@ import api from "../../api";
 const Signup = () => {
     const navigate = useNavigate();
     const toast = useRef(null);
-    const [page, setPage] = useState(3);
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [reSendLoading, setReSendLoading] = useState(false);
 
@@ -203,7 +203,8 @@ const Signup = () => {
                 detail: "You have been registered successfully",
                 life: 3000
             });
-            window.location.href = "/sign-in";
+            // window.location.href = "/sign-in";
+            navigate("/sign-in")
         }catch(err){
             console.log(err);
             toast.current.show({
