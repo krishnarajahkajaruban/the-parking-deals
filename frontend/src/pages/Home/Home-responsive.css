@@ -139,7 +139,7 @@
 @media (max-width: 575px) {
     .hero-section {
         padding: 60px 0;
-        height: calc(100vh - 20px);
+        height: 100%;
     }
 
     .hero-swiper-area {
@@ -152,17 +152,18 @@
     }
 
     .hero-section-img {
-        width: 40vh;
+        position: relative;
+        width: 100%;
         height: auto;
         right: -20px;
-        top: 20px;
+        top: -20px;
     }
 
     .hero-section-dec-img {
-        width: 11vh;
-        height: 11vh;
-        top: 7vh;
-        right: 8.5vh;
+        width: 90px;
+        height: 90px;
+        top: 23vmin;
+        right:22vmin;
     }
 
     .hero-section-para {

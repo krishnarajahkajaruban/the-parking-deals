@@ -53,7 +53,7 @@ const AboutUs = () => {
                     </div>
 
                     <div className='row content-margin-top content-card-row'>
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 mx-auto">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
                                     <div className="content-card-header">
@@ -69,7 +69,7 @@ const AboutUs = () => {
                             </Tilt>
                         </div>
 
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 mx-auto">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
                                     <div className="content-card-header">
@@ -85,7 +85,7 @@ const AboutUs = () => {
                             </Tilt>
                         </div>
 
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 mx-auto">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
                                     <div className="content-card-header">
@@ -101,7 +101,7 @@ const AboutUs = () => {
                             </Tilt>
                         </div>
 
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 mx-auto">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
                                     <div className="content-card-header">
@@ -117,7 +117,7 @@ const AboutUs = () => {
                             </Tilt>
                         </div>
 
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 mx-auto">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
                                     <div className="content-card-header">
@@ -133,7 +133,7 @@ const AboutUs = () => {
                             </Tilt>
                         </div>
 
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 mx-auto">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
                                     <div className="content-card-header">
@@ -149,7 +149,7 @@ const AboutUs = () => {
                             </Tilt>
                         </div>
 
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 mx-auto">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className='about-content-card'>
                                     <div className="content-card-header">

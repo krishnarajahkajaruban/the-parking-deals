@@ -248,6 +248,9 @@
 
 /* For Mobile Screen */
 @media (max-width: 575px) {
+    .menu-btn-link{
+        padding: 12px;
+    }
     .section-padding {
         padding: 60px 0;
     }
@@ -420,6 +423,9 @@
     .section-main-image-area .section-main-image {
         max-width: 80%;
     }
+    .custom-form-label{
+        font-size: 13px;
+    }
 
     .custom-card {
         padding: 20px;
@@ -557,6 +563,24 @@
 
     .menu-logo-link img {
         height: 70px;
+    }
+
+    .btn-width {
+        width: 100% !important;
+    }
+
+    .form-head-input-area {
+        padding: 10px 0px 0px;
+        background-color: transparent;
+        border-radius: 0px;
+    }
+
+    .p-datepicker * {
+        font-size: 13px !important;
+    }
+
+    .custom-modal .modal-body {
+        padding: 10px;
     }
 }
 

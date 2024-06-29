@@ -1,6 +1,7 @@
 * {
   box-sizing: border-box;
   font-family: "Poppins", sans-serif !important;
+  scroll-behavior: smooth;
 }
 
 :root {
@@ -31,7 +32,7 @@
 body {
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* background-color: #e9e8f8 !important; */
@@ -1254,6 +1255,16 @@ code {
   color: var(--color-secondary) !important;
 }
 
+.p-datepicker:not(.p-disabled) .p-monthpicker .p-monthpicker-month:not(.p-disabled):not(.p-highlight):hover {
+  background: #e7e7f5 !important;
+}
+
+.form-head-input-area {
+  background-color: #d7d7f1;
+  border-radius: 12px;
+  padding: 20px;
+}
+
 .p-datepicker table td.p-datepicker-today>span {
   background: #e7e7f5 !important;
   color: var(--color-primary) !important;
@@ -1261,6 +1272,11 @@ code {
 
 .p-datepicker-calendar tr td {
   padding: 5px;
+}
+
+.p-datepicker,
+.p-dropdown-panel {
+  z-index: 99999 !important;
 }
 
 .custom-form-group .p-icon-field {
@@ -1693,6 +1709,88 @@ button.custom-form-link:disabled {
 .text-no-wrap {
   text-wrap: nowrap !important;
 }
+
+.btn-width {
+  width: 50% !important;
+}
+
+/*  */
+.custom-modal {
+  border-radius: 20px !important;
+  padding: 10px;
+}
+
+.custom-modal .modal-header {
+  background-color: #e2e1f7;
+  border-radius: 12px;
+  border: none;
+}
+
+.custom-modal .modal-header .modal-title {
+  color: #37348b;
+  font-size: 16px !important;
+  font-weight: 600;
+  display: block;
+  background-color: #FFF;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border-left: 2px solid #d12788;
+  box-shadow: 0px 0px 15px #37348b2c;
+}
+
+.custom-modal .modal-header .btn-close {
+  border-radius: 8px;
+  background-color: #f8f7ff;
+  transition: ease 0.5s !important;
+  width: 10px;
+  height: 10px;
+  padding: 10px;
+  background-size: 12px;
+  margin-right: 0px;
+  box-shadow: 0px 0px 15px #37348b2c;
+}
+
+.custom-modal .modal-header .btn-close:hover {
+  background-color: #c2c1e0 !important;
+}
+
+.custom-modal .modal-header .btn-close:focus {
+  box-shadow: 0px 0px 0px 4px #37348b2c !important;
+  background-color: #FFF !important;
+}
+
+.custom-modal .modal-body {
+  padding: 20px;
+  background-color: #d7d7f1;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.custom-modal .modal-footer {
+  background-color: #e2e1f7;
+  border-radius: 12px;
+  border: none;
+}
+
+.custom-modal .custom-card-form,
+.custom-modal .form-head-input-area {
+  border-radius: 10px;
+}
+
+.custom-btn-primary {
+  background-color: #37348b !important;
+  border-color: #37348b !important;
+}
+
+.custom-btn-primary:hover {
+  background-color: #2a286e !important;
+}
+
+.custom-btn-primary:focus{
+  box-shadow: 0px 0px 0px 3px #37348b38 !important;
+}
+
+/*  */
 
 /*  */
 .back-to-top-btn {

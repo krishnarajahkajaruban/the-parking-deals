@@ -1,6 +1,6 @@
 .results-option-section {
     position: relative;
-    top: -100px;
+    margin-top: -100px;
 }
 
 .results-option-area {
@@ -52,7 +52,7 @@
     background-color: #37348b !important;
     color: #FFF !important;
     z-index: 2 !important;
-    border-radius: 10px!important;
+    border-radius: 10px !important;
     width: 40px;
     height: 40px;
     display: flex;
@@ -78,4 +78,543 @@
 
 .edit-float-btn i {
     font-size: 18px;
+}
+
+/*  */
+.result-card-view-row {
+    row-gap: 30px;
+}
+
+.result-card {
+    position: relative;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 10px 30px #22205723;
+    transition: ease-in-out 0.5s;
+    border: none;
+    outline: none;
+    background-color: #ffffff;
+    border-top: 2px solid #37348b;
+    border-bottom: 2px solid #37348b;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+}
+
+.result-card-head-area {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px solid #ebeafc;
+    background-color: #f7f6ff;
+}
+
+.result-card-logo-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    border: 3px solid #ffffff;
+    box-shadow: 0px 0px 20px #22205723;
+    background-color: #FFF;
+    overflow: hidden;
+}
+
+.result-card-logo-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: ease-in-out 0.5s;
+}
+
+.result-card:hover .result-card-logo-area img {
+    transform: scale(1.05);
+}
+
+.result-card-label-area {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    background-color: #ebeafc;
+}
+
+.result-card-star-area {
+    position: relative;
+    display: block;
+}
+
+.p-rating {
+    gap: 5px;
+    margin: 6px 0 8px 0;
+}
+
+.p-rating .p-rating-item .p-rating-icon {
+    width: 15px;
+    height: 15px;
+    color: #edb100;
+}
+
+.p-rating .p-rating-item.p-focus {
+    box-shadow: none !important;
+}
+
+.result-card-label-area h5 {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 0;
+    display: block;
+    color: #37348b;
+}
+
+.result-card-head {
+    color: #37348b;
+    font-size: 18px;
+    font-weight: 600;
+    display: block;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+}
+
+.result-card-price {
+    font-size: 23px;
+    color: #d12788;
+    font-weight: 600;
+    display: block;
+
+}
+
+.result-card-price .cut-price {
+    text-decoration: line-through;
+    color: #cacaca;
+    font-weight: 500 !important;
+}
+
+
+.result-card-sub {
+    display: block;
+    width: 100%;
+}
+
+.result-card-sub p {
+    color: #008f3b;
+    font-size: 14px;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.result-card-sub p:last-child {
+    margin-bottom: 0px;
+}
+
+.result-card-body-area {
+    background-color: #ebeafc;
+    position: relative;
+    border-radius: 12px;
+    padding: 15px;
+    height: 135px;
+    overflow-y: auto;
+}
+
+.result-card-body-area ul {
+    padding-left: 15px;
+    margin: 0;
+}
+
+.result-card-body-area ul li {
+    color: #000;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+
+.result-card-body-area ul li::marker {
+    color: #37348b;
+}
+
+.result-card-body-area ul li:last-child {
+    margin-bottom: 0 !important;
+}
+
+.result-card-footer-area {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+.result-card-feature-area {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.result-card-feature {
+    width: 45px;
+    height: 45px;
+    background-color: #ebeafc;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-card-feature img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.result-card-btn-area {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background-color: #ebeafc;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.result-card-btn {
+    width: 30%;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.result-card-status-area {
+    text-align: center;
+    position: relative;
+    background-color: #f3f3f3;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.result-card-status-area p {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 0;
+    display: block;
+    padding: 5px;
+    color: #696969;
+}
+
+/*  */
+.detail-card {
+    border-radius: 20px;
+    background-color: #FFF;
+    position: relative;
+    padding: 10px;
+    box-shadow: 0px 10px 20px #22205709;
+}
+
+.detail-card-logo-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
+    border: 3px solid #ebeafc;
+    background-color: #FFF;
+    overflow: hidden;
+    box-shadow: 0px 0px 20px #2220571e;
+}
+
+.detail-card-logo-area img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.detail-card-label-area {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background-color: #ebeafc;
+}
+
+.detail-card-label-area h5 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0;
+    display: block;
+    color: #37348b;
+}
+
+.detail-card-info-area {
+    position: relative;
+    display: flex;
+    border: 2px solid #FFF;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 0px 20px #22205713;
+}
+
+.detail-card-info-icon-area {
+    background-color: #d4d3f3;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid #FFF;
+}
+
+.detail-card-info-icon-area i {
+    font-size: 20px;
+    color: #37348b;
+    vertical-align: middle;
+}
+
+.detail-card-info-body {
+    padding: 10px;
+    width: 100%;
+    background-color: #ebeafc;
+}
+
+.detail-card-info-body p {
+    color: #7777ac;
+    font-size: 12px;
+    margin-bottom: 3px;
+    display: block;
+    font-weight: 500;
+}
+
+.detail-card-info-body h6 {
+    color: #37348b;
+    font-size: 16px;
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.detail-card-price-area {
+    position: relative;
+    border: 2px solid #FFF;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 0px 20px #22205713;
+    padding: 10px;
+    background-color: #faeaf3;
+    margin-top: 5px;
+}
+
+.detail-card-price-area p {
+    text-align: center;
+    font-size: 13px;
+    color: #ad879c;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.detail-card-price-area h5 {
+    text-align: center;
+    font-size: 20px;
+    color: #d12788;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0;
+
+}
+
+.detail-card-price-area h5 span {
+    text-decoration: line-through;
+    color: #daaec7;
+    font-weight: 500 !important;
+    margin-left: 10px;
+}
+
+.detail-card-feature-area {
+    background-color: #e3f3ea;
+    border-radius: 12px;
+    padding: 10px;
+    border: 2px solid #FFF;
+    box-shadow: 0px 0px 20px #22205713;
+    margin-top: 5px;
+}
+
+.detail-card-feature-area p {
+    color: #008f3b;
+    font-size: 13px;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 3px;
+    text-align: center;
+}
+
+.detail-card-feature-area p:last-child {
+    margin-bottom: 0;
+}
+
+/*  */
+
+.tab-detail-area {
+    border-radius: 20px;
+    background-color: #FFF;
+    position: relative;
+    padding: 20px;
+    box-shadow: 0px 10px 20px #22205709;
+    height: calc(100% - 20px);
+}
+
+.tab-detail-tabs {
+    border: 2px solid #FFF !important;
+    border-radius: 20px;
+    padding: 8px !important;
+    gap: 5px;
+    background-color: #d7d7f1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    /* flex-wrap: nowrap !important; 
+    overflow-y: hidden;
+    overflow-x: auto; */
+}
+
+.tab-detail-btn {
+    border-radius: 12px !important;
+    color: #37348b !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    border: 2px solid #FFF !important;
+    margin-bottom: 0 !important;
+    transition: ease 0.5s !important;
+    overflow: hidden !important;
+    text-wrap: nowrap !important;
+}
+
+.tab-detail-btn:focus {
+    box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.tab-detail-content {
+    height: 100%;
+}
+
+.tab-detail-content {
+    padding: 0 !important;
+}
+
+.tab-detail-map-view-area {
+    border-radius: 12px !important;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.tab-detail-content-area {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.no-data-area {
+    border-radius: 12px;
+    background-color: #f7f7f7;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    width: 50%;
+    height: 50%;
+}
+
+.no-data-area .no-data-img {
+    width: 100px;
+    opacity: 0.5;
+}
+
+.no-data-area h4 {
+    color: #838383;
+    font-size: 15px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.review-data-area {
+    position: relative;
+    border-radius: 12px;
+    padding: 15px;
+    background-color: #ebeafc;
+    margin-bottom: 15px;
+}
+
+.review-data-header-area {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    align-items: center;
+}
+
+.review-avatar-image-area {
+    border: 2px solid #FFF;
+    border-radius: 50%;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0px 5px 20px #22205715;
+    position: relative;
+    background-color: #f5f4fd;
+}
+
+.review-avatar-image-area img {
+    width: 70%;
+    height: 70%;
+    object-fit: cover;
+}
+
+.review-data-header-area h5 {
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+}
+
+.review-data-body {
+    position: relative;
+    width: 100%;
+    margin-top: 15px;
+    background-color: #FFF;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.review-data-body p {
+    color: #000;
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 0;
 }
