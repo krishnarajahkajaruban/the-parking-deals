@@ -8,7 +8,6 @@ import { Password } from 'primereact/password';
 import { Checkbox } from "primereact/checkbox";
 import { Button } from 'primereact/button';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
 import { setLogin } from "../../state";
 import api from "../../api";
@@ -18,6 +17,7 @@ const Signin = () => {
     const toast = useRef(null);
     const [checked, setChecked] = useState(false);
     const [require, setRequire] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const initialSigInInfo = {
         email: '',
@@ -31,6 +31,7 @@ const Signin = () => {
     };
 
     const login = async(loginInfo) => {
+        setLoading(true);
         try {
             const response = await api.post("/api/auth/login", loginInfo);
             console.log(response.data);
@@ -40,12 +41,14 @@ const Signin = () => {
                 detail: "You have been logged in successfully",
                 life: 3000
             });
-            dispatch(
-                setLogin({
-                    user: response.data.user,
-                    token: response.data.token
-                })
-            )
+            setTimeout(() => {
+                dispatch(
+                    setLogin({
+                        user: response.data.user,
+                        token: response.data.token
+                    })
+                )
+            }, 3000);
         }catch(err){
             console.log(err);
             toast.current.show({
@@ -54,6 +57,8 @@ const Signin = () => {
                 detail: err.response.data.error,
                 life: 3000
             });
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -76,7 +81,7 @@ const Signin = () => {
 
     return (
         <>
-            <Header />
+            {/* <Header /> */}
 
             {/* Breadcrumb Section Start */}
             <section className="breadcrumb-section overflow-hidden">
@@ -181,7 +186,8 @@ const Signin = () => {
                                     </div>
 
                                     <div className="custom-form-group contains-float-input">
-                                        <Button label="LOGIN" className="w-100 submit-button justify-content-center" />
+                                        <Button label="LOGIN" className="w-100 submit-button justify-content-center"
+                                        loading={loading} />
                                     </div>
 
                                     <div className="custom-form-link-area text-center">
@@ -195,7 +201,7 @@ const Signin = () => {
             </section>
             {/* Sign in Section End */}
 
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }

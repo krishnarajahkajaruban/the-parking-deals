@@ -10,17 +10,17 @@ const ProtectedRoute = ({ children }) => {
 
     if (isSignInComponent || isSignUpComponent) {
         if (isAuth) {
-            // return <Navigate to="/" />;
-            window.location.href = '/';
-            return null; 
+            return <Navigate to="/" />;
+            // window.location.href = '/';
+            // return null; 
         } else {
             return children;
         }
     } else {
         if (!isAuth) {
-            // return <Navigate to="/sign-in" />;
-            window.location.href = '/sign-in';
-            return null;
+            return <Navigate to="/sign-in" />;
+            // window.location.href = '/sign-in';
+            // return null;
         }
         return children;
     }
