@@ -7,8 +7,9 @@ const ProtectedRoute = ({ children }) => {
 
     const isSignInComponent = children.type && children.type.name === 'Signin';
     const isSignUpComponent = children.type && children.type.name === 'Signup';
+    const isForgotPasswordComponent = children.type && children.type.name === 'ForgotPassword';
 
-    if (isSignInComponent || isSignUpComponent) {
+    if (isSignInComponent || isSignUpComponent || isForgotPasswordComponent) {
         if (isAuth) {
             return <Navigate to="/" />;
             // window.location.href = '/';
