@@ -11,6 +11,9 @@ import ContactUs from './pages/ContactUs/ContactUs';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import Services from './pages/Services/Services';
 import VendorList from './pages/VendorList/VendorList';
+import Booking from './pages/Booking/Booking';
+
+import Preloader from './Preloader';
 
 import AOS from 'aos';
 import { PrimeReactProvider } from 'primereact/api';
@@ -34,6 +37,7 @@ function App() {
 
   return (
     <PrimeReactProvider value={value}>
+      <Preloader />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about-us' element={<AboutUs />} />
@@ -46,6 +50,7 @@ function App() {
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/services' element={<Services />} />
         <Route path='/results' element={<VendorList />} />
+        <Route path='/booking' element={<Booking />} />
       </Routes>
     </PrimeReactProvider>
   );

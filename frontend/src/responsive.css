@@ -248,9 +248,10 @@
 
 /* For Mobile Screen */
 @media (max-width: 575px) {
-    .menu-btn-link{
+    .menu-btn-link {
         padding: 12px;
     }
+
     .section-padding {
         padding: 60px 0;
     }
@@ -423,7 +424,8 @@
     .section-main-image-area .section-main-image {
         max-width: 80%;
     }
-    .custom-form-label{
+
+    .custom-form-label {
         font-size: 13px;
     }
 
@@ -456,6 +458,7 @@
         padding: 10px 0;
         background-color: transparent !important;
         border: none;
+        margin-top: 20px;
     }
 
     :root {
@@ -580,6 +583,10 @@
     }
 
     .custom-modal .modal-body {
+        padding: 10px;
+    }
+
+    .custom-modal .modal-header {
         padding: 10px;
     }
 }

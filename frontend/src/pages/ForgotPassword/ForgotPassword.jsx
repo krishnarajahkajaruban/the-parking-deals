@@ -164,7 +164,7 @@ const ForgotPassword = () => {
                                     </div>
                                     <h3 className="custom-card-tile">Email Verification</h3>
                                     <h6 className="custom-card-sub-tile">Enter your registered email address below for verification</h6>
-                                    <form action="" className="custom-card-form form-2">
+                                    <form action="" className="custom-card-form">
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
@@ -203,7 +203,7 @@ const ForgotPassword = () => {
                                     </div>
                                     <h3 className="custom-card-tile">OTP Verification</h3>
                                     <h6 className="custom-card-sub-tile">Enter the OTP verification code sent to your email address</h6>
-                                    <form action="" className="custom-card-form form-2">
+                                    <form action="" className="custom-card-form">
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
@@ -257,7 +257,7 @@ const ForgotPassword = () => {
                                     </div>
                                     <h3 className="custom-card-tile">Reset Your Password</h3>
                                     <h6 className="custom-card-sub-tile">Please enter your new password below.</h6>
-                                    <form action="" className="custom-card-form form-2">
+                                    <form action="" className="custom-card-form">
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">

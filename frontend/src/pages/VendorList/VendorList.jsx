@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './VendorList.css';
 import './VendorList-responsive.css';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { Tooltip } from 'bootstrap';
+import Preloader from '../../Preloader';
 
 import { InputText } from "primereact/inputtext";
 import { Divider } from 'primereact/divider';
@@ -11,9 +13,12 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Rating } from "primereact/rating";
+import { Image } from 'primereact/image';
 
 
 const VendorList = () => {
+    const navigate = useNavigate();
+    const [pageLoading, setPageLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [dropOffDate, setDropOffDate] = useState(null);
     const [pickupDate, setPickupDate] = useState(null);
@@ -95,12 +100,22 @@ const VendorList = () => {
         }, 2000);
     }
 
+    const handleBooking = () => {
+        setPageLoading(true);
+        setTimeout(() => {
+            navigate('/booking');
+            setPageLoading(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 800);
+    }
+
     useEffect(() => {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map((tooltipTriggerEl) => new Tooltip(tooltipTriggerEl));
     }, []);
     return (
         <>
+            {pageLoading && <Preloader />}
             <Header />
 
             {/* Breadcrumb Section Start */}
@@ -291,7 +306,7 @@ const VendorList = () => {
 
                                     <div className="result-card-btn-area">
                                         <Button label="VIEW" severity="secondary" className="result-card-btn" data-bs-toggle="modal" data-bs-target="#vendorDetailModal" />
-                                        <Button label="BOOK" className="custom-btn-primary result-card-btn" />
+                                        <Button label="BOOK" className="custom-btn-primary result-card-btn" onClick={handleBooking} />
                                     </div>
 
                                     <div className="result-card-status-area">
@@ -375,7 +390,7 @@ const VendorList = () => {
 
                                     <div className="result-card-btn-area">
                                         <Button label="VIEW" severity="secondary" className="result-card-btn" data-bs-toggle="modal" data-bs-target="#vendorDetailModal" />
-                                        <Button label="BOOK" className="custom-btn-primary result-card-btn" />
+                                        <Button label="BOOK" className="custom-btn-primary result-card-btn" onClick={handleBooking} />
                                     </div>
 
                                     <div className="result-card-status-area">
@@ -459,7 +474,7 @@ const VendorList = () => {
 
                                     <div className="result-card-btn-area">
                                         <Button label="VIEW" severity="secondary" className="result-card-btn" data-bs-toggle="modal" data-bs-target="#vendorDetailModal" />
-                                        <Button label="BOOK" className="custom-btn-primary result-card-btn" />
+                                        <Button label="BOOK" className="custom-btn-primary result-card-btn" onClick={handleBooking} />
                                     </div>
 
                                     <div className="result-card-status-area">
@@ -596,63 +611,340 @@ const VendorList = () => {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body pt-0 p-3">
-                            <ul class="nav nav-tabs tab-detail-tabs mt-3" id="companyDetailTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link tab-detail-btn active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">
-                                        Overview
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link tab-detail-btn" id="drop-off-procedure-tab" data-bs-toggle="tab" data-bs-target="#drop-off-procedure-tab-pane" type="button" role="tab" aria-controls="drop-off-procedure-tab-pane" aria-selected="false">
-                                        Drop-Off Procedure
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link tab-detail-btn" id="return-procedure-tab" data-bs-toggle="tab" data-bs-target="#return-procedure-tab-pane" type="button" role="tab" aria-controls="return-procedure-tab-pane" aria-selected="false">
-                                        Return Procedure
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link tab-detail-btn" id="view-map-tab" data-bs-toggle="tab" data-bs-target="#view-map-tab-pane" type="button" role="tab" aria-controls="view-map-tab-pane" aria-selected="false">
-                                        View Map
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link tab-detail-btn" id="photos-tab" data-bs-toggle="tab" data-bs-target="#photos-tab-pane" type="button" role="tab" aria-controls="photos-tab-pane" aria-selected="false">
-                                        Photos
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link tab-detail-btn" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">
-                                        Reviews
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link tab-detail-btn" id="terms-conditions-tab" data-bs-toggle="tab" data-bs-target="#terms-conditions-tab-pane" type="button" role="tab" aria-controls="terms-conditions-tab-pane" aria-selected="false">
-                                        Terms & Conditions
-                                    </button>
-                                </li>
-                            </ul>
-                            <div className="row">
+                            <div className="tab-detail-tabs-area mt-3">
+                                <ul class="nav nav-tabs tab-detail-tabs" id="companyDetailTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link tab-detail-btn active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">
+                                            Overview
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link tab-detail-btn" id="drop-off-procedure-tab" data-bs-toggle="tab" data-bs-target="#drop-off-procedure-tab-pane" type="button" role="tab" aria-controls="drop-off-procedure-tab-pane" aria-selected="false">
+                                            Drop-Off Procedure
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link tab-detail-btn" id="return-procedure-tab" data-bs-toggle="tab" data-bs-target="#return-procedure-tab-pane" type="button" role="tab" aria-controls="return-procedure-tab-pane" aria-selected="false">
+                                            Return Procedure
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link tab-detail-btn" id="view-map-tab" data-bs-toggle="tab" data-bs-target="#view-map-tab-pane" type="button" role="tab" aria-controls="view-map-tab-pane" aria-selected="false">
+                                            View Map
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link tab-detail-btn" id="photos-tab" data-bs-toggle="tab" data-bs-target="#photos-tab-pane" type="button" role="tab" aria-controls="photos-tab-pane" aria-selected="false">
+                                            Photos
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link tab-detail-btn" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">
+                                            Reviews
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link tab-detail-btn" id="terms-conditions-tab" data-bs-toggle="tab" data-bs-target="#terms-conditions-tab-pane" type="button" role="tab" aria-controls="terms-conditions-tab-pane" aria-selected="false">
+                                            Terms & Conditions
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="row tab-detail-row">
                                 <div className="col-12 col-xl-8 pe-xl-2">
                                     <article class="tab-content tab-detail-area mt-3" id="companyDetailTabContent">
-                                        <div class="tab-pane tab-detail-content fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">...</div>
+                                        {/* Overview */}
+                                        <div class="tab-pane tab-detail-content fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
+                                            <div className="tab-detail-content-area">
+                                                <h1>Why Use Lion Parking?</h1>
+                                                <ul>
+                                                    <li>
+                                                        Lion Parking Meet and Greet airport parking service offers the best option for those who are traveling with heavy luggage or families traveling with kids.
+                                                    </li>
+                                                    <li>
+                                                        Lion Parking at Heathrow Airport lets you drop your car in the nearest car park, so you can just walk inside and board your flight while your car is parked in a car park away from the terminal.
+                                                    </li>
+                                                    <li>
+                                                        Lion Parking aims to offer the best prices for both short stay airport parking as well as long term airport parking.
+                                                    </li>
+                                                    <li>
+                                                        Our aim is to provide a stress-free and affordable parking solution for all your travels to and from Airport.
+                                                    </li>
+                                                    <li>
+                                                        Meet and Greet parking service is available at Heathrow Terminal 1, Heathrow Terminal 2, Heathrow Terminal 3, Heathrow Terminal 4 and Heathrow Terminal 5.
+                                                    </li>
+                                                </ul>
+                                                <br />
 
-                                        <div class="tab-pane tab-detail-content fade" id="drop-off-procedure-tab-pane" role="tabpanel" aria-labelledby="drop-off-procedure-tab" tabindex="0">...</div>
+                                                <h2>Disabled Info</h2>
+                                                <p>Disabled & Family Friendly.</p>
+                                                <br />
 
-                                        <div class="tab-pane tab-detail-content fade" id="return-procedure-tab-pane" role="tabpanel" aria-labelledby="return-procedure-tab" tabindex="0">...</div>
+                                                <h2>Insurance</h2>
+                                                <p>Drivers are fully insured to drive any vehicle.</p>
+                                                <br />
 
+                                                <h2>Additional Info</h2>
+                                                <ul>
+                                                    <li>Drop off and pick up at the terminal.</li>
+                                                    <li>Operating Hours - 4.00 to 23.59 / 7 Days A Week.</li>
+                                                    <li>Please check booking confirmation for Company details.</li>
+                                                    <li>Valet Service for an additional £30.00, on request.</li>
+                                                    <li><u>"Customer has to pay for the entry and exit fee".</u></li>
+                                                </ul>
+                                                <br />
+
+                                                <h2>Important</h2>
+                                                <ul>
+                                                    <li>
+                                                        Lion Parking is a trading name of Lion Parking ltd. Full instructions will be provided in booking confirmation email.
+                                                    </li>
+                                                    <li>
+                                                        Our platform operate as a comparison site/booking agent. Your chosen Service provider will take the vehicle, park to their car park and return the vehicle. You must raise any issues regarding parking service ( Delay, Damage etc.) with service provider.
+                                                    </li>
+                                                    <li>
+                                                        We do our best to tell you as much about available products as possible before you purchase. All product specific information is provided by Service Providers. Therefore, we can't always keep track of changes to how they run. If you find anything that's not completely accurate in our information, Please let us know and we will take the necessary steps.
+                                                    </li>
+                                                </ul>
+                                                <br />
+
+                                                <p>
+                                                    Ultra Low Emission Zone (ULEZ) has expanded across all London boroughs including Heathrow Airport from 29 August 2023. If you drive anywhere within the ULEZ, including the Heathrow Airport from 29 August 2023, and your vehicle does not meet the emissions standards, you will have to pay a charge of £12.50. Please make sure to setup AUTO PAY when coming to the airport to avoid any penalty tickets. The operator will not be liable in case you receive a penalty for not paying the ULEZ charge.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {/*  */}
+
+                                        {/* Drop-Off Procedure */}
+                                        <div class="tab-pane tab-detail-content fade" id="drop-off-procedure-tab-pane" role="tabpanel" aria-labelledby="drop-off-procedure-tab" tabindex="0">
+                                            <div className="tab-detail-content-area">
+                                                <p>
+                                                    Beginning on August 29, 2023, the Ultra Low Emission Zone (ULEZ) in London has been extended to cover the entire Greater London area, Heathrow Airport included.
+                                                </p>
+
+                                                <p>
+                                                    This expansion, executed by Transport for London (TfL), seeks to mitigate air pollution across the city. As of this date, Heathrow Airport and its terminals (2, 3, 4 and 5) fall within the boundaries of ULEZ. Consequently, vehicles entering the airport are required to comply with specific emission criteria to avoid incurring a daily fee.
+                                                </p>
+                                                <br />
+                                                <p>
+                                                    To check if your car is ULEZ complaint please visit:
+                                                </p>
+
+                                                <a href="https://tfl.gov.uk/modes/driving/check-your-vehicle/ " target='_blank' rel="noreferrer">https://tfl.gov.uk/modes/driving/check-your-vehicle/ </a>
+
+                                                <br />
+
+                                                <p>
+                                                    Please be aware that if your vehicle does not meet ULEZ compliance standards, you will be responsible for set up auto pay in TFL website. To set this up, please visit:
+                                                </p>
+
+                                                <a href="https://tfl.gov.uk/modes/driving/pay-to-drive-in-london" target='_blank' rel="noreferrer">https://tfl.gov.uk/modes/driving/pay-to-drive-in-london</a>
+                                                <br />
+                                                <p>
+                                                    <b>
+                                                        Once your holiday parking has been booked and confirmed via email you are ready to go. Please do call us on 07479259475 when you are 30 minutes away so we can allocate a driver to collect your car, one of our friendly chauffeurs will be waiting to accept your car.
+                                                    </b>
+                                                </p>
+
+                                                <p>
+                                                    <b>
+                                                        <u><em>"Customer has to pay for the entry and exit fee".</em></u>
+                                                    </b>
+                                                </p>
+
+                                                <p>
+                                                    Please see the directions for each Terminal we serve below.
+                                                </p>
+
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 2 - sat-nav postcode: TW6 1EW
+                                                </h2>
+
+                                                <h2>
+                                                    Terminal 2 - Departure Instructions:
+                                                </h2>
+
+                                                <ul>
+                                                    <li>
+                                                        From the M25 exit at Junction 15, follow the signs for Terminals 1, 2 & 3 all the way round following onto the Western Perimeter Road.
+                                                    </li>
+                                                    <li>
+                                                        Go through the main tunnel to the Central Terminal Area for Terminals 1, 2 & 3. Exiting the tunnel, keep right, passing the Central Bus Station, joining the final approaches to Terminal 2 on Cosmopolitan Way.
+                                                    </li>
+                                                    <li>
+                                                        Please keep to the right, as the road to Terminal 2 will move away from the building before turning back as the road ramps up to Terminal 2 Departures & the Short Stay 2 car park on Constellation Way.
+                                                    </li>
+                                                    <li>
+                                                        Once you are on the rising ramp, continue to keep right as the ramp will lead directly into the "Short stay car park" entry barriers.
+                                                    </li>
+                                                    <li>
+                                                        Please make sure you are in lane 6, (towards the ticket machine), which will take you to Level 4 of the Short Stay car park. Take a ticket at the barrier and enter the car park.
+                                                    </li>
+                                                    <li>
+                                                        Once you enter the car park on Level 4, keep to the RIGHT following the signs for 'Off Airport Parking Meet & Greet' and then please park your car in "row B" Off Airport Parking Meet & Greet bays.
+                                                    </li>
+                                                    <li>
+                                                        Here you see our chauffeurs who are based near the ticket pay machine. They will be wearing black jackets and be expecting you.
+                                                    </li>
+                                                </ul>
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 3 - sat-nav postcode: TW6 1QG
+                                                </h2>
+
+                                                <h2>
+                                                    Terminal 3 - Departure Instructions
+                                                </h2>
+
+                                                <ul>
+                                                    <li>
+                                                        From the M25 exit at Junction 15, follow the signs for Terminals 1, 2 & 3 all the way round following onto the Western Perimeter Road.
+                                                    </li>
+                                                    <li>
+                                                        Go through the main tunnel to the Central Terminal Area for Terminals 1, 2 & 3.
+                                                    </li>
+                                                    <li>
+                                                        Exiting the tunnel, keep in the 1st lane and follow signs for Terminal 3 Short Stay Carpark (Carpark 3).
+                                                    </li>
+                                                    <li>
+                                                        Take a ticket from the barrier and follow signs to Level 4, then please park your car in "row A" Off Airport Parking Meet & Greet bays.
+                                                    </li>
+                                                    <li>
+                                                        Here you see our chauffeurs who are based near the ticket pay machine. They will be wearing black jackets and be expecting you.
+                                                    </li>
+                                                </ul>
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 4 - sat-nav postcode: TW6 3XA
+                                                </h2>
+
+                                                <h2>
+                                                    Terminal 4 - Departure Instructions
+                                                </h2>
+
+                                                <ul>
+                                                    <li>
+                                                        Please follow directions to the Short Stay car park and then drive up to Level 2, Row E or F. Look for the "Off Airport Meet and Greet' sign and park your car in Off Airport Parking Meet & Greet bays.
+                                                    </li>
+                                                    <li>
+                                                        Please have your email booking confirmation ready, together with your return flight details.
+                                                    </li>
+                                                    <li>
+                                                        From level 2 it's just a short walk to the terminal.
+                                                    </li>
+                                                </ul>
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 5 - sat-nav postcode: TW6 2GA
+                                                </h2>
+
+                                                <h2>
+                                                    Terminal 5 - Departure Instructions
+                                                </h2>
+
+                                                <ul>
+                                                    <li>
+                                                        Please follow the signs for the "Short Stay Passenger Pickup", which is located on the right-hand side of the ramp, as you take the exit for Terminal 5 from the roundabout.
+                                                    </li>
+                                                    <li>
+                                                        On arrival at the Short Stay car park, please move to the left-hand lane, following directions to "LEVEL 4" AVIS.
+                                                    </li>
+                                                    <li>
+                                                        Take a ticket from the barrier and follow signs for Off Airport Parking and make your way to zones "R-S". Please Park your car in these designated areas, sign posted as "Off Airport Meet & Greet”.
+                                                    </li>
+                                                    <li>
+                                                        Here you see our chauffeurs who are based near the ticket pay machine. They will be wearing black jackets and be expecting you.
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        {/*  */}
+
+                                        {/* Return Procedure */}
+                                        <div class="tab-pane tab-detail-content fade" id="return-procedure-tab-pane" role="tabpanel" aria-labelledby="return-procedure-tab" tabindex="0">
+                                            <div className="tab-detail-content-area">
+                                                <p>
+                                                    Please do call us on 07479 259 475 once arrived at the airport.
+                                                </p>
+
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 2 Return Instructions
+                                                </h2>
+
+                                                <p>
+                                                    On your return, once you have collected your luggage and are about to clear Customs, please call the number provided when your car was dropped off.
+                                                </p>
+                                                <p>
+                                                    Make your way to the same place where you dropped the vehicle off, (Level 4 of the Short Stay car park) and your car will be ready and waiting for you in row B next to the lift/pay machine.
+                                                </p>
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 3 Return Instructions
+                                                </h2>
+                                                <p>
+                                                    On your return, once you have collected your luggage and are about to clear Customs, please call the number provided when your car was dropped off.
+                                                </p>
+
+                                                <p>
+                                                    As you arrive in the arrivals, just before the Exit door on the Right-Hand Side, please take the lift to Short stay 3 Level 4 Car Park and your car will be ready and waiting for you in row A Off Airport Parking Meet & Greet bays.
+                                                </p>
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 4 Return Instructions
+                                                </h2>
+
+                                                <p>
+                                                    On your return, once you have collected your luggage and are about to clear Customs, please call the number provided when your car was dropped off. Walk back to the Short Stay car park (Level 2, E or F Off Airport Parking Meet & Greet bays) where your car will be ready and waiting for you.
+                                                </p>
+                                                <br />
+
+                                                <h2>
+                                                    Terminal 5 Return Instructions
+                                                </h2>
+
+                                                <p>
+                                                    On your return, once you have collected your luggage and are about to clear Customs, please call the number provided when your car was dropped off.
+                                                </p>
+
+                                                <p>
+                                                    Make your way to where you dropped the car off, (Level 4, Short Stay car park), where your car will be ready and waiting for you in Row R or S Off Airport Parking Meet & Greet bays.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {/*  */}
+
+                                        {/* View Map */}
                                         <div class="tab-pane tab-detail-content fade" id="view-map-tab-pane" role="tabpanel" aria-labelledby="view-map-tab" tabindex="0">
                                             <div className="tab-detail-map-view-area">
                                                 <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=London+(The%20Parking%20Deals)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
                                                 </iframe>
                                             </div>
                                         </div>
+                                        {/*  */}
 
-                                        <div class="tab-pane tab-detail-content fade" id="photos-tab-pane" role="tabpanel" aria-labelledby="photos-tab" tabindex="0">...</div>
+                                        {/* Photos */}
+                                        <div class="tab-pane tab-detail-content fade" id="photos-tab-pane" role="tabpanel" aria-labelledby="photos-tab" tabindex="0">
+                                            <div className="tab-detail-image-content">
+                                                <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" width="200" height='150' preview />
+                                                <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" width="200" height='150' preview />
+                                                <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" width="200" height='150' preview />
+                                                <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" width="200" height='150' preview />
+                                            </div>
+                                        </div>
+                                        {/*  */}
 
+                                        {/* Reviews */}
                                         <div class="tab-pane tab-detail-content fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
-                                            <div className="tab-detail-content-area">
+                                            <div className="tab-detail-review-area">
                                                 <article className='review-data-area'>
                                                     <div className="review-data-header-area">
                                                         <div className="review-avatar-image-area">
@@ -737,13 +1029,23 @@ const VendorList = () => {
                                                 {/*  */}
                                             </div>
                                         </div>
+                                        {/*  */}
 
-                                        <div class="tab-pane tab-detail-content fade" id="terms-conditions-tab-pane" role="tabpanel" aria-labelledby="terms-conditions-tab" tabindex="0">...</div>
+                                        {/* Terms & Conditions */}
+                                        <div class="tab-pane tab-detail-content fade" id="terms-conditions-tab-pane" role="tabpanel" aria-labelledby="terms-conditions-tab" tabindex="0">
+                                            <div className="tab-detail-content-area">
+                                                <p>
+                                                    For <b>The Parking Deals</b> T&Cs, please visit <a href="https://theparkingdeals.co.uk/terms-and-conditions" target='_blank' rel="noreferrer">https://theparkingdeals.co.uk/terms-and-conditions</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {/*  */}
+
                                     </article>
                                 </div>
 
                                 <div className="col-12 col-xl-4 ps-xl-2">
-                                    <article className='detail-card mt-3'>
+                                    <article className='detail-card mt-3 card-sticky'>
                                         <div className="detail-card-logo-area">
                                             <img src="assets/images/lion-parking.png" alt="" />
                                         </div>
@@ -792,7 +1094,7 @@ const VendorList = () => {
 
                                         <Divider className='mt-2 mb-2' />
 
-                                        <Button label="BOOK" className="custom-btn-primary w-100 result-card-btn" />
+                                        <Button label="BOOK" className="custom-btn-primary w-100 result-card-btn" onClick={handleBooking} />
                                     </article>
                                 </div>
                             </div>

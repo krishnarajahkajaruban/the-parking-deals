@@ -1,0 +1,184 @@
+:root {
+    --color-primary: #37348b;
+    --color-primary-dark: #222057;
+    --color-secondary: #d12788;
+    --color-secondary-dark: #b10867;
+    --text-color: #000;
+}
+
+
+.booking-section {
+    border-radius: 40px;
+    background-color: #ebeafc;
+    margin: 20px 0;
+}
+
+.detail-card-row {
+    margin: 5px 0 !important;
+    display: flex;
+    gap: 5px;
+}
+
+.detail-card-row .detail-card-panel {
+    width: 100%;
+}
+
+.detail-card-label-area.main {
+    background-color: #37348b !important;
+    padding: 12px 20px !important;
+}
+
+.detail-card-label-area.main h5 {
+    color: #FFF !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+}
+
+/*  */
+
+.booking-card {
+    position: relative;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #FFF;
+    box-shadow: 0px 10px 20px #22205709;
+}
+
+.booking-card-sub {
+    border-radius: 12px;
+    padding: 20px 20px;
+    background-color: #f4f4fd;
+    /* background-color: #f3f3ff; */
+    border: 2px solid #ebeafc;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.booking-card-sub:last-child {
+    margin-bottom: 0;
+}
+
+.booking-card-head {
+    font-size: 16px;
+    font-weight: 700;
+    display: block;
+    color: #37348b;
+    max-width: max-content;
+}
+
+.booking-card-head::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    margin-right: 5px;
+    margin-top: 2px;
+    background-color: #d12788;
+}
+
+.divider-margin {
+    margin: 25px 0;
+}
+
+.custom-form-flex-input-area {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    position: relative;
+    border-radius: 8px !important;
+    border: 1px solid #ced4da;
+    transition: ease 0.3s;
+}
+
+.custom-form-flex-input-area .custom-form-dropdown.p-dropdown {
+    width: 80px !important;
+    border: none;
+}
+
+.custom-form-flex-input-area .p-inputwrapper-focus {
+    box-shadow: none !important;
+}
+
+.custom-form-flex-input-area .p-inputtext {
+    border: none !important;
+}
+
+.custom-form-group .custom-form-flex-input-area .p-inputtext:focus {
+    box-shadow: none !important;
+}
+
+.custom-form-flex-input-area.focused {
+    border-color: #37348b !important;
+    box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.form-checkbox-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-checkbox-area label {
+    color: #000;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+.form-checkbox-area .p-checkbox.p-highlight .p-checkbox-box {
+    border-color: #37348b;
+    background: #37348b;
+}
+
+.form-checkbox-area .p-checkbox .p-checkbox-input:focus {
+    box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.custom-form-flex-group {
+    display: flex;
+    gap: 15px;
+}
+
+.custom-form-flex-group .aply-btn {
+    background-color: #37348b;
+    border-color: #37348b !important;
+    justify-content: center;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.custom-form-flex-group .aply-btn:hover {
+    background-color: #222057;
+}
+
+.custom-form-flex-group .aply-btn:focus {
+    box-shadow: 0px 0px 0px 4px #37348b2c !important;
+    border-color: #222057 !important;
+}
+
+.booking-card-head-area {
+    background-color: #e3e3f7;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.account-alert {
+    color: red;
+    text-align: center;
+    font-size: 13px;
+    padding-bottom: 0px;
+    font-weight: 400;
+}
+
+.custom-form-link-area .text-sm,
+.custom-form-link-area .text-sm button,
+.back-page-btn.text-sm {
+    font-size: 14px !important;
+}
+
+.divider.p-divider.p-divider-horizontal:before {
+    border-top-color: #FFF !important;
+}

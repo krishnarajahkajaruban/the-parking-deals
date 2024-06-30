@@ -348,7 +348,7 @@ const Signup = () => {
                     <h6 className="custom-card-sub-tile">
                       Enter your email address below for verification
                     </h6>
-                    <form action="" className="custom-card-form form-2">
+                    <form action="" className="custom-card-form">
                       <div className="row">
                         <div className="col-12">
                           <div className="custom-form-group mb-3 mb-sm-4">
@@ -434,7 +434,7 @@ const Signup = () => {
                     <h6 className="custom-card-sub-tile">
                       Enter the OTP verification code sent to your email address
                     </h6>
-                    <form action="" className="custom-card-form form-2">
+                    <form action="" className="custom-card-form">
                       <div className="row">
                         <div className="col-12">
                           <div className="custom-form-group mb-4">
@@ -534,7 +534,7 @@ const Signup = () => {
                     <h6 className="custom-card-sub-tile">
                       Enter the details below
                     </h6>
-                    <form action="" className="custom-card-form form-2"
+                    <form action="" className="custom-card-form"
                     onSubmit={handleSubmit}
                     >
                       <div className="row">

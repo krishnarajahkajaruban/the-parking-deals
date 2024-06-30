@@ -22,15 +22,15 @@ const Signin = () => {
     const initialSigInInfo = {
         email: '',
         password: ''
-     }
-     const [signInInfo, setSignInInfo] = useState(initialSigInInfo);
+    }
+    const [signInInfo, setSignInInfo] = useState(initialSigInInfo);
 
-     const handleInputChange = async(e) => {
+    const handleInputChange = async (e) => {
         const { name, value } = e.target;
-        setSignInInfo({...signInInfo, [name]: value });
+        setSignInInfo({ ...signInInfo, [name]: value });
     };
 
-    const login = async(loginInfo) => {
+    const login = async (loginInfo) => {
         try {
             const response = await api.post("/api/auth/login", loginInfo);
             console.log(response.data);
@@ -46,7 +46,7 @@ const Signin = () => {
                     token: response.data.token
                 })
             )
-        }catch(err){
+        } catch (err) {
             console.log(err);
             toast.current.show({
                 severity: 'error',
@@ -57,7 +57,7 @@ const Signin = () => {
         }
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!signInInfo.email || !signInInfo.password) {
             setRequire(true);
@@ -69,9 +69,9 @@ const Signin = () => {
             });
             return;
         }
-        
-       await login(signInInfo);
-       setSignInInfo(initialSigInInfo);
+
+        await login(signInInfo);
+        setSignInInfo(initialSigInInfo);
     };
 
     return (
@@ -129,44 +129,44 @@ const Signin = () => {
                                 <h3 className="custom-card-tile">Welcome to <span>The Parking Deals</span></h3>
                                 <h6 className="custom-card-sub-tile">Please sign in your account</h6>
                                 <form action="" className="custom-card-form"
-                                onSubmit={handleSubmit}
+                                    onSubmit={handleSubmit}
                                 >
                                     <div className="custom-form-group contains-float-input">
                                         <FloatLabel>
                                             <InputText id="email" keyfilter="email" className="custom-form-input" name="email"
-                                            value={signInInfo.email}
-                                            onChange={handleInputChange} 
+                                                value={signInInfo.email}
+                                                onChange={handleInputChange}
                                             />
-                                            {require && (
-                                                <small className="text-danger form-error-msg">
-                                                    This field is required
-                                                </small>
-                                                )}
+                                            <label htmlFor="email" className="custom-float-label">Email</label>
+                                        </FloatLabel>
+                                        {require && (
                                             <small className="text-danger form-error-msg">
+                                                This field is required
+                                            </small>
+                                        )}
+                                        <small className="text-danger form-error-msg">
                                             {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
                                                 signInInfo.email
                                             ) && signInInfo.email
                                                 ? "Enter valid email"
                                                 : ""}
-                                            </small>
-                                            <label htmlFor="email" className="custom-float-label">Email</label>
-                                        </FloatLabel>
+                                        </small>
                                     </div>
 
                                     <div className="custom-form-group contains-float-input">
                                         <FloatLabel>
-                                            <Password className="custom-form-input" 
-                                            name="password"
-                                            value={signInInfo.password}
-                                            onChange={handleInputChange} 
-                                            feedback={false} toggleMask />
-                                            {require && (
-                                                <small className="text-danger form-error-msg">
-                                                    This field is required
-                                                </small>
-                                                )}
+                                            <Password className="custom-form-input"
+                                                name="password"
+                                                value={signInInfo.password}
+                                                onChange={handleInputChange}
+                                                feedback={false} toggleMask />
                                             <label htmlFor="username" className="custom-float-label">Password</label>
                                         </FloatLabel>
+                                        {require && (
+                                            <small className="text-danger form-error-msg">
+                                                This field is required
+                                            </small>
+                                        )}
                                     </div>
 
                                     <div className="custom-form-group contains-float-input">

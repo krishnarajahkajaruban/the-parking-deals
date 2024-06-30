@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import './Home-responsive.css';
 import Footer from '../../components/Footer';
@@ -7,6 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import Preloader from '../../Preloader';
 
 import Tilt from 'react-parallax-tilt';
 import { InputText } from "primereact/inputtext";
@@ -16,6 +18,8 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 
 const Home = () => {
+    const navigate = useNavigate();
+    const [pageLoading, setPageLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [dropOffDate, setDropOffDate] = useState(null);
     const [pickupDate, setPickupDate] = useState(null);
@@ -60,15 +64,17 @@ const Home = () => {
     const handleGetQuote = () => {
         setLoading(true);
         setShowError(true);
+        setPageLoading(true);
 
         setTimeout(() => {
             setLoading(false);
             setShowError(false);
 
-            window.location.assign('/results');
+            navigate('/results');
+            setPageLoading(false);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 2000);
+        }, 800);
     }
 
     const handleDropOffDateChange = (e) => {
@@ -86,6 +92,7 @@ const Home = () => {
 
     return (
         <>
+            {pageLoading && <Preloader />}
             <Header />
 
             <section className='hero-section overflow-hidden'>
@@ -222,7 +229,7 @@ const Home = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="row">
                                         <div className="col-12">
                                             <Divider className='mt-4 mb-4' />

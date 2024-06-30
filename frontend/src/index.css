@@ -1168,7 +1168,7 @@ code {
   font-size: 15px;
 }
 
-.custom-form-dropdown .p-dropdown-label {
+.custom-form-group.input-with-icon .custom-form-dropdown .p-dropdown-label {
   padding-left: 0 !important;
 }
 
