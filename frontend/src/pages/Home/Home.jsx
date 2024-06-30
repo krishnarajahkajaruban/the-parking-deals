@@ -57,7 +57,7 @@ const Home = () => {
         );
     };
 
-    const getQuote = () => {
+    const handleGetQuote = () => {
         setLoading(true);
         setShowError(true);
 
@@ -70,6 +70,20 @@ const Home = () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 2000);
     }
+
+    const handleDropOffDateChange = (e) => {
+        const newDropOffDate = e.value;
+        setDropOffDate(newDropOffDate);
+
+        if (newDropOffDate) {
+            const newPickupDate = new Date(newDropOffDate);
+            newPickupDate.setDate(newPickupDate.getDate() + 7);
+            setPickupDate(newPickupDate);
+        } else {
+            setPickupDate(null);
+        }
+    };
+
     return (
         <>
             <Header />
@@ -190,22 +204,26 @@ const Home = () => {
                                 <div className="custom-card-logo-area mb-3">
                                     <h3 className="custom-card-header-head">GET QUOTE</h3>
                                 </div>
-                                <form action="" className="custom-card-form form-2 get-quote-form mt-0">
-                                    <div className="row">
-                                        <div className="col-12 col-xl-8 col-lg-6 col-md-8 col-sm-8 mx-auto">
-                                            <div className="custom-form-group mb-0 input-with-icon">
-                                                <label htmlFor="airport" className="custom-form-label form-required text-sm-center">Select airport</label>
-                                                <div className="form-icon-group">
-                                                    <i class="bi bi-airplane-fill input-grp-icon"></i>
-                                                    <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
-                                                        filter valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
+                                <form action="" className="custom-card-form form-2 get-quote-form mt-0 p-3">
+                                    <div className="form-head-input-area">
+                                        <div className="row">
+                                            <div className="col-12 col-xl-8 col-lg-6 col-md-8 col-sm-8 mx-auto">
+                                                <div className="custom-form-group mb-0 input-with-icon">
+                                                    <label htmlFor="airport" className="custom-form-label form-required text-sm-center">Select airport</label>
+                                                    <div className="form-icon-group">
+                                                        <i class="bi bi-airplane-fill input-grp-icon"></i>
+                                                        <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
+                                                            filter valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
+                                                    </div>
+                                                    {showError &&
+                                                        <small className="text-danger form-error-msg text-sm-center">This field is required</small>
+                                                    }
                                                 </div>
-                                                {showError &&
-                                                    <small className="text-danger form-error-msg text-sm-center">This field is required</small>
-                                                }
                                             </div>
                                         </div>
-
+                                    </div>
+                                    
+                                    <div className="row">
                                         <div className="col-12">
                                             <Divider className='mt-4 mb-4' />
                                         </div>
@@ -215,7 +233,7 @@ const Home = () => {
                                                 <label htmlFor="dropOffDate" className="custom-form-label form-required">Drop off date</label>
                                                 <div className="form-icon-group">
                                                     <i class="bi bi-calendar-check-fill input-grp-icon"></i>
-                                                    <Calendar id="dropOffDate" value={dropOffDate} onChange={(e) => setDropOffDate(e.value)} placeholder='dd/mm/yyyy' minDate={today} className='w-100' invalid={showError} />
+                                                    <Calendar id="dropOffDate" value={dropOffDate} onChange={handleDropOffDateChange} placeholder='dd/mm/yyyy' minDate={today} className='w-100' invalid={showError} />
                                                 </div>
                                                 {showError &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
@@ -281,7 +299,7 @@ const Home = () => {
                                     </div>
 
                                     <div className="custom-form-group contains-float-input mb-0">
-                                        <Button label="GET QUOTE" className="w-100 submit-button justify-content-center" loading={loading} onClick={getQuote} />
+                                        <Button label="GET QUOTE" className="w-100 submit-button justify-content-center" loading={loading} onClick={handleGetQuote} />
                                     </div>
                                 </form>
                             </article>

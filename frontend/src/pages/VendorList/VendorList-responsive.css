@@ -25,12 +25,67 @@
     .results-option-data-area i {
         font-size: 17px;
     }
+
+    /*  */
+    .result-card {
+        padding: 15px;
+    }
+
+    .result-card-label-area {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .result-card-label-area h5 {
+        font-size: 16px;
+    }
+
+    .result-card-head-area {
+        padding: 15px;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+
+    .result-card-head {
+        font-size: 16px;
+    }
+
+    .result-card-price {
+        font-size: 20px;
+    }
+
+    .result-card-sub p {
+        font-size: 13px;
+    }
+
+    .result-card-logo-area {
+        width: 130px;
+        height: 130px;
+    }
+
+    .result-card-feature {
+        width: 40px;
+        height: 40px;
+    }
+
+    .result-card-feature img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .result-card-btn {
+        width: 50%;
+    }
+
+    .result-card-status-area p {
+        font-size: 12px;
+    }
 }
 
 /* For MD (Medium) Screen (ipad) */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .results-option-section {
-        top: -80px;
+        margin-top: -80px;
     }
 
     .results-option-area {
@@ -57,7 +112,7 @@
 /* For SM (Small) Screen (Tab) */
 @media (min-width: 576px) and (max-width: 767px) {
     .results-option-section {
-        top: -80px;
+        margin-top: -80px;
         padding: 0 20px;
     }
 
@@ -85,7 +140,7 @@
 /* For Mobile Screen */
 @media (max-width: 575px) {
     .results-option-section {
-        top: -80px;
+        margin-top: -80px;
         padding: 0 10px;
     }
 
@@ -105,13 +160,119 @@
         font-size: 17px;
     }
 
+    .edit-float-btn {
+        width: 36px;
+        height: 36px;
+    }
+
     .edit-float-btn i {
-        font-size: 16px;
+        font-size: 15px;
+        vertical-align: middle;
     }
 
     .custom-card-form.results-option-form {
         border-bottom: 3px #37348b solid;
         background-color: #f3f3ff !important;
         padding: 50px 15px 0px 15px !important;
+    }
+
+    /*  */
+    .result-card {
+        padding: 15px;
+    }
+
+    .result-card-label-area {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .result-card-label-area h5 {
+        font-size: 16px;
+    }
+
+    .result-card-head-area {
+        padding: 15px;
+        gap: 15px;
+        margin-bottom: 10px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .result-card-head {
+        font-size: 18px;
+        text-align: center;
+        background-color: #FFF;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0px 0px 15px #e7e6f7;
+    }
+
+    .result-card-price {
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .result-card-sub p {
+        font-size: 13px;
+        text-align: center;
+        margin-bottom: 4px;
+    }
+
+    .result-card-star-area .p-rating {
+        justify-content: center;
+    }
+
+    .result-card-head-detail-area {
+        width: 100%;
+    }
+
+    .result-card-sub {
+        background-color: #e3f3ea;
+        border-radius: 8px;
+        padding: 5px;
+        border: 2px solid #FFF;
+    }
+
+    .result-card-logo-area {
+        width: 200px;
+        height: 130px;
+    }
+
+    .result-card-feature {
+        width: 40px;
+        height: 40px;
+    }
+
+    .result-card-feature img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .result-card-btn {
+        width: 50%;
+        font-size: 15px;
+    }
+
+    .result-card-status-area p {
+        font-size: 12px;
+    }
+
+    .result-card-body-area {
+        height: 126px;
+    }
+
+    .result-card-body-area ul li {
+        font-size: 13px;
+    }
+
+    .result-card-star-area {
+        background-color: #f5efde;
+        padding: 1px 20px;
+        border-radius: 20px;
+        max-width: max-content;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 10px;
     }
 }
