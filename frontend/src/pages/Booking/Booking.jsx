@@ -47,13 +47,13 @@ const Booking = () => {
         { name: 'Terminal 5' },
     ];
 
-    const [title, setTitle] = useState();
     const titles = [
         { name: 'Mr.' },
         { name: 'Mrs.' },
         { name: 'Ms.' },
         { name: 'Miss.' },
     ];
+    const [title, setTitle] = useState(titles[0]);
 
     const [checkedSmsConfirmation, setCheckedSmsConfirmation] = useState(false);
     const [checkedCancellationCover, setCheckedCancellationCover] = useState(false);
@@ -307,7 +307,7 @@ const Booking = () => {
                                             {/*  */}
 
                                         </div>
-                                        
+
                                         {/* Your Details */}
                                         <h4 className="booking-card-head">
                                             Your Details
@@ -320,7 +320,7 @@ const Booking = () => {
                                                         Title
                                                     </label>
                                                     <Dropdown id="title" value={title} onChange={(e) => setTitle(e.value)} options={titles} optionLabel="name"
-                                                        placeholder="Select Terminal" className="w-full w-100 custom-form-dropdown" />
+                                                        placeholder="Select" className="w-full w-100 custom-form-dropdown" />
                                                     {showError && (
                                                         <small className="text-danger form-error-msg">
                                                             This field is required

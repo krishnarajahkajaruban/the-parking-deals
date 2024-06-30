@@ -8,6 +8,7 @@ const sendEmail = require("../common/mailService");
 const AirportParkingAvailability = require("../models/airportParkingAvailability");
 const bcrypt = require("bcrypt");
 const EmailVerify = require("../models/emailVerify");
+const ForgotUserEmail = require("../models/forgotUserEmail");
 
 // Utility function to generate a 6-digit verification code
 const generateVerificationCode = () => {
@@ -138,6 +139,113 @@ const verifyingEmailVerification = async (req, res) => {
     }
   };
 
+// Function to handle password reset for existing users
+const sendVerificationCodeForPasswordReset = async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      if (!email) {
+        return res.status(500).json({ error: "Please provide email" });
+      }
+  
+      // Check if user exists
+      const user = await User.findOne({ email: email.toLowerCase() }).lean();
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Delete any existing password reset code for this email
+      await ForgotUserEmail.deleteOne({ email: email.toLowerCase() });
+  
+      // Generate and hash verification code
+      const verificationCode = generateVerificationCode();
+      const hashVerificationCode = await hashingVerificationCode(verificationCode);
+  
+      // Create a new ForgotUserEmail entry
+      const newForgotUserEmail = new ForgotUserEmail({
+        email: email.toLowerCase(),
+        verificationCode: hashVerificationCode,
+        verifyStatus: false
+      });
+  
+      await newForgotUserEmail.save();
+  
+      // Send the verification email
+      const emailResponse = await sendVerificationEmail(
+        email,
+        'Password Reset Verification Code!',
+        'Please use the following code to reset your password. If you did not request this, please ignore this email.',
+        verificationCode
+      );
+  
+      // Return a successful response
+      return res.status(201).json({
+        emailSent: emailResponse.emailSent,
+        mailMsg: emailResponse.message,
+        message: "Verification code sent successfully!",
+        info: emailResponse.info || null,
+        error: emailResponse.error || null
+      });
+  
+    } catch (err) {
+      // Return an error response
+      return res.status(500).json({ error: err.message });
+    }
+  };
+
+// Function to verify the password reset code
+const verifyingPasswordReset = async (req, res) => {
+    try {
+      const { verificationCode, email } = req.body;
+  
+      if (!email || !verificationCode) {
+        return res.status(400).json({ error: "Please provide email and verification code" });
+      }
+  
+      const result = await verifyCode(email, verificationCode, ForgotUserEmail);
+      if (result.error) {
+        return res.status(result.status).json({ error: result.error });
+      }
+      return res.status(result.status).json({ message: result.message });
+  
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  };
+
+//function for reset the password with new password
+const resettingPassword = async (req, res) => {
+    try {
+      const { newPassword, email } = req.body;
+  
+      if (!newPassword || !email) {
+        return res.status(400).json({ error: "Please provide email and new password" });
+      }
+  
+      // Ensure the email is verified
+      const isVerified = await ForgotUserEmail.findOne({ email: email.toLowerCase(), verifyStatus: true });
+  
+      if (!isVerified) {
+        return res.status(400).json({ error: "Please verify with your code sent to the mail first, or request a new one" });
+      }
+  
+      // Hash the new password
+      const hashPassword = await bcrypt.hash(newPassword, 12);
+  
+      // Update the user's password
+      await User.findOneAndUpdate(
+        { email: email.toLowerCase() },
+        { $set: { password: hashPassword } }
+      );
+  
+      // Remove the verification record
+      await ForgotUserEmail.deleteOne({ email: email.toLowerCase() });
+  
+      return res.status(200).json({ message: 'Password reset successfully!' });
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  };
 
 /* create a document for car park booking */
 const carParkingBookingDetail = async (req, res) => {
@@ -551,6 +659,9 @@ const getAllAirports = async (req, res) => {
 module.exports = {
     sendingVerificationCodeForEmailVerify,
     verifyingEmailVerification,
+    sendVerificationCodeForPasswordReset,
+    verifyingPasswordReset,
+    resettingPassword,
     carParkingBookingDetail,
     calculatingTotalBookingCharge,
     cancelTheBooking,
