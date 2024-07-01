@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { Toast } from 'primereact/toast';
 import { setLogin } from "../../state";
 import api from "../../api";
+import withComponentName from "../../withComponentName";
 
 const Signin = () => {
     const dispatch = useDispatch();
@@ -206,4 +207,4 @@ const Signin = () => {
     )
 }
 
-export default Signin;
+export default withComponentName(Signin, 'Signin');

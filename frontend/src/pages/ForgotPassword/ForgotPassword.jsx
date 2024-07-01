@@ -12,6 +12,7 @@ import { Toast } from 'primereact/toast';
 import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
+import withComponentName from "../../withComponentName";
 
 const ForgotPassword = () => {
     const toast = useRef(null);
@@ -389,4 +390,4 @@ const ForgotPassword = () => {
     )
 }
 
-export default ForgotPassword;
+export default withComponentName(ForgotPassword, 'ForgotPassword');
