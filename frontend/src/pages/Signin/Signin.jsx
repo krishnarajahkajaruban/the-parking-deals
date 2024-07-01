@@ -81,7 +81,7 @@ const Signin = () => {
 
     return (
         <>
-            {/* <Header /> */}
+            <Header />
 
             {/* Breadcrumb Section Start */}
             <section className="breadcrumb-section overflow-hidden">
@@ -201,7 +201,7 @@ const Signin = () => {
             </section>
             {/* Sign in Section End */}
 
-            {/* <Footer /> */}
+            <Footer />
         </>
     )
 }
