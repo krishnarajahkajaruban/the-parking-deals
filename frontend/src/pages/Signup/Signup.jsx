@@ -14,6 +14,7 @@ import { InputOtp } from 'primereact/inputotp';
 import { Toast } from 'primereact/toast';
 import api from "../../api";
 import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
+import withComponentName from "../../withComponentName";
 
 
 const Signup = () => {
@@ -836,4 +837,4 @@ const Signup = () => {
   );
 }
 
-export default Signup;
+export default withComponentName(Signup, 'Signup');
