@@ -5,8 +5,7 @@ import { Navigate } from 'react-router-dom';
 const ProtectedRoute = ({ children }) => {
     const isAuth = Boolean(useSelector((state) => state.auth.token));
 
-    console.log(children);
-    const childType = children.type?.name;
+    const childType = children.type?.displayName;
 
     console.log('Child Type:', childType);
     console.log('Is Auth:', isAuth);
