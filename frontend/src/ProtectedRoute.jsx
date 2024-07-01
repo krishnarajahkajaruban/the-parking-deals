@@ -3,28 +3,24 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-    const isAuth = Boolean(useSelector((state) => state.token));
+    const isAuth = Boolean(useSelector((state) => state.auth.token));
 
-    const isSignInComponent = children.type && children.type.name === 'Signin';
-    const isSignUpComponent = children.type && children.type.name === 'Signup';
-    const isForgotPasswordComponent = children.type && children.type.name === 'ForgotPassword';
+    const childType = children.type?.name;
 
-    if (isSignInComponent || isSignUpComponent || isForgotPasswordComponent) {
-        if (isAuth) {
-            return <Navigate to="/" />;
-            // window.location.href = '/';
-            // return null; 
-        } else {
-            return children;
-        }
-    } else {
-        if (!isAuth) {
-            return <Navigate to="/sign-in" />;
-            // window.location.href = '/sign-in';
-            // return null;
-        }
-        return children;
+    console.log('Child Type:', childType);
+    console.log('Is Auth:', isAuth);
+
+    const isAuthPage = ['Signin', 'Signup', 'ForgotPassword'].includes(childType);
+
+    if (isAuthPage && isAuth) {
+        return <Navigate to="/" />;
     }
+
+    if (!isAuth && !isAuthPage) {
+        return <Navigate to="/sign-in" />;
+    }
+
+    return children;
 }
 
 export default ProtectedRoute;
