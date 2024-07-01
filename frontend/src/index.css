@@ -938,8 +938,13 @@ code {
   padding: 20px;
 }
 
+.custom-card-logo-area .custom-card-logo.center-panel-logo {
+  max-width: 24%;
+}
+
 .custom-card-logo-area .custom-card-logo {
   max-width: 35%;
+  object-fit: contain;
 }
 
 .custom-card-tile {
@@ -1653,6 +1658,7 @@ button.custom-form-link:disabled {
 .content-collapse-section .p-accordion .p-accordion-content a:hover {
   text-decoration: underline;
 }
+
 .p-toast .p-toast-message {
   border: none;
   border-radius: 10px;
@@ -1805,7 +1811,7 @@ button.custom-form-link:disabled {
   background-color: #2a286e !important;
 }
 
-.custom-btn-primary:focus{
+.custom-btn-primary:focus {
   box-shadow: 0px 0px 0px 3px #37348b38 !important;
 }
 

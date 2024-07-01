@@ -77,6 +77,10 @@
     .section-main-image-area .section-main-image {
         max-width: 85%;
     }
+
+    .custom-card-logo-area .custom-card-logo.center-panel-logo {
+        max-width: 22%;
+    }
 }
 
 
@@ -161,6 +165,10 @@
     .content-collapse-section {
         margin-top: 20px;
     }
+
+    .custom-card-logo-area .custom-card-logo.center-panel-logo {
+        max-width: 35%;
+    }
 }
 
 /* For SM (Small) Screen (Tab) */
@@ -243,6 +251,10 @@
 
     .content-collapse-section {
         margin-top: 20px;
+    }
+
+    .custom-card-logo-area .custom-card-logo.center-panel-logo {
+        max-width: 35%;
     }
 }
 
@@ -434,6 +446,10 @@
     }
 
     .custom-card-logo-area .custom-card-logo {
+        max-width: 50%;
+    }
+
+    .custom-card-logo-area .custom-card-logo.center-panel-logo {
         max-width: 50%;
     }
 
