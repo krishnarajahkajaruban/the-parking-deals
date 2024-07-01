@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Preloader from '../Preloader';
+import { setLogout } from '../state';
 
 const Header = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const user = useSelector((state) => state.user);
+    const user = useSelector((state) => state.auth.user);
     const [pageLoading, setPageLoading] = useState(false);
 
     const handleNavigate = (url) => {
@@ -149,7 +151,7 @@ const Header = () => {
                             </div>
                             <div className="menu-profile-content">
                                 <h6 className='menu-profile-head'>👋 Hi,</h6>
-                                <h6 className='menu-profile-name'>John</h6>
+                                <h6 className='menu-profile-name'>{user?.firstName}</h6>
                             </div>
                         </div>
                         <hr />
@@ -157,13 +159,16 @@ const Header = () => {
                             <a href="/profile" className='menu-profile-link primary-btn'>
                                 <i className='bi bi-person me-1'></i> Profile
                             </a>
-                            <a href="/profile" className='menu-profile-link danger-btn'>
+                            <a href="#" className='menu-profile-link danger-btn'
+                            onClick={() => {
+                                dispatch(setLogout())
+                            }}>
                                 <i class="bi bi-box-arrow-right me-1"></i> Logout
                             </a>
                         </div>
                     </div>
 
-                    <ul className='menu-btn-link-area'>
+                    {!user && <ul className='menu-btn-link-area'>
                         <li className='menu-btn-link-item'>
                             <a href="/sign-up" className='menu-btn-link with-outline'>Sign up</a>
                         </li>
@@ -171,7 +176,7 @@ const Header = () => {
                         <li className='menu-btn-link-item'>
                             <a href="/sign-in" className='menu-btn-link with-bg'>Sign in</a>
                         </li>
-                    </ul>
+                    </ul>}
                 </div>
 
             </header>

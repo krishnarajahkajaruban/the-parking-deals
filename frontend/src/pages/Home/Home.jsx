@@ -17,10 +17,13 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import { fetchAllAirports } from '../../utils/vendorUtil';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Home = () => {
     const navigate = useNavigate();
     const reservationRef = useRef(null);
+    const dispatch = useDispatch();
     const [pageLoading, setPageLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [dropOffDate, setDropOffDate] = useState(null);
@@ -30,18 +33,36 @@ const Home = () => {
     const today = new Date();
     const [dropOffTime, setDropOffTime] = useState(null);
     const [pickupTime, setPickupTime] = useState(null);
+    const [couponCode, setCouponCode] = useState("");
 
-    const airports = [
-        { name: 'Birmingham Airport' },
-        { name: 'Bristol Airport' },
-        { name: 'Gatwick Airport' },
-        { name: 'Heathrow Airport' },
-        { name: 'Liverpool Airport' },
-        { name: 'Luton Airport' },
-        { name: 'Stansted Airport' },
-        { name: 'Manchester Airport' },
-        { name: 'Southend Airport' }
-    ];
+    // const airports = [
+    //     { name: 'Birmingham Airport' },
+    //     { name: 'Bristol Airport' },
+    //     { name: 'Gatwick Airport' },
+    //     { name: 'Heathrow Airport' },
+    //     { name: 'Liverpool Airport' },
+    //     { name: 'Luton Airport' },
+    //     { name: 'Stansted Airport' },
+    //     { name: 'Manchester Airport' },
+    //     { name: 'Southend Airport' }
+    // ];
+
+    const airports = useSelector((state) => state.vendor.airport);
+
+    useEffect(() => {
+        fetchAllAirports(dispatch);
+      }, [dispatch]);
+
+      const quoteInfo = {
+        airport: selectedAirport,
+        fromDate: dropOffDate,
+        toDate: pickupDate,
+        fromTime: dropOffTime,
+        toTime: pickupTime,
+        couponCode
+      }
+
+      
 
     const selectedAirportTemplate = (option, props) => {
         if (option) {
@@ -305,7 +326,8 @@ const Home = () => {
                                                 <label htmlFor="couponCode" className="custom-form-label form-required text-sm-center">Coupon Code</label>
                                                 <div className="form-icon-group">
                                                     <i class="bi bi-gift-fill input-grp-icon"></i>
-                                                    <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError} />
+                                                    <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError} 
+                                                    onChange={(e)=>setCouponCode(e.target.value)}/>
                                                 </div>
                                                 {showError &&
                                                     <small className="text-danger form-error-msg text-sm-center">This field is required</small>

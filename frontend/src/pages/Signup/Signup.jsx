@@ -19,7 +19,7 @@ import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 const Signup = () => {
   const navigate = useNavigate();
   const toast = useRef(null);
-  const [page, setPage] = useState(3);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [reSendLoading, setReSendLoading] = useState(false);
 

@@ -48,7 +48,7 @@ function App() {
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='/faq' element={<FaQ />} />
         <Route path='/contact-us' element={<ContactUs />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/forgot-password' element={<ProtectedRoute><ForgotPassword /></ProtectedRoute>} />
         <Route path='/services' element={<Services />} />
         <Route path='/results' element={<VendorList />} />
         <Route path='/booking' element={<Booking />} />
