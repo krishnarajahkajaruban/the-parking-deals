@@ -275,4 +275,78 @@
         margin-right: auto;
         margin-bottom: 10px;
     }
+
+    .tab-detail-btn {
+        font-size: 14px !important;
+    }
+
+    .tab-detail-tabs {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .tab-detail-tabs::-webkit-scrollbar {
+        background-color: #FFF;
+    }
+
+    .tab-detail-area {
+        padding: 10px;
+        height: 100%;
+    }
+
+    .tab-detail-row {
+        row-gap: 15px;
+    }
+
+    .review-data-header-area {
+        gap: 15px;
+    }
+
+    .review-data-rating .p-rating .p-rating-item .p-rating-icon {
+        width: 13px;
+        height: 13px;
+    }
+
+    .review-data-body {
+        padding: 10px 12px !important;
+    }
+
+    .review-data-body p {
+        font-size: 13px !important;
+    }
+
+    .review-data-header-area h5 {
+        font-size: 15px;
+    }
+
+    .tab-detail-content-area {
+        padding: 10px;
+    }
+
+    .tab-detail-image-content {
+        gap: 10px;
+    }
+
+    .tab-detail-content-area ul {
+        padding-left: 15px;
+    }
+
+    .tab-detail-content-area h1 {
+        font-size: 18px;
+    }
+
+    .tab-detail-content-area ul li,
+    .tab-detail-content-area p,
+    .tab-detail-content-area a {
+        font-size: 13px !important;
+    }
+
+    .tab-detail-content-area h2 {
+        font-size: 15px;
+    }
+
+    .tab-detail-image-content .p-image {
+        flex-basis: calc(50% - 10px) !important;
+    }
 }

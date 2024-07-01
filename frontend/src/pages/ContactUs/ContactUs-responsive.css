@@ -48,4 +48,8 @@
     .contact-detail-section {
         padding: 0 0 10px 0;
     }
+
+    .contact-btn {
+        width: 100%;
+    }
 }

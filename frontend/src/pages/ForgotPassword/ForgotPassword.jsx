@@ -47,16 +47,16 @@ const ForgotPassword = () => {
         newPassword: '',
         confirmPassword: ''
     };
-    const [resetPasswordInfo, setResetPasswordInfo] = useState(initialResetPasswordInfo);   
+    const [resetPasswordInfo, setResetPasswordInfo] = useState(initialResetPasswordInfo);
 
-    const handleInputChange = async(e) => {
+    const handleInputChange = async (e) => {
         const { name, value } = e.target;
-        setResetPasswordInfo({...resetPasswordInfo, [name]: value });
+        setResetPasswordInfo({ ...resetPasswordInfo, [name]: value });
     };
 
     const handleVerifyEmail = async (e) => {
         e.preventDefault();
-       await sendVerificationEmail(
+        await sendVerificationEmail(
             resetPasswordInfo.email,
             setLoading,
             setReSendLoading,
@@ -103,7 +103,7 @@ const ForgotPassword = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    const resettingPassword = async(resetInfo) => {
+    const resettingPassword = async (resetInfo) => {
         try {
             const response = await api.post("/api/user/reset-password", resetInfo);
             console.log(response.data);
@@ -117,7 +117,7 @@ const ForgotPassword = () => {
             setTimeout(() => {
                 navigate("/sign-in")
             }, 3000);
-        }catch(err){
+        } catch (err) {
             console.log(err);
             toast.current.show({
                 severity: 'error',
@@ -128,7 +128,7 @@ const ForgotPassword = () => {
         }
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!resetPasswordInfo.email || !resetPasswordInfo.newPassword || !resetPasswordInfo.confirmPassword) {
             setShowError(true);
@@ -158,13 +158,13 @@ const ForgotPassword = () => {
             });
             return;
         }
-        
+
         const { confirmPassword, ...updatedResetInfo } = resetPasswordInfo;
 
         await resettingPassword(updatedResetInfo);
- 
-       setResetPasswordInfo(initialResetPasswordInfo);
-   
+
+        setResetPasswordInfo(initialResetPasswordInfo);
+
     };
 
     return (
@@ -228,26 +228,26 @@ const ForgotPassword = () => {
                                     </div>
                                     <h3 className="custom-card-tile">Email Verification</h3>
                                     <h6 className="custom-card-sub-tile">Enter your registered email address below for verification</h6>
-                                    <form action="" className="custom-card-form form-2">
+                                    <form action="" className="custom-card-form">
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="verify_email" className="custom-form-label form-required">Email</label>
                                                     <InputText id="verify_email" keyfilter="email" className="custom-form-input" placeholder="Enter your email address"
-                                                    name="email"
-                                                    value={resetPasswordInfo.email}
-                                                    onChange={handleInputChange}
-                                                     />
+                                                        name="email"
+                                                        value={resetPasswordInfo.email}
+                                                        onChange={handleInputChange}
+                                                    />
 
                                                     {showError &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }
                                                     <small className="text-danger form-error-msg">
-                                                    {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                                                        resetPasswordInfo.email
-                                                    ) && resetPasswordInfo.email
-                                                        ? "Enter valid email"
-                                                        : ""}
+                                                        {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                                                            resetPasswordInfo.email
+                                                        ) && resetPasswordInfo.email
+                                                            ? "Enter valid email"
+                                                            : ""}
                                                     </small>
                                                 </div>
                                             </div>
@@ -255,7 +255,7 @@ const ForgotPassword = () => {
 
                                         <div className="custom-form-group contains-float-input mb-0">
                                             <Button label={`${loading ? 'Processing...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" loading={loading} onClick={handleVerifyEmail}
-                                            disabled={!resetPasswordInfo.email} />
+                                                disabled={!resetPasswordInfo.email} />
                                         </div>
                                     </form>
                                 </article>
@@ -279,7 +279,7 @@ const ForgotPassword = () => {
                                     </div>
                                     <h3 className="custom-card-tile">OTP Verification</h3>
                                     <h6 className="custom-card-sub-tile">Enter the OTP verification code sent to your email address</h6>
-                                    <form action="" className="custom-card-form form-2">
+                                    <form action="" className="custom-card-form">
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
@@ -299,9 +299,9 @@ const ForgotPassword = () => {
                                             <Button label={`${reSendLoading
                                                 ? "Processing..."
                                                 : loading
-                                                ? "Verifying..."
-                                                : "VERIFY"}`} className="w-100 submit-button justify-content-center" onClick={handleVerifyOTP} loading={loading} 
-                                                disabled={!otp}/>
+                                                    ? "Verifying..."
+                                                    : "VERIFY"}`} className="w-100 submit-button justify-content-center" onClick={handleVerifyOTP} loading={loading}
+                                                disabled={!otp} />
                                         </div>
 
                                         <div className="custom-form-link-area text-center">
@@ -338,16 +338,16 @@ const ForgotPassword = () => {
                                     </div>
                                     <h3 className="custom-card-tile">Reset Your Password</h3>
                                     <h6 className="custom-card-sub-tile">Please enter your new password below.</h6>
-                                    <form action="" className="custom-card-form form-2"
-                                    onSubmit={handleSubmit}>
+                                    <form action="" className="custom-card-form"
+                                        onSubmit={handleSubmit}>
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="password" className="custom-form-label form-required">New password</label>
                                                     <Password id="password" className="custom-form-input" name="newPassword"
-                                                    value={resetPasswordInfo.newPassword}
-                                                    onChange={handleInputChange} 
-                                                    header={header} footer={footer} toggleMask />
+                                                        value={resetPasswordInfo.newPassword}
+                                                        onChange={handleInputChange}
+                                                        header={header} footer={footer} toggleMask />
                                                     {showError &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }
@@ -358,11 +358,11 @@ const ForgotPassword = () => {
                                             <div className="col-12">
                                                 <div className="custom-form-group">
                                                     <label htmlFor="confirmPassword" className="custom-form-label form-required">Confirm password</label>
-                                                    <Password id="confirmPassword" className="custom-form-input" 
-                                                    name="confirmPassword"
-                                                    value={resetPasswordInfo.confirmPassword}
-                                                    onChange={handleInputChange}
-                                                    feedback={false} toggleMask />
+                                                    <Password id="confirmPassword" className="custom-form-input"
+                                                        name="confirmPassword"
+                                                        value={resetPasswordInfo.confirmPassword}
+                                                        onChange={handleInputChange}
+                                                        feedback={false} toggleMask />
                                                     {showError &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }

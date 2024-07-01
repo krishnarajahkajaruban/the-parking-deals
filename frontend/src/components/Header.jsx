@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Preloader from '../Preloader';
 
 const Header = () => {
+    const navigate = useNavigate();
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const user = useSelector((state) => state.user);
+    const [pageLoading, setPageLoading] = useState(false);
+
+    const handleNavigate = (url) => {
+        setPageLoading(true);
+        setTimeout(() => {
+            navigate(url);
+            setPageLoading(false);
+        }, 800);
+    };
 
     useEffect(() => {
         const handleScroll = () => {

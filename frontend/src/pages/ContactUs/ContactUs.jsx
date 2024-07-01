@@ -179,7 +179,7 @@ const ContactUs = () => {
 
                                                     <div className="col-12">
                                                         <div className="">
-                                                            <Button label="SEND" className="submit-button theme-pink ps-5 pe-5" loading={loading} onClick={sendMessage} />
+                                                            <Button label="SEND" className="submit-button theme-pink ps-5 pe-5 justify-content-center contact-btn" loading={loading} onClick={sendMessage} />
                                                         </div>
                                                     </div>
                                                 </div>
