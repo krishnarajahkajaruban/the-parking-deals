@@ -107,6 +107,16 @@
     .edit-float-btn i {
         font-size: 16px;
     }
+
+    .tab-detail-tabs {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .tab-detail-tabs::-webkit-scrollbar {
+        background-color: #FFF;
+    }
 }
 
 /* For SM (Small) Screen (Tab) */
@@ -134,6 +144,16 @@
 
     .edit-float-btn i {
         font-size: 16px;
+    }
+
+    .tab-detail-tabs {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .tab-detail-tabs::-webkit-scrollbar {
+        background-color: #FFF;
     }
 }
 
