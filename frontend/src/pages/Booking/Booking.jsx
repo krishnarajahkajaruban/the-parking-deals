@@ -3,6 +3,7 @@ import './Booking.css';
 import './Booking-responsive.css';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
+import { InputIcon } from 'primereact/inputicon';
 
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
@@ -12,11 +13,14 @@ import { Checkbox } from "primereact/checkbox";
 import { InputMask } from "primereact/inputmask";
 import { Password } from 'primereact/password';
 import { InputOtp } from 'primereact/inputotp';
+import { IconField } from "primereact/iconfield";
 
 import { Toast } from 'primereact/toast';
 
 const Booking = () => {
     const [showError, setShowError] = useState(false);
+    const [showCouponError, setShowCouponError] = useState(false);
+    const [couponValid, setCouponValid] = useState(false);
     const [showAlert, setShowAlert] = useState(true);
     const [isFocused, setIsFocused] = useState(false);
     const toast = useRef(null);
@@ -64,6 +68,11 @@ const Booking = () => {
 
     const handleRegister = () => {
 
+    }
+
+    const handleApplyCoupon = () => {
+        setCouponValid(true);
+        setShowCouponError(true);
     }
 
     const handleVerify = () => {
@@ -131,6 +140,10 @@ const Booking = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    const handleBooking = () => {
+
+    }
+
     const header = <div className="font-bold mb-3">Password Strength</div>;
     const footer = (
         <>
@@ -144,6 +157,10 @@ const Booking = () => {
             </ul>
         </>
     );
+
+    const [cardNumber, setCardNumber] = useState();
+    const [cardDate, setCardDate] = useState();
+    const [cardCVV, setCardCVV] = useState();
 
     return (
         <>
@@ -171,10 +188,10 @@ const Booking = () => {
 
             <Toast ref={toast} />
 
-            <section className='section-padding overflow-hidden booking-section'>
+            <section className='section-padding booking-section'>
                 <div className="container-md">
                     <div className="row">
-                        <div className="col-12 col-xl-8">
+                        <div className="col-12 col-xl-8 col-lg-7 card-in-reverse-order">
                             <article className='booking-card'>
                                 <div className="detail-card-label-area main mt-0">
                                     <h5>Booking Details</h5>
@@ -183,7 +200,7 @@ const Booking = () => {
                                     <div className='booking-card-sub'>
                                         <div className="booking-card-head-area">
                                             <div className="row">
-                                                <div className="col-12 col-sm-6 col-xl-8 mx-auto">
+                                                <div className="col-12 col-lg-10 col-md-8 col-xl-8 col-sm-9 mx-auto">
                                                     <div className="custom-form-group mb-3 mb-sm-2">
                                                         <label htmlFor="email" className="custom-form-label form-required text-center" >
                                                             Email Address
@@ -277,7 +294,7 @@ const Booking = () => {
                                                     <div className="col-12">
                                                         <button className="back-page-btn text-sm p-0 mb-3" onClick={goBack} data-aos="fade-left"><i className="ri ri-arrow-left-line me-2"></i>Back</button>
                                                     </div>
-                                                    <div className="col-12 col-sm-6 col-xl-6">
+                                                    <div className="col-12 col-sm-6 col-lg-10 col-xl-6 mx-auto">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="password" className="custom-form-label form-required">Password</label>
                                                             <Password id="password" value={password} className="custom-form-input" placeholder='Enter the Password' onChange={(e) => setPassword(e.target.value)} header={header} footer={footer} toggleMask />
@@ -287,7 +304,7 @@ const Booking = () => {
                                                         </div>
                                                     </div>
 
-                                                    <div className="col-12 col-sm-6 col-xl-6">
+                                                    <div className="col-12 col-sm-6 col-lg-10 col-xl-6 mx-auto">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="confirmPassword" className="custom-form-label form-required">Confirm password</label>
                                                             <Password id="confirmPassword" value={confirmPassword} className="custom-form-input" placeholder='Confirm the Password' onChange={(e) => setConfirmPassword(e.target.value)} feedback={false} toggleMask />
@@ -314,7 +331,7 @@ const Booking = () => {
                                         </h4>
 
                                         <div className="row mt-4">
-                                            <div className="col-12 col-sm-2 col-xl-2">
+                                            <div className="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-2">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="title" className="custom-form-label form-required" >
                                                         Title
@@ -329,7 +346,7 @@ const Booking = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="col-12 col-sm-5 col-xl-5">
+                                            <div className="col-12 col-sm-9 col-md-9 col-lg-9 col-xl-5">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="firstName" className="custom-form-label form-required" >
                                                         First Name
@@ -343,7 +360,7 @@ const Booking = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="col-12 col-sm-5 col-xl-5">
+                                            <div className="col-12 col-sm-6 col-md-6 col-lg-9 offset-lg-3 offset-xl-0 col-xl-5">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="lastName" className="custom-form-label form-required" >
                                                         Last Name
@@ -357,7 +374,7 @@ const Booking = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="col-12 col-sm-5 col-xl-5">
+                                            <div className="col-12 col-sm-6 col-lg-6 col-xl-6">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <label htmlFor="mobileNumber" className="custom-form-label form-required" >
                                                         Mobile Number
@@ -380,13 +397,13 @@ const Booking = () => {
                                                 </label>
                                             </div>
 
-                                            <div className="col-12 col-sm-6 col-xl-6">
+                                            <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <InputText id="addressLine1" className="custom-form-input" name="addressLine1" placeholder='Address Line 1' />
                                                 </div>
                                             </div>
 
-                                            <div className="col-12 col-sm-6 col-xl-6">
+                                            <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
                                                 <div className="custom-form-group mb-3 mb-sm-4">
                                                     <InputText id="addressLine2" className="custom-form-input" name="addressLine2" placeholder='Address Line 2' />
                                                 </div>
@@ -562,33 +579,156 @@ const Booking = () => {
                                         <h4 className="booking-card-head">
                                             Coupon Code
                                         </h4>
-                                        {/*  */}
 
                                         <div className="row mt-4">
-                                            <div className="col-12 col-sm-7 col-xl-7">
+                                            <div className="col-12 col-sm-7 col-lg-9 col-xl-7">
                                                 <div className="custom-form-group mb-0">
                                                     <div className="custom-form-flex-group">
                                                         <InputText id="couponCode" className="custom-form-input" name="couponCode" placeholder='Enter Discount Code' />
-                                                        <Button label="APPLY" className='aply-btn' />
+                                                        <Button label="APPLY" className='aply-btn' onClick={handleApplyCoupon} />
                                                     </div>
-                                                    {showError && (
+                                                    {showCouponError && (
                                                         <small className="text-danger form-error-msg">
                                                             This field is required
                                                         </small>
                                                     )}
+
+                                                    {couponValid && (
+                                                        <h6 className='coupon-valid success'>
+                                                            <i className='bi bi-check-circle-fill me-2'></i>
+                                                            Coupon is valid.
+                                                        </h6>
+
+                                                        // <h6 className='coupon-valid error'>
+                                                        //     <i className='bi bi-x-circle-fill me-2'></i>
+                                                        //     Coupon is invalid.
+                                                        // </h6>
+                                                    )}
+
                                                 </div>
                                             </div>
+                                        </div>
+                                        {/*  */}
+
+                                        <Divider className='divider-margin' />
+
+                                        <div className="total-price-area">
+                                            <h5 className='total-price-text'>Total :</h5>
+                                            <h5 className='total-price'>£ 77.77</h5>
                                         </div>
 
                                         <Divider className='divider-margin' />
 
+                                        {/* Coupon Code */}
+                                        <div className="booking-card-head-area">
+                                            <h4 className="booking-card-head">
+                                                Card Details
+                                            </h4>
+
+                                            <div className="row mt-4">
+                                                <div className="col-12 col-sm-6 col-lg-8 col-xl-6">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="cardName" className="custom-form-label form-required" >
+                                                            Name on Card
+                                                        </label>
+                                                        <InputText id="cardName" className="custom-form-input" name="cardName" placeholder='Name on Card' />
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-sm-6 col-lg-4 col-xl-6">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="cardPostCode" className="custom-form-label form-required" >
+                                                            Post code
+                                                        </label>
+                                                        <InputText id="cardPostCode" className="custom-form-input" name="cardPostCode" placeholder='Post code' />
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-sm-7 col-lg-12 col-xl-7">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="cardNumber" className="custom-form-label form-required" >
+                                                            Card Number
+                                                        </label>
+                                                        <IconField iconPosition="left">
+                                                            <InputIcon className="bi bi-credit-card-fill opacity-50"> </InputIcon>
+                                                            <InputMask value={cardNumber} v-model="value1" className="custom-form-input input-padding" onChange={(e) => setCardNumber(e.target.value)} mask="9999 9999 9999 9999" placeholder="0000 0000 0000 0000" />
+                                                        </IconField>
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="col-6 col-sm-3 col-lg-4 col-xl-3">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="cardDate" className="custom-form-label form-required" >
+                                                            Expiry Date
+                                                        </label>
+                                                        <InputMask value={cardDate} className="custom-form-input" onChange={(e) => setCardDate(e.target.value)} mask="99/99" placeholder="MM/YY" slotChar="MM/YY" />
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-6 col-sm-2 col-lg-3 col-xl-2">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="cardCVV" className="custom-form-label form-required" >
+                                                            CVV
+                                                        </label>
+                                                        <InputMask value={cardCVV} className="custom-form-input" onChange={(e) => setCardCVV(e.target.value)} mask="999" placeholder="CVV" />
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12">
+                                                    <p className='page-warning-text'><span className='form-required me-2'></span>Please do not reload or close the page while the payment is being processed</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/*  */}
+
+                                        <Divider className='divider-margin' />
+
+                                        <div className="account-agree-area">
+                                            <Checkbox inputId="isAgreed" onChange={e => setCheckedSmsConfirmation(e.checked)} checked={checkedSmsConfirmation} name="isAgreed" value="1" />
+                                            <label htmlFor="isAgreed" className="ml-2">
+                                                On making payment you agree to The Parking Deals&nbsp;
+                                                <a href="/terms-and-conditions" target='_blank'>Terms and Conditions</a>
+                                                &nbsp;and&nbsp;
+                                                <a href="/privacy-policy" target='_blank'>Privacy Policy</a>
+                                            </label>
+                                        </div>
+
+                                        <div className="row mt-5">
+                                            <div className="col-12 col-xl-4 col-md-6 col-lg-7 col-sm-6 mx-auto">
+                                                <Button label="CONFIRM BOOKING" className="custom-btn-primary w-100 result-card-btn" onClick={handleBooking} />
+                                            </div>
+                                        </div>
 
                                     </div>
                                 </div>
                             </article>
                         </div>
 
-                        <div className="col-12 col-xl-4 ps-xl-2">
+                        <div className="col-12 col-lg-5 col-xl-4 ps-xl-2 position-relative book-summary-section mt-lg-0">
                             <article className='detail-card'>
                                 <div className="detail-card-label-area main mt-0">
                                     <h5>Your Booking Summary</h5>
@@ -663,7 +803,55 @@ const Booking = () => {
                                     </div>
                                 </div>
                             </article>
+                            
+                            <article className='detail-card mt-3 card-position-sticky mb-3 mb-sm-0'>
+                                <div className="detail-card-label-area main mt-0">
+                                    <h5>Meet and Greet</h5>
+                                </div>
+                                <div className="detail-card-logo-area">
+                                    <img src="assets/images/lion-parking.png" alt="" />
+                                </div>
+                                <div className="detail-card-label-area">
+                                    <h5>Heathrow Airport</h5>
+                                </div>
+
+                                <div className="total-detail-area">
+                                    <div className="total-detail">
+                                        <h5 className='total-detail-head'>Booking Quote</h5>
+                                        <h5 className='total-detail-price'>£ 83</h5>
+                                    </div>
+
+                                    <Divider className='divider-primary' />
+
+                                    <div className="total-detail">
+                                        <h5 className='total-detail-head'>Booking Fee</h5>
+                                        <h5 className='total-detail-price'>£ 0.99</h5>
+                                    </div>
+
+                                    <Divider className='divider-primary' />
+
+                                    <div className="total-detail">
+                                        <h5 className='total-detail-head text-bold'>Total before discount</h5>
+                                        <h5 className='total-detail-price text-bold'>£ 83.99</h5>
+                                    </div>
+
+                                    <Divider className='divider-primary' />
+
+                                    <div className="total-detail">
+                                        <h5 className='total-detail-head'>Coupon Discount</h5>
+                                        <h5 className='total-detail-price'>- 7.5 %</h5>
+                                    </div>
+
+                                    <Divider className='divider-primary' />
+
+                                    <div className="total-detail">
+                                        <h5 className='total-detail-head text-bold'>Total before discount</h5>
+                                        <h5 className='total-detail-price text-bold'>£ 83.99</h5>
+                                    </div>
+                                </div>
+                            </article>
                         </div>
+
                     </div>
                 </div>
             </section>

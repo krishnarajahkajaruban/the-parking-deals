@@ -1,0 +1,118 @@
+/* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
+@media (min-width: 1399.99px) {}
+
+/* For XL Screen (Laptop - HD Ready Display) */
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {}
+
+/* For LG (Large) Screen  */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {}
+
+/* For MD (Medium) Screen (ipad) */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .detail-card-label-area.main h5 {
+        font-size: 16px !important;
+    }
+
+    .book-summary-section {
+        display: flex;
+        margin-bottom: 15px;
+        gap: 15px;
+    }
+
+    .book-summary-section .detail-card {
+        margin: 0 !important;
+        height: fit-content;
+    }
+
+    .book-summary-section .detail-card {
+        width: 45%;
+    }
+
+    .book-summary-section .detail-card.card-position-sticky {
+        width: 55%;
+    }
+
+    .book-summary-section .detail-card .detail-card-row {
+        flex-direction: column;
+    }
+
+    .card-in-reverse-order {
+        order: 2 !important;
+    }
+}
+
+/* For SM (Small) Screen (Tab) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .detail-card-label-area.main h5 {
+        font-size: 16px !important;
+    }
+
+    .book-summary-section {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .book-summary-section .detail-card {
+        margin: 0 !important;
+        height: fit-content;
+    }
+
+    .book-summary-section .detail-card {
+        width: 45%;
+    }
+
+    .book-summary-section .detail-card.card-position-sticky {
+        width: 55%;
+    }
+
+    .book-summary-section .detail-card .detail-card-row {
+        flex-direction: column;
+    }
+
+    .card-in-reverse-order {
+        order: 2 !important;
+    }
+}
+
+/* For Mobile Screen */
+@media (max-width: 575px) {
+    .detail-card-label-area.main h5 {
+        font-size: 16px !important;
+    }
+
+    .booking-card-sub,
+    .booking-card-head-area {
+        padding: 15px;
+    }
+
+    .form-checkbox-area label {
+        font-size: 14px;
+    }
+
+    .custom-form-flex-group {
+        gap: 10px;
+    }
+
+    .total-price-area .total-price-text,
+    .total-price-area .total-price {
+        font-size: 18px !important;
+    }
+
+    .page-warning-text {
+        font-size: 12px;
+    }
+
+    .account-agree-area label,
+    .account-agree-area label a {
+        font-size: 13px;
+    }
+
+    .card-in-reverse-order {
+        order: 2 !important;
+    }
+
+    .detail-card-info-body h6 {
+        font-size: 15px;
+    }
+}

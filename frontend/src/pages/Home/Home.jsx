@@ -9,6 +9,7 @@ import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Preloader from '../../Preloader';
+import SmoothScroll from 'smooth-scroll';
 
 import Tilt from 'react-parallax-tilt';
 import { InputText } from "primereact/inputtext";
@@ -19,6 +20,7 @@ import { Calendar } from 'primereact/calendar';
 
 const Home = () => {
     const navigate = useNavigate();
+    const reservationRef = useRef(null);
     const [pageLoading, setPageLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [dropOffDate, setDropOffDate] = useState(null);
@@ -90,6 +92,12 @@ const Home = () => {
         }
     };
 
+    const handleScroll = (e) => {
+        e.preventDefault();
+        const scroll = new SmoothScroll();
+        scroll.animateScroll(reservationRef.current, null, { offset: 120 });
+    };
+
     return (
         <>
             {pageLoading && <Preloader />}
@@ -128,7 +136,7 @@ const Home = () => {
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
                                     <a href="/about-us" className='nav-link-button text-no-wrap with-bg'>More detail</a>
-                                    <a href="#reservation" className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
+                                    <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
                         </SwiperSlide>
@@ -141,7 +149,7 @@ const Home = () => {
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
                                     <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
-                                    <a href="#reservation" className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
+                                    <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
                         </SwiperSlide>
@@ -154,7 +162,7 @@ const Home = () => {
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
                                     <a href="/contact-us" className='nav-link-button text-no-wrap with-bg'>More detail</a>
-                                    <a href="#reservation" className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
+                                    <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
                         </SwiperSlide>
@@ -167,7 +175,7 @@ const Home = () => {
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
                                     <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
-                                    <a href="#reservation" className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
+                                    <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
                         </SwiperSlide>
@@ -180,7 +188,7 @@ const Home = () => {
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
                                     <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
-                                    <a href="#reservation" className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
+                                    <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
                         </SwiperSlide>
@@ -193,7 +201,7 @@ const Home = () => {
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
                                     <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
-                                    <a href="#reservation" className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
+                                    <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
                         </SwiperSlide>
@@ -204,17 +212,22 @@ const Home = () => {
             <section className='section-padding overflow-hidden'>
                 <div className="container-md">
                     <div className="row">
-                        <div className="col-12 col-xl-6">
+                        <div className="col-12 col-xl-6 col-lg-6 pe-xl-5">
+                            <h3 className='section-heading text-center mx-auto text-lg-start ms-lg-0 text-purple'>Get Your Parking Quote</h3>
+
+                            <p className='section-paragraph text-center text-lg-start mt-5 mb-5 mb-xl-0'>
+                                Planning your trip just got easier with The Parking Deals. Use our quick and convenient form to get an instant quote for your airport parking needs. Simply select your airport from the dropdown menu, enter your drop-off and pick-up dates and times, and apply any available coupon codes to maximize your savings. Whether you need short-term, long-term, or premium parking options, our easy-to-use form will help you find the best rates and secure your spot in just a few clicks. Experience the convenience of knowing your parking is sorted before you even leave home. Fill out the form below and get ready for a stress-free start to your journey with The Parking Deals.
+                            </p>
                         </div>
-                        <div className="col-12 col-xl-6">
-                            <article className="custom-card border-top-primary p-3" id='reservation' data-aos="fade-up">
+                        <div className="col-12 col-xl-6 col-lg-6">
+                            <article className="custom-card border-top-primary p-3" id='reservation' ref={reservationRef} data-aos="fade-up">
                                 <div className="custom-card-logo-area mb-3">
                                     <h3 className="custom-card-header-head">GET QUOTE</h3>
                                 </div>
                                 <form action="" className="custom-card-form form-2 get-quote-form mt-0 p-3">
                                     <div className="form-head-input-area">
                                         <div className="row">
-                                            <div className="col-12 col-xl-8 col-lg-6 col-md-8 col-sm-8 mx-auto">
+                                            <div className="col-12 col-xl-8 col-lg-10 col-md-8 col-sm-8 mx-auto">
                                                 <div className="custom-form-group mb-0 input-with-icon">
                                                     <label htmlFor="airport" className="custom-form-label form-required text-sm-center">Select airport</label>
                                                     <div className="form-icon-group">
@@ -287,7 +300,7 @@ const Home = () => {
                                             </div>
                                         </div>
 
-                                        <div className="col-12 col-sm-6 col-xl-6 col-lg-4 col-md-6 mx-auto">
+                                        <div className="col-12 col-sm-6 col-xl-6 col-lg-7 col-md-6 mx-auto">
                                             <div className="custom-form-group mb-2 mb-sm-2 input-with-icon">
                                                 <label htmlFor="couponCode" className="custom-form-label form-required text-sm-center">Coupon Code</label>
                                                 <div className="form-icon-group">

@@ -93,3 +93,7 @@
     text-align: center;
     display: block;
 }
+
+.section-heading.text-lg-start::after {
+    margin-left: 0 !important;
+}

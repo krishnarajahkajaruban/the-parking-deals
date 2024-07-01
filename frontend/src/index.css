@@ -881,8 +881,8 @@ code {
 }
 
 .section-heading.text-center::after {
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .content-margin-top {
@@ -1002,6 +1002,10 @@ code {
 
 .custom-form-input {
   width: 100%;
+}
+
+.custom-form-input.input-padding{
+  padding-left: 38px !important; 
 }
 
 .custom-form-input.dark-theme {
@@ -1437,7 +1441,7 @@ button.custom-form-link:disabled {
 }
 
 .custom-form-label {
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 2px;
   color: #686868;
   display: block;

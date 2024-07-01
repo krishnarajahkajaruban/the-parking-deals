@@ -34,6 +34,10 @@
     .section-main-image-area .section-main-image {
         max-width: 80%;
     }
+
+    .detail-card-info-body h6 {
+        font-size: 15px;
+    }
 }
 
 /* For LG (Large) Screen  */
@@ -80,6 +84,23 @@
 
     .custom-card-logo-area .custom-card-logo.center-panel-logo {
         max-width: 22%;
+    }
+
+    .detail-card-label-area.main h5 {
+        font-size: 16px !important;
+    }
+
+    .detail-card-info-body h6 {
+        font-size: 15px !important;
+    }
+
+    .detail-card-info-icon-area i{
+        font-size: 18px;
+    }
+
+    .account-agree-area label,
+    .account-agree-area label a{
+        font-size: 13px;
     }
 }
 
