@@ -101,10 +101,11 @@ const VendorList = () => {
     }
 
     const handleBooking = () => {
-        setPageLoading(true);
+        // setPageLoading(true);
         setTimeout(() => {
-            navigate('/booking');
-            setPageLoading(false);
+            // navigate('/booking');
+            window.location.assign('/booking');
+            // setPageLoading(false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 800);
     }

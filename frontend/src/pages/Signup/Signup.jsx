@@ -19,7 +19,7 @@ import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 const Signup = () => {
   const navigate = useNavigate();
   const toast = useRef(null);
-  const [page, setPage] = useState(3);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [reSendLoading, setReSendLoading] = useState(false);
 
@@ -440,7 +440,7 @@ const Signup = () => {
             </div>
           ) : (
             <div className="row">
-              <div className="col-12 col-xl-6 col-lg-6 my-auto d-lg-none d-xxl-block">
+              {/* <div className="col-12 col-xl-6 col-lg-6 my-auto d-lg-none d-xxl-block">
                 <div
                   className="section-main-image-area mb-5 mb-sm-5 mb-lg-0"
                   data-aos="zoom-out"
@@ -453,9 +453,9 @@ const Signup = () => {
                     />
                   </Tilt>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="col-12 col-xl-7 col-xxl-6 col-lg-8 col-sm-11 col-md-11 mx-auto">
+              <div className="col-12 col-xl-9 col-xxl-8 col-lg-11 col-sm-11 col-md-11 mx-auto">
                 <button
                   className="back-page-btn"
                   onClick={goBack}
@@ -467,7 +467,7 @@ const Signup = () => {
                   <div className="custom-card-logo-area">
                     <img
                       src="assets/images/logo.png"
-                      className="custom-card-logo"
+                      className="custom-card-logo center-panel-logo"
                       alt="The Parking Deals"
                     />
                   </div>
@@ -479,7 +479,7 @@ const Signup = () => {
                     onSubmit={handleSubmit}
                   >
                     <div className="row">
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      <div className="col-12 col-sm-3 col-xl-2 col-lg-2 col-md-3">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="title"
@@ -507,7 +507,7 @@ const Signup = () => {
                         </div>
                       </div>
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      <div className="col-12 col-sm-9 col-xl-5 col-lg-5 col-md-9">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="firstName"
@@ -530,7 +530,7 @@ const Signup = () => {
                         </div>
                       </div>
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      <div className="col-12 col-sm-6 col-xl-5 col-lg-5">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="lastName"
@@ -569,13 +569,13 @@ const Signup = () => {
                       <div className="col-12 col-sm-6 col-xl-6">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
-                            htmlFor="phoneNumber"
+                            htmlFor="mobileNumber"
                             className="custom-form-label form-required"
                           >
-                            Phone number
+                            Mobile number
                           </label>
                           <InputText
-                            id="phoneNumber"
+                            id="mobileNumber"
                             keyfilter="num"
                             className="custom-form-input"
                             name="mobileNumber"
@@ -644,7 +644,49 @@ const Signup = () => {
                         </div>
                       </div>
 
-                      <div className="col-12">
+                      <div className="col-12 col-sm-6 col-xl-6">
+                        <div className="custom-form-group mb-3 mb-sm-4">
+                          <label
+                            htmlFor="addressLine1"
+                            className="custom-form-label form-required"
+                          >
+                            Address Line 1
+                          </label>
+                          <InputText
+                            id="addressLine1"
+                            className="custom-form-input"
+                            name="addressLine1"
+                          />
+                          {showError && (
+                            <small className="text-danger form-error-msg">
+                              This field is required
+                            </small>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-xl-6">
+                        <div className="custom-form-group mb-3 mb-sm-4">
+                          <label
+                            htmlFor="addressLine2"
+                            className="custom-form-label form-required"
+                          >
+                            Address Line 2
+                          </label>
+                          <InputText
+                            id="addressLine2"
+                            className="custom-form-input"
+                            name="addressLine2"
+                          />
+                          {showError && (
+                            <small className="text-danger form-error-msg">
+                              This field is required
+                            </small>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* <div className="col-12">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="address"
@@ -665,9 +707,9 @@ const Signup = () => {
                             </small>
                           )}
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      <div className="col-12 col-sm-6 col-xl-4 col-lg-4">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="city"
@@ -690,7 +732,7 @@ const Signup = () => {
                         </div>
                       </div>
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      <div className="col-12 col-sm-6 col-xl-4 col-lg-4">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="country"
@@ -713,7 +755,7 @@ const Signup = () => {
                         </div>
                       </div>
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      <div className="col-12 col-sm-6 col-xl-4 col-lg-4">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="postcode"

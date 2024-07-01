@@ -127,7 +127,7 @@
     padding: 0;
 }
 
-.form-checkbox-area .p-checkbox.p-highlight .p-checkbox-box {
+.p-checkbox.p-highlight .p-checkbox-box {
     border-color: #37348b;
     background: #37348b;
 }
@@ -171,6 +171,7 @@
     font-size: 13px;
     padding-bottom: 0px;
     font-weight: 400;
+    line-height: 1.5em;
 }
 
 .custom-form-link-area .text-sm,
@@ -181,4 +182,127 @@
 
 .divider.p-divider.p-divider-horizontal:before {
     border-top-color: #FFF !important;
+}
+
+.coupon-valid {
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+
+.coupon-valid i {
+    vertical-align: middle;
+}
+
+.coupon-valid.success {
+    color: #04ac58;
+}
+
+.coupon-valid.error {
+    color: #e22222;
+}
+
+.total-price-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 12px;
+    padding: 15px;
+    background-color: #FFF;
+    position: relative;
+    gap: 20px;
+    box-shadow: 0px 0px 15px #37348b11;
+}
+
+.total-price-area .total-price-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #000;
+    display: block;
+}
+
+.total-price-area .total-price {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #d12788;
+    display: block;
+}
+
+.page-warning-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 0;
+    display: block;
+}
+
+.card-position-sticky {
+    position: sticky !important;
+    top: 100px !important;
+}
+
+.account-agree-area {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+
+.account-agree-area label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    cursor: pointer;
+}
+
+.account-agree-area label a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #d12788;
+}
+
+.total-detail-area {
+    position: relative;
+    border: 2px solid #FFF;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 0px 20px #22205713;
+    background-color: #ebeafc;
+    padding: 15px;
+}
+
+.total-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+}
+
+.total-detail .total-detail-head,
+.total-detail .total-detail-price {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 0;
+    color: #37348b;
+    margin-bottom: 0;
+}
+
+.total-detail .total-detail-head.text-bold,
+.total-detail .total-detail-price.text-bold {
+    font-weight: 800 !important;
+}
+
+.divider-primary.p-divider.p-divider-horizontal::before {
+    border-top: 1px solid #ffffff !important;
+}
+
+.total-detail.with-bg {
+    background-color: #FFF;
+    border-radius: 8px;
+    padding: 15px;
 }

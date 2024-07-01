@@ -1,5 +1,9 @@
 /* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
-@media (min-width: 1399.99px) {}
+@media (min-width: 1399.99px) {
+    .section-heading.text-center.text-lg-start::after {
+        margin-left: 0 !important;
+    }
+}
 
 /* For XL Screen (Laptop - HD Ready Display) */
 @media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {
@@ -13,6 +17,10 @@
 
     .hero-section-para {
         font-size: 14px;
+    }
+
+    .section-heading.text-center.text-lg-start::after {
+        margin-left: 0 !important;
     }
 }
 
@@ -41,6 +49,9 @@
         right: 26.5vh;
     }
 
+    .section-heading.text-center.text-lg-start::after {
+        margin-left: 0 !important;
+    }
 }
 
 /* For MD (Medium) Screen (ipad) */
@@ -163,7 +174,7 @@
         width: 90px;
         height: 90px;
         top: 23vmin;
-        right:22vmin;
+        right: 22vmin;
     }
 
     .hero-section-para {
