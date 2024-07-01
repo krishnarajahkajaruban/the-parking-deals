@@ -41,7 +41,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about-us' element={<AboutUs />} />
-        <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} />
+{/*         <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} /> */}
+        <Route path='/sign-in' element={<Signin />} />
         <Route path='/sign-up' element={<ProtectedRoute><Signup /></ProtectedRoute>} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
