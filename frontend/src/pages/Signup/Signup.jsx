@@ -14,12 +14,13 @@ import { InputOtp } from 'primereact/inputotp';
 import { Toast } from 'primereact/toast';
 import api from "../../api";
 import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
+import withComponentName from "../../withComponentName";
 
 
 const Signup = () => {
   const navigate = useNavigate();
   const toast = useRef(null);
-  const [page, setPage] = useState(3);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [reSendLoading, setReSendLoading] = useState(false);
 
@@ -836,4 +837,4 @@ const Signup = () => {
   );
 }
 
-export default Signup;
+export default withComponentName(Signup, 'Signup');

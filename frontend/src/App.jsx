@@ -41,14 +41,13 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about-us' element={<AboutUs />} />
-{/*         <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} /> */}
-        <Route path='/sign-in' element={<Signin />} />
+        <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} />
         <Route path='/sign-up' element={<ProtectedRoute><Signup /></ProtectedRoute>} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='/faq' element={<FaQ />} />
         <Route path='/contact-us' element={<ContactUs />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/forgot-password' element={<ProtectedRoute><ForgotPassword /></ProtectedRoute>} />
         <Route path='/services' element={<Services />} />
         <Route path='/results' element={<VendorList />} />
         <Route path='/booking' element={<Booking />} />
