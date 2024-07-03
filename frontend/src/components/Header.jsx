@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Preloader from '../Preloader';
@@ -22,10 +22,25 @@ const Header = () => {
     };
 
     const [isOpen, setIsOpen] = useState(false);
+    const dropdowMenuRef = useRef(null);
 
     const toggleDropdownMenu = () => {
         setIsOpen(!isOpen);
     };
+
+    const handleClickOutside = (event) => {
+        if (dropdowMenuRef.current && !dropdowMenuRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -108,8 +123,8 @@ const Header = () => {
                                         </ul>
                                     ) : (
                                         <ul className='nav-button-grp'>
-                                            <li className='nav-button-grp-item position-relative'>
-                                                <button type='button' className='profile-toggle-btn p-ripple ps-0' onClick={toggleDropdownMenu}>
+                                            <li className='nav-button-grp-item position-relative' ref={dropdowMenuRef}>
+                                                <button type='button' className='profile-toggle-btn p-ripple' onClick={toggleDropdownMenu}>
                                                     <div className="profile-toggle-img-area">
                                                         {/* <img src="assets/images/profile-img.png" className='profile-toggle-img' alt="" /> */}
                                                         <img src="assets/images/user.png" className='profile-toggle-no-img' alt="" />
