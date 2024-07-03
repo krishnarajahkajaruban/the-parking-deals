@@ -40,11 +40,11 @@ const ContactUs = () => {
                         <div className="col-12">
                             <h3 className='breadcrumb-title'>Contact us</h3>
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
+                                <ol className="breadcrumb">
+                                    <li className="breadcrumb-item">
                                         <a href="/">Home</a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Contact us</li>
+                                    <li className="breadcrumb-item active" aria-current="page">Contact us</li>
                                 </ol>
                             </nav>
 
@@ -95,7 +95,7 @@ const ContactUs = () => {
 
                                             <div className="contact-content-area">
                                                 <div className="contact-content" data-aos="fade-left">
-                                                    <i class="bi bi-geo-alt-fill"></i>
+                                                    <i className="bi bi-geo-alt-fill"></i>
                                                     <a href="#" target="_blank" className="contact-content-link">
                                                         9-13 Wensum St, Burnham-on-Sea <br />
                                                         Somerset County <br />
@@ -104,14 +104,14 @@ const ContactUs = () => {
                                                 </div>
 
                                                 <div className="contact-content" data-aos="fade-left">
-                                                    <i class="bi bi-envelope-fill"></i>
+                                                    <i className="bi bi-envelope-fill"></i>
                                                     <a href="mailto:" className="contact-content-link">
                                                         info@theparkingdeals.uk
                                                     </a>
                                                 </div>
 
                                                 <div className="contact-content" data-aos="fade-left">
-                                                    <i class="bi bi-telephone-fill"></i>
+                                                    <i className="bi bi-telephone-fill"></i>
                                                     <a href="tel:" className="contact-content-link">
                                                         +44 000 000 0000
                                                     </a>

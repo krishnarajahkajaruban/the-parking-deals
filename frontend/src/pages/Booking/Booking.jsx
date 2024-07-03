@@ -173,11 +173,11 @@ const Booking = () => {
                         <div className="col-12">
                             <h3 className='breadcrumb-title'>Booking</h3>
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
+                                <ol className="breadcrumb">
+                                    <li className="breadcrumb-item">
                                         <a href="/">Home</a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Booking</li>
+                                    <li className="breadcrumb-item active" aria-current="page">Booking</li>
                                 </ol>
                             </nav>
                         </div>
@@ -735,7 +735,7 @@ const Booking = () => {
                                 </div>
                                 <div className="detail-card-info-area mb-1">
                                     <div className="detail-card-info-icon-area">
-                                        <i class="bi bi-building-fill"></i>
+                                        <i className="bi bi-building-fill"></i>
                                     </div>
                                     <div className="detail-card-info-body">
                                         <p>Company :</p>
@@ -745,7 +745,7 @@ const Booking = () => {
 
                                 <div className="detail-card-info-area">
                                     <div className="detail-card-info-icon-area">
-                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <i className="bi bi-geo-alt-fill"></i>
                                     </div>
                                     <div className="detail-card-info-body">
                                         <p>Location :</p>
@@ -757,7 +757,7 @@ const Booking = () => {
                                     <div className="detail-card-panel">
                                         <div className="detail-card-info-area">
                                             <div className="detail-card-info-icon-area">
-                                                <i class="bi bi-calendar2-fill"></i>
+                                                <i className="bi bi-calendar2-fill"></i>
                                             </div>
                                             <div className="detail-card-info-body">
                                                 <p>Drop Off Date :</p>
@@ -768,7 +768,7 @@ const Booking = () => {
                                     <div className="detail-card-panel">
                                         <div className="detail-card-info-area">
                                             <div className="detail-card-info-icon-area">
-                                                <i class="bi bi-clock-fill"></i>
+                                                <i className="bi bi-clock-fill"></i>
                                             </div>
                                             <div className="detail-card-info-body">
                                                 <p>Drop Off Time :</p>
@@ -782,7 +782,7 @@ const Booking = () => {
                                     <div className="detail-card-panel">
                                         <div className="detail-card-info-area">
                                             <div className="detail-card-info-icon-area">
-                                                <i class="bi bi-calendar2-fill"></i>
+                                                <i className="bi bi-calendar2-fill"></i>
                                             </div>
                                             <div className="detail-card-info-body">
                                                 <p>Return Date :</p>
@@ -793,7 +793,7 @@ const Booking = () => {
                                     <div className="detail-card-panel">
                                         <div className="detail-card-info-area">
                                             <div className="detail-card-info-icon-area">
-                                                <i class="bi bi-clock-fill"></i>
+                                                <i className="bi bi-clock-fill"></i>
                                             </div>
                                             <div className="detail-card-info-body">
                                                 <p>Return Time :</p>

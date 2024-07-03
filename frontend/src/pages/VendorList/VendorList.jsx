@@ -135,7 +135,7 @@ const VendorList = () => {
                             <article className="results-option-area">
                                 <div className="custom-card-form form-2 results-option-form mt-0 p-4">
                                     {/* <button className='edit-float-btn' onClick={() => setVisible(true)}>
-                                        <i class="bi bi-pencil-square"></i>
+                                        <i className="bi bi-pencil-square"></i>
                                     </button> */}
                                     <Button icon="bi bi-pencil-square" className='edit-float-btn' data-bs-toggle="modal" data-bs-target="#editSearchModal" />
                                     <div className="row">
@@ -143,7 +143,7 @@ const VendorList = () => {
                                             <div className="custom-form-group mb-0 input-with-icon">
                                                 <label htmlFor="airport" className="custom-form-label text-sm-center">Airport</label>
                                                 <div className="form-icon-group">
-                                                    <i class="bi bi-airplane-fill input-grp-icon"></i>
+                                                    <i className="bi bi-airplane-fill input-grp-icon"></i>
                                                     <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
                                                         filter valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" />
                                                 </div>
@@ -162,13 +162,13 @@ const VendorList = () => {
                                                         <div className="row">
                                                             <div className="col-12 col-md-6 mb-2 mb-md-0">
                                                                 <h6 data-bs-toggle="modal" data-bs-target="#editSearchModal">
-                                                                    <i class="bi bi-calendar-check-fill me-2"></i>
+                                                                    <i className="bi bi-calendar-check-fill me-2"></i>
                                                                     12/06/2024
                                                                 </h6>
                                                             </div>
                                                             <div className="col-12 col-md-6">
                                                                 <h6 data-bs-toggle="modal" data-bs-target="#editSearchModal">
-                                                                    <i class="bi bi-clock-fill me-2"></i>
+                                                                    <i className="bi bi-clock-fill me-2"></i>
                                                                     11:20
                                                                 </h6>
                                                             </div>
@@ -182,13 +182,13 @@ const VendorList = () => {
                                                         <div className="row">
                                                             <div className="col-12 col-md-6 mb-2 mb-md-0">
                                                                 <h6 data-bs-toggle="modal" data-bs-target="#editSearchModal">
-                                                                    <i class="bi bi-calendar-check-fill me-2"></i>
+                                                                    <i className="bi bi-calendar-check-fill me-2"></i>
                                                                     12/06/2024
                                                                 </h6>
                                                             </div>
                                                             <div className="col-12 col-md-6">
                                                                 <h6 data-bs-toggle="modal" data-bs-target="#editSearchModal">
-                                                                    <i class="bi bi-clock-fill me-2"></i>
+                                                                    <i className="bi bi-clock-fill me-2"></i>
                                                                     11:20
                                                                 </h6>
                                                             </div>
@@ -207,7 +207,7 @@ const VendorList = () => {
                                                 <div className="col-12 col-sm-6">
                                                     <div className="custom-form-group mb-3 mb-md-0 input-with-icon">
                                                         <div className="form-icon-group">
-                                                            <i class="bi bi-p-square input-grp-icon"></i>
+                                                            <i className="bi bi-p-square input-grp-icon"></i>
                                                             <Dropdown value={parkingOption} onChange={(e) => setParkingOption(e.value)} options={parking_options} optionLabel="name"
                                                                 placeholder="Select Parking Option" className="w-full w-100 custom-form-dropdown" />
                                                         </div>
@@ -217,7 +217,7 @@ const VendorList = () => {
                                                 <div className="col-12 col-sm-6">
                                                     <div className="custom-form-group mb-3 mb-md-0 input-with-icon">
                                                         <div className="form-icon-group">
-                                                            <i class="bi bi-arrow-down-up input-grp-icon"></i>
+                                                            <i className="bi bi-arrow-down-up input-grp-icon"></i>
                                                             <Dropdown value={filterOption} onChange={(e) => setFilterOption(e.value)} options={filter_options} optionLabel="name"
                                                                 placeholder="Select Parking Option" className="w-full w-100 custom-form-dropdown" />
                                                         </div>
@@ -258,12 +258,12 @@ const VendorList = () => {
                                         </h3>
                                         <div className='result-card-sub'>
                                             <p>
-                                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                                                <i className="bi bi-hand-thumbs-up-fill me-2"></i>
                                                 Save <span>£ 6.23</span> Today
                                             </p>
 
                                             <p>
-                                                <i class="bi bi-lightning-fill me-2"></i>
+                                                <i className="bi bi-lightning-fill me-2"></i>
                                                 Cancellation Cover Available
                                             </p>
                                         </div>
@@ -342,12 +342,12 @@ const VendorList = () => {
                                         </h3>
                                         <div className='result-card-sub'>
                                             <p>
-                                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                                                <i className="bi bi-hand-thumbs-up-fill me-2"></i>
                                                 Save <span>£ 6.23</span> Today
                                             </p>
 
                                             <p>
-                                                <i class="bi bi-lightning-fill me-2"></i>
+                                                <i className="bi bi-lightning-fill me-2"></i>
                                                 Cancellation Cover Available
                                             </p>
                                         </div>
@@ -426,12 +426,12 @@ const VendorList = () => {
                                         </h3>
                                         <div className='result-card-sub'>
                                             <p>
-                                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                                                <i className="bi bi-hand-thumbs-up-fill me-2"></i>
                                                 Save <span>£ 6.23</span> Today
                                             </p>
 
                                             <p>
-                                                <i class="bi bi-lightning-fill me-2"></i>
+                                                <i className="bi bi-lightning-fill me-2"></i>
                                                 Cancellation Cover Available
                                             </p>
                                         </div>
@@ -492,14 +492,14 @@ const VendorList = () => {
             </section>
 
             {/* quote form modal */}
-            <div class="modal fade" id="editSearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editSearchModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content custom-modal">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="editSearchModalLabel">Edit your search</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div className="modal fade" id="editSearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editSearchModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered modal-lg">
+                    <div className="modal-content custom-modal">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="editSearchModalLabel">Edit your search</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div className="modal-body">
                             <form action="" className="custom-card-form form-2 get-quote-form p-3 mt-0">
                                 <div className="form-head-input-area">
                                     <div className="row">
@@ -507,7 +507,7 @@ const VendorList = () => {
                                             <div className="custom-form-group mb-0 input-with-icon">
                                                 <label htmlFor="airport" className="custom-form-label form-required text-sm-center">Select airport</label>
                                                 <div className="form-icon-group">
-                                                    <i class="bi bi-airplane-fill input-grp-icon"></i>
+                                                    <i className="bi bi-airplane-fill input-grp-icon"></i>
                                                     <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
                                                         filter valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
                                                 </div>
@@ -527,7 +527,7 @@ const VendorList = () => {
                                         <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                             <label htmlFor="dropOffDate" className="custom-form-label form-required">Drop off date</label>
                                             <div className="form-icon-group">
-                                                <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                                                <i className="bi bi-calendar-check-fill input-grp-icon"></i>
                                                 <Calendar id="dropOffDate" value={dropOffDate} onChange={handleDropOffDateChange} placeholder='dd/mm/yyyy' minDate={today} className='w-100' invalid={showError} />
                                             </div>
                                             {showError &&
@@ -540,7 +540,7 @@ const VendorList = () => {
                                         <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                             <label htmlFor="dropOffTime" className="custom-form-label form-required">Drop off time</label>
                                             <div className="form-icon-group">
-                                                <i class="bi bi-clock-fill input-grp-icon"></i>
+                                                <i className="bi bi-clock-fill input-grp-icon"></i>
                                                 <Calendar id="dropOffTime" className='w-100' value={dropOffTime} onChange={(e) => setDropOffTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
                                             </div>
                                             {showError &&
@@ -553,7 +553,7 @@ const VendorList = () => {
                                         <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                             <label htmlFor="pickupDate" className="custom-form-label form-required">Pickup date</label>
                                             <div className="form-icon-group">
-                                                <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                                                <i className="bi bi-calendar-check-fill input-grp-icon"></i>
                                                 <Calendar id="pickupDate" value={pickupDate} onChange={(e) => setPickupDate(e.value)} placeholder='dd/mm/yyyy' minDate={dropOffDate} disabled={!dropOffDate} className='w-100' invalid={showError} />
                                             </div>
                                             {showError &&
@@ -566,7 +566,7 @@ const VendorList = () => {
                                         <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                             <label htmlFor="pickupTime" className="custom-form-label form-required">Pickup time</label>
                                             <div className="form-icon-group">
-                                                <i class="bi bi-clock-fill input-grp-icon"></i>
+                                                <i className="bi bi-clock-fill input-grp-icon"></i>
                                                 <Calendar id="pickupTime" className='w-100' value={pickupTime} onChange={(e) => setPickupTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
                                             </div>
                                             {showError &&
@@ -579,7 +579,7 @@ const VendorList = () => {
                                         <div className="custom-form-group mb-2 mb-sm-2 input-with-icon">
                                             <label htmlFor="couponCode" className="custom-form-label form-required text-lg-center">Coupon Code</label>
                                             <div className="form-icon-group">
-                                                <i class="bi bi-gift-fill input-grp-icon"></i>
+                                                <i className="bi bi-gift-fill input-grp-icon"></i>
                                                 <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError} />
                                             </div>
                                             {showError &&
@@ -604,48 +604,48 @@ const VendorList = () => {
             {/*  */}
 
             {/* vendor detail modal */}
-            <div class="modal fade" id="vendorDetailModal" tabindex="-1" aria-labelledby="vendorDetailModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
-                    <div class="modal-content custom-modal">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="vendorDetailModalLabel">Lion Parking</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div className="modal fade" id="vendorDetailModal" tabindex="-1" aria-labelledby="vendorDetailModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+                    <div className="modal-content custom-modal">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="vendorDetailModalLabel">Lion Parking</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body pt-0 p-3">
+                        <div className="modal-body pt-0 p-3">
                             <div className="tab-detail-tabs-area mt-3">
-                                <ul class="nav nav-tabs tab-detail-tabs" id="companyDetailTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link tab-detail-btn active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">
+                                <ul className="nav nav-tabs tab-detail-tabs" id="companyDetailTab" role="tablist">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link tab-detail-btn active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">
                                             Overview
                                         </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link tab-detail-btn" id="drop-off-procedure-tab" data-bs-toggle="tab" data-bs-target="#drop-off-procedure-tab-pane" type="button" role="tab" aria-controls="drop-off-procedure-tab-pane" aria-selected="false">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link tab-detail-btn" id="drop-off-procedure-tab" data-bs-toggle="tab" data-bs-target="#drop-off-procedure-tab-pane" type="button" role="tab" aria-controls="drop-off-procedure-tab-pane" aria-selected="false">
                                             Drop-Off Procedure
                                         </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link tab-detail-btn" id="return-procedure-tab" data-bs-toggle="tab" data-bs-target="#return-procedure-tab-pane" type="button" role="tab" aria-controls="return-procedure-tab-pane" aria-selected="false">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link tab-detail-btn" id="return-procedure-tab" data-bs-toggle="tab" data-bs-target="#return-procedure-tab-pane" type="button" role="tab" aria-controls="return-procedure-tab-pane" aria-selected="false">
                                             Return Procedure
                                         </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link tab-detail-btn" id="view-map-tab" data-bs-toggle="tab" data-bs-target="#view-map-tab-pane" type="button" role="tab" aria-controls="view-map-tab-pane" aria-selected="false">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link tab-detail-btn" id="view-map-tab" data-bs-toggle="tab" data-bs-target="#view-map-tab-pane" type="button" role="tab" aria-controls="view-map-tab-pane" aria-selected="false">
                                             View Map
                                         </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link tab-detail-btn" id="photos-tab" data-bs-toggle="tab" data-bs-target="#photos-tab-pane" type="button" role="tab" aria-controls="photos-tab-pane" aria-selected="false">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link tab-detail-btn" id="photos-tab" data-bs-toggle="tab" data-bs-target="#photos-tab-pane" type="button" role="tab" aria-controls="photos-tab-pane" aria-selected="false">
                                             Photos
                                         </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link tab-detail-btn" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link tab-detail-btn" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">
                                             Reviews
                                         </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link tab-detail-btn" id="terms-conditions-tab" data-bs-toggle="tab" data-bs-target="#terms-conditions-tab-pane" type="button" role="tab" aria-controls="terms-conditions-tab-pane" aria-selected="false">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link tab-detail-btn" id="terms-conditions-tab" data-bs-toggle="tab" data-bs-target="#terms-conditions-tab-pane" type="button" role="tab" aria-controls="terms-conditions-tab-pane" aria-selected="false">
                                             Terms & Conditions
                                         </button>
                                     </li>
@@ -653,9 +653,9 @@ const VendorList = () => {
                             </div>
                             <div className="row tab-detail-row">
                                 <div className="col-12 col-xl-8 pe-xl-2">
-                                    <article class="tab-content tab-detail-area mt-3" id="companyDetailTabContent">
+                                    <article className="tab-content tab-detail-area mt-3" id="companyDetailTabContent">
                                         {/* Overview */}
-                                        <div class="tab-pane tab-detail-content fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
+                                        <div className="tab-pane tab-detail-content fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
                                             <div className="tab-detail-content-area">
                                                 <h1>Why Use Lion Parking?</h1>
                                                 <ul>
@@ -717,7 +717,7 @@ const VendorList = () => {
                                         {/*  */}
 
                                         {/* Drop-Off Procedure */}
-                                        <div class="tab-pane tab-detail-content fade" id="drop-off-procedure-tab-pane" role="tabpanel" aria-labelledby="drop-off-procedure-tab" tabindex="0">
+                                        <div className="tab-pane tab-detail-content fade" id="drop-off-procedure-tab-pane" role="tabpanel" aria-labelledby="drop-off-procedure-tab" tabindex="0">
                                             <div className="tab-detail-content-area">
                                                 <p>
                                                     Beginning on August 29, 2023, the Ultra Low Emission Zone (ULEZ) in London has been extended to cover the entire Greater London area, Heathrow Airport included.
@@ -867,7 +867,7 @@ const VendorList = () => {
                                         {/*  */}
 
                                         {/* Return Procedure */}
-                                        <div class="tab-pane tab-detail-content fade" id="return-procedure-tab-pane" role="tabpanel" aria-labelledby="return-procedure-tab" tabindex="0">
+                                        <div className="tab-pane tab-detail-content fade" id="return-procedure-tab-pane" role="tabpanel" aria-labelledby="return-procedure-tab" tabindex="0">
                                             <div className="tab-detail-content-area">
                                                 <p>
                                                     Please do call us on 07479 259 475 once arrived at the airport.
@@ -924,7 +924,7 @@ const VendorList = () => {
                                         {/*  */}
 
                                         {/* View Map */}
-                                        <div class="tab-pane tab-detail-content fade" id="view-map-tab-pane" role="tabpanel" aria-labelledby="view-map-tab" tabindex="0">
+                                        <div className="tab-pane tab-detail-content fade" id="view-map-tab-pane" role="tabpanel" aria-labelledby="view-map-tab" tabindex="0">
                                             <div className="tab-detail-map-view-area">
                                                 <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=London+(The%20Parking%20Deals)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
                                                 </iframe>
@@ -933,7 +933,7 @@ const VendorList = () => {
                                         {/*  */}
 
                                         {/* Photos */}
-                                        <div class="tab-pane tab-detail-content fade" id="photos-tab-pane" role="tabpanel" aria-labelledby="photos-tab" tabindex="0">
+                                        <div className="tab-pane tab-detail-content fade" id="photos-tab-pane" role="tabpanel" aria-labelledby="photos-tab" tabindex="0">
                                             <div className="tab-detail-image-content">
                                                 <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" width="200" height='150' preview />
                                                 <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" width="200" height='150' preview />
@@ -944,7 +944,7 @@ const VendorList = () => {
                                         {/*  */}
 
                                         {/* Reviews */}
-                                        <div class="tab-pane tab-detail-content fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
+                                        <div className="tab-pane tab-detail-content fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
                                             <div className="tab-detail-review-area">
                                                 <article className='review-data-area'>
                                                     <div className="review-data-header-area">
@@ -1033,7 +1033,7 @@ const VendorList = () => {
                                         {/*  */}
 
                                         {/* Terms & Conditions */}
-                                        <div class="tab-pane tab-detail-content fade" id="terms-conditions-tab-pane" role="tabpanel" aria-labelledby="terms-conditions-tab" tabindex="0">
+                                        <div className="tab-pane tab-detail-content fade" id="terms-conditions-tab-pane" role="tabpanel" aria-labelledby="terms-conditions-tab" tabindex="0">
                                             <div className="tab-detail-content-area">
                                                 <p>
                                                     For <b>The Parking Deals</b> T&Cs, please visit <a href="https://theparkingdeals.co.uk/terms-and-conditions" target='_blank' rel="noreferrer">https://theparkingdeals.co.uk/terms-and-conditions</a>
@@ -1055,7 +1055,7 @@ const VendorList = () => {
                                         </div>
                                         <div className="detail-card-info-area mb-1">
                                             <div className="detail-card-info-icon-area">
-                                                <i class="bi bi-building-fill"></i>
+                                                <i className="bi bi-building-fill"></i>
                                             </div>
                                             <div className="detail-card-info-body">
                                                 <p>Company :</p>
@@ -1065,7 +1065,7 @@ const VendorList = () => {
 
                                         <div className="detail-card-info-area">
                                             <div className="detail-card-info-icon-area">
-                                                <i class="bi bi-geo-alt-fill"></i>
+                                                <i className="bi bi-geo-alt-fill"></i>
                                             </div>
                                             <div className="detail-card-info-body">
                                                 <p>Location :</p>
@@ -1083,12 +1083,12 @@ const VendorList = () => {
 
                                         <div className="detail-card-feature-area">
                                             <p>
-                                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                                                <i className="bi bi-hand-thumbs-up-fill me-2"></i>
                                                 Save <span>£ 6.23</span> Today
                                             </p>
 
                                             <p>
-                                                <i class="bi bi-lightning-fill me-2"></i>
+                                                <i className="bi bi-lightning-fill me-2"></i>
                                                 Cancellation Cover Available
                                             </p>
                                         </div>

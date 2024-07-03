@@ -91,11 +91,11 @@ const Signin = () => {
                         <div className="col-12">
                             <h3 className='breadcrumb-title'>Sign in</h3>
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
+                                <ol className="breadcrumb">
+                                    <li className="breadcrumb-item">
                                         <a href="/">Home</a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Sign in</li>
+                                    <li className="breadcrumb-item active" aria-current="page">Sign in</li>
                                 </ol>
                             </nav>
 

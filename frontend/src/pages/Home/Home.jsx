@@ -252,7 +252,7 @@ const Home = () => {
                                                 <div className="custom-form-group mb-0 input-with-icon">
                                                     <label htmlFor="airport" className="custom-form-label form-required text-sm-center">Select airport</label>
                                                     <div className="form-icon-group">
-                                                        <i class="bi bi-airplane-fill input-grp-icon"></i>
+                                                        <i className="bi bi-airplane-fill input-grp-icon"></i>
                                                         <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
                                                             filter valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
                                                     </div>
@@ -273,7 +273,7 @@ const Home = () => {
                                             <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                                 <label htmlFor="dropOffDate" className="custom-form-label form-required">Drop off date</label>
                                                 <div className="form-icon-group">
-                                                    <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                                                    <i className="bi bi-calendar-check-fill input-grp-icon"></i>
                                                     <Calendar id="dropOffDate" value={dropOffDate} onChange={handleDropOffDateChange} placeholder='dd/mm/yyyy' minDate={today} className='w-100' invalid={showError} />
                                                 </div>
                                                 {showError &&
@@ -286,7 +286,7 @@ const Home = () => {
                                             <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                                 <label htmlFor="dropOffTime" className="custom-form-label form-required">Drop off time</label>
                                                 <div className="form-icon-group">
-                                                    <i class="bi bi-clock-fill input-grp-icon"></i>
+                                                    <i className="bi bi-clock-fill input-grp-icon"></i>
                                                     <Calendar id="dropOffTime" className='w-100' value={dropOffTime} onChange={(e) => setDropOffTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
                                                 </div>
                                                 {showError &&
@@ -299,7 +299,7 @@ const Home = () => {
                                             <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                                 <label htmlFor="pickupDate" className="custom-form-label form-required">Pickup date</label>
                                                 <div className="form-icon-group">
-                                                    <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                                                    <i className="bi bi-calendar-check-fill input-grp-icon"></i>
                                                     <Calendar id="pickupDate" value={pickupDate} onChange={(e) => setPickupDate(e.value)} placeholder='dd/mm/yyyy' minDate={dropOffDate} disabled={!dropOffDate} className='w-100' invalid={showError} />
                                                 </div>
                                                 {showError &&
@@ -312,7 +312,7 @@ const Home = () => {
                                             <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
                                                 <label htmlFor="pickupTime" className="custom-form-label form-required">Pickup time</label>
                                                 <div className="form-icon-group">
-                                                    <i class="bi bi-clock-fill input-grp-icon"></i>
+                                                    <i className="bi bi-clock-fill input-grp-icon"></i>
                                                     <Calendar id="pickupTime" className='w-100' value={pickupTime} onChange={(e) => setPickupTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
                                                 </div>
                                                 {showError &&
@@ -325,7 +325,7 @@ const Home = () => {
                                             <div className="custom-form-group mb-2 mb-sm-2 input-with-icon">
                                                 <label htmlFor="couponCode" className="custom-form-label form-required text-sm-center">Coupon Code</label>
                                                 <div className="form-icon-group">
-                                                    <i class="bi bi-gift-fill input-grp-icon"></i>
+                                                    <i className="bi bi-gift-fill input-grp-icon"></i>
                                                     <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError} 
                                                     onChange={(e)=>setCouponCode(e.target.value)}/>
                                                 </div>
