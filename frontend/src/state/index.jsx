@@ -39,7 +39,7 @@ export const vendorSlice = createSlice({
 });
 
 export const { setLogin, setLogout } = authSlice.actions;
-export const { setAirports } = vendorSlice.actions;
+export const { setAirports, setQuotes } = vendorSlice.actions;
 
 export const authReducer = authSlice.reducer;
 export const vendorReducer = vendorSlice.reducer;

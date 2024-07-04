@@ -49,7 +49,7 @@ const Signin = () => {
                         token: response.data.token
                     })
                 )
-            }, 3000);
+            }, 2000);
         } catch (err) {
             console.log(err);
             toast.current.show({
@@ -145,7 +145,7 @@ const Signin = () => {
                                             />
                                             <label htmlFor="email" className="custom-float-label">Email</label>
                                         </FloatLabel>
-                                        {require && (
+                                        {(require && !signInInfo.email) && (
                                             <small className="text-danger form-error-msg">
                                                 This field is required
                                             </small>
@@ -168,7 +168,7 @@ const Signin = () => {
                                                 feedback={false} toggleMask />
                                             <label htmlFor="username" className="custom-float-label">Password</label>
                                         </FloatLabel>
-                                        {require && (
+                                        {(require && !signInInfo.password) && (
                                             <small className="text-danger form-error-msg">
                                                 This field is required
                                             </small>

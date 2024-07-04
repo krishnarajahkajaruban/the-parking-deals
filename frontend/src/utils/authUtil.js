@@ -1,7 +1,8 @@
 import api from "../api";
 
-export const sendVerificationEmail = async (email, setLoading, setReSendLoading, setPage, setSeconds, setIsButtonDisabled, setResetPasswordInfo, setSignUpInfo, toast, resetPassword = false) => {
+export const sendVerificationEmail = async (email, setShowError, setLoading, setReSendLoading, setPage, setSeconds, setIsButtonDisabled, setResetPasswordInfo, setSignUpInfo, toast, resetPassword = false) => {
     if (!email) {
+        setShowError(true);
         toast?.current.show({
             severity: 'error',
             summary: 'Error in Submission.',
@@ -54,8 +55,9 @@ export const sendVerificationEmail = async (email, setLoading, setReSendLoading,
     }
 };
 
-export const verifyOTP = async (otp, setOTP, email, setLoading, setPage, toast, resetPassword = false) => {
+export const verifyOTP = async (otp, setShowError, setOTP, email, setLoading, setPage, toast, resetPassword = false) => {
     if (!otp) {
+        setShowError(true);
         toast?.current.show({
             severity: 'error',
             summary: 'Error in Submission.',

@@ -45,15 +45,25 @@ const Signup = () => {
     </>
   );
 
+  const titles = [
+    { name: 'Mr.' },
+    { name: 'Mrs.' },
+    { name: 'Ms.' },
+    { name: 'Miss.' },
+  ];
+
+  
+   
   const initialSignUpInfo = {
     email: 'pragashconstantine13@gmail.com',
-    title: "",
+    title: titles[0].name,
     firstName: "",
     lastName: "",
     password: "",
     confirmPassword: "",
     mobileNumber: "",
-    address: "",
+    addressL1: "",
+    addressL2: "",
     city: "",
     country: "",
     postCode: "",
@@ -62,12 +72,7 @@ const Signup = () => {
   const [signUpInfo, setSignUpInfo] = useState(initialSignUpInfo);
   const [emailExists, setEmailExist] = useState(false);
 
-  const titles = [
-    { name: 'Mr.' },
-    { name: 'Mrs.' },
-    { name: 'Ms.' },
-    { name: 'Miss.' },
-  ];
+  // console.log(signUpInfo);
   const [title, setTitle] = useState(titles[0]);
 
   const handleInputChange = async (e) => {
@@ -90,6 +95,7 @@ const Signup = () => {
     e.preventDefault();
     await sendVerificationEmail(
       signUpInfo.email,
+      setShowError,
       setLoading,
       setReSendLoading,
       setPage,
@@ -103,7 +109,7 @@ const Signup = () => {
 
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
-    await verifyOTP(otp, setOTP, signUpInfo.email, setLoading, setPage, toast);
+    await verifyOTP(otp, setShowError, setOTP, signUpInfo.email, setLoading, setPage, toast);
   };
 
   useEffect(() => {
@@ -146,7 +152,7 @@ const Signup = () => {
       // window.location.href = "/sign-in";
       setTimeout(() => {
         navigate("/sign-in")
-      }, 3000);
+      }, 2000);
     } catch (err) {
       console.log(err);
       toast.current.show({
@@ -160,7 +166,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!signUpInfo.email || !signUpInfo.title || !signUpInfo.firstName || !signUpInfo.password || !signUpInfo.confirmPassword || !signUpInfo.mobileNumber) {
+    if (!signUpInfo.email || !signUpInfo.firstName || !signUpInfo.password || !signUpInfo.confirmPassword || !signUpInfo.mobileNumber) {
       setShowError(true);
       toast.current.show({
         severity: 'error',
@@ -311,7 +317,7 @@ const Signup = () => {
                             onChange={handleInputChange}
                           />
 
-                          {showError && (
+                          {(showError && !signUpInfo.email) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -393,11 +399,14 @@ const Signup = () => {
                               id="otp"
                               className="custom-form-input otp-input"
                               value={otp}
-                              onChange={(e) => setOTP(e.value)}
+                              onChange={(e) => {
+                                setShowError(false);
+                                setOTP(e.value);
+                              }}
                               integerOnly
                             />
                           </div>
-                          {showError && (
+                          {(showError && !otp) && (
                             <small className="text-danger form-error-msg text-center mt-3">
                               This field is required
                             </small>
@@ -488,7 +497,7 @@ const Signup = () => {
                           >
                             Title
                           </label>
-                          <Dropdown id="title" value={title} onChange={(e) => setTitle(e.value)} options={titles} optionLabel="name"
+                          <Dropdown id="title" value={{name:signUpInfo.title}} onChange={(e) => setSignUpInfo({...signUpInfo, title:e.value?.name})} options={titles} optionLabel="name"
                             placeholder="Select" className="w-full w-100 custom-form-dropdown" />
                           {/* <select id="title" className="custom-form-input"
                             name="title"
@@ -500,7 +509,7 @@ const Signup = () => {
                             <option value="Mrs">Mrs</option>
                             <option value="Ms">Ms</option>
                           </select> */}
-                          {showError && (
+                          {(showError && !signUpInfo.title) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -523,7 +532,7 @@ const Signup = () => {
                             value={signUpInfo.firstName}
                             onChange={handleInputChange}
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.firstName) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -583,7 +592,7 @@ const Signup = () => {
                             value={signUpInfo.mobileNumber}
                             onChange={handleInputChange}
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.mobileNumber) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -610,7 +619,7 @@ const Signup = () => {
                             footer={footer}
                             toggleMask
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.password) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -636,7 +645,7 @@ const Signup = () => {
                             feedback={false}
                             toggleMask
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.confirmPassword) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -656,9 +665,12 @@ const Signup = () => {
                           <InputText
                             id="addressLine1"
                             className="custom-form-input"
-                            name="addressLine1"
+                            name="addressL1"
+                            value={signUpInfo.addressL1}
+                            onChange={handleInputChange}
+                            
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.addressL1) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -670,20 +682,22 @@ const Signup = () => {
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="addressLine2"
-                            className="custom-form-label form-required"
+                            className="custom-form-label"
                           >
                             Address Line 2
                           </label>
                           <InputText
                             id="addressLine2"
                             className="custom-form-input"
-                            name="addressLine2"
+                            name="addressL2"
+                            value={signUpInfo.addressL2}
+                            onChange={handleInputChange}
                           />
-                          {showError && (
+                          {/* {showError && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
-                          )}
+                          )} */}
                         </div>
                       </div>
 
@@ -714,7 +728,7 @@ const Signup = () => {
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="city"
-                            className="custom-form-label"
+                            className="custom-form-label form-required"
                           >
                             City
                           </label>
@@ -725,7 +739,7 @@ const Signup = () => {
                             value={signUpInfo.city}
                             onChange={handleInputChange}
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.city) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -737,7 +751,7 @@ const Signup = () => {
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="country"
-                            className="custom-form-label"
+                            className="custom-form-label form-required"
                           >
                             Country
                           </label>
@@ -748,7 +762,7 @@ const Signup = () => {
                             value={signUpInfo.country}
                             onChange={handleInputChange}
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.country) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -760,7 +774,7 @@ const Signup = () => {
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="postcode"
-                            className="custom-form-label"
+                            className="custom-form-label form-required"
                           >
                             Postcode
                           </label>
@@ -771,7 +785,7 @@ const Signup = () => {
                             value={signUpInfo.postCode}
                             onChange={handleInputChange}
                           />
-                          {showError && (
+                          {(showError && !signUpInfo.postCode) && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>

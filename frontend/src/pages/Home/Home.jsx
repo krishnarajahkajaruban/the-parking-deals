@@ -17,12 +17,14 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
-import { fetchAllAirports } from '../../utils/vendorUtil';
+import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
 import { useDispatch, useSelector } from 'react-redux';
+import { Toast } from 'primereact/toast';
 
 const Home = () => {
     const navigate = useNavigate();
     const reservationRef = useRef(null);
+    const toast = useRef(null);
     const dispatch = useDispatch();
     const [pageLoading, setPageLoading] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -35,34 +37,11 @@ const Home = () => {
     const [pickupTime, setPickupTime] = useState(null);
     const [couponCode, setCouponCode] = useState("");
 
-    // const airports = [
-    //     { name: 'Birmingham Airport' },
-    //     { name: 'Bristol Airport' },
-    //     { name: 'Gatwick Airport' },
-    //     { name: 'Heathrow Airport' },
-    //     { name: 'Liverpool Airport' },
-    //     { name: 'Luton Airport' },
-    //     { name: 'Stansted Airport' },
-    //     { name: 'Manchester Airport' },
-    //     { name: 'Southend Airport' }
-    // ];
-
     const airports = useSelector((state) => state.vendor.airport);
 
     useEffect(() => {
         fetchAllAirports(dispatch);
       }, [dispatch]);
-
-      const quoteInfo = {
-        airport: selectedAirport,
-        fromDate: dropOffDate,
-        toDate: pickupDate,
-        fromTime: dropOffTime,
-        toTime: pickupTime,
-        couponCode
-      }
-
-      
 
     const selectedAirportTemplate = (option, props) => {
         if (option) {
@@ -84,20 +63,22 @@ const Home = () => {
         );
     };
 
-    const handleGetQuote = () => {
-        setLoading(true);
-        setShowError(true);
-        setPageLoading(true);
+    const handleGetQuote = async(e) => {
+        e.preventDefault();
+        setShowError(false);
+        if (!selectedAirport || !dropOffDate || !dropOffTime || !pickupDate || !pickupTime) {
+            setShowError(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
+        }
 
-        setTimeout(() => {
-            setLoading(false);
-            setShowError(false);
-
-            navigate('/results');
-            setPageLoading(false);
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 800);
+        const quoteInfo = {selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode}
+        navigate('/results', { state : {quoteInfo} });
     }
 
     const handleDropOffDateChange = (e) => {
@@ -230,6 +211,8 @@ const Home = () => {
                 </div>
             </section >
 
+            <Toast ref={toast} />
+
             <section className='section-padding overflow-hidden'>
                 <div className="container-md">
                     <div className="row">
@@ -245,7 +228,7 @@ const Home = () => {
                                 <div className="custom-card-logo-area mb-3">
                                     <h3 className="custom-card-header-head">GET QUOTE</h3>
                                 </div>
-                                <form action="" className="custom-card-form form-2 get-quote-form mt-0 p-3">
+                                <form action="" className="custom-card-form form-2 get-quote-form mt-0 p-3" onSubmit={handleGetQuote}>
                                     <div className="form-head-input-area">
                                         <div className="row">
                                             <div className="col-12 col-xl-8 col-lg-10 col-md-8 col-sm-8 mx-auto">
@@ -256,7 +239,7 @@ const Home = () => {
                                                         <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
                                                             filter valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
                                                     </div>
-                                                    {showError &&
+                                                    {(showError && !selectedAirport) &&
                                                         <small className="text-danger form-error-msg text-sm-center">This field is required</small>
                                                     }
                                                 </div>
@@ -276,7 +259,7 @@ const Home = () => {
                                                     <i className="bi bi-calendar-check-fill input-grp-icon"></i>
                                                     <Calendar id="dropOffDate" value={dropOffDate} onChange={handleDropOffDateChange} placeholder='dd/mm/yyyy' minDate={today} className='w-100' invalid={showError} />
                                                 </div>
-                                                {showError &&
+                                                {(showError && !dropOffDate) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
                                                 }
                                             </div>
@@ -289,7 +272,7 @@ const Home = () => {
                                                     <i className="bi bi-clock-fill input-grp-icon"></i>
                                                     <Calendar id="dropOffTime" className='w-100' value={dropOffTime} onChange={(e) => setDropOffTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
                                                 </div>
-                                                {showError &&
+                                                {(showError && !dropOffTime) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
                                                 }
                                             </div>
@@ -302,7 +285,7 @@ const Home = () => {
                                                     <i className="bi bi-calendar-check-fill input-grp-icon"></i>
                                                     <Calendar id="pickupDate" value={pickupDate} onChange={(e) => setPickupDate(e.value)} placeholder='dd/mm/yyyy' minDate={dropOffDate} disabled={!dropOffDate} className='w-100' invalid={showError} />
                                                 </div>
-                                                {showError &&
+                                                {(showError && !pickupDate) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
                                                 }
                                             </div>
@@ -315,7 +298,7 @@ const Home = () => {
                                                     <i className="bi bi-clock-fill input-grp-icon"></i>
                                                     <Calendar id="pickupTime" className='w-100' value={pickupTime} onChange={(e) => setPickupTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
                                                 </div>
-                                                {showError &&
+                                                {(showError && !pickupTime) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
                                                 }
                                             </div>
@@ -323,15 +306,15 @@ const Home = () => {
 
                                         <div className="col-12 col-sm-6 col-xl-6 col-lg-7 col-md-6 mx-auto">
                                             <div className="custom-form-group mb-2 mb-sm-2 input-with-icon">
-                                                <label htmlFor="couponCode" className="custom-form-label form-required text-sm-center">Coupon Code</label>
+                                                <label htmlFor="couponCode" className="custom-form-label text-sm-center">Coupon Code</label>
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-gift-fill input-grp-icon"></i>
                                                     <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError} 
                                                     onChange={(e)=>setCouponCode(e.target.value)}/>
                                                 </div>
-                                                {showError &&
+                                                {/* {showError &&
                                                     <small className="text-danger form-error-msg text-sm-center">This field is required</small>
-                                                }
+                                                } */}
                                             </div>
                                         </div>
 
@@ -341,7 +324,7 @@ const Home = () => {
                                     </div>
 
                                     <div className="custom-form-group contains-float-input mb-0">
-                                        <Button label="GET QUOTE" className="w-100 submit-button justify-content-center" loading={loading} onClick={handleGetQuote} />
+                                        <Button label="GET QUOTE" className="w-100 submit-button justify-content-center" loading={loading}  />
                                     </div>
                                 </form>
                             </article>
