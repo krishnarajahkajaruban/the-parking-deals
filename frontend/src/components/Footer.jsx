@@ -32,9 +32,9 @@ const Footer = () => {
 
     return (
         <>
-            <button class={`back-to-top-btn ${showBackToTop ? 'show' : ''}`} id='back_to_top'
+            <button className={`back-to-top-btn ${showBackToTop ? 'show' : ''}`} id='back_to_top'
                 onClick={handleBackToTop}>
-                <svg class="svgIcon" viewBox="0 0 384 512">
+                <svg className="svgIcon" viewBox="0 0 384 512">
                     <path
                         d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
                     ></path>
@@ -92,7 +92,7 @@ const Footer = () => {
                                             <li className='footer-link-item'>
                                                 <a href="tel:" className='footer-link with-icon'>
                                                     <div className="link-icon-area">
-                                                        <i class="bi bi-telephone-fill"></i>
+                                                        <i className="bi bi-telephone-fill"></i>
                                                     </div>
                                                     <span>+94 00 000 0000</span>
                                                 </a>
@@ -100,7 +100,7 @@ const Footer = () => {
                                             <li className='footer-link-item'>
                                                 <a href="mailto:" className='footer-link with-icon'>
                                                     <div className="link-icon-area">
-                                                        <i class="bi bi-envelope-fill"></i>
+                                                        <i className="bi bi-envelope-fill"></i>
                                                     </div>
                                                     <span>info@theparkingdeals.co.uk</span>
                                                 </a>
@@ -108,7 +108,7 @@ const Footer = () => {
                                             <li className='footer-link-item'>
                                                 <a href="" target='_blank' rel="noreferrer" className='footer-link with-icon'>
                                                     <div className="link-icon-area">
-                                                        <i class="bi bi-geo-alt-fill"></i>
+                                                        <i className="bi bi-geo-alt-fill"></i>
                                                     </div>
                                                     <span>info@theparkingdeals.co.uk</span>
                                                 </a>
@@ -137,19 +137,19 @@ const Footer = () => {
                                 <h6 className='footer-link-head text-center mb-4'>Follow us :</h6>
                                 <div className="footer-social-container">
                                     <a href="" className='footer-social-link' data-bs-toggle="tooltip" data-bs-placement="top" title="Facebook">
-                                        <i class="ri-facebook-fill"></i>
+                                        <i className="ri-facebook-fill"></i>
                                     </a>
 
                                     <a href="" className='footer-social-link' data-bs-toggle="tooltip" data-bs-placement="top" title="Twitter">
-                                        <i class="ri-twitter-x-line"></i>
+                                        <i className="ri-twitter-x-line"></i>
                                     </a>
 
                                     <a href="" className='footer-social-link' data-bs-toggle="tooltip" data-bs-placement="top" title="Instagram">
-                                        <i class="ri-instagram-line"></i>
+                                        <i className="ri-instagram-line"></i>
                                     </a>
 
                                     <a href="" className='footer-social-link' data-bs-toggle="tooltip" data-bs-placement="top" title="Linkedin">
-                                        <i class="ri-linkedin-fill"></i>
+                                        <i className="ri-linkedin-fill"></i>
                                     </a>
                                 </div>
                             </div>

@@ -16,11 +16,11 @@ const PrivacyPolicy = () => {
                         <div className="col-12">
                             <h3 className='breadcrumb-title'>Privacy Policy</h3>
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
+                                <ol className="breadcrumb">
+                                    <li className="breadcrumb-item">
                                         <a href="/">Home</a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Privacy Policy</li>
+                                    <li className="breadcrumb-item active" aria-current="page">Privacy Policy</li>
                                 </ol>
                             </nav>
 
@@ -210,7 +210,7 @@ const PrivacyPolicy = () => {
 
                                     <h6 className="content-contact-head mt-4">The Parking Deals</h6>
                                     <div className="content-contact-detail">
-                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <i className="bi bi-geo-alt-fill"></i>
                                         <a href="#">
                                             9-13 Wensum St, Burnham-on-Sea <br />
                                             Somerset County <br />
@@ -219,12 +219,12 @@ const PrivacyPolicy = () => {
                                     </div>
 
                                     <div className="content-contact-detail">
-                                        <i class="bi bi-envelope-fill"></i>
+                                        <i className="bi bi-envelope-fill"></i>
                                         <a href="mailto:">info@theparkingdeals.uk</a>
                                     </div>
 
                                     <div className="content-contact-detail">
-                                        <i class="bi bi-telephone-fill"></i>
+                                        <i className="bi bi-telephone-fill"></i>
                                         <a href="tel:">+44 000 000 0000</a>
                                     </div>
                                 </div>

@@ -12,6 +12,7 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import Services from './pages/Services/Services';
 import VendorList from './pages/VendorList/VendorList';
 import Booking from './pages/Booking/Booking';
+import Profile from './pages/Profile/Profile';
 
 import Preloader from './Preloader';
 
@@ -51,6 +52,7 @@ function App() {
         <Route path='/services' element={<Services />} />
         <Route path='/results' element={<VendorList />} />
         <Route path='/booking' element={<Booking />} />
+        <Route path='/profile' element={<Profile />} />
       </Routes>
     </PrimeReactProvider>
   );

@@ -11,7 +11,7 @@ const userSchema = new Schema(
       required: function() {
         return this.role === "User";
       },
-      enum: ["Mr", "Mrs", "Ms"]
+      enum: ["Mr.", "Mrs.", "Ms.", "Miss."]
     },
     firstName: {
       type: String,
@@ -53,7 +53,13 @@ const userSchema = new Schema(
       enum: ["Admin", "User", "Vendor"],
       required: [true, "Role must be provided"]
     },
-    address: {
+    addressL1: {
+      type: String,
+      required: function() {
+        return this.role === "User";
+      },
+    },
+    addressL2: {
       type: String,
       set: function(value) {
         // If the role is not 'User', return undefined to prevent setting a default value
@@ -66,36 +72,21 @@ const userSchema = new Schema(
     },
     city: {
       type: String,
-      set: function(value) {
-        // If the role is not 'User', return undefined to prevent setting a default value
-        if (this.role !== "User") {
-          return undefined;
-        }
-        // If the role is 'User', return the provided value or an empty string if not provided
-        return value || "";
-      }
+      required: function() {
+        return this.role === "User";
+      },
     },
     country: {
       type: String,
-      set: function(value) {
-        // If the role is not 'User', return undefined to prevent setting a default value
-        if (this.role !== "User") {
-          return undefined;
-        }
-        // If the role is 'User', return the provided value or an empty string if not provided
-        return value || "";
-      }
+      required: function() {
+        return this.role === "User";
+      },
     },
     postCode: {
       type: String,
-      set: function(value) {
-        // If the role is not 'User', return undefined to prevent setting a default value
-        if (this.role !== "User") {
-          return undefined;
-        }
-        // If the role is 'User', return the provided value or an empty string if not provided
-        return value || "";
-      }
+      required: function() {
+        return this.role === "User";
+      },
     }
   },
   { timestamps: true }

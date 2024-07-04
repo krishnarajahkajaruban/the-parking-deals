@@ -139,7 +139,7 @@ const VendorList = () => {
         //     window.scrollTo({ top: 0, behavior: 'smooth' });
         // }, 800);
         const bookingDetails = {
-          airportName:selectedAirport.name || quoteInfo?.selectedAirport.name,
+          airportName:selectedAirport?.name || quoteInfo?.selectedAirport?.name,
           dropOffDate:new Date(dropOffDate || quoteInfo?.dropOffDate).toISOString(),
           dropOffTime:new Date(dropOffTime || quoteInfo?.dropOffTime).toTimeString().split(' ')[0],
           pickUpDate:new Date(pickupDate || quoteInfo?.pickupDate).toISOString(),
@@ -168,14 +168,14 @@ const VendorList = () => {
         </section>
         {/* Breadcrumb Section End */}
 
-        <section className="results-option-section" data-aos="fade-up">
-          <div className="container-md">
-            <div className="row">
-              <div className="col-12">
-                <article className="results-option-area">
-                  <div className="custom-card-form form-2 results-option-form mt-0 p-4">
-                    {/* <button className='edit-float-btn' onClick={() => setVisible(true)}>
-                                        <i class="bi bi-pencil-square"></i>
+            <section className='results-option-section' data-aos="fade-up">
+                <div className="container-md">
+                    <div className="row">
+                        <div className="col-12">
+                            <article className="results-option-area">
+                                <div className="custom-card-form form-2 results-option-form mt-0 p-4">
+                                    {/* <button className='edit-float-btn' onClick={() => setVisible(true)}>
+                                        <i className="bi bi-pencil-square"></i>
                                     </button> */}
                     <Button
                       icon="bi bi-pencil-square"
@@ -517,7 +517,7 @@ const VendorList = () => {
                               invalid={showError}
                             />
                           </div>
-                          {showError && (
+                          {(showError && !selectedAirport) && (
                             <small className="text-danger form-error-msg text-sm-center">
                               This field is required
                             </small>
@@ -551,7 +551,7 @@ const VendorList = () => {
                             invalid={showError}
                           />
                         </div>
-                        {showError && (
+                        {(showError && !dropOffDate) && (
                           <small className="text-danger form-error-msg">
                             This field is required
                           </small>
@@ -579,7 +579,7 @@ const VendorList = () => {
                             invalid={showError}
                           />
                         </div>
-                        {showError && (
+                        {(showError && !dropOffTime) && (
                           <small className="text-danger form-error-msg">
                             This field is required
                           </small>
@@ -608,7 +608,7 @@ const VendorList = () => {
                             invalid={showError}
                           />
                         </div>
-                        {showError && (
+                        {(showError && !pickupDate) && (
                           <small className="text-danger form-error-msg">
                             This field is required
                           </small>
@@ -636,7 +636,7 @@ const VendorList = () => {
                             invalid={showError}
                           />
                         </div>
-                        {showError && (
+                        {(showError && !pickupTime) && (
                           <small className="text-danger form-error-msg">
                             This field is required
                           </small>

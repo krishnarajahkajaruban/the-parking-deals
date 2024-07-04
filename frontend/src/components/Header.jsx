@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Preloader from '../Preloader';
 import { setLogout } from '../state';
+import { Ripple } from 'primereact/ripple';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -19,6 +20,27 @@ const Header = () => {
             setPageLoading(false);
         }, 800);
     };
+
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdowMenuRef = useRef(null);
+
+    const toggleDropdownMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleClickOutside = (event) => {
+        if (dropdowMenuRef.current && !dropdowMenuRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -90,14 +112,62 @@ const Header = () => {
                                         </li>
                                     </ul>
 
-                                    {!user && <ul className='nav-button-grp'>
-                                        <li className='nav-button-grp-item'>
-                                            <a href="/sign-up" className='nav-link-button with-outline text-uppercase letter-spaced'>Sign up</a>
-                                        </li>
-                                        <li className='nav-button-grp-item'>
-                                            <a href="/sign-in" className='nav-link-button with-bg text-uppercase letter-spaced'>Sign in</a>
-                                        </li>
-                                    </ul>}
+                                    {!user ? (
+                                        <ul className='nav-button-grp'>
+                                            <li className='nav-button-grp-item'>
+                                                <a href="/sign-up" className='nav-link-button with-outline text-uppercase letter-spaced'>Sign up</a>
+                                            </li>
+                                            <li className='nav-button-grp-item'>
+                                                <a href="/sign-in" className='nav-link-button with-bg text-uppercase letter-spaced'>Sign in</a>
+                                            </li>
+                                        </ul>
+                                    ) : (
+                                        <ul className='nav-button-grp'>
+                                            <li className='nav-button-grp-item position-relative' ref={dropdowMenuRef}>
+                                                <button type='button' className='profile-toggle-btn p-ripple' onClick={toggleDropdownMenu}>
+                                                    <div className="profile-toggle-img-area">
+                                                        {/* <img src="assets/images/profile-img.png" className='profile-toggle-img' alt="" /> */}
+                                                        <img src="assets/images/user.png" className='profile-toggle-no-img' alt="" />
+                                                    </div>
+                                                    <div className='profile-toggle-detail'>
+                                                        <h5>Hi 👋</h5>
+                                                        <h6>{user?.firstName || "---------"}</h6>
+                                                    </div>
+                                                    <i className={`bi bi-chevron-down ${isOpen ? 'rotate' : ''}`}></i>
+                                                    <Ripple />
+                                                </button>
+                                                <ul className={`profile-dropdown-menu ${isOpen ? 'open' : ''}`}>
+                                                    <div className='profile-dropdown-detail'>
+                                                        <div className="profile-dropdown-image-area">
+                                                            {/* <img src="assets/images/profile-img.png" className='profile-dropdown-img' alt="" /> */}
+                                                            <img src="assets/images/user.png" className='profile-dropdown-no-img' alt="" />
+                                                        </div>
+                                                        <h6 className='dropdown-profile-name'>
+                                                            {user?.firstName || "---------"}
+                                                        </h6>
+                                                    </div>
+                                                    <li className='profile-dropdown-item mb-1 mt-1'>
+                                                        <a className="profile-dropdown-link profile p-ripple" href="/profile">
+                                                            <i className='bi bi-person me-2'></i>
+                                                            Profile
+                                                            <Ripple />
+                                                        </a>
+                                                    </li>
+                                                    <li className='profile-dropdown-item'
+                                                     onClick={() => {
+                                                        dispatch(setLogout())
+                                                    }}>
+                                                        <a className="profile-dropdown-link logout p-ripple" role='button' href="#"
+                                                           >
+                                                            <i className='bi bi-box-arrow-right me-2'></i>
+                                                            Logout
+                                                            <Ripple />
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    )}
 
                                     <ul className='menu-toggle-btn-area'>
                                         <li className='nav-button-grp-item'>
@@ -144,39 +214,45 @@ const Header = () => {
                         </li>
                     </ul>
 
-                    <div className='menu-profile-area'>
-                        <div className="menu-profile-body">
-                            <div className="menu-profile-img-area">
-                                <img src="assets/images/user.png" alt="" />
+                    {user ? (
+                        <div className='menu-profile-area'>
+                            <div className="menu-profile-body">
+                                <div className="menu-profile-img-area">
+                                    <img src="assets/images/user.png" alt="" />
+                                </div>
+                                <div className="menu-profile-content">
+                                    <h6 className='menu-profile-head'>👋 Hi,</h6>
+                                    <h6 className='menu-profile-name'>
+                                        {user?.firstName || "---------"}
+                                    </h6>
+                                </div>
                             </div>
-                            <div className="menu-profile-content">
-                                <h6 className='menu-profile-head'>👋 Hi,</h6>
-                                <h6 className='menu-profile-name'>{user?.firstName}</h6>
+                            <hr />
+                            <div className="menu-profile-footer">
+                                <a href="/profile" className='menu-profile-link primary-btn'>
+                                    <i className='bi bi-person me-1'></i> Profile
+                                </a>
+                                <a href="#" role='button' className='menu-profile-link danger-btn'
+                                    onClick={() => {
+                                        dispatch(setLogout())
+                                    }}>
+                                    <i class="bi bi-box-arrow-right me-1"></i>
+                                    Logout
+                                </a>
                             </div>
                         </div>
-                        <hr />
-                        <div className="menu-profile-footer">
-                            <a href="/profile" className='menu-profile-link primary-btn'>
-                                <i className='bi bi-person me-1'></i> Profile
-                            </a>
-                            <a href="#" className='menu-profile-link danger-btn'
-                            onClick={() => {
-                                dispatch(setLogout())
-                            }}>
-                                <i class="bi bi-box-arrow-right me-1"></i> Logout
-                            </a>
-                        </div>
-                    </div>
+                    ) : (
+                        <ul className='menu-btn-link-area'>
+                            <li className='menu-btn-link-item'>
+                                <a href="/sign-up" className='menu-btn-link with-outline'>Sign up</a>
+                            </li>
 
-                    {!user && <ul className='menu-btn-link-area'>
-                        <li className='menu-btn-link-item'>
-                            <a href="/sign-up" className='menu-btn-link with-outline'>Sign up</a>
-                        </li>
+                            <li className='menu-btn-link-item'>
+                                <a href="/sign-in" className='menu-btn-link with-bg'>Sign in</a>
+                            </li>
+                        </ul>
+                    )}
 
-                        <li className='menu-btn-link-item'>
-                            <a href="/sign-in" className='menu-btn-link with-bg'>Sign in</a>
-                        </li>
-                    </ul>}
                 </div>
 
             </header>
