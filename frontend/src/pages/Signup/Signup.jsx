@@ -146,7 +146,7 @@ const Signup = () => {
       // window.location.href = "/sign-in";
       setTimeout(() => {
         navigate("/sign-in")
-      }, 3000);
+      }, 2000);
     } catch (err) {
       console.log(err);
       toast.current.show({

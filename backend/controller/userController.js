@@ -574,60 +574,70 @@ const cancelTheBooking = async (req, res) => {
 
 /* find all vendors available for the searching creteria */
 const findAllVendorDetailForUserSearchedParkingSlot = async (req, res) => {
-    try {
-        const { airport, fromDate, fromTime, toDate, toTime } = req.query;
+  try {
+    console.log(req.query);
+      const { airport, fromDate, fromTime, toDate, toTime } = req.query;
 
-        if (!airport || !fromDate || !fromTime || !toDate || !toTime) {
-            return res.status(400).json({
-                error: "Please provide searching details!"
-            });
-        }
+      if (!airport || !fromDate || !fromTime || !toDate || !toTime) {
+          return res.status(400).json({
+              error: "Please provide searching details!"
+          });
+      }
 
-        const fromDateObj = new Date(fromDate);
-        const toDateObj = new Date(toDate);
+      const fromDateObj = new Date(fromDate);
+      const toDateObj = new Date(toDate);
 
-        // Query the AirportParkingAvailability collection
-        const parkingSlots = await AirportParkingAvailability.find({
-            airport,
-            "companyParkingSlot": {
-                $elemMatch: {
-                    fromDate: { $lte: toDateObj },
-                    toDate: { $gte: fromDateObj },
-                    fromTime: { $lte: toTime },
-                    toTime: { $gte: fromTime }
-                }
-            }
-        });
+      // Using aggregation to get the user details
+      const result = await AirportParkingAvailability.aggregate([
+          {
+              $match: {
+                  airport
+              }
+          },
+          {
+              $unwind: "$companyParkingSlot"
+          },
+          {
+              $match: {
+                  "companyParkingSlot.fromDate": { $lte: toDateObj },
+                  "companyParkingSlot.toDate": { $gte: fromDateObj },
+                  "companyParkingSlot.fromTime": { $lte: toTime },
+                  "companyParkingSlot.toTime": { $gte: fromTime }
+              }
+          },
+          {
+              $lookup: {
+                  from: "users",
+                  localField: "companyParkingSlot.companyId",
+                  foreignField: "_id",
+                  as: "vendorDetails"
+              }
+          },
+          {
+              $unwind: "$vendorDetails"
+          },
+          {
+              $group: {
+                  _id: "$vendorDetails._id",
+                  vendorDetails: { $first: "$vendorDetails" }
+              }
+          },
+          {
+              $replaceRoot: { newRoot: "$vendorDetails" }
+          }
+      ]);
 
-        if (parkingSlots.length === 0) {
-            return res.status(404).json({
-                message: "No vendors found matching the criteria."
-            });
-        }
+      if (result.length === 0) {
+          return res.status(200).json([]);
+      };
 
-        const companyIds = parkingSlots.flatMap(slot =>
-            slot.companyParkingSlot
-                .filter(subSlot =>
-                    subSlot.fromDate <= toDateObj &&
-                    subSlot.toDate >= fromDateObj &&
-                    subSlot.fromTime <= toTime &&
-                    subSlot.toTime >= fromTime
-                )
-                .map(subSlot => subSlot.companyId)
-        );
+      return res.status(200).json(result);
 
-        const uniqueCompanyIds = [...new Set(companyIds)];
-
-        // Query the User collection for the vendor details
-        const vendorDetails = await User.find({ _id: { $in: uniqueCompanyIds } });
-
-        return res.status(200).json(vendorDetails);
-
-    } catch (err) {
-        return res.status(500).json({
-            error: `Server Error: ${err.message}`
-        });
-    }
+  } catch (err) {
+      return res.status(500).json({
+          error: `Server Error: ${err.message}`
+      });
+  }
 };
 
 /* find out all the available airports */

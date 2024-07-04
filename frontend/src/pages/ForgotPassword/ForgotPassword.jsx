@@ -26,8 +26,7 @@ const ForgotPassword = () => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
     const [showError, setShowError] = useState(false);
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    
 
     const header = <div className="font-bold mb-3">Password Strength</div>;
     const footer = (
@@ -117,7 +116,7 @@ const ForgotPassword = () => {
             // window.location.href = "/sign-in";
             setTimeout(() => {
                 navigate("/sign-in")
-            }, 3000);
+            }, 2000);
         } catch (err) {
             console.log(err);
             toast.current.show({

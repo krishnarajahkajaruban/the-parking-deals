@@ -49,7 +49,7 @@ const Signin = () => {
                         token: response.data.token
                     })
                 )
-            }, 3000);
+            }, 2000);
         } catch (err) {
             console.log(err);
             toast.current.show({

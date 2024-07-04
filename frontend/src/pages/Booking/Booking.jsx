@@ -16,8 +16,12 @@ import { InputOtp } from 'primereact/inputotp';
 import { IconField } from "primereact/iconfield";
 
 import { Toast } from 'primereact/toast';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Booking = () => {
+    const location = useLocation();
+    const { bookingDetails } = location.state || {};
     const [showError, setShowError] = useState(false);
     const [showCouponError, setShowCouponError] = useState(false);
     const [couponValid, setCouponValid] = useState(false);
@@ -61,6 +65,9 @@ const Booking = () => {
 
     const [checkedSmsConfirmation, setCheckedSmsConfirmation] = useState(false);
     const [checkedCancellationCover, setCheckedCancellationCover] = useState(false);
+
+    console.log(bookingDetails);
+    const user = useSelector((state) => state.auth.user);
 
     const handleLogin = () => {
 
@@ -164,6 +171,7 @@ const Booking = () => {
 
     return (
         <>
+            {!bookingDetails && <Navigate to="/" />}
             <Header />
 
             {/* Breadcrumb Section Start */}
@@ -198,240 +206,241 @@ const Booking = () => {
                                 </div>
                                 <div className="booking-card-body">
                                     <div className='booking-card-sub'>
-                                        <div className="booking-card-head-area">
-                                            <div className="row">
-                                                <div className="col-12 col-lg-10 col-md-8 col-xl-8 col-sm-9 mx-auto">
-                                                    <div className="custom-form-group mb-3 mb-sm-2">
-                                                        <label htmlFor="email" className="custom-form-label form-required text-center" >
-                                                            Email Address
+                                        {!user && <>
+                                            <div className="booking-card-head-area">
+                                                <div className="row">
+                                                    <div className="col-12 col-lg-10 col-md-8 col-xl-8 col-sm-9 mx-auto">
+                                                        <div className="custom-form-group mb-3 mb-sm-2">
+                                                            <label htmlFor="email" className="custom-form-label form-required text-center" >
+                                                                Email Address
+                                                            </label>
+                                                            <InputText id="email" className="custom-form-input text-center" name="email" placeholder='Enter Email Address' />
+                                                            {showError && (
+                                                                <small className="text-danger form-error-msg text-center">
+                                                                    This field is required
+                                                                </small>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <Divider className='divider' />
+
+                                                {/* for login */}
+                                                <div className="row">
+                                                    <div className="col-12 col-sm-6 col-xl-6 mx-auto">
+                                                        <div className="custom-form-group mb-3 mb-sm-4">
+                                                            <label htmlFor="email" className="custom-form-label form-required text-center" >
+                                                                Password
+                                                            </label>
+                                                            <Password id="password" value={password} className="custom-form-input text-center" placeholder='Enter the Password' onChange={(e) => setPassword(e.target.value)} feedback={false} toggleMask />
+                                                            {showError &&
+                                                                <small className="text-danger form-error-msg">This field is required</small>
+                                                            }
+                                                        </div>
+
+                                                        <div className="custom-form-group contains-float-input pt-2 mb-1">
+                                                            <Button label="LOGIN" className="w-100 submit-button justify-content-center" onClick={handleLogin} loading={loading} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/*  */}
+
+                                                {/* for create account */}
+                                                {page === 1 ? (
+                                                    <div className="row mt-4">
+                                                        {showAlert &&
+                                                            <div className="col-12">
+                                                                <h6 className='account-alert'>
+                                                                    There is no account in this email, please verify your email to create an account.
+                                                                </h6>
+                                                            </div>
+                                                        }
+
+                                                        <div className="col-12 col-sm-6 col-xl-6 mx-auto">
+                                                            <div className="custom-form-group contains-float-input pt-2 mb-1">
+                                                                <Button label={`${loading ? 'Processing...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" onClick={handleVerify} loading={loading} />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : page === 2 ? (
+                                                    <div className="row mt-4">
+                                                        <div className="col-12">
+                                                            <button className="back-page-btn text-sm p-0 mb-3" onClick={goBack} data-aos="fade-left"><i className="ri ri-arrow-left-line me-2"></i>Back</button>
+                                                        </div>
+                                                        <div className="col-12 col-sm-6 col-xl-6 mx-auto">
+                                                            <div className="custom-form-group mb-3 mb-sm-4">
+                                                                <label htmlFor="otp" className="custom-form-label form-required text-center mx-auto">Enter OTP</label>
+
+                                                                <div className="otp-input-area">
+                                                                    <InputOtp id="otp" className="custom-form-input otp-input" value={otp} onChange={(e) => setOTP(e.value)} integerOnly />
+                                                                </div>
+                                                                {showError &&
+                                                                    <small className="text-danger form-error-msg text-center mt-3">This field is required</small>
+                                                                }
+                                                            </div>
+
+                                                            <div className="custom-form-group contains-float-input mb-3">
+                                                                <Button label={`${loading ? 'Verifying...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" onClick={handleVerifyOTP} loading={loading} />
+                                                            </div>
+
+                                                            <div className="custom-form-link-area text-center">
+                                                                <p className='text-sm'>
+                                                                    Didn’t received the code?{' '}
+                                                                    <button
+                                                                        className="custom-form-link"
+                                                                        onClick={handleResendCode}
+                                                                        disabled={isButtonDisabled}
+                                                                    >
+                                                                        <b> Resend Code {isButtonDisabled && `(${seconds}s)`}</b>
+                                                                    </button>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="row mt-4">
+                                                        <div className="col-12">
+                                                            <button className="back-page-btn text-sm p-0 mb-3" onClick={goBack} data-aos="fade-left"><i className="ri ri-arrow-left-line me-2"></i>Back</button>
+                                                        </div>
+                                                        <div className="col-12 col-sm-6 col-lg-10 col-xl-6 mx-auto">
+                                                            <div className="custom-form-group mb-3 mb-sm-4">
+                                                                <label htmlFor="password" className="custom-form-label form-required">Password</label>
+                                                                <Password id="password" value={password} className="custom-form-input" placeholder='Enter the Password' onChange={(e) => setPassword(e.target.value)} header={header} footer={footer} toggleMask />
+                                                                {showError &&
+                                                                    <small className="text-danger form-error-msg">This field is required</small>
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-12 col-sm-6 col-lg-10 col-xl-6 mx-auto">
+                                                            <div className="custom-form-group mb-3 mb-sm-4">
+                                                                <label htmlFor="confirmPassword" className="custom-form-label form-required">Confirm password</label>
+                                                                <Password id="confirmPassword" value={confirmPassword} className="custom-form-input" placeholder='Confirm the Password' onChange={(e) => setConfirmPassword(e.target.value)} feedback={false} toggleMask />
+                                                                {showError &&
+                                                                    <small className="text-danger form-error-msg">This field is required</small>
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-12 col-sm-6 col-xl-6 mx-auto">
+                                                            <div className="custom-form-group contains-float-input pt-2 mb-1">
+                                                                <Button label="SIGN UP" className="w-100 submit-button justify-content-center" onClick={handleRegister} loading={loading} />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {/*  */}
+
+                                            </div>
+
+                                            {/* Your Details */}
+                                            <h4 className="booking-card-head">
+                                                Your Details
+                                            </h4>
+
+                                            <div className="row mt-4">
+                                                <div className="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="title" className="custom-form-label form-required" >
+                                                            Title
                                                         </label>
-                                                        <InputText id="email" className="custom-form-input text-center" name="email" placeholder='Enter Email Address' />
+                                                        <Dropdown id="title" value={title} onChange={(e) => setTitle(e.value)} options={titles} optionLabel="name"
+                                                            placeholder="Select" className="w-full w-100 custom-form-dropdown" />
                                                         {showError && (
-                                                            <small className="text-danger form-error-msg text-center">
+                                                            <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
                                                         )}
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <Divider className='divider' />
-
-                                            {/* for login */}
-                                            {/* <div className="row">
-                                                <div className="col-12 col-sm-6 col-xl-6 mx-auto">
+                                                <div className="col-12 col-sm-9 col-md-9 col-lg-9 col-xl-5">
                                                     <div className="custom-form-group mb-3 mb-sm-4">
-                                                        <label htmlFor="email" className="custom-form-label form-required text-center" >
-                                                            Password
+                                                        <label htmlFor="firstName" className="custom-form-label form-required" >
+                                                            First Name
                                                         </label>
-                                                        <Password id="password" value={password} className="custom-form-input text-center" placeholder='Enter the Password' onChange={(e) => setPassword(e.target.value)} feedback={false} toggleMask />
-                                                        {showError &&
-                                                            <small className="text-danger form-error-msg">This field is required</small>
-                                                        }
-                                                    </div>
-
-                                                    <div className="custom-form-group contains-float-input pt-2 mb-1">
-                                                        <Button label="LOGIN" className="w-100 submit-button justify-content-center" onClick={handleLogin} loading={loading} />
+                                                        <InputText id="firstName" className="custom-form-input" name="firstName" placeholder='Enter First Name' />
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </div> */}
+
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-9 offset-lg-3 offset-xl-0 col-xl-5">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="lastName" className="custom-form-label form-required" >
+                                                            Last Name
+                                                        </label>
+                                                        <InputText id="lastName" className="custom-form-input" name="lastName" placeholder='Enter Last Name' />
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-sm-6 col-lg-6 col-xl-6">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <label htmlFor="mobileNumber" className="custom-form-label form-required" >
+                                                            Mobile Number
+                                                        </label>
+                                                        <InputMask id="mobileNumber" className="custom-form-input" name="mobileNumber" mask="(999) 9999-9999" placeholder="(020) 1234-5678"></InputMask>
+                                                        {showError && (
+                                                            <small className="text-danger form-error-msg">
+                                                                This field is required
+                                                            </small>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <label htmlFor="address" className="custom-form-label form-required" >
+                                                        Address
+                                                    </label>
+                                                </div>
+
+                                                <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <InputText id="addressLine1" className="custom-form-input" name="addressLine1" placeholder='Address Line 1' />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <InputText id="addressLine2" className="custom-form-input" name="addressLine2" placeholder='Address Line 2' />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-sm-6 col-xl-6">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <InputText id="city" className="custom-form-input" name="city" placeholder='City' />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-sm-6 col-xl-6">
+                                                    <div className="custom-form-group mb-3 mb-sm-4">
+                                                        <InputText id="country" className="custom-form-input" name="country" placeholder='Country' />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-sm-6 col-xl-6">
+                                                    <div className="custom-form-group mb-0">
+                                                        <InputText id="postCode" className="custom-form-input" name="postCode" placeholder='Post Code' />
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                             {/*  */}
 
-                                            {/* for create account */}
-                                            {page === 1 ? (
-                                                <div className="row mt-4">
-                                                    {showAlert &&
-                                                        <div className="col-12">
-                                                            <h6 className='account-alert'>
-                                                                There is no account in this email, please verify your email to create an account.
-                                                            </h6>
-                                                        </div>
-                                                    }
-
-                                                    <div className="col-12 col-sm-6 col-xl-6 mx-auto">
-                                                        <div className="custom-form-group contains-float-input pt-2 mb-1">
-                                                            <Button label={`${loading ? 'Processing...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" onClick={handleVerify} loading={loading} />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) : page === 2 ? (
-                                                <div className="row mt-4">
-                                                    <div className="col-12">
-                                                        <button className="back-page-btn text-sm p-0 mb-3" onClick={goBack} data-aos="fade-left"><i className="ri ri-arrow-left-line me-2"></i>Back</button>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-xl-6 mx-auto">
-                                                        <div className="custom-form-group mb-3 mb-sm-4">
-                                                            <label htmlFor="otp" className="custom-form-label form-required text-center mx-auto">Enter OTP</label>
-
-                                                            <div className="otp-input-area">
-                                                                <InputOtp id="otp" className="custom-form-input otp-input" value={otp} onChange={(e) => setOTP(e.value)} integerOnly />
-                                                            </div>
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg text-center mt-3">This field is required</small>
-                                                            }
-                                                        </div>
-
-                                                        <div className="custom-form-group contains-float-input mb-3">
-                                                            <Button label={`${loading ? 'Verifying...' : 'VERIFY'}`} className="w-100 submit-button justify-content-center" onClick={handleVerifyOTP} loading={loading} />
-                                                        </div>
-
-                                                        <div className="custom-form-link-area text-center">
-                                                            <p className='text-sm'>
-                                                                Didn’t received the code?{' '}
-                                                                <button
-                                                                    className="custom-form-link"
-                                                                    onClick={handleResendCode}
-                                                                    disabled={isButtonDisabled}
-                                                                >
-                                                                    <b> Resend Code {isButtonDisabled && `(${seconds}s)`}</b>
-                                                                </button>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="row mt-4">
-                                                    <div className="col-12">
-                                                        <button className="back-page-btn text-sm p-0 mb-3" onClick={goBack} data-aos="fade-left"><i className="ri ri-arrow-left-line me-2"></i>Back</button>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-lg-10 col-xl-6 mx-auto">
-                                                        <div className="custom-form-group mb-3 mb-sm-4">
-                                                            <label htmlFor="password" className="custom-form-label form-required">Password</label>
-                                                            <Password id="password" value={password} className="custom-form-input" placeholder='Enter the Password' onChange={(e) => setPassword(e.target.value)} header={header} footer={footer} toggleMask />
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg">This field is required</small>
-                                                            }
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-12 col-sm-6 col-lg-10 col-xl-6 mx-auto">
-                                                        <div className="custom-form-group mb-3 mb-sm-4">
-                                                            <label htmlFor="confirmPassword" className="custom-form-label form-required">Confirm password</label>
-                                                            <Password id="confirmPassword" value={confirmPassword} className="custom-form-input" placeholder='Confirm the Password' onChange={(e) => setConfirmPassword(e.target.value)} feedback={false} toggleMask />
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg">This field is required</small>
-                                                            }
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-12 col-sm-6 col-xl-6 mx-auto">
-                                                        <div className="custom-form-group contains-float-input pt-2 mb-1">
-                                                            <Button label="SIGN UP" className="w-100 submit-button justify-content-center" onClick={handleRegister} loading={loading} />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                            {/*  */}
-
-                                        </div>
-
-                                        {/* Your Details */}
-                                        <h4 className="booking-card-head">
-                                            Your Details
-                                        </h4>
-
-                                        <div className="row mt-4">
-                                            <div className="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-2">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <label htmlFor="title" className="custom-form-label form-required" >
-                                                        Title
-                                                    </label>
-                                                    <Dropdown id="title" value={title} onChange={(e) => setTitle(e.value)} options={titles} optionLabel="name"
-                                                        placeholder="Select" className="w-full w-100 custom-form-dropdown" />
-                                                    {showError && (
-                                                        <small className="text-danger form-error-msg">
-                                                            This field is required
-                                                        </small>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-sm-9 col-md-9 col-lg-9 col-xl-5">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <label htmlFor="firstName" className="custom-form-label form-required" >
-                                                        First Name
-                                                    </label>
-                                                    <InputText id="firstName" className="custom-form-input" name="firstName" placeholder='Enter First Name' />
-                                                    {showError && (
-                                                        <small className="text-danger form-error-msg">
-                                                            This field is required
-                                                        </small>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-sm-6 col-md-6 col-lg-9 offset-lg-3 offset-xl-0 col-xl-5">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <label htmlFor="lastName" className="custom-form-label form-required" >
-                                                        Last Name
-                                                    </label>
-                                                    <InputText id="lastName" className="custom-form-input" name="lastName" placeholder='Enter Last Name' />
-                                                    {showError && (
-                                                        <small className="text-danger form-error-msg">
-                                                            This field is required
-                                                        </small>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-sm-6 col-lg-6 col-xl-6">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <label htmlFor="mobileNumber" className="custom-form-label form-required" >
-                                                        Mobile Number
-                                                    </label>
-                                                    <InputMask id="mobileNumber" className="custom-form-input" name="mobileNumber" mask="(999) 9999-9999" placeholder="(020) 1234-5678"></InputMask>
-                                                    {showError && (
-                                                        <small className="text-danger form-error-msg">
-                                                            This field is required
-                                                        </small>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <label htmlFor="address" className="custom-form-label form-required" >
-                                                    Address
-                                                </label>
-                                            </div>
-
-                                            <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <InputText id="addressLine1" className="custom-form-input" name="addressLine1" placeholder='Address Line 1' />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <InputText id="addressLine2" className="custom-form-input" name="addressLine2" placeholder='Address Line 2' />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-sm-6 col-xl-6">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <InputText id="city" className="custom-form-input" name="city" placeholder='City' />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-sm-6 col-xl-6">
-                                                <div className="custom-form-group mb-3 mb-sm-4">
-                                                    <InputText id="country" className="custom-form-input" name="country" placeholder='Country' />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-sm-6 col-xl-6">
-                                                <div className="custom-form-group mb-0">
-                                                    <InputText id="postCode" className="custom-form-input" name="postCode" placeholder='Post Code' />
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        {/*  */}
-
-                                        <Divider className='divider-margin' />
-
+                                            <Divider className='divider-margin' />
+                                        </>}
                                         {/* Travel Details */}
                                         <h4 className="booking-card-head">
                                             Travel Details
