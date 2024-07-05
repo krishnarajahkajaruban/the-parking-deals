@@ -166,7 +166,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!signUpInfo.email || !signUpInfo.firstName || !signUpInfo.password || !signUpInfo.confirmPassword || !signUpInfo.mobileNumber) {
+    if (!signUpInfo.email || !signUpInfo.firstName || !signUpInfo.password || !signUpInfo.confirmPassword || !signUpInfo.mobileNumber || !signUpInfo.title || !signUpInfo.addressL1 || !signUpInfo.city || !signUpInfo.country || !signUpInfo.postCode) {
       setShowError(true);
       toast.current.show({
         severity: 'error',

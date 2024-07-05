@@ -130,7 +130,7 @@ const VendorList = () => {
 
     }
 
-    const handleBooking = (id) => {
+    const handleBooking = (companyId, companyName, companyImg, bookingQuote) => {
         // setPageLoading(true);
         // setTimeout(() => {
         //     // navigate('/booking');
@@ -145,7 +145,10 @@ const VendorList = () => {
           pickUpDate:new Date(pickupDate || quoteInfo?.pickupDate).toISOString(),
           pickUpTime:new Date(pickupTime || quoteInfo?.pickupTime).toTimeString().split(' ')[0],
           couponCode,
-          companyId:id
+          companyId,
+          companyName,
+          companyImg,
+          bookingQuote
         }
         navigate('/booking', { state : {bookingDetails} });
     };
@@ -440,7 +443,7 @@ const VendorList = () => {
                                     <Button
                                         label="BOOK"
                                         className="custom-btn-primary result-card-btn"
-                                        onClick={()=>handleBooking(quote._id)}
+                                        onClick={()=>handleBooking(quote._id, quote.name, quote.logo, quote.quote)}
                                     />
                                     </div>
 
@@ -1487,7 +1490,7 @@ const VendorList = () => {
                       <Button
                         label="BOOK"
                         className="custom-btn-primary w-100 result-card-btn"
-                        onClick={()=>handleBooking(selectedVendor?._id)}
+                        onClick={()=>handleBooking(selectedVendor?._id, selectedVendor?.name, selectedVendor?.logo, selectedVendor?.quote)}
                       />
                     </article>
                   </div>

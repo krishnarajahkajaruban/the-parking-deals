@@ -16,13 +16,14 @@ import { InputOtp } from 'primereact/inputotp';
 import { IconField } from "primereact/iconfield";
 
 import { Toast } from 'primereact/toast';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import api from '../../api';
 import { sendVerificationEmail, verifyOTP } from '../../utils/authUtil';
 
 const Booking = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { bookingDetails } = location.state || {};
     const [showError, setShowError] = useState(false);
     const [showCouponError, setShowCouponError] = useState(false);
@@ -67,24 +68,113 @@ const Booking = () => {
 
     const [checkedSmsConfirmation, setCheckedSmsConfirmation] = useState(false);
     const [checkedCancellationCover, setCheckedCancellationCover] = useState(false);
+    const [isAgreed, setIsAgreed] = useState(false);
 
     console.log(bookingDetails);
     const user = useSelector((state) => state.auth.user);
+    const token = useSelector((state) => state.auth.token);
 
-    const initalCarParkingSlotBookingDetails = {
+    const initalUserDetails = {
         email: "",
         password: "",
         confirmPassword: "",
-        title: titles[0].name
+        title: titles[0].name,
+        firstName: "",
+        lastName: "",
+        mobileNumber: "",
+        addressL1: "",
+        addressL2: "",
+        city: "",
+        country: "",
+        postCode: "",
+        role: "User"
     };
 
-    const [carParkingSlotBookingDetails, setCarParkingSlotBookingDetails] = useState(initalCarParkingSlotBookingDetails);
+    const initialTravelDetails = {
+        departureTerminal: "",
+        arrivalTerminal: "",
+        outBoundFlight: "",
+        inBoundFlight: ""
+    };
+
+    const initialVehiclesDetails = [
+        {
+            regNo: "",
+            color: "",
+            make: "",
+            model:""
+        }
+    ];
+
+    const initialCardDetails = {
+        name: "",
+        postCode: "",
+        cardNo: "",
+        expDate: "",
+        cvv: ""
+    };
+
+    const [userDetails, setUserDetails] = useState(initalUserDetails);
     const [emailExist, setEmailExist] = useState(false);
     const [reSendLoading, setReSendLoading] = useState(false);
+    const [travelDetails, setTravelDetails] = useState(initialTravelDetails);
+    const [vehiclesDetails, setVehiclesDetails] = useState(initialVehiclesDetails);
+    const [couponCode, setCouponCode] = useState(bookingDetails?.couponCode);
+    const [cardDetails, setCardDetails] = useState(initialCardDetails);
+    const [bookingCharge, setBookingCharge] = useState();
+
+    useEffect(() => {
+        if(bookingDetails?.bookingQuote){
+            const calculatingBookingCharge = async() => {
+                try{
+                    const response = await api.post("/api/user/calculate-total-booking-charge", 
+                        {
+                            bookingQuote: bookingDetails?.bookingQuote, 
+                            couponCode,
+                            smsConfirmation: checkedSmsConfirmation, 
+                            cancellationCover: checkedCancellationCover
+                        }
+                    );
+                    console.log(response.data);
+                    setBookingCharge(response.data);
+                }catch(err){
+                    console.log(err);
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Error in Booking charge calculation!',
+                        detail: err.response.data.error,
+                        life: 3000
+                    });
+                };
+            };
+            calculatingBookingCharge();
+        }
+    }, [bookingDetails]);
+
+    const checkingCouponCodeValidity = async() => {
+        try{
+            const response = await api.post("/api/user/checking-couponcode-validity", 
+                { 
+                    couponCode
+                }
+            );
+            console.log(response.data);
+            setCouponValid(true);
+        }catch(err){
+            console.log(err);
+            setCouponValid(false);
+        };
+    };
+
+    useEffect(() => {
+        if(couponCode){
+            checkingCouponCodeValidity();
+        }
+    }, [couponCode]);
 
     const handleInputChange = async (e) => {
         const { name, value } = e.target;
-        setCarParkingSlotBookingDetails({ ...carParkingSlotBookingDetails, [name]: value });
+        setUserDetails({ ...userDetails, [name]: value });
         if (name === "email") {
           setShowError(false);
           setEmailExist(false);
@@ -98,6 +188,32 @@ const Booking = () => {
         }
       };
 
+      const handleInputTravelDetailChange = async (e) => {
+        const { name, value } = e.target;
+        setTravelDetails({ ...travelDetails, [name]: value });
+      };
+
+      const handleInputVechicleDetailChange = async (index, e) => {
+        const { name, value } = e.target;
+        const newVehicleDetails = [...vehiclesDetails];
+        newVehicleDetails[index][name] = value;
+        setVehiclesDetails(newVehicleDetails);
+      };
+
+      const addVehicle = () => {
+        setVehiclesDetails([...vehiclesDetails, { regNo: '', make: '', model: '', color: '' }]);
+      };
+
+      const removeVehicle = (index) => {
+        const newVehicleDetails = vehiclesDetails.filter((_, i) => i !== index);
+        setVehiclesDetails(newVehicleDetails);
+      };
+
+      const handleInputCardDetailChange = async (e) => {
+        const { name, value } = e.target;
+        setCardDetails({ ...cardDetails, [name]: value });
+      };
+
     const handleLogin = () => {
 
     }
@@ -107,14 +223,15 @@ const Booking = () => {
     }
 
     const handleApplyCoupon = () => {
-        setCouponValid(true);
-        setShowCouponError(true);
+        if(couponCode){
+            checkingCouponCodeValidity();
+        };
     }
 
     const handleVerify = async (e) => {
         e.preventDefault();
         await sendVerificationEmail(
-          carParkingSlotBookingDetails.email,
+          userDetails.email,
           setShowError,
           setLoading,
           setReSendLoading,
@@ -122,14 +239,14 @@ const Booking = () => {
           setSeconds,
           setIsButtonDisabled,
           null,
-          setCarParkingSlotBookingDetails,
+          setUserDetails,
           toast
         );
       };
 
     const handleVerifyOTP = async (e) => {
         e.preventDefault();
-        await verifyOTP(otp, setShowError, setOTP, carParkingSlotBookingDetails.email, setLoading, setPage, toast);
+        await verifyOTP(otp, setShowError, setOTP, userDetails.email, setLoading, setPage, toast);
       };
 
     useEffect(() => {
@@ -159,9 +276,161 @@ const Booking = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    const handleBooking = () => {
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp);
+      
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+      
+        return `${day}/${month}/${year}`;
+      };
 
-    }
+      const formatTime = (timeString) => {
+        const [hours, minutes] = timeString.split(':');
+        return `${hours}:${minutes}`;
+      };
+
+      const bookTheCarParkingSlot = async(details) => {
+        try{
+            const response = await api.post("/api/user/car-park-booking", details);
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'Booking Successfully',
+                detail: "You have been booked your parking slot successfully",
+                life: 3000
+              });
+              
+              setTimeout(() => {
+                navigate("/")
+              }, 2000);
+
+        }catch(err){
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed to Book',
+                detail: err.response.data.error,
+                life: 3000
+              });
+        };
+      };
+
+      const handleBooking = () => {
+        // Check if all required user details are filled
+        if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title || !userDetails.addressL1 || !userDetails.city || !userDetails.country || !userDetails.postCode) {
+          setShowError(true);
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error in Your Details Submission',
+            detail: "Please fill all required fields!",
+            life: 3000
+          });
+          return;
+        }
+      
+        // Check if passwords match
+        if (userDetails.password !== userDetails.confirmPassword) {
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error in Your Details Submission',
+            detail: "Password & Confirm Password do not match!",
+            life: 3000
+          });
+          return;
+        }
+      
+        // Check if password length is at least 8 characters
+        if (userDetails.password.length < 8) {
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error in Your Details Submission',
+            detail: "Password must be at least 8 characters long!",
+            life: 3000
+          });
+          return;
+        }
+      
+        // Check if travel details are filled
+        if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
+          setShowError(true);
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error in Travel Detail Submission',
+            detail: "Please fill all required fields!",
+            life: 3000
+          });
+          return;
+        }
+      
+        // Check if all vehicle details are filled
+        const hasError = vehiclesDetails.some(vehicle => !vehicle.regNo || !vehicle.color);
+        if (hasError) {
+          setShowError(true);
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error in Vehicle Detail Submission',
+            detail: "Please fill all required fields!",
+            life: 3000
+          });
+          return;
+        }
+      
+        // Check if terms and privacy policy are agreed
+        if (!isAgreed) {
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error in Submission',
+            detail: "You have to agree to the Terms & Privacy Policy before the Booking",
+            life: 3000
+          });
+          return;
+        }
+      
+        // Prepare user details object
+        let userDetail = {};
+        if (user) {
+          userDetail.accessToken = token;
+        } else if (emailExist) {
+          userDetail.registeredStatus = true;
+        } else {
+          userDetail = {
+            email: userDetails.email,
+            firstName: userDetails.firstName,
+            lastName: userDetails.lastName,
+            password: userDetails.password,
+            mobileNumber: userDetails.mobileNumber,
+            title: userDetails.title,
+            addressL1: userDetails.addressL1,
+            addressL2: userDetails.addressL2,
+            city: userDetails.city,
+            country: userDetails.country,
+            postCode: userDetails.postCode,
+          };
+        }
+      
+        // Prepare booking details object
+        const carParkingSlotBookingDetails = {
+          airportName: bookingDetails?.airportName,
+          dropOffDate: bookingDetails?.dropOffDate,
+          dropOffTime: bookingDetails?.dropOffTime,
+          pickUpDate: bookingDetails?.pickUpDate,
+          pickUpTime: bookingDetails?.pickUpTime,
+          companyId: bookingDetails?.companyId,
+          userDetail: userDetail,
+          travelDetail: travelDetails,
+          vehicleDetail: vehiclesDetails,
+          cardDetail: cardDetails,
+          bookingQuote: bookingDetails?.bookingQuote,
+          couponCode: bookingDetails?.couponCode,
+          smsConfirmation: checkedSmsConfirmation,
+          cancellationCover: checkedCancellationCover
+        };
+      
+        bookTheCarParkingSlot(carParkingSlotBookingDetails);
+      };
+      
 
     const header = <div className="font-bold mb-3">Password Strength</div>;
     const footer = (
@@ -237,18 +506,18 @@ const Booking = () => {
                                     className="custom-form-input text-center"
                                     name="email"
                                     placeholder="Enter Email Address"
-                                    value={carParkingSlotBookingDetails.email}
+                                    value={userDetails.email}
                                     onChange={handleInputChange}
                                   />
-                                  {(showError && !carParkingSlotBookingDetails.email) && (
+                                  {(showError && !userDetails.email) && (
                                     <small className="text-danger form-error-msg text-center">
                                       This field is required
                                     </small>
                                   )}
                                   <small className="text-danger form-error-msg">
                                     {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                                      carParkingSlotBookingDetails.email
-                                    ) && carParkingSlotBookingDetails.email
+                                      userDetails.email
+                                    ) && userDetails.email
                                       ? "Enter valid email"
                                       : ""}
                                   </small>
@@ -261,9 +530,9 @@ const Booking = () => {
                             {/* for login */}
                             {(emailExist &&
                                   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                                    carParkingSlotBookingDetails.email
+                                    userDetails.email
                                   ) &&
-                                  carParkingSlotBookingDetails.email) && <div className="row">
+                                  userDetails.email) && <div className="row">
                               <div className="col-12 col-sm-6 col-xl-6 mx-auto">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <label
@@ -275,7 +544,7 @@ const Booking = () => {
                                   <Password
                                     id="password"
                                     name='password'
-                                    value={carParkingSlotBookingDetails.password}
+                                    value={userDetails.password}
                                     className="custom-form-input text-center"
                                     placeholder="Enter the Password"
                                     onChange={handleInputChange
@@ -283,7 +552,7 @@ const Booking = () => {
                                     feedback={false}
                                     toggleMask
                                   />
-                                  {(showError && !carParkingSlotBookingDetails.password) && (
+                                  {(showError && !userDetails.password) && (
                                     <small className="text-danger form-error-msg">
                                       This field is required
                                     </small>
@@ -305,9 +574,9 @@ const Booking = () => {
                             {/* for create account */}
                             {(page === 1 && !emailExist &&
                                   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                                    carParkingSlotBookingDetails.email
+                                    userDetails.email
                                   ) &&
-                                  carParkingSlotBookingDetails.email) ? (
+                                  userDetails.email) ? (
                               <div className="row mt-4">
                                     <div className="col-12">
                                       <h6 className="account-alert">
@@ -425,7 +694,7 @@ const Booking = () => {
                                     <Password
                                       id="password"
                                       name='password'
-                                      value={carParkingSlotBookingDetails.password}
+                                      value={userDetails.password}
                                       className="custom-form-input"
                                       placeholder="Enter the Password"
                                       onChange={handleInputChange
@@ -434,12 +703,12 @@ const Booking = () => {
                                       footer={footer}
                                       toggleMask
                                     />
-                                    {(showError && !carParkingSlotBookingDetails.password) && (
+                                    {(showError && !userDetails.password) && (
                                       <small className="text-danger form-error-msg">
                                         This field is required
                                       </small>
                                     )}
-                                    <small className='text-danger form-error-msg'>{(carParkingSlotBookingDetails.password.length < 8 && carParkingSlotBookingDetails.password) ? "Password must be atleast 8 characters long" : ""}</small>
+                                    <small className='text-danger form-error-msg'>{(userDetails.password.length < 8 && userDetails.password) ? "Password must be atleast 8 characters long" : ""}</small>
                                   </div>
                                 </div>
 
@@ -454,7 +723,7 @@ const Booking = () => {
                                     <Password
                                       id="confirmPassword"
                                       name='confirmPassword'
-                                      value={carParkingSlotBookingDetails.confirmPassword}
+                                      value={userDetails.confirmPassword}
                                       className="custom-form-input"
                                       placeholder="Confirm the Password"
                                       onChange={handleInputChange
@@ -462,12 +731,12 @@ const Booking = () => {
                                       feedback={false}
                                       toggleMask
                                     />
-                                    {(showError && !carParkingSlotBookingDetails.confirmPassword) && (
+                                    {(showError && !userDetails.confirmPassword) && (
                                       <small className="text-danger form-error-msg">
                                         This field is required
                                       </small>
                                     )}
-                                    <small className='text-danger text-capitalized form-error-message'>{(carParkingSlotBookingDetails.password !== carParkingSlotBookingDetails.confirmPassword && carParkingSlotBookingDetails.confirmPassword) ? "Password & Confirm Password must be equal" : ""}</small>
+                                    <small className='text-danger text-capitalized form-error-message'>{(userDetails.password !== userDetails.confirmPassword && userDetails.confirmPassword) ? "Password & Confirm Password must be equal" : ""}</small>
                                   </div>
                                 </div>
 
@@ -487,9 +756,9 @@ const Booking = () => {
                           </div>
                             {(!emailExist &&
                                   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                                    carParkingSlotBookingDetails.email
+                                    userDetails.email
                                   ) &&
-                                  carParkingSlotBookingDetails.email) && <>
+                                  userDetails.email) && <>
                                 {/* Your Details */}
                                 <h4 className="booking-card-head">Your Details</h4>
 
@@ -504,14 +773,14 @@ const Booking = () => {
                                         </label>
                                         <Dropdown
                                         id="title"
-                                        value={{name: carParkingSlotBookingDetails.title}}
-                                        onChange={(e) => setCarParkingSlotBookingDetails({...carParkingSlotBookingDetails, title:e.value?.name})}
+                                        value={{name: userDetails.title}}
+                                        onChange={(e) => setUserDetails({...userDetails, title:e.value?.name})}
                                         options={titles}
                                         optionLabel="name"
                                         placeholder="Select"
                                         className="w-full w-100 custom-form-dropdown"
                                         />
-                                        {(showError && !carParkingSlotBookingDetails.title) && (
+                                        {(showError && !userDetails.title) && (
                                                                     <small className="text-danger form-error-msg">
                                                                     This field is required
                                                                     </small>
@@ -532,8 +801,10 @@ const Booking = () => {
                                         className="custom-form-input"
                                         name="firstName"
                                         placeholder="Enter First Name"
+                                        value={userDetails.firstName}
+                                        onChange={handleInputChange}
                                         />
-                                        {showError && (
+                                        {(showError && !userDetails.firstName) && (
                                         <small className="text-danger form-error-msg">
                                             This field is required
                                         </small>
@@ -545,7 +816,7 @@ const Booking = () => {
                                     <div className="custom-form-group mb-3 mb-sm-4">
                                         <label
                                         htmlFor="lastName"
-                                        className="custom-form-label form-required"
+                                        className="custom-form-label"
                                         >
                                         Last Name
                                         </label>
@@ -554,12 +825,14 @@ const Booking = () => {
                                         className="custom-form-input"
                                         name="lastName"
                                         placeholder="Enter Last Name"
+                                        value={userDetails.lastName}
+                                        onChange={handleInputChange}
                                         />
-                                        {showError && (
+                                        {/* {showError && (
                                         <small className="text-danger form-error-msg">
                                             This field is required
                                         </small>
-                                        )}
+                                        )} */}
                                     </div>
                                     </div>
 
@@ -577,8 +850,10 @@ const Booking = () => {
                                         name="mobileNumber"
                                         mask="(999) 9999-9999"
                                         placeholder="(020) 1234-5678"
+                                        value={userDetails.mobileNumber}
+                                        onChange={handleInputChange}
                                         ></InputMask>
-                                        {showError && (
+                                        {(showError && !userDetails.mobileNumber) && (
                                         <small className="text-danger form-error-msg">
                                             This field is required
                                         </small>
@@ -602,9 +877,16 @@ const Booking = () => {
                                         <InputText
                                         id="addressLine1"
                                         className="custom-form-input"
-                                        name="addressLine1"
+                                        name="addressL1"
                                         placeholder="Address Line 1"
+                                        value={userDetails.addressL1}
+                                        onChange={handleInputChange}
                                         />
+                                        {(showError && !userDetails.addressL1) && (
+                                            <small className="text-danger form-error-msg">
+                                            This field is required
+                                            </small>
+                                        )}
                                     </div>
                                     </div>
 
@@ -613,8 +895,10 @@ const Booking = () => {
                                         <InputText
                                         id="addressLine2"
                                         className="custom-form-input"
-                                        name="addressLine2"
+                                        name="addressL2"
                                         placeholder="Address Line 2"
+                                        value={userDetails.addressL2}
+                                        onChange={handleInputChange}
                                         />
                                     </div>
                                     </div>
@@ -626,7 +910,14 @@ const Booking = () => {
                                         className="custom-form-input"
                                         name="city"
                                         placeholder="City"
+                                        value={userDetails.city}
+                                        onChange={handleInputChange}
                                         />
+                                        {(showError && !userDetails.city) && (
+                                            <small className="text-danger form-error-msg">
+                                            This field is required
+                                            </small>
+                                        )}
                                     </div>
                                     </div>
 
@@ -637,7 +928,14 @@ const Booking = () => {
                                         className="custom-form-input"
                                         name="country"
                                         placeholder="Country"
+                                        value={userDetails.country}
+                                        onChange={handleInputChange}
                                         />
+                                        {(showError && !userDetails.country) && (
+                                            <small className="text-danger form-error-msg">
+                                            This field is required
+                                            </small>
+                                        )}
                                     </div>
                                     </div>
 
@@ -648,7 +946,14 @@ const Booking = () => {
                                         className="custom-form-input"
                                         name="postCode"
                                         placeholder="Post Code"
+                                        value={userDetails.postCode}
+                                        onChange={handleInputChange}
                                         />
+                                        {(showError && !userDetails.postCode) && (
+                                            <small className="text-danger form-error-msg">
+                                            This field is required
+                                            </small>
+                                        )}
                                     </div>
                                     </div>
                                 </div>
@@ -672,14 +977,14 @@ const Booking = () => {
                             </label>
                             <Dropdown
                               id="departTerminal"
-                              value={departTerminal}
-                              onChange={(e) => setDepartTerminal(e.value)}
+                              value={{name: travelDetails.departureTerminal}}
+                              onChange={(e) => setTravelDetails({...travelDetails, departureTerminal: e.value?.name})}
                               options={depart_terminals}
                               optionLabel="name"
                               placeholder="Select Terminal"
                               className="w-full w-100 custom-form-dropdown"
                             />
-                            {showError && (
+                            {(showError && !travelDetails.departureTerminal) && (
                               <small className="text-danger form-error-msg">
                                 This field is required
                               </small>
@@ -697,14 +1002,14 @@ const Booking = () => {
                             </label>
                             <Dropdown
                               id="arrivalTerminal"
-                              value={arrivalTerminal}
-                              onChange={(e) => setArrivalTerminal(e.value)}
+                              value={{name: travelDetails.arrivalTerminal}}
+                              onChange={(e) => setTravelDetails({...travelDetails, arrivalTerminal: e.value?.name})}
                               options={arrival_terminals}
                               optionLabel="name"
                               placeholder="Select Terminal"
                               className="w-full w-100 custom-form-dropdown"
                             />
-                            {showError && (
+                            {(showError && !travelDetails.arrivalTerminal) && (
                               <small className="text-danger form-error-msg">
                                 This field is required
                               </small>
@@ -724,6 +1029,8 @@ const Booking = () => {
                               id="outBoundFlight"
                               className="custom-form-input"
                               name="outBoundFlight"
+                              value={travelDetails.outBoundFlight}
+                              onChange={handleInputTravelDetailChange}
                               placeholder="Enter Outbound"
                             />
                           </div>
@@ -741,6 +1048,8 @@ const Booking = () => {
                               id="inBoundFlight"
                               className="custom-form-input"
                               name="inBoundFlight"
+                              value={travelDetails.inBoundFlight}
+                              onChange={handleInputTravelDetailChange}
                               placeholder="Enter Inbound"
                             />
                           </div>
@@ -753,82 +1062,106 @@ const Booking = () => {
                       {/* Vehicle Details */}
                       <h4 className="booking-card-head">Vehicle Details</h4>
 
-                      <div className="row mt-4">
-                        <div className="col-12 col-sm-6 col-xl-6">
-                          <div className="custom-form-group mb-3 mb-sm-4">
-                            <label
-                              htmlFor="regNo"
-                              className="custom-form-label form-required"
-                            >
-                              Registration Number
-                            </label>
-                            <InputText
-                              id="regNo"
-                              className="custom-form-input"
-                              name="regNo"
-                              placeholder="Enter Registration No."
-                            />
-                            {showError && (
-                              <small className="text-danger form-error-msg">
-                                This field is required
-                              </small>
-                            )}
-                          </div>
-                        </div>
+                      {vehiclesDetails.map((vehicle, index) => (
+                        <div className="row mt-4" key={index}>
+                            <div className="col-12 col-sm-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                                <label
+                                htmlFor={`regNo-${index}`}
+                                className="custom-form-label form-required"
+                                >
+                                Registration Number
+                                </label>
+                                <InputText
+                                id={`regNo-${index}`}
+                                className="custom-form-input"
+                                name="regNo"
+                                placeholder="Enter Registration No."
+                                value={vehicle.regNo}
+                                onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                                />
+                                {showError  && !vehicle.regNo && (
+                                <small className="text-danger form-error-msg">
+                                    This field is required
+                                </small>
+                                )}
+                            </div>
+                            </div>
 
-                        <div className="col-12 col-sm-6 col-xl-6">
-                          <div className="custom-form-group mb-3 mb-sm-4">
-                            <label htmlFor="make" className="custom-form-label">
-                              Make
-                            </label>
-                            <InputText
-                              id="make"
-                              className="custom-form-input"
-                              name="make"
-                              placeholder="Enter Make"
-                            />
-                          </div>
-                        </div>
+                            <div className="col-12 col-sm-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                                <label htmlFor={`make-${index}`} className="custom-form-label">
+                                Make
+                                </label>
+                                <InputText
+                                id={`make-${index}`}
+                                className="custom-form-input"
+                                name="make"
+                                placeholder="Enter Make"
+                                value={vehicle.make}
+                                onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                                />
+                            </div>
+                            </div>
 
-                        <div className="col-12 col-sm-6 col-xl-6">
-                          <div className="custom-form-group mb-3 mb-sm-0">
-                            <label
-                              htmlFor="model"
-                              className="custom-form-label"
-                            >
-                              Model
-                            </label>
-                            <InputText
-                              id="model"
-                              className="custom-form-input"
-                              name="model"
-                              placeholder="Enter Model"
-                            />
-                          </div>
-                        </div>
+                            <div className="col-12 col-sm-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-0">
+                                <label
+                                htmlFor={`model-${index}`}
+                                className="custom-form-label"
+                                >
+                                Model
+                                </label>
+                                <InputText
+                                id={`model-${index}`}
+                                className="custom-form-input"
+                                name="model"
+                                placeholder="Enter Model"
+                                value={vehicle.model}
+                                onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                                />
+                            </div>
+                            </div>
 
-                        <div className="col-12 col-sm-6 col-xl-6">
-                          <div className="custom-form-group mb-0">
-                            <label
-                              htmlFor="color"
-                              className="custom-form-label form-required"
-                            >
-                              Color
-                            </label>
-                            <InputText
-                              id="color"
-                              className="custom-form-input"
-                              name="color"
-                              placeholder="Enter Color"
-                            />
-                            {showError && (
-                              <small className="text-danger form-error-msg">
-                                This field is required
-                              </small>
-                            )}
-                          </div>
+                            <div className="col-12 col-sm-6 col-xl-6">
+                            <div className="custom-form-group mb-0">
+                                <label
+                                htmlFor={`color-${index}`}
+                                className="custom-form-label form-required"
+                                >
+                                Color
+                                </label>
+                                <InputText
+                                id={`color-${index}`}
+                                className="custom-form-input"
+                                name="color"
+                                placeholder="Enter Color"
+                                value={vehicle.color}
+                                onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                                />
+                                {showError && !vehicle.color && (
+                                <small className="text-danger form-error-msg">
+                                    This field is required
+                                </small>
+                                )}
+                            </div>
+                            </div>
+                            <div className="col-12">
+                            <Button
+                                      label="Add Vehicle"
+                                      className="btn btn-primary mt-3"
+                                      onClick={addVehicle}
+                                    />
+                            {index !== 0 && (
+                                <Button
+                                    label="Remove Vehicle"
+                                    onClick={() => removeVehicle(index)}
+                                    className="btn btn-danger mt-3 ml-2 mx-2"
+                                />
+                                )}      
+                            </div>
                         </div>
-                      </div>
+                      ))}
                       {/*  */}
 
                       <Divider className="divider-margin" />
@@ -894,30 +1227,34 @@ const Booking = () => {
                                 className="custom-form-input"
                                 name="couponCode"
                                 placeholder="Enter Discount Code"
+                                value={couponCode}
+                                onChange={(e) => setCouponCode(e.target.value)}
                               />
                               <Button
                                 label="APPLY"
                                 className="aply-btn"
                                 onClick={handleApplyCoupon}
+                                disabled={!couponCode}
                               />
                             </div>
-                            {showCouponError && (
+                            {/* {showCouponError && (
                               <small className="text-danger form-error-msg">
                                 This field is required
                               </small>
-                            )}
+                            )} */}
 
-                            {couponValid && (
+                            {(couponCode && couponValid) ? (
                               <h6 className="coupon-valid success">
                                 <i className="bi bi-check-circle-fill me-2"></i>
                                 Coupon is valid.
-                              </h6>
-
-                              // <h6 className='coupon-valid error'>
-                              //     <i className='bi bi-x-circle-fill me-2'></i>
-                              //     Coupon is invalid.
-                              // </h6>
-                            )}
+                              </h6>)
+                                : (couponCode && !couponValid) ? (
+                              <h6 className='coupon-valid error'>
+                                  <i className='bi bi-x-circle-fill me-2'></i>
+                                  Coupon is invalid.
+                              </h6> 
+                                ) : null
+                            }
                           </div>
                         </div>
                       </div>
@@ -927,7 +1264,7 @@ const Booking = () => {
 
                       <div className="total-price-area">
                         <h5 className="total-price-text">Total :</h5>
-                        <h5 className="total-price">£ 77.77</h5>
+                        <h5 className="total-price">£ {bookingCharge?.totalPayable || 0}</h5>
                       </div>
 
                       <Divider className="divider-margin" />
@@ -948,10 +1285,12 @@ const Booking = () => {
                               <InputText
                                 id="cardName"
                                 className="custom-form-input"
-                                name="cardName"
+                                name="name"
+                                value={cardDetails.name}
+                                onChange={handleInputCardDetailChange}
                                 placeholder="Name on Card"
                               />
-                              {showError && (
+                              {(showError && !cardDetails.name) && (
                                 <small className="text-danger form-error-msg">
                                   This field is required
                                 </small>
@@ -970,10 +1309,12 @@ const Booking = () => {
                               <InputText
                                 id="cardPostCode"
                                 className="custom-form-input"
-                                name="cardPostCode"
+                                name="postCode"
+                                value={cardDetails.postCode}
+                                onChange={handleInputCardDetailChange}
                                 placeholder="Post code"
                               />
-                              {showError && (
+                              {(showError && !cardDetails.postCode) && (
                                 <small className="text-danger form-error-msg">
                                   This field is required
                                 </small>
@@ -994,17 +1335,16 @@ const Booking = () => {
                                   {" "}
                                 </InputIcon>
                                 <InputMask
-                                  value={cardNumber}
+                                name='cardNo'
+                                  value={cardDetails.cardNo}
                                   v-model="value1"
                                   className="custom-form-input input-padding"
-                                  onChange={(e) =>
-                                    setCardNumber(e.target.value)
-                                  }
+                                  onChange={handleInputCardDetailChange}
                                   mask="9999 9999 9999 9999"
                                   placeholder="0000 0000 0000 0000"
                                 />
                               </IconField>
-                              {showError && (
+                              {(showError && !cardDetails.cardNo) && (
                                 <small className="text-danger form-error-msg">
                                   This field is required
                                 </small>
@@ -1020,14 +1360,15 @@ const Booking = () => {
                                 Expiry Date
                               </label>
                               <InputMask
-                                value={cardDate}
+                              name='expDate'
+                                value={cardDetails.expDate}
                                 className="custom-form-input"
-                                onChange={(e) => setCardDate(e.target.value)}
+                                onChange={handleInputCardDetailChange}
                                 mask="99/99"
                                 placeholder="MM/YY"
                                 slotChar="MM/YY"
                               />
-                              {showError && (
+                              {(showError && !cardDetails.expDate) && (
                                 <small className="text-danger form-error-msg">
                                   This field is required
                                 </small>
@@ -1044,13 +1385,13 @@ const Booking = () => {
                                 CVV
                               </label>
                               <InputMask
-                                value={cardCVV}
+                                value={cardDetails.cvv}
                                 className="custom-form-input"
-                                onChange={(e) => setCardCVV(e.target.value)}
+                                onChange={handleInputCardDetailChange}
                                 mask="999"
                                 placeholder="CVV"
                               />
-                              {showError && (
+                              {(showError && !cardDetails.cvv) && (
                                 <small className="text-danger form-error-msg">
                                   This field is required
                                 </small>
@@ -1074,8 +1415,8 @@ const Booking = () => {
                       <div className="account-agree-area">
                         <Checkbox
                           inputId="isAgreed"
-                          onChange={(e) => setCheckedSmsConfirmation(e.checked)}
-                          checked={checkedSmsConfirmation}
+                          onChange={(e) => setIsAgreed(e.checked)}
+                          checked={isAgreed}
                           name="isAgreed"
                           value="1"
                         />
@@ -1097,6 +1438,7 @@ const Booking = () => {
                             label="CONFIRM BOOKING"
                             className="custom-btn-primary w-100 result-card-btn"
                             onClick={handleBooking}
+                            disabled={!isAgreed}
                           />
                         </div>
                       </div>
@@ -1116,7 +1458,7 @@ const Booking = () => {
                     </div>
                     <div className="detail-card-info-body">
                       <p>Company :</p>
-                      <h6>Lion Parking</h6>
+                      <h6>{bookingDetails?.companyName}</h6>
                     </div>
                   </div>
 
@@ -1126,7 +1468,7 @@ const Booking = () => {
                     </div>
                     <div className="detail-card-info-body">
                       <p>Location :</p>
-                      <h6>Heathrow Airport</h6>
+                      <h6>{bookingDetails?.airportName}</h6>
                     </div>
                   </div>
 
@@ -1138,7 +1480,7 @@ const Booking = () => {
                         </div>
                         <div className="detail-card-info-body">
                           <p>Drop Off Date :</p>
-                          <h6>30/6/2024</h6>
+                          <h6>{formatDate(bookingDetails?.dropOffDate)}</h6>
                         </div>
                       </div>
                     </div>
@@ -1149,7 +1491,7 @@ const Booking = () => {
                         </div>
                         <div className="detail-card-info-body">
                           <p>Drop Off Time :</p>
-                          <h6>12:00</h6>
+                          <h6>{formatTime(bookingDetails?.dropOffTime)}</h6>
                         </div>
                       </div>
                     </div>
@@ -1163,7 +1505,7 @@ const Booking = () => {
                         </div>
                         <div className="detail-card-info-body">
                           <p>Return Date :</p>
-                          <h6>7/7/2024</h6>
+                          <h6>{formatDate(bookingDetails?.pickUpDate)}</h6>
                         </div>
                       </div>
                     </div>
@@ -1174,7 +1516,7 @@ const Booking = () => {
                         </div>
                         <div className="detail-card-info-body">
                           <p>Return Time :</p>
-                          <h6>12:00</h6>
+                          <h6>{formatTime(bookingDetails?.pickUpTime)}</h6>
                         </div>
                       </div>
                     </div>
@@ -1186,23 +1528,24 @@ const Booking = () => {
                     <h5>Meet and Greet</h5>
                   </div>
                   <div className="detail-card-logo-area">
+                    {/* <img src={bookingDetails?.companyImg} alt="" /> */}
                     <img src="assets/images/lion-parking.png" alt="" />
                   </div>
                   <div className="detail-card-label-area">
-                    <h5>Heathrow Airport</h5>
+                    <h5>{bookingDetails?.airportName}</h5>
                   </div>
 
                   <div className="total-detail-area">
                     <div className="total-detail">
                       <h5 className="total-detail-head">Booking Quote</h5>
-                      <h5 className="total-detail-price">£ 83</h5>
+                      <h5 className="total-detail-price">£ {bookingDetails?.bookingQuote}</h5>
                     </div>
 
                     <Divider className="divider-primary" />
 
                     <div className="total-detail">
                       <h5 className="total-detail-head">Booking Fee</h5>
-                      <h5 className="total-detail-price">£ 0.99</h5>
+                      <h5 className="total-detail-price">£ {bookingCharge?.bookingFee || 0}</h5>
                     </div>
 
                     <Divider className="divider-primary" />
@@ -1211,14 +1554,14 @@ const Booking = () => {
                       <h5 className="total-detail-head text-bold">
                         Total before discount
                       </h5>
-                      <h5 className="total-detail-price text-bold">£ 83.99</h5>
+                      <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalBeforeDiscount || 0}</h5>
                     </div>
 
                     <Divider className="divider-primary" />
 
                     <div className="total-detail">
                       <h5 className="total-detail-head">Coupon Discount</h5>
-                      <h5 className="total-detail-price">- 7.5 %</h5>
+                      <h5 className="total-detail-price">- {bookingCharge?.couponDiscount || 0} %</h5>
                     </div>
 
                     <Divider className="divider-primary" />
@@ -1227,7 +1570,7 @@ const Booking = () => {
                       <h5 className="total-detail-head text-bold">
                         Total before discount
                       </h5>
-                      <h5 className="total-detail-price text-bold">£ 83.99</h5>
+                      <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalBeforeDiscount || 0}</h5>
                     </div>
                   </div>
                 </article>
