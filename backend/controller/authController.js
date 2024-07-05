@@ -38,7 +38,7 @@ const checkUserAlreadyRegistered = async (req, res) => {
   
 
 /* register */
-const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, address, city, country, postCode, role) => {
+const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, addressL1, addressL2, city, country, postCode, role) => {
   
   try{
     // Check for required fields
@@ -48,6 +48,10 @@ const register = async (email, title, firstName, lastName, companyName, password
       (role === 'Vendor' && !companyName) || 
       !password || 
       (role === "User" && !mobileNumber) || 
+      (role === "User" && !addressL1) ||
+      (role === "User" && !city) ||
+      (role === "User" && !country) ||
+      (role === "User" && !postCode) ||
       !role) {
       return {
           error: "Please fill all required fields!",
@@ -111,7 +115,8 @@ const register = async (email, title, firstName, lastName, companyName, password
         password: hashedPassword,
         mobileNumber,
         role,
-        address,
+        addressL1,
+        addressL2,
         city,
         country,
         postCode

@@ -153,11 +153,12 @@ const Header = () => {
                                                             <Ripple />
                                                         </a>
                                                     </li>
-                                                    <li className='profile-dropdown-item'>
+                                                    <li className='profile-dropdown-item'
+                                                     onClick={() => {
+                                                        dispatch(setLogout())
+                                                    }}>
                                                         <a className="profile-dropdown-link logout p-ripple" role='button' href="#"
-                                                            onClick={() => {
-                                                                dispatch(setLogout())
-                                                            }}>
+                                                           >
                                                             <i className='bi bi-box-arrow-right me-2'></i>
                                                             Logout
                                                             <Ripple />
