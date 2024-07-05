@@ -16,15 +16,21 @@ const airports = [
 const quotes = [
     {
         _id: 1,
-        name: "Lion Parking1"
+        name: "Lion Parking1",
+        logo:"",
+        quote: 83
     },
     {
         _id: 2,
-        name: "Lion Parking2"
+        name: "Lion Parking2",
+        logo:"",
+        quote: 84
     },
     {
         _id: 3,
-        name: "Lion Parking3"
+        name: "Lion Parking3",
+        logo:"",
+        quote: 85
     }
 ];
 

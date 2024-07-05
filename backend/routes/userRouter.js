@@ -9,6 +9,7 @@ const {
     resettingPassword,
     carParkingBookingDetail,
     calculatingTotalBookingCharge,
+    checkingCouponCodeValidity,
     cancelTheBooking,
     findAllVendorDetailForUserSearchedParkingSlot,
     getAllAirports
@@ -55,6 +56,9 @@ router.post("/calculate-total-booking-charge", async (req, res) => {
      });
 
 });
+
+//endpoint to check validity of coupon code
+router.post("/checking-couponcode-validity", checkingCouponCodeValidity);
 
 //endpoint to cancel the booking
 router.patch("/cancell-booking", authMiddleware, cancelTheBooking);

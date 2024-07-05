@@ -44,6 +44,31 @@ const vehicleDetailSchema = new Schema({
   }
 }, { _id: false } // Prevents creation of an _id field in this subdocument
 );
+
+// Define the Card detail sub-schema
+const cardDetailSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, "Name on the card must be provided"]
+  },
+  postCode: {
+    type: String,
+    required: [true, "Post Code must be provided"]
+  },
+  cardNo: {
+    type: Number,
+    required: [true, "Card No must be provided"]
+  },
+  expDate: {
+    type: String,
+    required: [true, "Expiry Date must be provided"]
+  },
+  cvv: {
+    type: Number,
+    required: [true, "CVV must be provided"]
+  }
+}, { _id: false } // Prevents creation of an _id field in this subdocument
+);
   
 // Define the main schema
 const bookingDetailSchema = new Schema(
@@ -80,6 +105,7 @@ const bookingDetailSchema = new Schema(
     },
     travelDetail: travelDetailSchema,
     vehicleDetail: [vehicleDetailSchema],
+    cardDetail:cardDetailSchema,
     bookingQuote : {
       type: Number,
       required: [true, "Booking Quote must be provided"]

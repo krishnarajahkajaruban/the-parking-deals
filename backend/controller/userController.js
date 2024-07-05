@@ -260,15 +260,16 @@ const carParkingBookingDetail = async (req, res) => {
             userDetail,
             travelDetail,
             vehicleDetail,
+            cardDetail,
             bookingQuote,
             couponCode,
             smsConfirmation,
             cancellationCover
         } = req.body;
 
-        const { email, title, firstName, lastName, password, mobileNumber, address, city, country, postCode, accessToken, registeredStatus } = userDetail;
+        const { email, title, firstName, lastName, password, mobileNumber, addressL1, addressL2, city, country, postCode, accessToken, registeredStatus } = userDetail;
 
-        if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail || !bookingQuote) {
+        if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail || !cardDetail || !bookingQuote) {
             return res.status(400).json({ error: "All fields must be provided" });
         }
 
@@ -305,7 +306,7 @@ const carParkingBookingDetail = async (req, res) => {
             user = result.user;
             token = result.token;
         } else {
-            const result = await register(email, title, firstName, lastName, password, mobileNumber, address, city, country, postCode, "User");
+            const result = await register(email, title, firstName, lastName, password, mobileNumber, addressL1, addressL2, city, country, postCode, "User");
 
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
@@ -331,6 +332,7 @@ const carParkingBookingDetail = async (req, res) => {
             userId: user._id || user.id,
             travelDetail,
             vehicleDetail,
+            cardDetail,
             bookingQuote: bookingResult.bookingQuote,
             bookingFee: bookingResult.bookingFee,
             ...(smsConfirmation && { smsConfirmationFee: bookingResult.smsConfirmation }),
@@ -457,27 +459,23 @@ const sendEmailToCompany = async (booking, user, type) => {
 /* calculating total booking charge */
 const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfirmation, cancellationCover) => {
     try {
-        
+
         // Check if bookingQuote is provided and is a number
         if (!bookingQuote || isNaN(Number(bookingQuote))) {
-            return {
-                error: "Booking Quote required and must be a number!",
-                status: 400
-            };
-        }
-
+          return {
+              error: "Booking Quote required and must be a number!",
+              status: 400
+          };
+      };
+        
         // Initialize coupon discount
         let couponDiscount = 0;
         if (couponCode) {
             const validityOfCouponCode = await CouponDiscount.findOne({ couponCode: couponCode.toLowerCase() }).lean();
 
-            if (!validityOfCouponCode) {
-                return {
-                    error: "Coupon code is not valid",
-                    status: 400
-                };
-            }
-            couponDiscount = validityOfCouponCode.discount;
+            if (validityOfCouponCode) { 
+              couponDiscount = validityOfCouponCode.discount;
+            };
         }
 
         // Fetch the latest booking fare
@@ -519,6 +517,28 @@ const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfir
             status: 500
           };
     }
+};
+
+const checkingCouponCodeValidity = async(req, res) => {
+  try{
+    const { couponCode } = req.body;
+
+    if(!couponCode) {
+        return res.status(400).json({ error: "No Coupon code provided"})
+    };
+
+    const validityOfCouponCode = await CouponDiscount.findOne({ couponCode: couponCode.toLowerCase() }).lean();
+
+      if (!validityOfCouponCode) {
+          return  res.status(400).json({ error: "Coupon code is not valid" });
+      };
+
+      res.status(200).json({message: "Coupon code is valid"});
+  }catch(err){
+      return res.status(500).json({
+        error: err.message
+    });
+  };
 };
 
 /* cancelled the booking */
@@ -674,6 +694,7 @@ module.exports = {
     resettingPassword,
     carParkingBookingDetail,
     calculatingTotalBookingCharge,
+    checkingCouponCodeValidity,
     cancelTheBooking,
     findAllVendorDetailForUserSearchedParkingSlot,
     getAllAirports
