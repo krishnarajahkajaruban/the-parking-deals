@@ -112,7 +112,7 @@ const Header = () => {
                                         </li>
                                     </ul>
 
-                                    {user ? (
+                                    {!user ? (
                                         <ul className='nav-button-grp'>
                                             <li className='nav-button-grp-item'>
                                                 <a href="/sign-up" className='nav-link-button with-outline text-uppercase letter-spaced'>Sign up</a>
@@ -147,9 +147,9 @@ const Header = () => {
                                                         </h6>
                                                     </div>
                                                     <li className='profile-dropdown-item mb-1 mt-1'>
-                                                        <a className="profile-dropdown-link profile p-ripple" href="/profile">
-                                                            <i className='bi bi-person me-2'></i>
-                                                            Profile
+                                                        <a className="profile-dropdown-link profile p-ripple" href="/dashboard">
+                                                            <i className='bi bi-speedometer2 me-2'></i>
+                                                            Dashboard
                                                             <Ripple />
                                                         </a>
                                                     </li>
@@ -228,14 +228,14 @@ const Header = () => {
                             </div>
                             <hr />
                             <div className="menu-profile-footer">
-                                <a href="/profile" className='menu-profile-link primary-btn'>
-                                    <i className='bi bi-person me-1'></i> Profile
+                                <a href="/dashboard" className='menu-profile-link primary-btn'>
+                                    <i className='bi bi-speedometer2'></i> Dashboard
                                 </a>
                                 <a href="#" role='button' className='menu-profile-link danger-btn'
                                     onClick={() => {
                                         dispatch(setLogout())
                                     }}>
-                                    <i class="bi bi-box-arrow-right me-1"></i>
+                                    <i class="bi bi-box-arrow-right"></i>
                                     Logout
                                 </a>
                             </div>

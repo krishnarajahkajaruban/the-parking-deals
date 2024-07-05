@@ -394,7 +394,7 @@ const Signup = () => {
                               className="custom-form-input otp-input"
                               value={otp}
                               onChange={(e) => setOTP(e.value)}
-                              integerOnly
+                              
                             />
                           </div>
                           {showError && (

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import './Profile.css';
-import './Profile-responsive.css';
+import './Dashboard.css';
+import './Dashboard-responsive.css';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
-const Profile = () => {
+const Dashboard = () => {
     return (
         <>
             <Header />
@@ -14,13 +14,13 @@ const Profile = () => {
                 <div className="container-md">
                     <div className="row">
                         <div className="col-12">
-                            <h3 className='breadcrumb-title'>Profile</h3>
+                            <h3 className='breadcrumb-title'>Dashboard</h3>
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb">
                                     <li className="breadcrumb-item">
                                         <a href="/">Home</a>
                                     </li>
-                                    <li className="breadcrumb-item active" aria-current="page">Profile</li>
+                                    <li className="breadcrumb-item active" aria-current="page">Dashboard</li>
                                 </ol>
                             </nav>
 
@@ -31,7 +31,7 @@ const Profile = () => {
             {/* Breadcrumb Section End */}
 
             {/* Profile section */}
-            <section className="section-padding overflow-hidden">
+            <section className="section-padding dashboard-section overflow-hidden">
                 <div className="container-md">
                     <div className="row">
                         <div className="col-12">
@@ -47,4 +47,4 @@ const Profile = () => {
     )
 }
 
-export default Profile;
+export default Dashboard;
