@@ -41,7 +41,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchAllAirports(dispatch);
-      }, [dispatch]);
+    }, [dispatch]);
 
     const selectedAirportTemplate = (option, props) => {
         if (option) {
@@ -63,7 +63,7 @@ const Home = () => {
         );
     };
 
-    const handleGetQuote = async(e) => {
+    const handleGetQuote = async (e) => {
         e.preventDefault();
         setShowError(false);
         if (!selectedAirport || !dropOffDate || !dropOffTime || !pickupDate || !pickupTime) {
@@ -77,8 +77,9 @@ const Home = () => {
             return;
         }
 
-        const quoteInfo = {selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode}
-        navigate('/results', { state : {quoteInfo} });
+        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode }
+        navigate('/results', { state: { quoteInfo } });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const handleDropOffDateChange = (e) => {
@@ -309,8 +310,8 @@ const Home = () => {
                                                 <label htmlFor="couponCode" className="custom-form-label text-sm-center">Coupon Code</label>
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-gift-fill input-grp-icon"></i>
-                                                    <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError} 
-                                                    onChange={(e)=>setCouponCode(e.target.value)}/>
+                                                    <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError}
+                                                        onChange={(e) => setCouponCode(e.target.value)} />
                                                 </div>
                                                 {/* {showError &&
                                                     <small className="text-danger form-error-msg text-sm-center">This field is required</small>
@@ -324,7 +325,7 @@ const Home = () => {
                                     </div>
 
                                     <div className="custom-form-group contains-float-input mb-0">
-                                        <Button label="GET QUOTE" className="w-100 submit-button justify-content-center" loading={loading}  />
+                                        <Button label="GET QUOTE" className="w-100 submit-button justify-content-center" loading={loading} />
                                     </div>
                                 </form>
                             </article>

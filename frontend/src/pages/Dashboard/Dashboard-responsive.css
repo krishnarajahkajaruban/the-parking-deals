@@ -1,0 +1,152 @@
+/* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
+@media (min-width: 1399.99px) {}
+
+/* For XL Screen (Laptop - HD Ready Display) */
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {
+
+    .dashboard-profile-detail .dashboard-profile-detail-title,
+    .dashboard-profile-detail .dashboard-profile-content {
+        font-size: 15px !important;
+    }
+}
+
+/* For LG (Large) Screen  */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .dashboard-profile-detail .dashboard-profile-detail-title,
+    .dashboard-profile-detail .dashboard-profile-content {
+        font-size: 15px !important;
+    }
+
+    .dashboard-tab-area.tabs {
+        flex-direction: row !important;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .dashboard-tab-area .dashboard-tab-link {
+        width: auto;
+        justify-content: center;
+        font-size: 15px;
+    }
+}
+
+/* For MD (Medium) Screen (ipad) */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .dashboard-profile-detail .dashboard-profile-detail-title,
+    .dashboard-profile-detail .dashboard-profile-content {
+        font-size: 15px !important;
+    }
+
+    .dashboard-tab-area.tabs {
+        flex-direction: row !important;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .dashboard-tab-area .dashboard-tab-link {
+        width: auto;
+        justify-content: center;
+        font-size: 15px;
+    }
+
+    .dashboard-profile-image-area {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+/* For SM (Small) Screen (Tab) */
+@media (min-width: 576px) and (max-width: 767px) {
+
+    .dashboard-profile-detail .dashboard-profile-detail-title,
+    .dashboard-profile-detail .dashboard-profile-content {
+        font-size: 15px !important;
+    }
+
+    .dashboard-tab-area.tabs {
+        flex-direction: row !important;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .dashboard-tab-area .dashboard-tab-link {
+        width: auto;
+        justify-content: center;
+        font-size: 15px;
+    }
+
+    .dashboard-profile-image-area {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* For Mobile Screen */
+@media (max-width: 575px) {
+
+    .dashboard-profile-detail .dashboard-profile-detail-title,
+    .dashboard-profile-detail .dashboard-profile-content {
+        font-size: 14px !important;
+    }
+
+    .dashboard-tab-area.tabs {
+        flex-direction: column !important;
+        gap: 10px;
+        margin-bottom: 15px;
+        padding: 10px !important;
+    }
+
+    .dashboard-profile-head h5 {
+        font-size: 16px !important;
+    }
+
+    .dashboard-tab-area .dashboard-tab-link {
+        width: auto;
+        justify-content: center;
+        font-size: 15px;
+    }
+
+    .dashboard-profile-image-area {
+        width: 130px;
+        height: 130px;
+    }
+
+    .dashboard-tab-area {
+        padding: 10px !important;
+    }
+
+    .dash-tab-divider {
+        border-left: none;
+    }
+
+    .dashboard-profile-detail-area {
+        padding: 20px 0 0 0
+    }
+
+    .dashboard-profile-footer {
+        flex-direction: column;
+    }
+
+    .dashboard-profile-footer .dashboard-action-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 8px;
+    }
+
+    .edit-profile-area {
+        padding: 10px;
+    }
+
+    .p-dialog.p-confirm-dialog .p-confirm-dialog-icon {
+        font-size: 1.4rem !important;
+    }
+
+    .p-dialog{
+        width: 85vw !important;
+    }
+    .p-dialog.p-confirm-dialog .p-confirm-dialog-message{
+        font-size: 13px !important;
+    }
+}
