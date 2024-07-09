@@ -29,32 +29,22 @@ app.use(cors({ // CORS setup
 }));
 
 app.use(morgan("tiny")); // Logging
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // URL encoded data parsing
-
-// Routes
-app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
-app.use("/api/admin", adminRouter);
-app.use("/api/common-role", commonRoleRouter);
-
-// Create HTTP server
-const server = http.createServer(app);
-
-// Get port from environment variables or use default port 3000
-const PORT = process.env.PORT || 5001;
 
 // Webhook endpoint to handle Stripe events
-app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (request, response) => {
-  const sig = request.headers['stripe-signature'];
-  let event;
+app.post('/webhook', express.raw({ type: 'application/json' }), async(request, response) => {
+  let event = request.body;
 
-  try {
-    event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error(`Webhook Error: ${err.message}`);
-    return response.status(400).send(`Webhook Error: ${err.message}`);
-  }
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if(endpointSecret){
+    const sig = request.headers['stripe-signature'];
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      console.error(`Webhook Error: ${err.message}`);
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+  };
 
   // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
@@ -82,6 +72,21 @@ async function handlePaymentFailure(paymentIntent) {
   console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
 }
 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // URL encoded data parsing
+
+// Routes
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/common-role", commonRoleRouter);
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Get port from environment variables or use default port 3000
+const PORT = process.env.PORT || 5001;
 
 // Start the server
 server.listen(PORT, async() => {
