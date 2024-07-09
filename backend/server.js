@@ -29,7 +29,13 @@ app.use(cors({ // CORS setup
 }));
 
 app.use(morgan("tiny")); // Logging
-
+app.use((req, res, next) => {
+  if (req.originalUrl === '/webhook') {
+    next(); // Do nothing with the body because I need it in a raw state.
+  } else {
+    express.json()(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
 // Webhook endpoint to handle Stripe events
 app.post('/webhook', express.raw({ type: 'application/json' }), async(request, response) => {
   let event = request.body;
@@ -72,9 +78,7 @@ async function handlePaymentFailure(paymentIntent) {
   console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
 }
 
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // URL encoded data parsing
+// app.use(express.urlencoded({ extended: true })); // URL encoded data parsing
 
 // Routes
 app.use("/api/auth", authRouter);
