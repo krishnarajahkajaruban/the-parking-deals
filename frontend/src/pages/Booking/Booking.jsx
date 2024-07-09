@@ -311,14 +311,14 @@ const Booking = () => {
         sessionId: response.data.id
       });
   
-      if (result.error) {
-        toast.current.show({
-          severity: 'error',
-          summary: 'Failed to Book',
-          detail: result.error.message,
-          life: 3000
-        });
-      }
+      console.log(result);
+  
+      toast.current.show({
+        severity: 'success',
+        summary: 'Booking Successful',
+        detail: "You have booked your parking slot successfully",
+        life: 3000
+      });
   
     } catch (err) {
       console.log(err);
@@ -330,6 +330,7 @@ const Booking = () => {
       });
     }
   };
+  
   
 
   function validateUserDetails(userDetails, isUserPresent, doesEmailExist) {
