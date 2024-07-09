@@ -10,6 +10,8 @@ const bcrypt = require("bcrypt");
 const EmailVerify = require("../models/emailVerify");
 const ForgotUserEmail = require("../models/forgotUserEmail");
 
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
 // Utility function to generate a 6-digit verification code
 const generateVerificationCode = () => {
     const charset = '0123456789';
@@ -260,7 +262,7 @@ const carParkingBookingDetail = async (req, res) => {
             userDetail,
             travelDetail,
             vehicleDetail,
-            cardDetail,
+            // cardDetail,
             bookingQuote,
             couponCode,
             smsConfirmation,
@@ -269,7 +271,9 @@ const carParkingBookingDetail = async (req, res) => {
 
         const { email, title, firstName, lastName, password, mobileNumber, addressL1, addressL2, city, country, postCode, accessToken, registeredStatus } = userDetail;
 
-        if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail || !cardDetail || !bookingQuote) {
+        if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail 
+          // || !cardDetail 
+          || !bookingQuote) {
             return res.status(400).json({ error: "All fields must be provided" });
         }
 
@@ -322,6 +326,8 @@ const carParkingBookingDetail = async (req, res) => {
             return res.status(bookingResult.status).json({ error: bookingResult.error });
         }
 
+        // console.log(user);
+
         const newCarParkingBooking = new BookingDetail({
             airportName,
             dropOffDate,
@@ -332,7 +338,7 @@ const carParkingBookingDetail = async (req, res) => {
             userId: user._id || user.id,
             travelDetail,
             vehicleDetail,
-            cardDetail,
+            // cardDetail,
             bookingQuote: bookingResult.bookingQuote,
             bookingFee: bookingResult.bookingFee,
             ...(smsConfirmation && { smsConfirmationFee: bookingResult.smsConfirmation }),
@@ -340,10 +346,36 @@ const carParkingBookingDetail = async (req, res) => {
             totalBeforeDiscount: bookingResult.totalBeforeDiscount,
             couponDiscount: bookingResult.couponDiscount,
             totalPayable: bookingResult.totalPayable,
-            status: "Confirmed"
+            status: "Pending"
         });
 
         await newCarParkingBooking.save();
+
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card"],
+          line_items: [
+            {
+              price_data: {
+                currency: "gbp",
+                product_data: {
+                  name: "Car Parking Booking",
+                  images: ["https://example.com/image.jpg"]
+                },
+                unit_amount: Math.round(bookingResult.totalPayable * 100)
+              },
+              quantity: 1
+            }
+          ],
+          mode: "payment",
+          success_url: `${process.env.FRONTEND_URL}/booking-success?bookingId=${newCarParkingBooking._id}`,
+          cancel_url: `${process.env.FRONTEND_URL}/booking-cancel`,
+          metadata: {
+            bookingId: newCarParkingBooking._id.toString()
+          }
+        });
+
+        // console.log(session);
+        
 
         const [emailResponseForUser, emailResponseForCompany] = await Promise.all([
             sendEmailToUser(newCarParkingBooking, user, "Book"),
@@ -351,6 +383,7 @@ const carParkingBookingDetail = async (req, res) => {
         ]);
 
         return res.status(201).json({
+            id: session.id,
             newCarParkBooking: newCarParkingBooking.toObject(),
             token,
             emailSentForUser: emailResponseForUser.emailSent,

@@ -109,7 +109,7 @@ const Signup = () => {
 
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
-    await verifyOTP(otp, setShowError, setOTP, signUpInfo.email, setLoading, setPage, toast);
+    await verifyOTP(otp, setShowError, setOTP, signUpInfo.email, setLoading, setPage, toast, false, false);
   };
 
   useEffect(() => {

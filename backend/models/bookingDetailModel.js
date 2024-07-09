@@ -6,12 +6,12 @@ const travelDetailSchema = new Schema({
   departureTerminal: {
     type: String,
     required: [true, "Departure terminal must be provided"],
-    enum: ["Terminal1", "Terminal2", "Terminal3", "Terminal4", "Terminal5"]
+    enum: ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4", "Terminal 5"]
   },
   arrivalTerminal: {
     type: String,
     required: [true, "Arrival terminal must be provided"],
-    enum: ["Terminal1", "Terminal2", "Terminal3", "Terminal4", "Terminal5"]
+    enum: ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4", "Terminal 5"]
   },
   outBoundFlight: {
     type: String,
@@ -56,7 +56,7 @@ const cardDetailSchema = new Schema({
     required: [true, "Post Code must be provided"]
   },
   cardNo: {
-    type: Number,
+    type: String,
     required: [true, "Card No must be provided"]
   },
   expDate: {
@@ -64,7 +64,7 @@ const cardDetailSchema = new Schema({
     required: [true, "Expiry Date must be provided"]
   },
   cvv: {
-    type: Number,
+    type: String,
     required: [true, "CVV must be provided"]
   }
 }, { _id: false } // Prevents creation of an _id field in this subdocument
@@ -105,7 +105,7 @@ const bookingDetailSchema = new Schema(
     },
     travelDetail: travelDetailSchema,
     vehicleDetail: [vehicleDetailSchema],
-    cardDetail:cardDetailSchema,
+    // cardDetail:cardDetailSchema,
     bookingQuote : {
       type: Number,
       required: [true, "Booking Quote must be provided"]
@@ -128,14 +128,14 @@ const bookingDetailSchema = new Schema(
       type: Number,
       required: [true, "Coupon discount must be provided"]
     },
-    totalpayable : {
+    totalPayable : {
       type: Number,
       required: [true, "Total payable must be provided"]
     },
     status: {
       type: String,
       required: [true, "Booking Status must be provided"],
-      enum: [ "Confirmed", "Cancelled"]
+      enum: [ "Paid", "Pending", "Failed", "Cancelled"]
     }
   },
   { timestamps: true }

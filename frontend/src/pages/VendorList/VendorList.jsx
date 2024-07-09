@@ -204,7 +204,7 @@ const VendorList = () => {
                             <i class="bi bi-airplane-fill input-grp-icon"></i>
                             {selectedAirport?.name || quoteInfo?.selectedAirport.name}
                           </h6>
-                          <Dropdown
+                          {/* <Dropdown
                               id="airport"
                               value={selectedAirport}
                               onChange={(e) => setSelectedAirport(e.value)}
@@ -215,7 +215,7 @@ const VendorList = () => {
                               valueTemplate={selectedAirportTemplate}
                               itemTemplate={airportOptionTemplate}
                               className="w-full w-100 custom-form-dropdown"
-                            />
+                            /> */}
                         </div>
                       </div>
                     </div>

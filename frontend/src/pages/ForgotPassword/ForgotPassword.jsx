@@ -72,7 +72,7 @@ const ForgotPassword = () => {
 
     const handleVerifyOTP = async (e) => {
         e.preventDefault();
-        await verifyOTP(otp, setOTP, resetPasswordInfo.email, setLoading, setPage, toast, true);
+        await verifyOTP(otp, setShowError, setOTP, resetPasswordInfo.email, setLoading, setPage, toast, true, false);
     };
 
     useEffect(() => {
