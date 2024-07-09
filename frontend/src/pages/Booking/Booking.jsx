@@ -76,8 +76,7 @@ const Booking = () => {
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
 
-  console.log(checkedSmsConfirmation, checkedCancellationCover);
-
+  
   const initalUserDetails = {
     email: "",
     password: "",
@@ -155,7 +154,7 @@ const Booking = () => {
       
       calculatingBookingCharge();
     }
-  }, [bookingDetails]);
+  }, [bookingDetails, checkedCancellationCover, checkedSmsConfirmation]);
 
   const checkingCouponCodeValidity = async () => {
     try {
@@ -219,6 +218,7 @@ const Booking = () => {
     const { name, value } = e.target;
     setCardDetails({ ...cardDetails, [name]: value });
   };
+
 
   const handleLogin = () => {
 
@@ -304,28 +304,22 @@ const Booking = () => {
     try {
       const response = await api.post("/api/user/car-park-booking", details);
       console.log(response.data);
-
+  
       const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
-
-      const result = stripe.redirectToCheckout({
-        sessionId:response.data.id
+  
+      const result = await stripe.redirectToCheckout({
+        sessionId: response.data.id
       });
-
-      if(result.error){
-        console.log(result.error);
-      };
-
-      toast.current.show({
-        severity: 'success',
-        summary: 'Booking Successfully',
-        detail: "You have been booked your parking slot successfully",
-        life: 3000
-      });
-
-      // setTimeout(() => {
-      //   navigate("/")
-      // }, 2000);
-
+  
+      if (result.error) {
+        toast.current.show({
+          severity: 'error',
+          summary: 'Failed to Book',
+          detail: result.error.message,
+          life: 3000
+        });
+      }
+  
     } catch (err) {
       console.log(err);
       toast.current.show({
@@ -334,8 +328,9 @@ const Booking = () => {
         detail: err.response.data.error,
         life: 3000
       });
-    };
+    }
   };
+  
 
   function validateUserDetails(userDetails, isUserPresent, doesEmailExist) {
     // Check if user is present
@@ -465,7 +460,7 @@ const Booking = () => {
       userDetail: userDetail,
       travelDetail: travelDetails,
       vehicleDetail: vehiclesDetails,
-      cardDetail: cardDetails,
+      // cardDetail: cardDetails,
       bookingQuote: bookingDetails?.bookingQuote,
       couponCode: bookingDetails?.couponCode,
       smsConfirmation: checkedSmsConfirmation,
@@ -1219,7 +1214,6 @@ const Booking = () => {
                             <Checkbox
                               inputId="smsConfirmation"
                               onChange={(e) =>{
-                                calculatingBookingCharge();
                                 setCheckedSmsConfirmation(e.checked)
                               }
                               }
@@ -1240,7 +1234,6 @@ const Booking = () => {
                             <Checkbox
                               inputId="cancellationCover"
                               onChange={(e) =>{
-                                calculatingBookingCharge();
                                 setCheckedCancellationCover(e.checked)
                               }
                               }
@@ -1311,13 +1304,13 @@ const Booking = () => {
 
                     <div className="total-price-area">
                       <h5 className="total-price-text">Total :</h5>
-                      <h5 className="total-price">£ {bookingCharge?.totalPayable || 0}</h5>
+                      <h5 className="total-price">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
                     </div>
 
-                    <Divider className="divider-margin" />
+                    {/* <Divider className="divider-margin" /> */}
 
                     {/* Coupon Code */}
-                    <div className="booking-card-head-area">
+                    {/* <div className="booking-card-head-area">
                       <h4 className="booking-card-head">Card Details</h4>
 
                       <div className="row mt-4">
@@ -1455,7 +1448,7 @@ const Booking = () => {
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/*  */}
 
                     <Divider className="divider-margin" />
@@ -1639,7 +1632,7 @@ const Booking = () => {
                     <h5 className="total-detail-head text-bold">
                       Total Payable
                     </h5>
-                    <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalPayable || 0}</h5>
+                    <h5 className="total-detail-price text-bold">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
                   </div>
                 </div>
               </article>
