@@ -10,6 +10,8 @@ const bcrypt = require("bcrypt");
 const EmailVerify = require("../models/emailVerify");
 const ForgotUserEmail = require("../models/forgotUserEmail");
 
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
 // Utility function to generate a 6-digit verification code
 const generateVerificationCode = () => {
     const charset = '0123456789';
@@ -345,23 +347,45 @@ const carParkingBookingDetail = async (req, res) => {
 
         await newCarParkingBooking.save();
 
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card"],
+          line_items: [
+            {
+              price_data: {
+                currency: "gbp",
+                product_data: {
+                  name: "Car Parking Booking",
+                  images: ["https://example.com/image.jpg"]
+                },
+                unit_amount: bookingResult.totalPayable * 100
+              },
+              quantity: 1
+            }
+          ],
+          mode: "payment",
+          success_url: `${process.env.FRONTEND_URL}/booking-success?bookingId=${newCarParkingBooking._id}`,
+          cancel_url: `${process.env.FRONTEND_URL}/booking-cancel`
+        });
+        
+
         const [emailResponseForUser, emailResponseForCompany] = await Promise.all([
             sendEmailToUser(newCarParkingBooking, user, "Book"),
-            sendEmailToCompany(newCarParkingBooking, user, "Book")
+            // sendEmailToCompany(newCarParkingBooking, user, "Book")
         ]);
 
         return res.status(201).json({
+            id: session.id,
             newCarParkBooking: newCarParkingBooking.toObject(),
             token,
             emailSentForUser: emailResponseForUser.emailSent,
             mailMsgForUser: emailResponseForUser.message,
-            emailSentForCompany: emailResponseForCompany.emailSent,
-            mailMsgForCompany: emailResponseForCompany.message,
+            // emailSentForCompany: emailResponseForCompany.emailSent,
+            // mailMsgForCompany: emailResponseForCompany.message,
             message: "Car park booking created successfully!",
             infoForUser: emailResponseForUser.info || null,
             errorForUser: emailResponseForUser.error || null,
-            infoForCompany: emailResponseForCompany.info || null,
-            errorForCompany: emailResponseForCompany.error || null
+            // infoForCompany: emailResponseForCompany.info || null,
+            // errorForCompany: emailResponseForCompany.error || null
         });
 
     } catch (err) {

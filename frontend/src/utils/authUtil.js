@@ -55,7 +55,7 @@ export const sendVerificationEmail = async (email, setShowError, setLoading, set
     }
 };
 
-export const verifyOTP = async (otp, setShowError, setOTP, email, setLoading, setPage, toast, resetPassword = false) => {
+export const verifyOTP = async (otp, setShowError, setOTP, email, setLoading, setPage, toast, resetPassword, setVerified) => {
     if (!otp) {
         setShowError(true);
         toast?.current.show({
@@ -72,6 +72,7 @@ export const verifyOTP = async (otp, setShowError, setOTP, email, setLoading, se
         const response = await api.post(endpoint, { verificationCode: otp, email });
         console.log(response.data);
         setPage(3);
+        setVerified && setVerified(true);
         toast?.current.show({
             severity: 'success',
             summary: 'OTP verified successfully.',
