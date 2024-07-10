@@ -107,4 +107,9 @@ router.put("/update-user-info", authMiddleware, upload.single("dp"), updateUserI
 //endpoint to get user info with updated token
 router.get("/user-info", authMiddleware, getUserInfoWithUpdatedToken);
 
+//endpoint to check the validity of the token
+router.get("/check-token-validity", authMiddleware, (req, res) => {
+    return res.status(200).json({ message: "Token is valid" });
+})
+
  module.exports = router;

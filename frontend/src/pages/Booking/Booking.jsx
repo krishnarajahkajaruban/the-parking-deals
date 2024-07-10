@@ -1553,13 +1553,13 @@ const CheckoutForm = () => {
 
                     <div className="row mt-5">
                       <div className="col-12 col-xl-4 col-md-6 col-lg-7 col-sm-6 mx-auto">
-                        {/* <Button
+                        <Button
                           label="CONFIRM BOOKING"
                           className="custom-btn-primary w-100 result-card-btn"
                           onClick={handleBooking}
                           disabled={!isAgreed}
-                        /> */}
-                        {PaymentForm()}
+                        />
+                        {/* {PaymentForm()} */}
                       </div>
                     </div>
                   </div>
