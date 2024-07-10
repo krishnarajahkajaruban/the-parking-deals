@@ -1,4 +1,3 @@
-// Import required libraries
 const express = require('express');
 const cors = require('cors');
 const connectDb = require("./config/dbConnection");
@@ -31,65 +30,31 @@ app.use(cors({ // CORS setup
 }));
 
 app.use(morgan("tiny")); // Logging
+
+// Middleware to handle raw body for Stripe webhook
 app.use((req, res, next) => {
   if (req.originalUrl === '/webhook') {
-    next(); // Do nothing with the body because I need it in a raw state.
+    rawBody(req, {
+      length: req.headers['content-length'],
+      limit: '1mb',
+      type: 'application/json',
+    }, (err, string) => {
+      if (err) return next(err);
+      req.rawBody = string;
+      next();
+    });
   } else {
-    express.json()(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+    express.json()(req, res, next);
   }
 });
 
 // Webhook endpoint to handle Stripe events
-// app.post('/webhook', express.raw({ type: 'application/json' }), async(request, response) => {
-//   let event = request.body;
-
-//   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-//   if(endpointSecret){
-//     const sig = request.headers['stripe-signature'];
-//     try {
-//       event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-//     } catch (err) {
-//       console.error(`Webhook Error: ${err.message}`);
-//       return response.status(400).send(`Webhook Error: ${err.message}`);
-//     }
-//   };
-
-//   // Handle the checkout.session.completed event
-//   if (event.type === 'checkout.session.completed') {
-//     const session = event.data.object;
-//     await handleCheckoutSession(session);
-//   } else if (event.type === 'payment_intent.payment_failed') {
-//     const paymentIntent = event.data.object;
-//     await handlePaymentFailure(paymentIntent);
-//   }
-
-//   response.json({ received: true });
-// });
-
-// async function handleCheckoutSession(session) {
-//   // Update booking status to success in your database
-//   const bookingId = session.metadata.bookingId;
-//   await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Paid' });
-//   console.log(`Payment successful for session: ${session.id}`);
-// }
-
-// async function handlePaymentFailure(paymentIntent) {
-//   // Update booking status to failed in your database
-//   const bookingId = paymentIntent.metadata.bookingId;
-//   await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Failed' });
-//   console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
-// }
-
-// Webhook to handle payment status updates
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', async(req, res) => {
   let event;
 
   try {
-    const rawBodyBuffer = await rawBody(req);
     const sig = req.headers['stripe-signature'];
-
-    event = stripe.webhooks.constructEvent(rawBodyBuffer, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -114,8 +79,6 @@ app.post('/webhook', async (req, res) => {
   res.json({ received: true });
 });
 
-// app.use(express.urlencoded({ extended: true })); // URL encoded data parsing
-
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
@@ -126,10 +89,8 @@ app.use("/api/common-role", commonRoleRouter);
 app.use((err, req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   if (err instanceof Multer.MulterError) {
-    // A Multer error occurred when uploading.
     res.status(400).json({ error: err.message });
   } else if (err) {
-    // An unknown error occurred when uploading.
     res.status(400).json({ error: err.message });
   } else {
     next();
