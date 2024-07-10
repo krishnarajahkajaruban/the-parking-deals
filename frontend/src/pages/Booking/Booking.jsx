@@ -127,7 +127,7 @@ const Booking = () => {
   const [cardDetails, setCardDetails] = useState(initialCardDetails);
   const [bookingCharge, setBookingCharge] = useState();
 
-  const stripePromise = loadStripe('your_stripe_publishable_key');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -181,12 +181,27 @@ const CheckoutForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <CardElement />
-      <button type="submit" disabled={!stripe}>Pay</button>
+      <button type="submit" disabled={!stripe}>Pay</button> 
+      {/* <Button
+        type='submit'
+        label="CONFIRM BOOKING"
+        className="custom-btn-primary w-100 result-card-btn"
+        // onClick={handleBooking}
+        disabled={!isAgreed || !stripe}
+        /> */}
       {error && <div>{error}</div>}
       {success && <div>Payment successful!</div>}
     </form>
   );
 };
+
+    const PaymentForm = () => {
+      return (
+        <Elements stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>
+      );
+    };
 
   const calculatingBookingCharge = async () => {
     try {
@@ -1538,19 +1553,19 @@ const CheckoutForm = () => {
 
                     <div className="row mt-5">
                       <div className="col-12 col-xl-4 col-md-6 col-lg-7 col-sm-6 mx-auto">
-                        <Button
+                        {/* <Button
                           label="CONFIRM BOOKING"
                           className="custom-btn-primary w-100 result-card-btn"
                           onClick={handleBooking}
                           disabled={!isAgreed}
-                        />
+                        /> */}
+                        {PaymentForm()}
                       </div>
                     </div>
                   </div>
                 </div>
               </article>
             </div>
-
             <div className="col-12 col-lg-5 col-xl-4 ps-xl-2 position-relative book-summary-section mt-lg-0">
               <article className="detail-card">
                 <div className="detail-card-label-area main mt-0">
