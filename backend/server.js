@@ -61,6 +61,7 @@ app.post('/webhook', async(req, res) => {
   }
 
   if (event.type === 'payment_intent.succeeded') {
+    console.log("succeeded")
     const paymentIntent = event.data.object;
     await Payment.findOneAndUpdate(
       { stripePaymentId: paymentIntent.id },
@@ -68,6 +69,7 @@ app.post('/webhook', async(req, res) => {
       { upsert: true }
     );
   } else if (event.type === 'payment_intent.payment_failed') {
+    console.log("failed")
     const paymentIntent = event.data.object;
     await Payment.findOneAndUpdate(
       { stripePaymentId: paymentIntent.id },
