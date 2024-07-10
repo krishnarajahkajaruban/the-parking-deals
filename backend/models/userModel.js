@@ -87,6 +87,15 @@ const userSchema = new Schema(
       required: function() {
         return this.role === "User";
       },
+    },
+    dp: {
+      type: String,
+      set: function(value) {
+        if (!this.role === "User") {
+          return undefined;
+        }
+        return value || "";
+      }
     }
   },
   { timestamps: true }

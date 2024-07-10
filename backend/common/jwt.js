@@ -14,7 +14,8 @@ const generateToken = (user, secret, expiresIn = '1d') => {
     role: user.role,
     ...(user.role === "User" && {city: user.city}),
     ...(user.role === "User" && {country: user.country}),
-    ...(user.role === "User" && {postCode: user.postCode})
+    ...(user.role === "User" && {postCode: user.postCode}),
+    ...(user.role === "User" && {dp: user.dp})
   };
 
   return jwt.sign(payload, secret, { expiresIn });

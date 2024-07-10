@@ -24,7 +24,7 @@ const app = express();
 app.use(cors({ // CORS setup
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
   credentials: true,
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials']
 }));
 
@@ -36,6 +36,7 @@ app.use((req, res, next) => {
     express.json()(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
   }
 });
+
 // Webhook endpoint to handle Stripe events
 app.post('/webhook', express.raw({ type: 'application/json' }), async(request, response) => {
   let event = request.body;
@@ -85,6 +86,20 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/common-role", commonRoleRouter);
+
+// Error handling middleware for Multer errors
+app.use((err, req, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
+  if (err instanceof Multer.MulterError) {
+    // A Multer error occurred when uploading.
+    res.status(400).json({ error: err.message });
+  } else if (err) {
+    // An unknown error occurred when uploading.
+    res.status(400).json({ error: err.message });
+  } else {
+    next();
+  }
+});
 
 // Create HTTP server
 const server = http.createServer(app);

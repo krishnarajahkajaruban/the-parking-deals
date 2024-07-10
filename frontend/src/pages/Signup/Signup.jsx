@@ -55,7 +55,7 @@ const Signup = () => {
 
 
   const initialSignUpInfo = {
-    email: 'pragashconstantine13@gmail.com',
+    email: '',
     title: titles[0].name,
     firstName: "",
     lastName: "",

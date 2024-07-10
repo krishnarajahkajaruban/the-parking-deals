@@ -16,14 +16,17 @@ import { Dropdown } from "primereact/dropdown";
 import { FileUpload } from 'primereact/fileupload';
 import { InputText } from "primereact/inputtext";
 import { InputMask } from "primereact/inputmask";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin, setLogout } from "../../state";
+import { Toast } from 'primereact/toast';
+import api from "../../api";
 
 const Dashboard = () => {
     const ref = useRef(null);
+    const toast = useRef(null);
+    const dispatch = useDispatch();
     const [showError, setShowError] = useState(false);
     const [showEditArea, setShowEditArea] = useState(false);
-
-    const accept = () => {
-    }
 
     const logOut = () => {
         confirmDialog({
@@ -32,9 +35,12 @@ const Dashboard = () => {
             icon: 'bi bi-info-circle',
             defaultFocus: 'reject',
             acceptClassName: 'p-button-danger',
-            accept,
+            accept: () => {
+                dispatch(setLogout());
+            },
         });
     }
+    
 
     useEffect(() => {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -57,12 +63,119 @@ const Dashboard = () => {
     const [country, setCountry] = useState('');
     const [postCode, setPostCode] = useState('');
 
-    const onUpload = () => {
+    const user = useSelector((state) => state.auth.user);
+    const token = useSelector((state) => state.auth.token);
+    const [imgFile, setImgFile] = useState();
+    const [loading, setLoading] = useState(false);
+
+    const initialUserInfo = {
+        title: user?.title || titles[0].name,
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
+        mobileNumber: user?.mobileNumber || "",
+        addressL1: user?.addressL1 || "",
+        addressL2: user?.addressL2 || "",
+        city: user?.city || "",
+        country: user?.country || "",
+        postCode: user?.postCode || "",
+      };
+
+      const [userInfo, setUserInfo] = useState(initialUserInfo);
+
+      
+      const handleInputChange = async (e) => {
+        const { name, value } = e.target;
+        setUserInfo({ ...userInfo, [name]: value });
+        
     };
 
+    const onUpload = (event) => {
+        const uploadedFiles = event.files;
+        console.log(uploadedFiles);
+        if (uploadedFiles.length > 0) {
+            const file = uploadedFiles[0];
+            
+        }
+    };
+
+    const dpUploadHandler = ({files}) => {
+        const [file] = files;
+        console.log(file);
+        setImgFile(file);
+        // const fileReader = new FileReader();
+        // fileReader.onload = (e) => {
+        //     setFile(e.target.result);
+        // };
+        // fileReader.readAsDataURL(file);
+    };
+
+    
+
+    const updatingUserInfo = async(info) => {
+        setLoading(true);
+        try {
+            const response = await api.put("/api/user/update-user-info", info, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'User Info Updated',
+                detail: "Your user info has been updated successfully",
+                life: 3000
+            });
+            dispatch(
+                setLogin({
+                    user: response.data.user,
+                    token: response.data.token
+                })
+            );
+        } catch (err) {
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in UserInfo Update',
+                detail: err.response.data.error,
+                life: 3000
+            });
+        } finally{
+            setLoading(false);
+        }
+    };
+    
     const handleProfileUpdate = () => {
+        if (!userInfo.firstName || !userInfo.mobileNumber || !userInfo.title || !userInfo.addressL1 || !userInfo.city || !userInfo.country || !userInfo.postCode) {
+            setShowError(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
+        }
+    
+        let formData = new FormData();
+        formData.append('title', userInfo.title);
+        formData.append('firstName', userInfo.firstName);
+        formData.append('lastName', userInfo.lastName);
+        formData.append('mobileNumber', userInfo.mobileNumber);
+        formData.append('addressL1', userInfo.addressL1);
+        formData.append('addressL2', userInfo.addressL2);
+        formData.append('city', userInfo.city);
+        formData.append('country', userInfo.country);
+        formData.append('postCode', userInfo.postCode);
+    
+        if (imgFile) {
+            formData.append('dp', imgFile);
+        }
+    
+        updatingUserInfo(formData);
     };
-
+    
     const togglePanel = (e) => {
         setShowEditArea(!showEditArea);
         ref.current.toggle();
@@ -135,10 +248,10 @@ const Dashboard = () => {
                                             <div className="row">
                                                 <div className="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-3 my-auto mx-auto h-100">
                                                     <div className="dashboard-profile-image-area">
-                                                        <Image src="assets/images/profile-img.png" className='dashboard-profile-img' alt="Image" preview />
+                                                        {user?.dp && <Image src={user?.dp} className='dashboard-profile-img' alt="Image" preview />}
 
                                                         {/* if no image */}
-                                                        {/* <img src="assets/images/user.png" className='dashboard-profile-no-img' alt="" /> */}
+                                                        {!user?.dp && <img src="assets/images/user.png" className='dashboard-profile-no-img' alt="" />}
                                                         {/*  */}
 
                                                     </div>
@@ -151,7 +264,7 @@ const Dashboard = () => {
                                                                 Name :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                Mr. Taylor Wells
+                                                                {user?.title}. {user?.firstName} {user?.lastName}
                                                             </h6>
                                                         </div>
 
@@ -162,7 +275,7 @@ const Dashboard = () => {
                                                                 Mobile No. :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                020 3771 2884
+                                                                {user?.mobileNumber}
                                                             </h6>
                                                         </div>
 
@@ -172,7 +285,7 @@ const Dashboard = () => {
                                                                 Email :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                TaylorWells@teleworm.us
+                                                                {user?.email}
                                                             </h6>
                                                         </div>
 
@@ -182,9 +295,7 @@ const Dashboard = () => {
                                                                 Address :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                85 Boar Lane
-                                                                SELHAM
-                                                                GU28 1AD
+                                                                {user?.addressL1 || "-"} {user?.addressL2}
                                                             </h6>
                                                         </div>
                                                     </div>
@@ -197,6 +308,8 @@ const Dashboard = () => {
                                         </div>
                                     </article>
 
+                                    <Toast ref={toast} />
+
                                     <Panel ref={ref} id="editProfile" header="Edit Profile" className="mt-3 edit-profile-section" toggleable collapsed>
                                         <div className="edit-profile-area">
                                             <div className="row">
@@ -205,21 +318,28 @@ const Dashboard = () => {
                                                         <label htmlFor="title" className="custom-form-label">
                                                             Profile Picture
                                                         </label>
-                                                        <FileUpload
+                                                        {/* <FileUpload
                                                             mode="basic"
                                                             name="demo[]"
                                                             accept="image/*"
-                                                            maxFileSize={1000}
+                                                            maxFileSize={5000000}
                                                             className="profil-img-upload"
-                                                            onUpload={onUpload}
+                                                            // onUpload={onUpload}
                                                             auto
                                                             chooseLabel="Browse"
-                                                        />
-                                                        {showError && (
+                                                        /> */}
+                                                        <FileUpload name="dp"
+                                                            accept="image/*"
+                                                            customUpload={true}
+                                                            uploadHandler={dpUploadHandler}
+                                                            mode="basic"
+                                                            auto={true}
+                                                            chooseLabel="Browse"/>
+                                                        {/* {showError && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </div>
                                                 <div className="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
@@ -229,14 +349,14 @@ const Dashboard = () => {
                                                         </label>
                                                         <Dropdown
                                                             id="title"
-                                                            value={title}
-                                                            onChange={(e) => setTitle(e.value)}
+                                                            value={{ name: userInfo.title }}
+                                                            onChange={(e) => setUserInfo({ ...userInfo, title: e.value?.name })}
                                                             options={titles}
                                                             optionLabel="name"
                                                             placeholder="Select"
                                                             className="w-full w-100 custom-form-dropdown"
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.title && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -259,10 +379,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="firstName"
                                                             placeholder="Enter First Name"
-                                                            value={firstName}
-                                                            onChange={(e) => setFirstName(e.target.value)}
+                                                            value={userInfo.firstName}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.firstName && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -274,7 +394,7 @@ const Dashboard = () => {
                                                     <div className="custom-form-group mb-3 mb-sm-4">
                                                         <label
                                                             htmlFor="lastName"
-                                                            className="custom-form-label form-required"
+                                                            className="custom-form-label"
                                                         >
                                                             Last Name
                                                         </label>
@@ -283,14 +403,14 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="lastName"
                                                             placeholder="Enter Last Name"
-                                                            value={lastName}
-                                                            onChange={(e) => setLastName(e.target.value)}
+                                                            value={userInfo.lastName}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {/* {showError && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </div>
 
@@ -302,20 +422,29 @@ const Dashboard = () => {
                                                         >
                                                             Mobile Number
                                                         </label>
-                                                        <InputMask
+                                                        {/* <InputMask
                                                             id="mobileNumber"
                                                             className="custom-form-input"
                                                             name="mobileNumber"
                                                             mask="(999) 9999-9999"
                                                             placeholder="(020) 1234-5678"
-                                                            value={mobileNumber}
-                                                            onChange={(e) => setMobileNumber(e.target.value)}
-                                                        ></InputMask>
-                                                        {showError && (
+                                                            value={userInfo.mobileNumber}
+                                                            onChange={handleInputChange}
+                                                        ></InputMask> */}
+                                                        <InputText
+                                                            id="mobileNumber"
+                                                            keyfilter="num"
+                                                            className="custom-form-input"
+                                                            name="mobileNumber"
+                                                            value={userInfo.mobileNumber}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                        {showError && !userInfo.mobileNumber && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
                                                         )}
+                                                        <small className='text-danger form-error-msg'>{(!(/^\d{9,}$/.test(userInfo.mobileNumber)) && userInfo.mobileNumber) ? "Enter valid phone number" : ""}</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -337,10 +466,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="addressL1"
                                                             placeholder="Address Line 1"
-                                                            value={addressL1}
-                                                            onChange={(e) => setAddressL1(e.target.value)}
+                                                            value={userInfo.addressL1}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.addressL1 && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -355,8 +484,8 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="addressL2"
                                                             placeholder="Address Line 2"
-                                                            value={addressL2}
-                                                            onChange={(e) => setAddressL2(e.target.value)}
+                                                            value={userInfo.addressL2}
+                                                            onChange={handleInputChange}
                                                         />
                                                     </div>
                                                 </div>
@@ -365,13 +494,13 @@ const Dashboard = () => {
                                                     <div className="custom-form-group mb-3 mb-sm-0">
                                                         <InputText
                                                             id="city"
-                                                            className="custom-form-input"
+                                                            className="custom-form-input   form-required"
                                                             name="city"
                                                             placeholder="City"
-                                                            value={city}
-                                                            onChange={(e) => setCity(e.target.value)}
+                                                            value={userInfo.city}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.city && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -386,10 +515,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="country"
                                                             placeholder="Country"
-                                                            value={country}
-                                                            onChange={(e) => setCountry(e.target.value)}
+                                                            value={userInfo.country}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError  && !userInfo.country && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -404,10 +533,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="postCode"
                                                             placeholder="Post Code"
-                                                            value={postCode}
-                                                            onChange={(e) => setPostCode(e.target.value)}
+                                                            value={userInfo.postCode}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.postCode && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -424,6 +553,7 @@ const Dashboard = () => {
                                                         label="Update"
                                                         className="custom-btn-primary w-100 result-card-btn"
                                                         onClick={handleProfileUpdate}
+                                                        loading={loading}
                                                     />
                                                 </div>
                                             </div>
