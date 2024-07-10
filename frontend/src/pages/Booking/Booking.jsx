@@ -154,7 +154,7 @@ const CheckoutForm = () => {
       return;
     }
 
-    const response = await fetch('http://localhost:8000/create-payment-intent', {
+    const response = await fetch(`${process.env.REACT_APP_BASEURL}/create-payment-intent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
