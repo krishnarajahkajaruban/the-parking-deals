@@ -68,6 +68,15 @@ const Dashboard = () => {
     const [imgFile, setImgFile] = useState();
     const [loading, setLoading] = useState(false);
 
+    // useEffect(()=>{
+    //     api.get("/api/user/user-info", {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`,
+    //         },
+    //     }).then(res=>console.log(res.data))
+    //     .catch(err => console.log(err));
+    // },[])
+
     const initialUserInfo = {
         title: user?.title || titles[0].name,
         firstName: user?.firstName || "",
