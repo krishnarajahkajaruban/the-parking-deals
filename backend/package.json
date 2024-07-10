@@ -26,6 +26,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.14",
+    "raw-body": "^2.5.2",
     "stripe": "^16.2.0"
   }
 }

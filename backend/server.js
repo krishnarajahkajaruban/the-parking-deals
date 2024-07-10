@@ -8,6 +8,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const mongoose = require('mongoose');
+const rawBody = require('raw-body');
 const BookingDetail = require('./models/bookingDetailModel'); 
 
 const authRouter = require("./routes/authRouter");
@@ -81,14 +82,16 @@ app.use((req, res, next) => {
 // }
 
 // Webhook to handle payment status updates
-app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-
+app.post('/webhook', async (req, res) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    const rawBodyBuffer = await rawBody(req);
+    const sig = req.headers['stripe-signature'];
+
+    event = stripe.webhooks.constructEvent(rawBodyBuffer, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
