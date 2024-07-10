@@ -127,7 +127,7 @@ const Header = () => {
                                                 <button type='button' className='profile-toggle-btn p-ripple' onClick={toggleDropdownMenu}>
                                                     <div className="profile-toggle-img-area">
                                                         {/* <img src="assets/images/profile-img.png" className='profile-toggle-img' alt="" /> */}
-                                                        <img src="assets/images/user.png" className='profile-toggle-no-img' alt="" />
+                                                        <img src={user?.dp || "assets/images/user.png"} className='profile-toggle-no-img' alt="" />
                                                     </div>
                                                     <div className='profile-toggle-detail'>
                                                         <h5>Hi 👋</h5>
@@ -140,7 +140,7 @@ const Header = () => {
                                                     <div className='profile-dropdown-detail'>
                                                         <div className="profile-dropdown-image-area">
                                                             {/* <img src="assets/images/profile-img.png" className='profile-dropdown-img' alt="" /> */}
-                                                            <img src="assets/images/user.png" className='profile-dropdown-no-img' alt="" />
+                                                            <img src={user?.dp || "assets/images/user.png"} className='profile-dropdown-no-img' alt="" />
                                                         </div>
                                                         <h6 className='dropdown-profile-name'>
                                                             {user?.firstName || "---------"}
@@ -218,7 +218,7 @@ const Header = () => {
                         <div className='menu-profile-area'>
                             <div className="menu-profile-body">
                                 <div className="menu-profile-img-area">
-                                    <img src="assets/images/user.png" alt="" />
+                                    <img src={user?.dp || "assets/images/user.png"} alt="" />
                                 </div>
                                 <div className="menu-profile-content">
                                     <h6 className='menu-profile-head'>👋 Hi,</h6>

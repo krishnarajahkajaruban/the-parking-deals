@@ -52,7 +52,7 @@ function App() {
         <Route path='/services' element={<Services />} />
         <Route path='/results' element={<VendorList />} />
         <Route path='/booking' element={<Booking />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       </Routes>
     </PrimeReactProvider>
   );

@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const http = require('http');
 const bodyParser = require('body-parser');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
+const mongoose = require('mongoose');
 const BookingDetail = require('./models/bookingDetailModel'); 
 
 const authRouter = require("./routes/authRouter");
@@ -24,7 +25,7 @@ const app = express();
 app.use(cors({ // CORS setup
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
   credentials: true,
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials']
 }));
 
@@ -36,47 +37,79 @@ app.use((req, res, next) => {
     express.json()(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
   }
 });
+
 // Webhook endpoint to handle Stripe events
-app.post('/webhook', express.raw({ type: 'application/json' }), async(request, response) => {
-  let event = request.body;
+// app.post('/webhook', express.raw({ type: 'application/json' }), async(request, response) => {
+//   let event = request.body;
 
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+//   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if(endpointSecret){
-    const sig = request.headers['stripe-signature'];
-    try {
-      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-    } catch (err) {
-      console.error(`Webhook Error: ${err.message}`);
-      return response.status(400).send(`Webhook Error: ${err.message}`);
-    }
-  };
+//   if(endpointSecret){
+//     const sig = request.headers['stripe-signature'];
+//     try {
+//       event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+//     } catch (err) {
+//       console.error(`Webhook Error: ${err.message}`);
+//       return response.status(400).send(`Webhook Error: ${err.message}`);
+//     }
+//   };
 
-  // Handle the checkout.session.completed event
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    await handleCheckoutSession(session);
-  } else if (event.type === 'payment_intent.payment_failed') {
-    const paymentIntent = event.data.object;
-    await handlePaymentFailure(paymentIntent);
+//   // Handle the checkout.session.completed event
+//   if (event.type === 'checkout.session.completed') {
+//     const session = event.data.object;
+//     await handleCheckoutSession(session);
+//   } else if (event.type === 'payment_intent.payment_failed') {
+//     const paymentIntent = event.data.object;
+//     await handlePaymentFailure(paymentIntent);
+//   }
+
+//   response.json({ received: true });
+// });
+
+// async function handleCheckoutSession(session) {
+//   // Update booking status to success in your database
+//   const bookingId = session.metadata.bookingId;
+//   await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Paid' });
+//   console.log(`Payment successful for session: ${session.id}`);
+// }
+
+// async function handlePaymentFailure(paymentIntent) {
+//   // Update booking status to failed in your database
+//   const bookingId = paymentIntent.metadata.bookingId;
+//   await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Failed' });
+//   console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
+// }
+
+// Webhook to handle payment status updates
+app.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  response.json({ received: true });
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object;
+    await Payment.findOneAndUpdate(
+      { stripePaymentId: paymentIntent.id },
+      { status: 'succeeded' },
+      { upsert: true }
+    );
+  } else if (event.type === 'payment_intent.payment_failed') {
+    const paymentIntent = event.data.object;
+    await Payment.findOneAndUpdate(
+      { stripePaymentId: paymentIntent.id },
+      { status: 'failed' },
+      { upsert: true }
+    );
+  }
+
+  res.json({ received: true });
 });
-
-async function handleCheckoutSession(session) {
-  // Update booking status to success in your database
-  const bookingId = session.metadata.bookingId;
-  await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Paid' });
-  console.log(`Payment successful for session: ${session.id}`);
-}
-
-async function handlePaymentFailure(paymentIntent) {
-  // Update booking status to failed in your database
-  const bookingId = paymentIntent.metadata.bookingId;
-  await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Failed' });
-  console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
-}
 
 // app.use(express.urlencoded({ extended: true })); // URL encoded data parsing
 
@@ -85,6 +118,44 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/common-role", commonRoleRouter);
+
+// Error handling middleware for Multer errors
+app.use((err, req, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
+  if (err instanceof Multer.MulterError) {
+    // A Multer error occurred when uploading.
+    res.status(400).json({ error: err.message });
+  } else if (err) {
+    // An unknown error occurred when uploading.
+    res.status(400).json({ error: err.message });
+  } else {
+    next();
+  }
+});
+
+// Define a payment schema and model
+const paymentSchema = new mongoose.Schema({
+  stripePaymentId: String,
+  status: String,
+});
+
+const Payment = mongoose.model('Payment', paymentSchema);
+
+// Create a payment intent
+app.post('/create-payment-intent', async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'usd',
+    });
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Create HTTP server
 const server = http.createServer(app);

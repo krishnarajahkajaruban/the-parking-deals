@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import api from '../../api';
 import { sendVerificationEmail, verifyOTP } from '../../utils/authUtil';
 import {loadStripe} from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 const Booking = () => {
   const location = useLocation();
@@ -125,6 +126,82 @@ const Booking = () => {
   const [couponCode, setCouponCode] = useState(bookingDetails?.couponCode);
   const [cardDetails, setCardDetails] = useState(initialCardDetails);
   const [bookingCharge, setBookingCharge] = useState();
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
+
+const CheckoutForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    const response = await fetch('http://localhost:8000/create-payment-intent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount: 1000 }), // Amount in cents
+    });
+
+    const { clientSecret } = await response.json();
+
+    const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: paymentMethod.id,
+    });
+
+    if (confirmError) {
+      setError(confirmError.message);
+      return;
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      setSuccess(true);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <CardElement />
+      <button type="submit" disabled={!stripe}>Pay</button> 
+      {/* <Button
+        type='submit'
+        label="CONFIRM BOOKING"
+        className="custom-btn-primary w-100 result-card-btn"
+        // onClick={handleBooking}
+        disabled={!isAgreed || !stripe}
+        /> */}
+      {error && <div>{error}</div>}
+      {success && <div>Payment successful!</div>}
+    </form>
+  );
+};
+
+    const PaymentForm = () => {
+      return (
+        <Elements stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>
+      );
+    };
 
   const calculatingBookingCharge = async () => {
     try {
@@ -1476,19 +1553,19 @@ const Booking = () => {
 
                     <div className="row mt-5">
                       <div className="col-12 col-xl-4 col-md-6 col-lg-7 col-sm-6 mx-auto">
-                        <Button
+                        {/* <Button
                           label="CONFIRM BOOKING"
                           className="custom-btn-primary w-100 result-card-btn"
                           onClick={handleBooking}
                           disabled={!isAgreed}
-                        />
+                        /> */}
+                        {PaymentForm()}
                       </div>
                     </div>
                   </div>
                 </div>
               </article>
             </div>
-
             <div className="col-12 col-lg-5 col-xl-4 ps-xl-2 position-relative book-summary-section mt-lg-0">
               <article className="detail-card">
                 <div className="detail-card-label-area main mt-0">
