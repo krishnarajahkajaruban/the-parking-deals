@@ -341,42 +341,41 @@ const VendorList = () => {
                     >
                       <article className="result-card">
                         <div className="result-card-label-area">
-                          <h5>Meet and Greet</h5>
+                          <h5>{quote.type}</h5>
                         </div>
                         <div className="result-card-head-area">
                           <div className="result-card-logo-area">
-                            <img src="assets/images/lion-parking.png" alt="" />
+                            <img src={quote.logo || "assets/images/lion-parking.png"} alt="" />
                           </div>
                           <div className="result-card-head-detail-area">
                             <h4 className="result-card-head">{quote.name}</h4>
                             <div className="result-card-star-area">
-                              <Rating value={4} readOnly cancel={false} />
+                              <Rating value={quote.rating} readOnly cancel={false} />
                             </div>
                             <h3 className="result-card-price">
-                              £ 76.78
-                              <span className="cut-price ms-3">£ 83.00</span>
+                              £ {quote.finalQuote}
+                              {quote.quote > 0 && <span className="cut-price ms-3">£ {quote.quote}</span>}
                             </h3>
                             <div className="result-card-sub">
-                              <p>
+                              {quote.quote > 0 && <p>
                                 <i class="bi bi-hand-thumbs-up-fill me-2"></i>
-                                Save <span>£ 6.23</span> Today
-                              </p>
+                                Save <span>£ {quote.quote - quote.finalQuote}</span> Today
+                              </p>}
 
-                              <p>
+                              {quote.cancellationCover && <p>
                                 <i class="bi bi-lightning-fill me-2"></i>
                                 Cancellation Cover Available
-                              </p>
+                              </p>}
                             </div>
                           </div>
                         </div>
                         <div className="result-card-body-area">
                           <ul>
-                            <li>Airport Access Fee not Included.</li>
-                            <li>Uniformed & CRB Checked Staff.</li>
-                            <li>Disabled & Family Friendly.</li>
-                            <li>Meet & Greet at LHR Terminals.</li>
-                            <li>Affordable Price</li>
-                            <li>Friendly drivers and excellent customer service</li>
+                            {quote.facilities.map((facility, index) => {
+                              return(
+                                <li key={index}>{facility}</li>
+                              )
+                            })}
                           </ul>
                         </div>
                         <div className="result-card-footer-area">
@@ -444,7 +443,7 @@ const VendorList = () => {
                             <Button
                               label="BOOK"
                               className="custom-btn-primary result-card-btn"
-                              onClick={() => handleBooking(quote._id, quote.name, quote.logo, quote.quote)}
+                              onClick={() => handleBooking(quote._id, quote.name, quote.logo, quote.finalQuote)}
                             />
                           </div>
 
@@ -1491,7 +1490,7 @@ const VendorList = () => {
                     <Button
                       label="BOOK"
                       className="custom-btn-primary w-100 result-card-btn"
-                      onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.name, selectedVendor?.logo, selectedVendor?.quote)}
+                      onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.name, selectedVendor?.logo, selectedVendor?.finalQuote)}
                     />
                   </article>
                 </div>

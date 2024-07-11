@@ -10,6 +10,8 @@ const bcrypt = require("bcrypt");
 const EmailVerify = require("../models/emailVerify");
 const ForgotUserEmail = require("../models/forgotUserEmail");
 const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
+const ContactForm = require("../models/contact");
+const SubscribedEmail = require("../models/subcribedEmail");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
@@ -844,6 +846,108 @@ const getUserInfoWithUpdatedToken = async(req, res) => {
   };
 };
 
+/* change the user password */
+const updatingUserPassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const { id } = req.user;
+
+    if(! currentPassword || ! newPassword) {
+      return res.status(400).json({ error: 'Please provide current password and new password' });
+    };
+
+    const user = await User.findById(id).select('+password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Password does not match' });
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 12);
+    await User.findByIdAndUpdate(id, { password: hashPassword });
+
+    res.status(200).json({ message: 'Password updated successfully!' });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+};
+
+/* create a contact form  */
+const createContactOrFaqForm = async (req, res) => {
+  try {
+      const { name, email, mobileNumber, subject, message, type } = req.body;
+
+      if ( !name || !email || !mobileNumber || !subject || !message || !type ) {
+          return res.status(400).json({ error: "All fields are required." });
+      }
+
+      let form;
+      if(type ==="contact"){
+        form = new ContactForm({
+            name,
+            email,
+            mobileNumber,
+            subject,
+            message
+        });
+  
+        await form.save();
+      }
+      // else if (type === "faq"){
+      //   form = new Faq({
+      //     fullName,
+      //     email,
+      //     subject,
+      //     message
+      // });
+
+      // await form.save();
+      // }
+      else {
+        return res.status(400).json({ error: "Invalid type" });
+      };
+
+      res.status(201).json({
+          message: `${type === "contact" ? "Contact" : type === "faq" ? "FAQ" : ""} Form submitted successfully!`,
+          form: form.toObject()
+      });
+  }catch (err) {
+      console.log(err);
+      res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/* creating a subscribed user */
+const creatingSubscribedUser = async (req, res) => {
+  try{
+    const { email } = req.body;
+
+    if(!email){
+      return res.status(400).json({ error: "Email is required!" });
+    };
+
+    const alreadySubscribed= await SubscribedEmail.findOne({ email: email.toLowerCase() });
+
+    if(alreadySubscribed){
+      return res.status(400).json({ error: "You already subscribed!" });
+    };
+
+    const newSubcribedEmail = new SubscribedEmail(
+      {
+        email: email.toLowerCase()
+      }
+    );
+    await newSubcribedEmail.save();
+
+    res.status(201).json({ message: "Subscribed successfully!" });
+    
+  }catch (err) {
+    res.status(500).json({ error: err.message });
+  };
+};
 
 module.exports = {
     sendingVerificationCodeForEmailVerify,
@@ -858,5 +962,8 @@ module.exports = {
     findAllVendorDetailForUserSearchedParkingSlot,
     getAllAirports,
     updateUserInfo,
-    getUserInfoWithUpdatedToken
+    getUserInfoWithUpdatedToken,
+    updatingUserPassword,
+    createContactOrFaqForm,
+    creatingSubscribedUser
 };

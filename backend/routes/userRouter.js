@@ -16,7 +16,10 @@ const {
     findAllVendorDetailForUserSearchedParkingSlot,
     getAllAirports,
     updateUserInfo,
-    getUserInfoWithUpdatedToken
+    getUserInfoWithUpdatedToken,
+    updatingUserPassword,
+    createContactOrFaqForm,
+    creatingSubscribedUser
  } = require("../controller/userController");
 
 
@@ -110,6 +113,15 @@ router.get("/user-info", authMiddleware, getUserInfoWithUpdatedToken);
 //endpoint to check the validity of the token
 router.get("/check-token-validity", authMiddleware, (req, res) => {
     return res.status(200).json({ message: "Token is valid" });
-})
+});
+
+//endpoint to update user password
+router.patch("/update-user-password", authMiddleware, updatingUserPassword);
+
+//endpoint to create contact form
+router.post("/submit-contact-or-faq-form", createContactOrFaqForm);
+
+//endpoint to create subscribed user
+router.post("/submit-subscribed-user",creatingSubscribedUser);
 
  module.exports = router;

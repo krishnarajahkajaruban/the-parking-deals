@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Tooltip } from 'bootstrap';
+import { useForm } from 'react-hook-form';
+import api from '../api';
+import { Toast } from 'primereact/toast';
+import { Button } from 'primereact/button';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
     const [showBackToTop, setShowBackToTop] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const toast = useRef(null);
 
     useEffect(() => {
         const handleShow = () => {
@@ -28,6 +34,37 @@ const Footer = () => {
             top: 0,
             behavior: 'smooth'
         });
+    };
+
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+    const submit = async(data) => {
+        // Handle form submission
+        setLoading(true);
+        console.log(data);
+
+        try{
+            const response = await api.post("/api/user/submit-subscribed-user", data);
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'Thanks for subscribing',
+                detail: 'You will be notified!',
+                life: 3000
+            });
+            reset();
+        }catch(e){
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed!',
+                detail: 'Failed to subscribe!',
+                life: 3000
+            });
+        }finally{
+            setLoading(false);
+            
+        };
+        
     };
 
     return (
@@ -118,15 +155,26 @@ const Footer = () => {
                                 </div>
                             </div>
                         </div>
-
+                        <Toast ref={toast} />
                         <div className="row mt-4">
                             <div className="col-12 col-xl-8 col-lg-8 col-md-10 col-sm-9 mx-auto">
                                 <h6 className='footer-link-head text-center mb-4'>Subscribe our newsletter</h6>
 
                                 <div className="subscribe-input-area">
-                                    <form action="">
-                                        <input type="email" className='subscribe-input' placeholder='Enter your email address...' />
-                                        <button type='submit' className='subscribe-btn'>Subscribe</button>
+                                    <form action=""
+                                    onSubmit={handleSubmit(submit)}
+                                    >
+                                        <input type="email" className='subscribe-input' placeholder='Enter your email address...' 
+                                        id="email"
+                                        {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
+                                        />
+                                        {errors.email &&
+                                        <small className="text-danger form-error-msg">{errors.email.message}</small>
+                                        }
+                                        <Button type='submit' className='subscribe-btn'
+                                        loading={loading}
+                                        label='Subscribe'
+                                         />
                                     </form>
                                 </div>
                             </div>
