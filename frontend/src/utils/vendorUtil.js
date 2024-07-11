@@ -2,35 +2,25 @@ import api from "../api";
 import { setAirports, setQuotes } from "../state";
 
 const airports = [
-    { name: 'Birmingham Airport' },
-    { name: 'Bristol Airport' },
-    { name: 'Gatwick Airport' },
-    { name: 'Heathrow Airport' },
-    { name: 'Liverpool Airport' },
-    { name: 'Luton Airport' },
-    { name: 'Stansted Airport' },
-    { name: 'Manchester Airport' },
-    { name: 'Southend Airport' }
+    { name: 'Luton' }
 ];
 
 const quotes = [
     {
         _id: "668c972be10c2151fd59835c",
-        name: "Lion Parking1",
-        logo:"",
-        quote: 83
-    },
-    {
-        _id: 2,
-        name: "Lion Parking2",
-        logo:"",
-        quote: 84
-    },
-    {
-        _id: 3,
-        name: "Lion Parking3",
-        logo:"",
-        quote: 85
+        name: "Luton 247 Meet & Greet",
+        logo:"https://parkingdealsuk.com/storage/images/2d8140f4b6d3175fd7e2e3bd7b6eb433.png",
+        finalQuote: 159.00,
+        type: "Meet and Greet",
+        rating: 4.6,
+        quote:0,
+        cancellationCover: true,
+        facilities: [
+            "Excellent for meet and greet",
+            "Drop off and pick up at the terminal.",
+            "Reliable, Punctual & professional staff",
+            "Airport levy charges not included"
+        ]
     }
 ];
 

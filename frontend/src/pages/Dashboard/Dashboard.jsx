@@ -67,15 +67,18 @@ const Dashboard = () => {
     const token = useSelector((state) => state.auth.token);
     const [imgFile, setImgFile] = useState();
     const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [status, setStatus] = useState("Paid");
 
-    // useEffect(()=>{
-    //     api.get("/api/user/user-info", {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`,
-    //         },
-    //     }).then(res=>console.log(res.data))
-    //     .catch(err => console.log(err));
-    // },[])
+    useEffect(()=>{
+        api.get(`/api/common-role/get-all-bookings?page=${page}&limit=10&status=${status}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        }).then(res=>console.log(res.data))
+        .catch(err => console.log(err));
+    },[]);
 
     const initialUserInfo = {
         title: user?.title || titles[0].name,

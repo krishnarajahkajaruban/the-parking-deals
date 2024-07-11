@@ -5,7 +5,10 @@ const {
     createCouponCodeDiscount,
     updatingBookingFare,
     getAllUsersByType,
-    addingCardParkingAvailability
+    addingCardParkingAvailability,
+    getAllContactOrFaqForms,
+    respondToTheContactOrFaqForm,
+    getAllSubscribedEmails
 } = require("../controller/adminController");
 
 // endpoint to create coupon code discount
@@ -19,5 +22,14 @@ router.get("/get-all-users", authMiddleware, getAllUsersByType);
 
 //endpoint to update the company detail along with their airport parking slots availability from their apis
 router.get("/update-airport-parking-slots", addingCardParkingAvailability);
+
+//endpoint to get all contact forms
+router.get("/get-all-contact-or-faq-forms", authMiddleware, getAllContactOrFaqForms);
+
+//enpoint to sent email to the query user depend on type (faq or contact)
+router.post("/send-email-for-faq-or-contact-user", authMiddleware, respondToTheContactOrFaqForm);
+
+//endpoint to find subscribed emails
+router.get("/subscribed-emails", getAllSubscribedEmails);
 
 module.exports = router;

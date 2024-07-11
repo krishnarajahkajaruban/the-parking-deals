@@ -8,6 +8,8 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { useForm } from 'react-hook-form';
+import api from "../../api";
 
 const ContactUs = () => {
     const [showError, setShowError] = useState(false);
@@ -29,6 +31,38 @@ const ContactUs = () => {
             });
         }, 2000);
     }
+
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+    const submit = async(data) => {
+        // Handle form submission
+        setLoading(true);
+        console.log(data);
+
+        try{
+            const response = await api.post("/api/user/submit-contact-or-faq-form", {...data, type:"contact"});
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Message sent successfully',
+                life: 3000
+            });
+            reset();
+        }catch(e){
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed',
+                detail: 'Message sent failed!',
+                life: 3000
+            });
+        }finally{
+            setLoading(false);
+            
+        };
+        
+    };
+
     return (
         <>
             <Header />
@@ -125,14 +159,18 @@ const ContactUs = () => {
                                                 Get in touch with us
                                             </h4>
 
-                                            <form action="" className="contact-form-area">
+                                            <form action="" className="contact-form-area"
+                                            onSubmit={handleSubmit(submit)}
+                                            >
                                                 <div className="row">
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="name" className="custom-form-label form-required">Name</label>
-                                                            <InputText id="name" className="custom-form-input" />
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg">This field is required</small>
+                                                            <InputText id="name" className="custom-form-input"
+                                                            {...register('name', { required: 'Name is required' })}
+                                                             />
+                                                            {errors.name &&
+                                                                <small className="text-danger form-error-msg">{errors.name.message}</small>
                                                             }
                                                         </div>
                                                     </div>
@@ -140,9 +178,11 @@ const ContactUs = () => {
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="email" className="custom-form-label form-required">Email</label>
-                                                            <InputText id="email" className="custom-form-input" keyfilter="email" />
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg">This field is required</small>
+                                                            <InputText id="email" className="custom-form-input" keyfilter="email" 
+                                                            {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
+                                                            />
+                                                            {errors.email &&
+                                                                <small className="text-danger form-error-msg">{errors.email.message}</small>
                                                             }
                                                         </div>
                                                     </div>
@@ -150,9 +190,17 @@ const ContactUs = () => {
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="phoneNumber" className="custom-form-label form-required">Phone number</label>
-                                                            <InputText id="phoneNumber" className="custom-form-input" keyfilter="num" />
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg">This field is required</small>
+                                                            <InputText id="mobileNumber" className="custom-form-input" keyfilter="num" 
+                                                            {...register('mobileNumber', {
+                                                                required: 'Phone number is required',
+                                                                pattern: {
+                                                                  value: /^\d{10}$/,
+                                                                  message: 'Phone number must be 10 digits'
+                                                                }
+                                                              })}
+                                                            />
+                                                            {errors.mobileNumber &&
+                                                                <small className="text-danger form-error-msg">{errors.mobileNumber.message}</small>
                                                             }
                                                         </div>
                                                     </div>
@@ -160,9 +208,11 @@ const ContactUs = () => {
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="subject" className="custom-form-label form-required">Subject</label>
-                                                            <InputText id="subject" className="custom-form-input" />
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg">This field is required</small>
+                                                            <InputText id="subject" className="custom-form-input" 
+                                                            {...register('subject', { required: 'Subject is required' })}
+                                                            />
+                                                            {errors.subject &&
+                                                                <small className="text-danger form-error-msg">{errors.subject.message}</small>
                                                             }
                                                         </div>
                                                     </div>
@@ -170,16 +220,18 @@ const ContactUs = () => {
                                                     <div className="col-12">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="message" className="custom-form-label form-required">Message</label>
-                                                            <InputTextarea id="message" className="custom-form-input" rows={5} cols={30} />
-                                                            {showError &&
-                                                                <small className="text-danger form-error-msg mt-0">This field is required</small>
+                                                            <InputTextarea id="message" className="custom-form-input" rows={5} cols={30} 
+                                                            {...register('message', { required: 'Message is required' })}
+                                                            />
+                                                            {errors.message &&
+                                                                <small className="text-danger form-error-msg mt-0">{errors.message.message}</small>
                                                             }
                                                         </div>
                                                     </div>
 
                                                     <div className="col-12">
                                                         <div className="">
-                                                            <Button label="SEND" className="submit-button theme-pink ps-5 pe-5 justify-content-center contact-btn" loading={loading} onClick={sendMessage} />
+                                                            <Button label="SEND" className="submit-button theme-pink ps-5 pe-5 justify-content-center contact-btn" loading={loading} type="submit" />
                                                         </div>
                                                     </div>
                                                 </div>

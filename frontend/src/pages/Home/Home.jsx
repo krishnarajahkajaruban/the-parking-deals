@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import './Home-responsive.css';
-import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
@@ -20,6 +19,7 @@ import { Calendar } from 'primereact/calendar';
 import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
+import Footer from '../../components/Footer';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -333,8 +333,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            <Footer />
+        
+                <Footer />
+                                                 
         </>
     )
 }
