@@ -108,18 +108,19 @@ const register = async (email, title, firstName, lastName, companyName, password
     // Create a new user
     const user = new User({
         email: email.toLowerCase(),
-        title,
-        firstName,
-        lastName,
-        companyName,
-        password: hashedPassword,
-        mobileNumber,
+        ...(role === "User" && { title }),
+        ...(["Admin", "User"].includes(role) && { firstName }),
+        ...(["Admin", "User"].includes(role) && { lastName: lastName || "" }),
+        ...(role === "Vendor" && { companyName }),
+        ...(role === "User" && { mobileNumber }),
+        ...(role === "User" && { addressL1 }),
+        ...(role === "User" && { addressL2: addressL2 || "" }),
         role,
-        addressL1,
-        addressL2,
-        city,
-        country,
-        postCode
+        ...(role === "User" && { city }),
+        ...(role === "User" && { country }),
+        ...(role === "User" && { postCode }),
+        password: hashedPassword,
+        ...(role === "User" && { dp: "" })
     });
 
     // Save the user to the database

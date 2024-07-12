@@ -398,13 +398,18 @@ const CheckoutForm = () => {
       });
   
       console.log(result);
-  
+
       toast.current.show({
         severity: 'success',
         summary: 'Booking Successful',
         detail: "You have booked your parking slot successfully",
         life: 3000
       });
+
+      setTimeout(()=>{
+        navigate("/");
+      }, 2000);
+  
   
     } catch (err) {
       console.log(err);
@@ -422,7 +427,7 @@ const CheckoutForm = () => {
   function validateUserDetails(userDetails, isUserPresent, doesEmailExist) {
     // Check if user is present
     if (isUserPresent) {
-      return; // No validation needed if user is already present
+      return true; // No validation needed if user is already present
     }
   
     // Check if email exists in the system
@@ -435,7 +440,7 @@ const CheckoutForm = () => {
           detail: "Please fill all required fields!",
           life: 3000
         });
-        return;
+        return false;
       }
     } else {
       // Validate all required fields
@@ -447,19 +452,19 @@ const CheckoutForm = () => {
           detail: "Please fill all required fields!",
           life: 3000
         });
-        return;
+        return false;
       }
     }
   
     // Check if passwords match
-    if (userDetails.password !== userDetails.confirmPassword) {
+    if (!doesEmailExist && (userDetails.password !== userDetails.confirmPassword)) {
       toast.current.show({
         severity: 'error',
         summary: 'Error in Your Details Submission',
         detail: "Password & Confirm Password do not match!",
         life: 3000
       });
-      return;
+      return false;
     }
   
     // Check if password length is at least 8 characters
@@ -470,14 +475,19 @@ const CheckoutForm = () => {
         detail: "Password must be at least 8 characters long!",
         life: 3000
       });
-      return;
+      return false;
     }
+  
+    return true; // All validations passed
   }
-
+  
   const handleBooking = () => {
     console.log(userDetails, user, emailExist);
-    validateUserDetails(userDetails, user, emailExist);
-
+    
+    if (!validateUserDetails(userDetails, user, emailExist)) {
+      return; // Exit if validation fails
+    }
+  
     // Check if travel details are filled
     if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
       setShowError(true);
@@ -489,7 +499,7 @@ const CheckoutForm = () => {
       });
       return;
     }
-
+  
     // Check if all vehicle details are filled
     const hasError = vehiclesDetails.some(vehicle => !vehicle.regNo || !vehicle.color);
     if (hasError) {
@@ -502,7 +512,7 @@ const CheckoutForm = () => {
       });
       return;
     }
-
+  
     // Check if terms and privacy policy are agreed
     if (!isAgreed) {
       toast.current.show({
@@ -513,7 +523,7 @@ const CheckoutForm = () => {
       });
       return;
     }
-
+  
     // Prepare user details object
     let userDetail = {};
     if (user) {
@@ -539,7 +549,7 @@ const CheckoutForm = () => {
         postCode: userDetails.postCode,
       };
     }
-
+  
     // Prepare booking details object
     const carParkingSlotBookingDetails = {
       airportName: bookingDetails?.airportName,
@@ -557,11 +567,10 @@ const CheckoutForm = () => {
       smsConfirmation: checkedSmsConfirmation,
       cancellationCover: checkedCancellationCover
     };
-
+  
     bookTheCarParkingSlot(carParkingSlotBookingDetails);
   };
-
-
+  
   const header = <div className="font-bold mb-3">Password Strength</div>;
   const footer = (
     <>
