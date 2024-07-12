@@ -15,6 +15,7 @@ import { Toast } from 'primereact/toast';
 import api from "../../api";
 import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 import withComponentName from "../../withComponentName";
+import Preloader from "../../Preloader";
 
 
 const Signup = () => {
@@ -214,6 +215,7 @@ const Signup = () => {
 
   return (
     <>
+    <Preloader/>
       <Header />
 
       {/* Breadcrumb Section Start */}
