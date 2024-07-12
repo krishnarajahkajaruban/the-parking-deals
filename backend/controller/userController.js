@@ -384,7 +384,7 @@ const carParkingBookingDetail = async (req, res) => {
             }
           ],
           mode: "payment",
-          success_url: `${process.env.FRONTEND_URL}`,
+          // success_url: `${process.env.FRONTEND_URL}`,
           cancel_url: `${process.env.FRONTEND_URL}/booking`,
           metadata: {
             bookingId: newCarParkingBooking._id.toString()

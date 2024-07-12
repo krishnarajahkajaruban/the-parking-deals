@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import api from './api';
 import { setLogout } from './state';
+import Preloader from './Preloader';
 
 const ProtectedRoute = ({ children }) => {
     const [isAuth, setIsAuth] = useState(null);
@@ -35,7 +36,7 @@ const ProtectedRoute = ({ children }) => {
 
     if (isAuth === null) {
         // You can add a loading spinner here if needed
-        return <div>Loading...</div>;
+        return <Preloader/>;
     }
 
     const childType = children.type?.componentName;
