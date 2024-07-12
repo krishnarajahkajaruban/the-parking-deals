@@ -40,6 +40,8 @@ const ProtectedRoute = ({ children }) => {
 
     const childType = children.type?.componentName;
 
+    console.log(childType);
+
     const isAuthPage = ['Signin', 'Signup', 'ForgotPassword'].includes(childType);
 
     if (isAuthPage && isAuth) {
@@ -54,3 +56,4 @@ const ProtectedRoute = ({ children }) => {
 }
 
 export default ProtectedRoute;
+

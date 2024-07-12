@@ -2,13 +2,13 @@ import React, { Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 // import Home from './pages/Home/Home';
 // import AboutUs from './pages/AboutUs/AboutUs';
-// import Signin from './pages/Signin/Signin';
-// import Signup from './pages/Signup/Signup';
+import Signin from './pages/Signin/Signin';
+import Signup from './pages/Signup/Signup';
 // import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 // import TermsAndConditions from './pages/TermsAndConditions/TermsAndConditions';
 // import FaQ from './pages/FaQ/FaQ';
 // import ContactUs from './pages/ContactUs/ContactUs';
-// import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 // import Services from './pages/Services/Services';
 // import VendorList from './pages/VendorList/VendorList';
 // import Booking from './pages/Booking/Booking';
@@ -24,13 +24,13 @@ import ProtectedRoute from './ProtectedRoute';
 
 const Home = React.lazy(()=>import('./pages/Home/Home'));
 const AboutUs = React.lazy(()=>import('./pages/AboutUs/AboutUs'));
-const Signin = React.lazy(()=>import('./pages/Signin/Signin'));
-const Signup = React.lazy(()=>import('./pages/Signup/Signup'));
+// const Signin = React.lazy(()=>import('./pages/Signin/ModifiedSigin'));
+// const Signup = React.lazy(()=>import('./pages/Signup/Signup'));
 const PrivacyPolicy = React.lazy(()=>import('./pages/PrivacyPolicy/PrivacyPolicy'));
 const TermsAndConditions = React.lazy(()=>import('./pages/TermsAndConditions/TermsAndConditions'));
 const FaQ = React.lazy(()=>import('./pages/FaQ/FaQ'));
 const ContactUs = React.lazy(()=>import('./pages/ContactUs/ContactUs'));
-const ForgotPassword = React.lazy(()=>import('./pages/ForgotPassword/ForgotPassword'));
+// const ForgotPassword = React.lazy(()=>import('./pages/ForgotPassword/ForgotPassword'));
 const Services = React.lazy(()=>import('./pages/Services/Services'));
 const VendorList = React.lazy(()=>import('./pages/VendorList/VendorList'));
 const Booking = React.lazy(()=>import('./pages/Booking/Booking'));
@@ -53,16 +53,23 @@ function App() {
   return (
     <PrimeReactProvider value={value}>
       {/* <Preloader /> */}
+      {/* <Suspense fallback={<Preloader />}>
+            <Routes>
+                <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} />
+                <Route path='/sign-up' element={<ProtectedRoute><Signup /></ProtectedRoute>} />
+                <Route path='/forgot-password' element={<ProtectedRoute><ForgotPassword /></ProtectedRoute>} />
+            </Routes>
+        </Suspense> */}
       <Routes>
         <Route path='/' element={<Suspense fallback={<Preloader />}><Home /></Suspense>} />
         <Route path='/about-us' element={<Suspense fallback={<Preloader />}><AboutUs /></Suspense>} />
-        <Route path='/sign-in' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Signin /></ProtectedRoute></Suspense>} />
-        <Route path='/sign-up' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Signup /></ProtectedRoute></Suspense>} />
+        <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} />
+        <Route path='/sign-up' element={<ProtectedRoute><Signup /></ProtectedRoute>} />
+        <Route path='/forgot-password' element={<ProtectedRoute><ForgotPassword /></ProtectedRoute>} />
         <Route path='/privacy-policy' element={<Suspense fallback={<Preloader />}><PrivacyPolicy /></Suspense>} />
         <Route path='/terms-and-conditions' element={<Suspense fallback={<Preloader />}><TermsAndConditions /></Suspense>} />
         <Route path='/faq' element={<Suspense fallback={<Preloader />}><FaQ /></Suspense>} />
         <Route path='/contact-us' element={<Suspense fallback={<Preloader />}><ContactUs /></Suspense>} />
-        <Route path='/forgot-password' element={<Suspense fallback={<Preloader />}><ProtectedRoute><ForgotPassword /></ProtectedRoute></Suspense>} />
         <Route path='/services' element={<Suspense fallback={<Preloader />}><Services /></Suspense>} />
         <Route path='/results' element={<Suspense fallback={<Preloader />}><VendorList /></Suspense>} />
         <Route path='/booking' element={<Suspense fallback={<Preloader />}><Booking /></Suspense>} />

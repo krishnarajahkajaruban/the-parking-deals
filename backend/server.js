@@ -75,16 +75,27 @@ app.post('/webhook', async(req, res) => {
 async function handleCheckoutSession(session) {
   // Update booking status to success in your database
   const bookingId = session.metadata.bookingId;
-  await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Paid' });
+  const stripePaymentId = session.payment_intent;
+
+  await BookingDetail.findByIdAndUpdate(bookingId, { 
+    status: 'Paid',
+    stripePaymentId // Save the Stripe payment ID
+  });
   console.log(`Payment successful for session: ${session.id}`);
 }
 
 async function handlePaymentFailure(paymentIntent) {
   // Update booking status to failed in your database
   const bookingId = paymentIntent.metadata.bookingId;
-  await BookingDetail.findByIdAndUpdate(bookingId, { status: 'Failed' });
+  const stripePaymentId = paymentIntent.id;
+
+  await BookingDetail.findByIdAndUpdate(bookingId, { 
+    status: 'Failed',
+    stripePaymentId // Save the Stripe payment ID
+  });
   console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
 }
+
 
 // Routes
 app.use("/api/auth", authRouter);

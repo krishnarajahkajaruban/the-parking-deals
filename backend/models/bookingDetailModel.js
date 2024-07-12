@@ -136,6 +136,9 @@ const bookingDetailSchema = new Schema(
       type: String,
       required: [true, "Booking Status must be provided"],
       enum: [ "Paid", "Pending", "Failed", "Cancelled"]
+    },
+    stripePaymentId: {
+      type: String
     }
   },
   { timestamps: true }
