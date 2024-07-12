@@ -402,6 +402,7 @@ const carParkingBookingDetail = async (req, res) => {
         return res.status(201).json({
             id: session.id,
             newCarParkBooking: newCarParkingBooking.toObject(),
+            user: user.toObject(),
             token,
             emailSentForUser: emailResponseForUser.emailSent,
             mailMsgForUser: emailResponseForUser.message,

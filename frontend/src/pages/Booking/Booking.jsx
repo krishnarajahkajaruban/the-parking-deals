@@ -17,15 +17,17 @@ import { IconField } from "primereact/iconfield";
 
 import { Toast } from 'primereact/toast';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../../api';
 import { sendVerificationEmail, verifyOTP } from '../../utils/authUtil';
 import {loadStripe} from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { setLogin } from '../../state';
 
 const Booking = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { bookingDetails } = location.state || {};
   const [showError, setShowError] = useState(false);
   const [showCouponError, setShowCouponError] = useState(false);
@@ -381,6 +383,13 @@ const CheckoutForm = () => {
     try {
       const response = await api.post("/api/user/car-park-booking", details);
       console.log(response.data);
+
+      dispatch(
+        setLogin({
+        user: response.data.user,
+        token: response.data.token
+        })
+      );
   
       const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
   
@@ -960,7 +969,7 @@ const CheckoutForm = () => {
                                   >
                                     Mobile Number
                                   </label>
-                                  <InputMask
+                                  {/* <InputMask
                                     id="mobileNumber"
                                     className="custom-form-input"
                                     name="mobileNumber"
@@ -968,7 +977,15 @@ const CheckoutForm = () => {
                                     placeholder="(020) 1234-5678"
                                     value={userDetails.mobileNumber}
                                     onChange={handleInputChange}
-                                  ></InputMask>
+                                  ></InputMask> */}
+                                  <InputText
+                                    id="mobileNumber"
+                                    keyfilter="num"
+                                    className="custom-form-input"
+                                    name="mobileNumber"
+                                    value={userDetails.mobileNumber}
+                                    onChange={handleInputChange}
+                                  />
                                   {(showError && !userDetails.mobileNumber) && (
                                     <small className="text-danger form-error-msg">
                                       This field is required
