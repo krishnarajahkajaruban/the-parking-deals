@@ -161,7 +161,7 @@ const VendorList = () => {
   return (
     <>
       {!quoteInfo && <Navigate to="/" />}
-      {pageLoading && <Preloader />}
+      {/* {pageLoading && <Preloader />} */}
       <Header />
 
       {/* Breadcrumb Section Start */}

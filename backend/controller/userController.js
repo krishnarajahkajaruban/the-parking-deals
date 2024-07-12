@@ -313,7 +313,7 @@ const carParkingBookingDetail = async (req, res) => {
             user = result.user;
             token = result.token;
         } else {
-            const result = await register(email, title, firstName, lastName, password, mobileNumber, addressL1, addressL2, city, country, postCode, "User");
+            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, addressL1, addressL2, city, country, postCode, "User");
 
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
@@ -322,6 +322,20 @@ const carParkingBookingDetail = async (req, res) => {
             user = result.user;
             token = generateToken(user, process.env.JWT_SECRET);
         }
+
+        const dropOff = new Date(dropOffDate);
+        const pickUp = new Date(pickUpDate);
+        const now = new Date();
+        
+        // Check if dropOffDate is today or in the future
+        if (dropOff < now) {
+          return res.status(400).json({ error: "dropOffDate must be today or in the future."});
+        };
+
+        // Check if dropOffDate is less than pickUpDate
+        if (dropOff >= pickUp) {
+          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate."});
+        };
 
         const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
 
@@ -642,6 +656,17 @@ const findAllVendorDetailForUserSearchedParkingSlot = async (req, res) => {
 
       const fromDateObj = new Date(fromDate);
       const toDateObj = new Date(toDate);
+      const now = new Date();
+        
+        // Check if dropOffDate is today or in the future
+        if (fromDateObj < now) {
+          return res.status(400).json({ error: "dropOffDate must be today or in the future."});
+        };
+
+        // Check if dropOffDate is less than pickUpDate
+        if (fromDateObj >= toDateObj) {
+          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate."});
+        };
 
       // Using aggregation to get the user details
       const result = await AirportParkingAvailability.aggregate([

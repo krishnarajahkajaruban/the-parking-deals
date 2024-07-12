@@ -12,6 +12,7 @@ import { Toast } from 'primereact/toast';
 import { setLogin } from "../../state";
 import api from "../../api";
 import withComponentName from "../../withComponentName";
+import Preloader from "../../Preloader";
 
 const Signin = () => {
     const dispatch = useDispatch();
@@ -82,6 +83,7 @@ const Signin = () => {
 
     return (
         <>
+            <Preloader/>
             <Header />
 
             {/* Breadcrumb Section Start */}
