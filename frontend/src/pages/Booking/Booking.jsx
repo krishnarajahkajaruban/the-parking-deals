@@ -427,7 +427,7 @@ const CheckoutForm = () => {
   
     // Check if email exists in the system
     if (doesEmailExist) {
-      if (!userDetails.email || !userDetails.password || !userDetails.confirmPassword) {
+      if (!userDetails.email || !userDetails.password) {
         setShowError(true);
         toast.current.show({
           severity: 'error',
@@ -519,7 +519,11 @@ const CheckoutForm = () => {
     if (user) {
       userDetail.accessToken = token;
     } else if (emailExist) {
-      userDetail.registeredStatus = true;
+      userDetail = {
+        email: userDetails.email,
+        password: userDetails.password,
+        registeredStatus: true
+      };
     } else {
       userDetail = {
         email: userDetails.email,
@@ -1661,11 +1665,11 @@ const CheckoutForm = () => {
 
               <article className="detail-card mt-3 card-position-sticky mb-3 mb-sm-0">
                 <div className="detail-card-label-area main mt-0">
-                  <h5>Meet and Greet</h5>
+                  <h5>{bookingDetails?.serviceType}</h5>
                 </div>
                 <div className="detail-card-logo-area">
-                  {/* <img src={bookingDetails?.companyImg} alt="" /> */}
-                  <img src="assets/images/lion-parking.png" alt="" />
+                  <img src={bookingDetails?.companyImg} alt="" />
+                  {/* <img src="assets/images/lion-parking.png" alt="" /> */}
                 </div>
                 <div className="detail-card-label-area">
                   <h5>{bookingDetails?.airportName}</h5>
