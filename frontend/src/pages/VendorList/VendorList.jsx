@@ -130,7 +130,7 @@ const VendorList = () => {
 
   }
 
-  const handleBooking = (companyId, companyName, companyImg, bookingQuote) => {
+  const handleBooking = (companyId, companyName, companyImg, bookingQuote, serviceType) => {
     // setPageLoading(true);
     // setTimeout(() => {
     //     // navigate('/booking');
@@ -148,7 +148,8 @@ const VendorList = () => {
       companyId,
       companyName,
       companyImg,
-      bookingQuote
+      bookingQuote,
+      serviceType
     }
     navigate('/booking', { state: { bookingDetails } });
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -443,7 +444,7 @@ const VendorList = () => {
                             <Button
                               label="BOOK"
                               className="custom-btn-primary result-card-btn"
-                              onClick={() => handleBooking(quote._id, quote.name, quote.logo, quote.finalQuote)}
+                              onClick={() => handleBooking(quote._id, quote.name, quote.logo, quote.finalQuote, quote.type)}
                             />
                           </div>
 
@@ -1490,7 +1491,7 @@ const VendorList = () => {
                     <Button
                       label="BOOK"
                       className="custom-btn-primary w-100 result-card-btn"
-                      onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.name, selectedVendor?.logo, selectedVendor?.finalQuote)}
+                      onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.name, selectedVendor?.logo, selectedVendor?.finalQuote, selectedVendor?.type)}
                     />
                   </article>
                 </div>
