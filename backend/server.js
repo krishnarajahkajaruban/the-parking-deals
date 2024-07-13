@@ -4,6 +4,7 @@ const connectDb = require("./config/dbConnection");
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const http = require('http');
+const { Server } = require('socket.io');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const rawBody = require('raw-body');
 const BookingDetail = require('./models/bookingDetailModel'); 
@@ -19,6 +20,12 @@ dotenv.config();
 // Create Express app
 const app = express();
 
+// Create HTTP server
+const server = http.createServer(app);
+
+// Get port from environment variables or use default port 3000
+const PORT = process.env.PORT || 5001;
+
 // Middleware setup
 app.use(cors({ // CORS setup
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
@@ -27,7 +34,15 @@ app.use(cors({ // CORS setup
   allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials']
 }));
 
+const io = new Server(server, {
+  cors: {
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
+    methods: ["GET", "POST"],
+  },
+});
+
 app.use(morgan("tiny")); // Logging
+
 
 // Middleware to handle raw body for Stripe webhook
 app.use((req, res, next) => {
@@ -44,6 +59,10 @@ app.use((req, res, next) => {
   } else {
     express.json()(req, res, next);
   }
+});
+
+io.on('connection', (socket) => {
+  console.log('Client connected to Socket.io');
 });
 
 // Webhook endpoint to handle Stripe events
@@ -63,10 +82,12 @@ app.post('/webhook', async(req, res) => {
     console.log("checkout session completed")
     const session = event.data.object;
     await handleCheckoutSession(session);
+    io.emit('checkout.session.completed', session);
   } else if (event.type === 'payment_intent.payment_failed') {
     console.log("payment intent failed")
     const paymentIntent = event.data.object;
     await handlePaymentFailure(paymentIntent);
+    io.emit('payment_intent.payment_failed', paymentIntent);
   }
 
   res.json({ received: true });
@@ -115,11 +136,6 @@ app.use((err, req, res, next) => {
   }
 });
 
-// Create HTTP server
-const server = http.createServer(app);
-
-// Get port from environment variables or use default port 3000
-const PORT = process.env.PORT || 5001;
 
 // Start the server
 server.listen(PORT, async() => {
