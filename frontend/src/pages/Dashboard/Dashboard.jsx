@@ -16,9 +16,13 @@ import { Dropdown } from "primereact/dropdown";
 import { FileUpload } from 'primereact/fileupload';
 import { InputText } from "primereact/inputtext";
 import { InputMask } from "primereact/inputmask";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+
+import { SampleData } from './SampleData';
 
 const Dashboard = () => {
-    const ref = useRef(null);
+    const editProfile = useRef(null);
     const [showError, setShowError] = useState(false);
     const [showEditArea, setShowEditArea] = useState(false);
 
@@ -65,14 +69,21 @@ const Dashboard = () => {
 
     const togglePanel = (e) => {
         setShowEditArea(!showEditArea);
-        ref.current.toggle();
+        editProfile.current.toggle();
         if (showEditArea) {
             e.preventDefault();
             const scroll = new SmoothScroll();
-            scroll.animateScroll(ref.current, null, { offset: 100 });
+            scroll.animateScroll(editProfile.current, null, { offset: 120 });
             setShowEditArea(!showEditArea);
         }
     };
+
+    const [customers, setCustomers] = useState([]);
+
+    useEffect(() => {
+        SampleData.getCustomersMedium().then((data) => setCustomers(data));
+    }, []);
+
 
     return (
         <>
@@ -197,7 +208,7 @@ const Dashboard = () => {
                                         </div>
                                     </article>
 
-                                    <Panel ref={ref} id="editProfile" header="Edit Profile" className="mt-3 edit-profile-section" toggleable collapsed>
+                                    <Panel ref={editProfile} id="editProfile" header="Edit Profile" className="mt-3 edit-profile-section" toggleable collapsed>
                                         <div className="edit-profile-area">
                                             <div className="row">
                                                 <div className="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
@@ -430,7 +441,25 @@ const Dashboard = () => {
                                         </div>
                                     </Panel>
                                 </div>
+
                                 <div className="tab-pane dashboard-tab-content fade" id="v-pills-bookings" role="tabpanel" aria-labelledby="v-pills-bookings-tab" tabindex="0">
+                                    <article className="dashboard-profile-card">
+                                        <div className="dashboard-profile-head">
+                                            <h5>Bookings</h5>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <div className="dash-table-area">
+                                                    <DataTable value={customers} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
+                                                        <Column field="name" header="Name" style={{ width: '25%' }}></Column>
+                                                        <Column field="country.name" header="Country" style={{ width: '25%' }}></Column>
+                                                        <Column field="company" header="Company" style={{ width: '25%' }}></Column>
+                                                        <Column field="representative.name" header="Representative" style={{ width: '25%' }}></Column>
+                                                    </DataTable>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
                                 </div>
                             </div>
 

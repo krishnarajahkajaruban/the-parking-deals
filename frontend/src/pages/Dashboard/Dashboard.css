@@ -309,3 +309,8 @@
     position: sticky;
     top: 100px;
 }
+
+.dash-table-area {
+    position: relative;
+    width: 100%;
+}
