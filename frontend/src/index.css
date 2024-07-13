@@ -273,7 +273,7 @@ code {
 }
 
 .subscribe-input-area .subscribe-btn {
-  border-radius: 50px;
+  border-radius: 50px !important;
   color: #d12788;
   font-weight: 600;
   background-color: #ffffff !important;

@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLogin, setLogout } from "../../state";
 import { Toast } from 'primereact/toast';
 import api from "../../api";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
     const editProfile = useRef(null);
@@ -34,6 +35,7 @@ const Dashboard = () => {
     const [showEditArea, setShowEditArea] = useState(false);
     const [filterDate, setFilterDate] = useState(null);
     const today = new Date();
+    const navigate = useNavigate();
 
     const logOut = () => {
         confirmDialog({
@@ -274,6 +276,11 @@ const Dashboard = () => {
 
     const cancel = () => { };
 
+    const goToLink = (path) => {
+        navigate(path);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <>
             <Header />
@@ -390,7 +397,7 @@ const Dashboard = () => {
                                             </div>
                                         </div>
                                         <div className="dashboard-profile-footer">
-                                            <Button label="Change Password" icon="bi bi-lock" className="primary dashboard-action-btn" text />
+                                            <Button label="Change Password" onClick={() => goToLink('/change-password')} icon="bi bi-lock" className="primary dashboard-action-btn" text />
                                             <Button label="Logout" onClick={logOut} severity="danger" icon="bi bi-box-arrow-right" className="dashboard-action-btn" text />
                                         </div>
                                     </article>
@@ -708,7 +715,7 @@ const Dashboard = () => {
             </section>
             {/*  */}
 
-            {/* Booking detil modal */}
+            {/* Booking detail modal */}
             <div
                 class="modal fade"
                 id="bookingDetailModal"

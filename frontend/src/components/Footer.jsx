@@ -38,12 +38,12 @@ const Footer = () => {
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    const submit = async(data) => {
+    const submit = async (data) => {
         // Handle form submission
         setLoading(true);
         console.log(data);
 
-        try{
+        try {
             const response = await api.post("/api/user/submit-subscribed-user", data);
             console.log(response.data);
             toast.current.show({
@@ -53,18 +53,18 @@ const Footer = () => {
                 life: 3000
             });
             reset();
-        }catch(e){
+        } catch (e) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Failed!',
                 detail: 'Failed to subscribe!',
                 life: 3000
             });
-        }finally{
+        } finally {
             setLoading(false);
-            
+
         };
-        
+
     };
 
     return (
@@ -162,19 +162,19 @@ const Footer = () => {
 
                                 <div className="subscribe-input-area">
                                     <form action=""
-                                    onSubmit={handleSubmit(submit)}
+                                        onSubmit={handleSubmit(submit)}
                                     >
-                                        <input type="email" className='subscribe-input' placeholder='Enter your email address...' 
-                                        id="email"
-                                        {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
+                                        <input type="email" className='subscribe-input' placeholder='Enter your email address...'
+                                            id="email"
+                                            {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
                                         />
                                         {errors.email &&
-                                        <small className="text-danger form-error-msg">{errors.email.message}</small>
+                                            <small className="text-danger form-error-msg">{errors.email.message}</small>
                                         }
                                         <Button type='submit' className='subscribe-btn'
-                                        loading={loading}
-                                        label='Subscribe'
-                                         />
+                                            loading={loading}
+                                            label='Subscribe'
+                                        />
                                     </form>
                                 </div>
                             </div>
