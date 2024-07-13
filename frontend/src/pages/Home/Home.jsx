@@ -45,22 +45,22 @@ const Home = () => {
         fetchAllAirports(dispatch);
     }, [dispatch]);
 
-    useEffect(() => {
-        socket.on('checkout.session.completed', (session) => {
-          console.log('Checkout session completed');
+    // useEffect(() => {
+    //     socket.on('checkout.session.completed', (session) => {
+    //       console.log('Checkout session completed');
           
-        });
+    //     });
     
-        socket.on('payment_intent.payment_failed', (paymentIntent) => {
-          console.log('Payment intent failed');
+    //     socket.on('payment_intent.payment_failed', (paymentIntent) => {
+    //       console.log('Payment intent failed');
          
-        });
+    //     });
     
-        return () => {
-          socket.off('checkout.session.completed');
-          socket.off('payment_intent.payment_failed');
-        };
-      }, [socket]);
+    //     return () => {
+    //       socket.off('checkout.session.completed');
+    //       socket.off('payment_intent.payment_failed');
+    //     };
+    //   }, [socket]);
 
     const selectedAirportTemplate = (option, props) => {
         if (option) {

@@ -13,7 +13,13 @@ router.post("/check-user-registerd", checkUserAlreadyRegistered);
 router.post("/register", async (req, res) => {
     const { email, title, firstName, lastName, companyName, password, mobileNumber, addressL1, addressL2, city, country, postCode, role } = req.body;
 
-    const result = await register(email, title, firstName, lastName, companyName, password, mobileNumber, addressL1, addressL2, city, country, postCode, role);
+    let result;
+
+    if(role === 'User'){
+        result = await register(email, title, firstName, lastName, null, password, mobileNumber, addressL1, addressL2, city, country, postCode, role);
+    }else{
+        result = await register(email, null, null, null, companyName, password, null, null, null, null, null, null, role);
+    }
 
     if (result.status !== 201) {
         return res.status(result.status).json({ error: result.error });

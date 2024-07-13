@@ -48,9 +48,9 @@ root.render(
   <BrowserRouter>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistStore(store)}>
-        <SocketProvider>
+        {/* <SocketProvider> */}
           <App />
-        </SocketProvider>
+        {/* </SocketProvider> */}
       </PersistGate>
     </Provider>
   </BrowserRouter>

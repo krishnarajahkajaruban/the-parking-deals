@@ -45,6 +45,10 @@ const ProtectedRoute = ({ children }) => {
 
     const isAuthPage = ['Signin', 'Signup', 'ForgotPassword'].includes(childType);
 
+    if(childType === 'VenderList' && isAuth !== null){
+        return children;
+    }
+
     if (isAuthPage && isAuth) {
         return <Navigate to="/" />;
     }

@@ -16,6 +16,23 @@ export const SocketProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    socket.on('checkout.session.completed', (session) => {
+      console.log('Checkout session completed');
+      
+    });
+
+    socket.on('payment_intent.payment_failed', (paymentIntent) => {
+      console.log('Payment intent failed');
+     
+    });
+
+    return () => {
+      socket.off('checkout.session.completed');
+      socket.off('payment_intent.payment_failed');
+    };
+  }, [socket]);
+
   return (
     <SocketContext.Provider value={socket}>
       {children}
