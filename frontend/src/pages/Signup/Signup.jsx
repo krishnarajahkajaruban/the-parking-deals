@@ -142,6 +142,7 @@ const Signup = () => {
 
   const register = async (signUpInfo) => {
     try {
+      console.log(signUpInfo);
       const response = await api.post("/api/auth/register", signUpInfo);
       console.log(response.data);
       toast.current.show({

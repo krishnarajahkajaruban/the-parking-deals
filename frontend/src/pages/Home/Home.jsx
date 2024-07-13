@@ -23,7 +23,7 @@ import Footer from '../../components/Footer';
 import { SocketContext } from '../../context/SocketContext';
 
 const Home = () => {
-    const socket = useContext(SocketContext);
+    // const socket = useContext(SocketContext);
     const navigate = useNavigate();
     const reservationRef = useRef(null);
     const toast = useRef(null);
