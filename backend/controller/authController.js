@@ -39,7 +39,7 @@ const checkUserAlreadyRegistered = async (req, res) => {
 
 /* register */
 const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, addressL1, addressL2, city, country, postCode, role) => {
-  
+  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, addressL1, addressL2, city, country, postCode, role);
   try{
     // Check for required fields
     if (!email || 
@@ -110,7 +110,7 @@ const register = async (email, title, firstName, lastName, companyName, password
         email: email.toLowerCase(),
         ...(role === "User" && { title }),
         ...(["Admin", "User"].includes(role) && { firstName }),
-        ...(["Admin", "User"].includes(role) && { lastName: lastName || "" }),
+        ...(["Admin", "User"].includes(role) && { lastname: lastName || "" }),
         ...(role === "Vendor" && { companyName }),
         ...(role === "User" && { mobileNumber }),
         ...(role === "User" && { addressL1 }),

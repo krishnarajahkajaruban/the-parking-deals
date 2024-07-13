@@ -19,17 +19,15 @@ const userSchema = new Schema(
         return ["Admin", "User"].includes(this.role);
       },
     },
-    lastName: {
+    lastname: {
       type: String,
-      set: function(value) {
-        // If the role is not 'User', return undefined to prevent setting a default value
-        if (!["Admin", "User"].includes(this.role)) {
-          return undefined;
-        }
-        // If the role is 'User', return the provided value or an empty string if not provided
-        return value || "";
-      }
-    },
+      // set: function(value) {
+      //   if (["Admin", "User"].includes(this.role)) {
+      //     return value || "";
+      //   }
+      //   return undefined;
+      // }
+    },    
     companyName : {
       type: String,
       required: function() {
