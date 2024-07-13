@@ -20,7 +20,7 @@ import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
 import Footer from '../../components/Footer';
-import { SocketContext } from '../../context/SocketContext';
+// import { SocketContext } from '../../context/SocketContext';
 
 const Home = () => {
     // const socket = useContext(SocketContext);
