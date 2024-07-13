@@ -10,7 +10,7 @@ import Signup from './pages/Signup/Signup';
 // import ContactUs from './pages/ContactUs/ContactUs';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 // import Services from './pages/Services/Services';
-// import VendorList from './pages/VendorList/VendorList';
+import VendorList from './pages/VendorList/VendorList';
 // import Booking from './pages/Booking/Booking';
 // import Dashboard from './pages/Dashboard/Dashboard';
 
@@ -32,7 +32,7 @@ const FaQ = React.lazy(()=>import('./pages/FaQ/FaQ'));
 const ContactUs = React.lazy(()=>import('./pages/ContactUs/ContactUs'));
 // const ForgotPassword = React.lazy(()=>import('./pages/ForgotPassword/ForgotPassword'));
 const Services = React.lazy(()=>import('./pages/Services/Services'));
-const VendorList = React.lazy(()=>import('./pages/VendorList/VendorList'));
+// const VendorList = React.lazy(()=>import('./pages/VendorList/VendorList'));
 const Booking = React.lazy(()=>import('./pages/Booking/Booking'));
 const Dashboard = React.lazy(()=>import('./pages/Dashboard/Dashboard'));
 
@@ -71,7 +71,7 @@ function App() {
         <Route path='/faq' element={<Suspense fallback={<Preloader />}><FaQ /></Suspense>} />
         <Route path='/contact-us' element={<Suspense fallback={<Preloader />}><ContactUs /></Suspense>} />
         <Route path='/services' element={<Suspense fallback={<Preloader />}><Services /></Suspense>} />
-        <Route path='/results' element={<Suspense fallback={<Preloader />}><VendorList /></Suspense>} />
+        <Route path='/results' element={<ProtectedRoute><VendorList /></ProtectedRoute>} />
         <Route path='/booking' element={<Suspense fallback={<Preloader />}><Booking /></Suspense>} />
         <Route path='/dashboard' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Dashboard /></ProtectedRoute></Suspense>} />
       </Routes>

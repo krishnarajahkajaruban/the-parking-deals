@@ -17,6 +17,7 @@ import { Image } from 'primereact/image';
 import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
+import withComponentName from '../../withComponentName';
 
 
 const VendorList = () => {
@@ -1507,4 +1508,4 @@ const VendorList = () => {
   );
 }
 
-export default VendorList;
+export default withComponentName(VendorList, 'VenderList');
