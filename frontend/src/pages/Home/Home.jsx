@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Suspense, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import './Home-responsive.css';
-import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
@@ -20,8 +19,11 @@ import { Calendar } from 'primereact/calendar';
 import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
+import Footer from '../../components/Footer';
+import { SocketContext } from '../../context/SocketContext';
 
 const Home = () => {
+    const socket = useContext(SocketContext);
     const navigate = useNavigate();
     const reservationRef = useRef(null);
     const toast = useRef(null);
@@ -42,6 +44,23 @@ const Home = () => {
     useEffect(() => {
         fetchAllAirports(dispatch);
     }, [dispatch]);
+
+    // useEffect(() => {
+    //     socket.on('checkout.session.completed', (session) => {
+    //       console.log('Checkout session completed');
+          
+    //     });
+    
+    //     socket.on('payment_intent.payment_failed', (paymentIntent) => {
+    //       console.log('Payment intent failed');
+         
+    //     });
+    
+    //     return () => {
+    //       socket.off('checkout.session.completed');
+    //       socket.off('payment_intent.payment_failed');
+    //     };
+    //   }, [socket]);
 
     const selectedAirportTemplate = (option, props) => {
         if (option) {
@@ -333,8 +352,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            <Footer />
+        
+                <Footer />
+                                                 
         </>
     )
 }

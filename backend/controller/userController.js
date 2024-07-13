@@ -9,6 +9,11 @@ const AirportParkingAvailability = require("../models/airportParkingAvailability
 const bcrypt = require("bcrypt");
 const EmailVerify = require("../models/emailVerify");
 const ForgotUserEmail = require("../models/forgotUserEmail");
+const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
+const ContactForm = require("../models/contact");
+const SubscribedEmail = require("../models/subcribedEmail");
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 // Utility function to generate a 6-digit verification code
 const generateVerificationCode = () => {
@@ -260,7 +265,7 @@ const carParkingBookingDetail = async (req, res) => {
             userDetail,
             travelDetail,
             vehicleDetail,
-            cardDetail,
+            // cardDetail,
             bookingQuote,
             couponCode,
             smsConfirmation,
@@ -269,7 +274,9 @@ const carParkingBookingDetail = async (req, res) => {
 
         const { email, title, firstName, lastName, password, mobileNumber, addressL1, addressL2, city, country, postCode, accessToken, registeredStatus } = userDetail;
 
-        if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail || !cardDetail || !bookingQuote) {
+        if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail 
+          // || !cardDetail 
+          || !bookingQuote) {
             return res.status(400).json({ error: "All fields must be provided" });
         }
 
@@ -306,7 +313,7 @@ const carParkingBookingDetail = async (req, res) => {
             user = result.user;
             token = result.token;
         } else {
-            const result = await register(email, title, firstName, lastName, password, mobileNumber, addressL1, addressL2, city, country, postCode, "User");
+            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, addressL1, addressL2, city, country, postCode, "User");
 
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
@@ -316,11 +323,27 @@ const carParkingBookingDetail = async (req, res) => {
             token = generateToken(user, process.env.JWT_SECRET);
         }
 
+        const dropOff = new Date(dropOffDate);
+        const pickUp = new Date(pickUpDate);
+        const now = new Date();
+        
+        // Check if dropOffDate is today or in the future
+        if (dropOff < now) {
+          return res.status(400).json({ error: "dropOffDate must be today or in the future."});
+        };
+
+        // Check if dropOffDate is less than pickUpDate
+        if (dropOff >= pickUp) {
+          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate."});
+        };
+
         const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
 
         if (bookingResult.status !== 200) {
             return res.status(bookingResult.status).json({ error: bookingResult.error });
         }
+
+        // console.log(user);
 
         const newCarParkingBooking = new BookingDetail({
             airportName,
@@ -332,7 +355,7 @@ const carParkingBookingDetail = async (req, res) => {
             userId: user._id || user.id,
             travelDetail,
             vehicleDetail,
-            cardDetail,
+            // cardDetail,
             bookingQuote: bookingResult.bookingQuote,
             bookingFee: bookingResult.bookingFee,
             ...(smsConfirmation && { smsConfirmationFee: bookingResult.smsConfirmation }),
@@ -340,10 +363,36 @@ const carParkingBookingDetail = async (req, res) => {
             totalBeforeDiscount: bookingResult.totalBeforeDiscount,
             couponDiscount: bookingResult.couponDiscount,
             totalPayable: bookingResult.totalPayable,
-            status: "Confirmed"
+            status: "Pending"
         });
 
         await newCarParkingBooking.save();
+
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card"],
+          line_items: [
+            {
+              price_data: {
+                currency: "gbp",
+                product_data: {
+                  name: "Car Parking Booking",
+                  images: ["https://example.com/image.jpg"]
+                },
+                unit_amount: Math.round(bookingResult.totalPayable * 100)
+              },
+              quantity: 1
+            }
+          ],
+          mode: "payment",
+          success_url: `${process.env.FRONTEND_URL}`,
+          cancel_url: `${process.env.FRONTEND_URL}/booking`,
+          metadata: {
+            bookingId: newCarParkingBooking._id.toString()
+          }
+        });
+
+        // console.log(session);
+        
 
         const [emailResponseForUser, emailResponseForCompany] = await Promise.all([
             sendEmailToUser(newCarParkingBooking, user, "Book"),
@@ -351,7 +400,9 @@ const carParkingBookingDetail = async (req, res) => {
         ]);
 
         return res.status(201).json({
+            id: session.id,
             newCarParkBooking: newCarParkingBooking.toObject(),
+            user: user,
             token,
             emailSentForUser: emailResponseForUser.emailSent,
             mailMsgForUser: emailResponseForUser.message,
@@ -606,6 +657,17 @@ const findAllVendorDetailForUserSearchedParkingSlot = async (req, res) => {
 
       const fromDateObj = new Date(fromDate);
       const toDateObj = new Date(toDate);
+      const now = new Date();
+        
+        // Check if dropOffDate is today or in the future
+        if (fromDateObj < now) {
+          return res.status(400).json({ error: "dropOffDate must be today or in the future."});
+        };
+
+        // Check if dropOffDate is less than pickUpDate
+        if (fromDateObj >= toDateObj) {
+          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate."});
+        };
 
       // Using aggregation to get the user details
       const result = await AirportParkingAvailability.aggregate([
@@ -685,6 +747,233 @@ const getAllAirports = async (req, res) => {
     }
 };
 
+/* update user info */
+const updateUserInfo = async (req, res) => {
+  try {
+      const {
+          email, title, firstName, lastName,
+          mobileNumber, addressL1, addressL2, city, country, postCode
+      } = req.body;
+
+      const { id } = req.user;
+
+      // const parsedEmail = email && JSON.parse(email);
+      // const parsedTitle = title && JSON.parse(title);
+      // const parsedFirstName = firstName && JSON.parse(firstName);
+      // const parsedLastName = lastName && JSON.parse(lastName);
+      // const parsedMobileNumber = mobileNumber && JSON.parse(mobileNumber);
+      // const parsedAddressL1 = addressL1 && JSON.parse(addressL1);
+      // const parsedAddressL2 = addressL2 && JSON.parse(addressL2);
+      // const parsedCity = city && JSON.parse(city);
+      // const parsedCountry = country && JSON.parse(country);
+      // const parsedPostCode = postCode && JSON.parse(postCode);
+
+      const parsedEmail = email 
+      const parsedTitle = title 
+      const parsedFirstName = firstName 
+      const parsedLastName = lastName 
+      const parsedMobileNumber = mobileNumber 
+      const parsedAddressL1 = addressL1 
+      const parsedAddressL2 = addressL2 
+      const parsedCity = city 
+      const parsedCountry = country 
+      const parsedPostCode = postCode 
+
+      const userDetailTobeUpdated = await User.findById(id);
+
+      if(!userDetailTobeUpdated){
+        res.status(404).json({ error:"User not found" });
+      };
+
+      if(parsedEmail){
+        const isEmailVerified = await EmailVerify.findOne({ email: email.toLowerCase(), verifyStatus: true});
+
+        if(!isEmailVerified){
+          return res.status(400).json({ error: "Please verify your email first!"});
+        };
+      };
+
+      let dp = userDetailTobeUpdated.dp;
+      let oldDp;
+
+      if (req.file) {
+
+        if (dp) {
+          const urlParts = dp.split('/');
+          const fileName = urlParts[urlParts.length - 1];
+          oldDp = fileName.split('.')[0];
+        }
+
+          const b64 = Buffer.from(req.file.buffer).toString('base64');
+          const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+          const cldRes = await handleUpload(dataURI);
+          dp = cldRes.secure_url;
+
+          if(oldDp){
+            await deleteOldImage(oldDp);
+          };
+
+      }
+
+      const updateFields = {
+          email: parsedEmail || userDetailTobeUpdated.email,
+          title: parsedTitle || userDetailTobeUpdated.title, 
+          firstName: parsedFirstName || userDetailTobeUpdated.firstName, 
+          lastName: parsedLastName || userDetailTobeUpdated.lastName,
+          mobileNumber: parsedMobileNumber || userDetailTobeUpdated.mobileNumber, 
+          addressL1: parsedAddressL1 || userDetailTobeUpdated.addressL1,
+          addressL2: parsedAddressL2 || userDetailTobeUpdated.addressL2, 
+          city: parsedCity || userDetailTobeUpdated.city, 
+          country: parsedCountry || userDetailTobeUpdated.country, 
+          postCode: parsedPostCode || userDetailTobeUpdated.postCode
+      };
+
+      // Only set 'dp' field if a new file was uploaded
+      if (dp) {
+          updateFields.dp = dp;
+      }
+
+      console.log(updateFields);
+
+      const updatedUserInfo = await User.findByIdAndUpdate(
+          id,
+          { $set: updateFields },
+          { new: true }
+      );
+
+      if (!updatedUserInfo) {
+          return res.status(404).json({ error: 'Error in updating!' });
+      }
+
+      const token = generateToken(updatedUserInfo, process.env.JWT_SECRET);
+
+      res.status(200).json({
+          message: 'User info updated successfully!',
+          user:updatedUserInfo.toObject(),
+          token
+      });
+
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+};
+
+const getUserInfoWithUpdatedToken = async(req, res) => {
+  try{
+    const { id } = req.user;
+    const user = await User.findById(id).lean().exec();
+    if(!user){
+      return res.status(404).json({ error: "User not found" });
+    };
+    const token = generateToken(user, process.env.JWT_SECRET);
+    res.status(200).json({ user, token });
+  }catch (err) {
+    res.status(500).json({ error: err.message });
+  };
+};
+
+/* change the user password */
+const updatingUserPassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const { id } = req.user;
+
+    if(! currentPassword || ! newPassword) {
+      return res.status(400).json({ error: 'Please provide current password and new password' });
+    };
+
+    const user = await User.findById(id).select('+password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Password does not match' });
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 12);
+    await User.findByIdAndUpdate(id, { password: hashPassword });
+
+    res.status(200).json({ message: 'Password updated successfully!' });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+};
+
+/* create a contact form  */
+const createContactOrFaqForm = async (req, res) => {
+  try {
+      const { name, email, mobileNumber, subject, message, type } = req.body;
+
+      if ( !name || !email || !mobileNumber || !subject || !message || !type ) {
+          return res.status(400).json({ error: "All fields are required." });
+      }
+
+      let form;
+      if(type ==="contact"){
+        form = new ContactForm({
+            name,
+            email,
+            mobileNumber,
+            subject,
+            message
+        });
+  
+        await form.save();
+      }
+      // else if (type === "faq"){
+      //   form = new Faq({
+      //     fullName,
+      //     email,
+      //     subject,
+      //     message
+      // });
+
+      // await form.save();
+      // }
+      else {
+        return res.status(400).json({ error: "Invalid type" });
+      };
+
+      res.status(201).json({
+          message: `${type === "contact" ? "Contact" : type === "faq" ? "FAQ" : ""} Form submitted successfully!`,
+          form: form.toObject()
+      });
+  }catch (err) {
+      console.log(err);
+      res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/* creating a subscribed user */
+const creatingSubscribedUser = async (req, res) => {
+  try{
+    const { email } = req.body;
+
+    if(!email){
+      return res.status(400).json({ error: "Email is required!" });
+    };
+
+    const alreadySubscribed= await SubscribedEmail.findOne({ email: email.toLowerCase() });
+
+    if(alreadySubscribed){
+      return res.status(400).json({ error: "You already subscribed!" });
+    };
+
+    const newSubcribedEmail = new SubscribedEmail(
+      {
+        email: email.toLowerCase()
+      }
+    );
+    await newSubcribedEmail.save();
+
+    res.status(201).json({ message: "Subscribed successfully!" });
+    
+  }catch (err) {
+    res.status(500).json({ error: err.message });
+  };
+};
 
 module.exports = {
     sendingVerificationCodeForEmailVerify,
@@ -697,5 +986,10 @@ module.exports = {
     checkingCouponCodeValidity,
     cancelTheBooking,
     findAllVendorDetailForUserSearchedParkingSlot,
-    getAllAirports
+    getAllAirports,
+    updateUserInfo,
+    getUserInfoWithUpdatedToken,
+    updatingUserPassword,
+    createContactOrFaqForm,
+    creatingSubscribedUser
 };

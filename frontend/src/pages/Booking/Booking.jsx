@@ -17,13 +17,17 @@ import { IconField } from "primereact/iconfield";
 
 import { Toast } from 'primereact/toast';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../../api';
 import { sendVerificationEmail, verifyOTP } from '../../utils/authUtil';
+import {loadStripe} from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { setLogin } from '../../state';
 
 const Booking = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { bookingDetails } = location.state || {};
   const [showError, setShowError] = useState(false);
   const [showCouponError, setShowCouponError] = useState(false);
@@ -33,6 +37,7 @@ const Booking = () => {
   const toast = useRef(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [verified, setVerified] = useState(false);
 
   const [otp, setOTP] = useState();
   const [seconds, setSeconds] = useState(0);
@@ -74,6 +79,7 @@ const Booking = () => {
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
 
+  
   const initalUserDetails = {
     email: "",
     password: "",
@@ -123,33 +129,111 @@ const Booking = () => {
   const [cardDetails, setCardDetails] = useState(initialCardDetails);
   const [bookingCharge, setBookingCharge] = useState();
 
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
+
+const CheckoutForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    const response = await fetch(`${process.env.REACT_APP_BASEURL}/create-payment-intent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount: 1000 }), // Amount in cents
+    });
+
+    const { clientSecret } = await response.json();
+
+    const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: paymentMethod.id,
+    });
+
+    if (confirmError) {
+      setError(confirmError.message);
+      return;
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      setSuccess(true);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <CardElement />
+      <button type="submit" disabled={!stripe}>Pay</button> 
+      {/* <Button
+        type='submit'
+        label="CONFIRM BOOKING"
+        className="custom-btn-primary w-100 result-card-btn"
+        // onClick={handleBooking}
+        disabled={!isAgreed || !stripe}
+        /> */}
+      {error && <div>{error}</div>}
+      {success && <div>Payment successful!</div>}
+    </form>
+  );
+};
+
+    const PaymentForm = () => {
+      return (
+        <Elements stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>
+      );
+    };
+
+  const calculatingBookingCharge = async () => {
+    try {
+      const response = await api.post("/api/user/calculate-total-booking-charge",
+        {
+          bookingQuote: bookingDetails?.bookingQuote,
+          couponCode,
+          smsConfirmation: checkedSmsConfirmation,
+          cancellationCover: checkedCancellationCover
+        }
+      );
+      console.log(response.data);
+      setBookingCharge(response.data);
+    } catch (err) {
+      console.log(err);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error in Booking charge calculation!',
+        detail: err.response.data.error,
+        life: 3000
+      });
+    };
+  };
+
   useEffect(() => {
     if (bookingDetails?.bookingQuote) {
-      const calculatingBookingCharge = async () => {
-        try {
-          const response = await api.post("/api/user/calculate-total-booking-charge",
-            {
-              bookingQuote: bookingDetails?.bookingQuote,
-              couponCode,
-              smsConfirmation: checkedSmsConfirmation,
-              cancellationCover: checkedCancellationCover
-            }
-          );
-          console.log(response.data);
-          setBookingCharge(response.data);
-        } catch (err) {
-          console.log(err);
-          toast.current.show({
-            severity: 'error',
-            summary: 'Error in Booking charge calculation!',
-            detail: err.response.data.error,
-            life: 3000
-          });
-        };
-      };
+      
       calculatingBookingCharge();
     }
-  }, [bookingDetails]);
+  }, [bookingDetails, checkedCancellationCover, checkedSmsConfirmation]);
 
   const checkingCouponCodeValidity = async () => {
     try {
@@ -214,6 +298,7 @@ const Booking = () => {
     setCardDetails({ ...cardDetails, [name]: value });
   };
 
+
   const handleLogin = () => {
 
   }
@@ -225,6 +310,7 @@ const Booking = () => {
   const handleApplyCoupon = () => {
     if (couponCode) {
       checkingCouponCodeValidity();
+      calculatingBookingCharge();
     };
   }
 
@@ -246,7 +332,7 @@ const Booking = () => {
 
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
-    await verifyOTP(otp, setShowError, setOTP, userDetails.email, setLoading, setPage, toast);
+    await verifyOTP(otp, setShowError, setOTP, userDetails.email, setLoading, setPage, toast, false, setVerified);
   };
 
   useEffect(() => {
@@ -291,21 +377,40 @@ const Booking = () => {
     return `${hours}:${minutes}`;
   };
 
+
   const bookTheCarParkingSlot = async (details) => {
+    console.log(details);
     try {
       const response = await api.post("/api/user/car-park-booking", details);
       console.log(response.data);
+
+      dispatch(
+        setLogin({
+        user: response.data.user,
+        token: response.data.token
+        })
+      );
+  
+      const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
+  
+      const result = await stripe.redirectToCheckout({
+        sessionId: response.data.id
+      });
+  
+      console.log(result);
+
       toast.current.show({
         severity: 'success',
-        summary: 'Booking Successfully',
-        detail: "You have been booked your parking slot successfully",
+        summary: 'Booking Successful',
+        detail: "You have booked your parking slot successfully",
         life: 3000
       });
 
-      setTimeout(() => {
-        navigate("/")
+      setTimeout(()=>{
+        navigate("/");
       }, 2000);
-
+  
+  
     } catch (err) {
       console.log(err);
       toast.current.show({
@@ -314,33 +419,54 @@ const Booking = () => {
         detail: err.response.data.error,
         life: 3000
       });
-    };
-  };
-
-  const handleBooking = () => {
-    // Check if all required user details are filled
-    if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title || !userDetails.addressL1 || !userDetails.city || !userDetails.country || !userDetails.postCode) {
-      setShowError(true);
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error in Your Details Submission',
-        detail: "Please fill all required fields!",
-        life: 3000
-      });
-      return;
     }
+  };
+  
+  
 
+  function validateUserDetails(userDetails, isUserPresent, doesEmailExist) {
+    // Check if user is present
+    if (isUserPresent) {
+      return true; // No validation needed if user is already present
+    }
+  
+    // Check if email exists in the system
+    if (doesEmailExist) {
+      if (!userDetails.email || !userDetails.password) {
+        setShowError(true);
+        toast.current.show({
+          severity: 'error',
+          summary: 'Error in Your Details Submission',
+          detail: "Please fill all required fields!",
+          life: 3000
+        });
+        return false;
+      }
+    } else {
+      // Validate all required fields
+      if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title || !userDetails.addressL1 || !userDetails.city || !userDetails.country || !userDetails.postCode) {
+        setShowError(true);
+        toast.current.show({
+          severity: 'error',
+          summary: 'Error in Your Details Submission',
+          detail: "Please fill all required fields!",
+          life: 3000
+        });
+        return false;
+      }
+    }
+  
     // Check if passwords match
-    if (userDetails.password !== userDetails.confirmPassword) {
+    if (!doesEmailExist && (userDetails.password !== userDetails.confirmPassword)) {
       toast.current.show({
         severity: 'error',
         summary: 'Error in Your Details Submission',
         detail: "Password & Confirm Password do not match!",
         life: 3000
       });
-      return;
+      return false;
     }
-
+  
     // Check if password length is at least 8 characters
     if (userDetails.password.length < 8) {
       toast.current.show({
@@ -349,9 +475,19 @@ const Booking = () => {
         detail: "Password must be at least 8 characters long!",
         life: 3000
       });
-      return;
+      return false;
     }
-
+  
+    return true; // All validations passed
+  }
+  
+  const handleBooking = () => {
+    console.log(userDetails, user, emailExist);
+    
+    if (!validateUserDetails(userDetails, user, emailExist)) {
+      return; // Exit if validation fails
+    }
+  
     // Check if travel details are filled
     if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
       setShowError(true);
@@ -363,7 +499,7 @@ const Booking = () => {
       });
       return;
     }
-
+  
     // Check if all vehicle details are filled
     const hasError = vehiclesDetails.some(vehicle => !vehicle.regNo || !vehicle.color);
     if (hasError) {
@@ -376,7 +512,7 @@ const Booking = () => {
       });
       return;
     }
-
+  
     // Check if terms and privacy policy are agreed
     if (!isAgreed) {
       toast.current.show({
@@ -387,13 +523,17 @@ const Booking = () => {
       });
       return;
     }
-
+  
     // Prepare user details object
     let userDetail = {};
     if (user) {
       userDetail.accessToken = token;
     } else if (emailExist) {
-      userDetail.registeredStatus = true;
+      userDetail = {
+        email: userDetails.email,
+        password: userDetails.password,
+        registeredStatus: true
+      };
     } else {
       userDetail = {
         email: userDetails.email,
@@ -409,7 +549,7 @@ const Booking = () => {
         postCode: userDetails.postCode,
       };
     }
-
+  
     // Prepare booking details object
     const carParkingSlotBookingDetails = {
       airportName: bookingDetails?.airportName,
@@ -421,17 +561,16 @@ const Booking = () => {
       userDetail: userDetail,
       travelDetail: travelDetails,
       vehicleDetail: vehiclesDetails,
-      cardDetail: cardDetails,
+      // cardDetail: cardDetails,
       bookingQuote: bookingDetails?.bookingQuote,
       couponCode: bookingDetails?.couponCode,
       smsConfirmation: checkedSmsConfirmation,
       cancellationCover: checkedCancellationCover
     };
-
+  
     bookTheCarParkingSlot(carParkingSlotBookingDetails);
   };
-
-
+  
   const header = <div className="font-bold mb-3">Password Strength</div>;
   const footer = (
     <>
@@ -757,7 +896,7 @@ const Booking = () => {
                           /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
                             userDetails.email
                           ) &&
-                          userDetails.email) && <>
+                          userDetails.email && verified) && <>
                             {/* Your Details */}
                             <h4 className="booking-card-head">Your Details</h4>
 
@@ -843,7 +982,7 @@ const Booking = () => {
                                   >
                                     Mobile Number
                                   </label>
-                                  <InputMask
+                                  {/* <InputMask
                                     id="mobileNumber"
                                     className="custom-form-input"
                                     name="mobileNumber"
@@ -851,7 +990,15 @@ const Booking = () => {
                                     placeholder="(020) 1234-5678"
                                     value={userDetails.mobileNumber}
                                     onChange={handleInputChange}
-                                  ></InputMask>
+                                  ></InputMask> */}
+                                  <InputText
+                                    id="mobileNumber"
+                                    keyfilter="num"
+                                    className="custom-form-input"
+                                    name="mobileNumber"
+                                    value={userDetails.mobileNumber}
+                                    onChange={handleInputChange}
+                                  />
                                   {(showError && !userDetails.mobileNumber) && (
                                     <small className="text-danger form-error-msg">
                                       This field is required
@@ -1174,8 +1321,9 @@ const Booking = () => {
                           <div className="form-checkbox-area">
                             <Checkbox
                               inputId="smsConfirmation"
-                              onChange={(e) =>
+                              onChange={(e) =>{
                                 setCheckedSmsConfirmation(e.checked)
+                              }
                               }
                               checked={checkedSmsConfirmation}
                               name="smsConfirmation"
@@ -1193,8 +1341,9 @@ const Booking = () => {
                           <div className="form-checkbox-area">
                             <Checkbox
                               inputId="cancellationCover"
-                              onChange={(e) =>
+                              onChange={(e) =>{
                                 setCheckedCancellationCover(e.checked)
+                              }
                               }
                               checked={checkedCancellationCover}
                               name="cancellationCover"
@@ -1263,13 +1412,13 @@ const Booking = () => {
 
                     <div className="total-price-area">
                       <h5 className="total-price-text">Total :</h5>
-                      <h5 className="total-price">£ {bookingCharge?.totalPayable || 0}</h5>
+                      <h5 className="total-price">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
                     </div>
 
-                    <Divider className="divider-margin" />
+                    {/* <Divider className="divider-margin" /> */}
 
                     {/* Coupon Code */}
-                    <div className="booking-card-head-area">
+                    {/* <div className="booking-card-head-area">
                       <h4 className="booking-card-head">Card Details</h4>
 
                       <div className="row mt-4">
@@ -1384,6 +1533,7 @@ const Booking = () => {
                               CVV
                             </label>
                             <InputMask
+                            name='cvv'
                               value={cardDetails.cvv}
                               className="custom-form-input"
                               onChange={handleInputCardDetailChange}
@@ -1406,7 +1556,7 @@ const Booking = () => {
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/*  */}
 
                     <Divider className="divider-margin" />
@@ -1439,13 +1589,13 @@ const Booking = () => {
                           onClick={handleBooking}
                           disabled={!isAgreed}
                         />
+                        {/* {PaymentForm()} */}
                       </div>
                     </div>
                   </div>
                 </div>
               </article>
             </div>
-
             <div className="col-12 col-lg-5 col-xl-4 ps-xl-2 position-relative book-summary-section mt-lg-0">
               <article className="detail-card">
                 <div className="detail-card-label-area main mt-0">
@@ -1524,11 +1674,11 @@ const Booking = () => {
 
               <article className="detail-card mt-3 card-position-sticky mb-3 mb-sm-0">
                 <div className="detail-card-label-area main mt-0">
-                  <h5>Meet and Greet</h5>
+                  <h5>{bookingDetails?.serviceType}</h5>
                 </div>
                 <div className="detail-card-logo-area">
-                  {/* <img src={bookingDetails?.companyImg} alt="" /> */}
-                  <img src="assets/images/lion-parking.png" alt="" />
+                  <img src={bookingDetails?.companyImg} alt="" />
+                  {/* <img src="assets/images/lion-parking.png" alt="" /> */}
                 </div>
                 <div className="detail-card-label-area">
                   <h5>{bookingDetails?.airportName}</h5>
@@ -1547,29 +1697,50 @@ const Booking = () => {
                     <h5 className="total-detail-price">£ {bookingCharge?.bookingFee || 0}</h5>
                   </div>
 
+                  {checkedSmsConfirmation && <>
+                    <Divider className="divider-primary" />
+
+                    <div className="total-detail">
+                      <h5 className="total-detail-head">SMS Confirmation</h5>
+                      <h5 className="total-detail-price">£ {bookingCharge?.smsConfirmation || 0}</h5>
+                    </div>
+                  </>}
+
+          {           checkedCancellationCover &&         <>
+                      <Divider className="divider-primary" />
+
+                      <div className="total-detail">
+                        <h5 className="total-detail-head">Cancellation Cover</h5>
+                        <h5 className="total-detail-price">£ {bookingCharge?.cancellationCover || 0}</h5>
+                      </div>
+                    </>}
+
+                  {((couponCode && couponValid) || !couponCode) && <>
+                    <Divider className="divider-primary" />
+
+                    <div className="total-detail">
+                      <h5 className="total-detail-head text-bold">
+                        Total before discount
+                      </h5>
+                      {couponCode ? <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalBeforeDiscount || 0}</h5> : <h5 className="total-detail-price text-bold">-</h5>}
+                    </div>
+
+                    <Divider className="divider-primary" />
+
+                    <div className="total-detail">
+                      <h5 className="total-detail-head">Coupon Discount</h5>
+                      {couponCode ? <h5 className="total-detail-price">- {bookingCharge?.couponDiscount || 0} %</h5> : <h5 className="total-detail-price">-</h5>}
+                    </div>
+                  </>}
+
+
                   <Divider className="divider-primary" />
 
                   <div className="total-detail">
                     <h5 className="total-detail-head text-bold">
-                      Total before discount
+                      Total Payable
                     </h5>
-                    <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalBeforeDiscount || 0}</h5>
-                  </div>
-
-                  <Divider className="divider-primary" />
-
-                  <div className="total-detail">
-                    <h5 className="total-detail-head">Coupon Discount</h5>
-                    <h5 className="total-detail-price">- {bookingCharge?.couponDiscount || 0} %</h5>
-                  </div>
-
-                  <Divider className="divider-primary" />
-
-                  <div className="total-detail">
-                    <h5 className="total-detail-head text-bold">
-                      Total before discount
-                    </h5>
-                    <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalBeforeDiscount || 0}</h5>
+                    <h5 className="total-detail-price text-bold">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
                   </div>
                 </div>
               </article>

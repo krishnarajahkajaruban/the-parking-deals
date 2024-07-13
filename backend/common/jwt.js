@@ -5,8 +5,8 @@ const generateToken = (user, secret, expiresIn = '1d') => {
     id: user._id,
     email: user.email,
     ...(user.role === "User" && { title: user.title }),
-    ...(user.role.includes(["Admin", "User"]) && { firstName: user.firstName }),
-    ...(user.role.includes(["Admin", "User"]) && { lastName: user.lastName }),
+    ...(["Admin", "User"].includes(user.role) && { firstName: user.firstName }),
+    ...(["Admin", "User"].includes(user.role) && { lastName: user.lastName }),
     ...(user.role === "Vendor" && { companyName: user.companyName }),
     ...(user.role === "User" && { mobileNumber: user.mobileNumber}),
     ...(user.role === "User" && {addressL1: user.addressL1}),
@@ -14,7 +14,8 @@ const generateToken = (user, secret, expiresIn = '1d') => {
     role: user.role,
     ...(user.role === "User" && {city: user.city}),
     ...(user.role === "User" && {country: user.country}),
-    ...(user.role === "User" && {postCode: user.postCode})
+    ...(user.role === "User" && {postCode: user.postCode}),
+    ...(user.role === "User" && {dp: user.dp})
   };
 
   return jwt.sign(payload, secret, { expiresIn });

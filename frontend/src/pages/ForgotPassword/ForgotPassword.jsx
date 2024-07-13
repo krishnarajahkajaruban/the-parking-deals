@@ -13,6 +13,7 @@ import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 import withComponentName from "../../withComponentName";
+import Preloader from "../../Preloader";
 
 const ForgotPassword = () => {
     const toast = useRef(null);
@@ -72,7 +73,7 @@ const ForgotPassword = () => {
 
     const handleVerifyOTP = async (e) => {
         e.preventDefault();
-        await verifyOTP(otp, setOTP, resetPasswordInfo.email, setLoading, setPage, toast, true);
+        await verifyOTP(otp, setShowError, setOTP, resetPasswordInfo.email, setLoading, setPage, toast, true, false);
     };
 
     useEffect(() => {
@@ -169,6 +170,7 @@ const ForgotPassword = () => {
 
     return (
         <>
+        <Preloader/>
             <Header />
 
             {/* Breadcrumb Section Start */}

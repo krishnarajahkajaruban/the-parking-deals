@@ -1888,7 +1888,7 @@ button.custom-form-link:disabled {
 
 .p-dialog.p-confirm-dialog .p-confirm-dialog-message {
   font-size: 14px;
-  text-align: center;
+  /* text-align: center; */
   margin: 0;
 }
 
@@ -2337,4 +2337,8 @@ button.custom-form-link:disabled {
 .bi-chevron-down.rotate {
   transform: rotateX(180deg);
   transition: transform 0.5s;
+}
+
+.tab-pane{
+  outline: none;
 }

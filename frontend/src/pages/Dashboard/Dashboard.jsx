@@ -15,19 +15,25 @@ import { Panel } from 'primereact/panel';
 import { Dropdown } from "primereact/dropdown";
 import { FileUpload } from 'primereact/fileupload';
 import { InputText } from "primereact/inputtext";
-import { InputMask } from "primereact/inputmask";
+import { Calendar } from 'primereact/calendar';
+import { Tag } from 'primereact/tag';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
 import { SampleData } from './SampleData';
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin, setLogout } from "../../state";
+import { Toast } from 'primereact/toast';
+import api from "../../api";
 
 const Dashboard = () => {
     const editProfile = useRef(null);
+    const toast = useRef(null);
+    const dispatch = useDispatch();
     const [showError, setShowError] = useState(false);
     const [showEditArea, setShowEditArea] = useState(false);
-
-    const accept = () => {
-    }
+    const [filterDate, setFilterDate] = useState(null);
+    const today = new Date();
 
     const logOut = () => {
         confirmDialog({
@@ -36,9 +42,12 @@ const Dashboard = () => {
             icon: 'bi bi-info-circle',
             defaultFocus: 'reject',
             acceptClassName: 'p-button-danger',
-            accept,
+            accept: () => {
+                dispatch(setLogout());
+            },
         });
     }
+
 
     useEffect(() => {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -61,10 +70,129 @@ const Dashboard = () => {
     const [country, setCountry] = useState('');
     const [postCode, setPostCode] = useState('');
 
-    const onUpload = () => {
+    const user = useSelector((state) => state.auth.user);
+    const token = useSelector((state) => state.auth.token);
+    const [imgFile, setImgFile] = useState();
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [status, setStatus] = useState("Paid");
+
+    useEffect(() => {
+        api.get(`/api/common-role/get-all-bookings?page=${page}&limit=10&status=${status}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        }).then(res => console.log(res.data))
+            .catch(err => console.log(err));
+    }, []);
+
+    const initialUserInfo = {
+        title: user?.title || titles[0].name,
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
+        mobileNumber: user?.mobileNumber || "",
+        addressL1: user?.addressL1 || "",
+        addressL2: user?.addressL2 || "",
+        city: user?.city || "",
+        country: user?.country || "",
+        postCode: user?.postCode || "",
+    };
+
+    const [userInfo, setUserInfo] = useState(initialUserInfo);
+
+
+    const handleInputChange = async (e) => {
+        const { name, value } = e.target;
+        setUserInfo({ ...userInfo, [name]: value });
+
+    };
+
+    const onUpload = (event) => {
+        const uploadedFiles = event.files;
+        console.log(uploadedFiles);
+        if (uploadedFiles.length > 0) {
+            const file = uploadedFiles[0];
+
+        }
+    };
+
+    const dpUploadHandler = ({ files }) => {
+        const [file] = files;
+        console.log(file);
+        setImgFile(file);
+        // const fileReader = new FileReader();
+        // fileReader.onload = (e) => {
+        //     setFile(e.target.result);
+        // };
+        // fileReader.readAsDataURL(file);
+    };
+
+
+
+    const updatingUserInfo = async (info) => {
+        setLoading(true);
+        try {
+            const response = await api.put("/api/user/update-user-info", info, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'User Info Updated',
+                detail: "Your user info has been updated successfully",
+                life: 3000
+            });
+            dispatch(
+                setLogin({
+                    user: response.data.user,
+                    token: response.data.token
+                })
+            );
+        } catch (err) {
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in UserInfo Update',
+                detail: err.response.data.error,
+                life: 3000
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleProfileUpdate = () => {
+        if (!userInfo.firstName || !userInfo.mobileNumber || !userInfo.title || !userInfo.addressL1 || !userInfo.city || !userInfo.country || !userInfo.postCode) {
+            setShowError(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append('title', userInfo.title);
+        formData.append('firstName', userInfo.firstName);
+        formData.append('lastName', userInfo.lastName);
+        formData.append('mobileNumber', userInfo.mobileNumber);
+        formData.append('addressL1', userInfo.addressL1);
+        formData.append('addressL2', userInfo.addressL2);
+        formData.append('city', userInfo.city);
+        formData.append('country', userInfo.country);
+        formData.append('postCode', userInfo.postCode);
+
+        if (imgFile) {
+            formData.append('dp', imgFile);
+        }
+
+        updatingUserInfo(formData);
     };
 
     const togglePanel = (e) => {
@@ -78,12 +206,73 @@ const Dashboard = () => {
         }
     };
 
-    const [customers, setCustomers] = useState([]);
+    const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
-        SampleData.getCustomersMedium().then((data) => setCustomers(data));
+        SampleData.getBookingsMedium().then((data) => setBookings(data));
     }, []);
 
+    const searchBodyTemplate = () => {
+        return (
+            <Button
+                icon="bi bi-eye-fill"
+                className="data-view-button"
+                data-bs-toggle="modal"
+                data-bs-target="#bookingDetailModal"
+            />
+        );
+    };
+
+    const cancelBodyTemplate = () => {
+        return (
+            <Button
+                label="Cancel"
+                severity="danger"
+                className="cancel-button"
+                onClick={cancelBooking}
+            />
+        );
+    };
+
+    const dateTimeTemplate = (booking) => {
+        return (
+            <>
+                {booking.date + "/" + booking.time}
+            </>
+        );
+    };
+
+    const statusBodyTemplate = (booking) => {
+        return (
+            <Tag value={booking.status} severity={getSeverity(booking)}></Tag>
+        );
+    };
+
+    const getSeverity = (booking) => {
+        switch (booking.status) {
+            case 'Accepted':
+                return 'success';
+
+            case 'Cancelled':
+                return 'danger';
+
+            default:
+                return null;
+        }
+    };
+
+    const cancelBooking = () => {
+        confirmDialog({
+            message: 'Are you sure you want to cancel the booking?',
+            header: 'Booking Cancellation Confirmation',
+            icon: 'bi bi-info-circle',
+            defaultFocus: 'reject',
+            acceptClassName: 'p-button-danger',
+            accept: cancel
+        });
+    }
+
+    const cancel = () => { };
 
     return (
         <>
@@ -146,10 +335,10 @@ const Dashboard = () => {
                                             <div className="row">
                                                 <div className="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-3 my-auto mx-auto h-100">
                                                     <div className="dashboard-profile-image-area">
-                                                        <Image src="assets/images/profile-img.png" className='dashboard-profile-img' alt="Image" preview />
+                                                        {user?.dp && <Image src={user?.dp} className='dashboard-profile-img' alt="Image" preview />}
 
                                                         {/* if no image */}
-                                                        {/* <img src="assets/images/user.png" className='dashboard-profile-no-img' alt="" /> */}
+                                                        {!user?.dp && <img src="assets/images/user.png" className='dashboard-profile-no-img' alt="" />}
                                                         {/*  */}
 
                                                     </div>
@@ -162,7 +351,7 @@ const Dashboard = () => {
                                                                 Name :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                Mr. Taylor Wells
+                                                                {user?.title}. {user?.firstName} {user?.lastName}
                                                             </h6>
                                                         </div>
 
@@ -173,7 +362,7 @@ const Dashboard = () => {
                                                                 Mobile No. :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                020 3771 2884
+                                                                {user?.mobileNumber}
                                                             </h6>
                                                         </div>
 
@@ -183,7 +372,7 @@ const Dashboard = () => {
                                                                 Email :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                TaylorWells@teleworm.us
+                                                                {user?.email}
                                                             </h6>
                                                         </div>
 
@@ -193,9 +382,7 @@ const Dashboard = () => {
                                                                 Address :
                                                             </h6>
                                                             <h6 className="dashboard-profile-content">
-                                                                85 Boar Lane
-                                                                SELHAM
-                                                                GU28 1AD
+                                                                {user?.addressL1 || "-"} {user?.addressL2}
                                                             </h6>
                                                         </div>
                                                     </div>
@@ -208,6 +395,8 @@ const Dashboard = () => {
                                         </div>
                                     </article>
 
+                                    <Toast ref={toast} />
+
                                     <Panel ref={editProfile} id="editProfile" header="Edit Profile" className="mt-3 edit-profile-section" toggleable collapsed>
                                         <div className="edit-profile-area">
                                             <div className="row">
@@ -216,21 +405,29 @@ const Dashboard = () => {
                                                         <label htmlFor="title" className="custom-form-label">
                                                             Profile Picture
                                                         </label>
-                                                        <FileUpload
+                                                        {/* <FileUpload
                                                             mode="basic"
                                                             name="demo[]"
                                                             accept="image/*"
-                                                            maxFileSize={1000}
+                                                            maxFileSize={5000000}
                                                             className="profil-img-upload"
-                                                            onUpload={onUpload}
+                                                            // onUpload={onUpload}
                                                             auto
                                                             chooseLabel="Browse"
-                                                        />
-                                                        {showError && (
+                                                        /> */}
+                                                        <FileUpload name="dp"
+                                                            accept="image/*"
+                                                            customUpload={true}
+                                                            uploadHandler={dpUploadHandler}
+                                                            className="profil-img-upload"
+                                                            mode="basic"
+                                                            auto={true}
+                                                            chooseLabel="Browse" />
+                                                        {/* {showError && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </div>
                                                 <div className="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
@@ -240,14 +437,14 @@ const Dashboard = () => {
                                                         </label>
                                                         <Dropdown
                                                             id="title"
-                                                            value={title}
-                                                            onChange={(e) => setTitle(e.value)}
+                                                            value={{ name: userInfo.title }}
+                                                            onChange={(e) => setUserInfo({ ...userInfo, title: e.value?.name })}
                                                             options={titles}
                                                             optionLabel="name"
                                                             placeholder="Select"
                                                             className="w-full w-100 custom-form-dropdown"
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.title && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -270,10 +467,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="firstName"
                                                             placeholder="Enter First Name"
-                                                            value={firstName}
-                                                            onChange={(e) => setFirstName(e.target.value)}
+                                                            value={userInfo.firstName}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.firstName && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -285,7 +482,7 @@ const Dashboard = () => {
                                                     <div className="custom-form-group mb-3 mb-sm-4">
                                                         <label
                                                             htmlFor="lastName"
-                                                            className="custom-form-label form-required"
+                                                            className="custom-form-label"
                                                         >
                                                             Last Name
                                                         </label>
@@ -294,14 +491,14 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="lastName"
                                                             placeholder="Enter Last Name"
-                                                            value={lastName}
-                                                            onChange={(e) => setLastName(e.target.value)}
+                                                            value={userInfo.lastName}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {/* {showError && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </div>
 
@@ -313,20 +510,29 @@ const Dashboard = () => {
                                                         >
                                                             Mobile Number
                                                         </label>
-                                                        <InputMask
+                                                        {/* <InputMask
                                                             id="mobileNumber"
                                                             className="custom-form-input"
                                                             name="mobileNumber"
                                                             mask="(999) 9999-9999"
                                                             placeholder="(020) 1234-5678"
-                                                            value={mobileNumber}
-                                                            onChange={(e) => setMobileNumber(e.target.value)}
-                                                        ></InputMask>
-                                                        {showError && (
+                                                            value={userInfo.mobileNumber}
+                                                            onChange={handleInputChange}
+                                                        ></InputMask> */}
+                                                        <InputText
+                                                            id="mobileNumber"
+                                                            keyfilter="num"
+                                                            className="custom-form-input"
+                                                            name="mobileNumber"
+                                                            value={userInfo.mobileNumber}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                        {showError && !userInfo.mobileNumber && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
                                                         )}
+                                                        <small className='text-danger form-error-msg'>{(!(/^\d{9,}$/.test(userInfo.mobileNumber)) && userInfo.mobileNumber) ? "Enter valid phone number" : ""}</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -348,10 +554,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="addressL1"
                                                             placeholder="Address Line 1"
-                                                            value={addressL1}
-                                                            onChange={(e) => setAddressL1(e.target.value)}
+                                                            value={userInfo.addressL1}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.addressL1 && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -366,8 +572,8 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="addressL2"
                                                             placeholder="Address Line 2"
-                                                            value={addressL2}
-                                                            onChange={(e) => setAddressL2(e.target.value)}
+                                                            value={userInfo.addressL2}
+                                                            onChange={handleInputChange}
                                                         />
                                                     </div>
                                                 </div>
@@ -376,13 +582,13 @@ const Dashboard = () => {
                                                     <div className="custom-form-group mb-3 mb-sm-0">
                                                         <InputText
                                                             id="city"
-                                                            className="custom-form-input"
+                                                            className="custom-form-input   form-required"
                                                             name="city"
                                                             placeholder="City"
-                                                            value={city}
-                                                            onChange={(e) => setCity(e.target.value)}
+                                                            value={userInfo.city}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.city && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -397,10 +603,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="country"
                                                             placeholder="Country"
-                                                            value={country}
-                                                            onChange={(e) => setCountry(e.target.value)}
+                                                            value={userInfo.country}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.country && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -415,10 +621,10 @@ const Dashboard = () => {
                                                             className="custom-form-input"
                                                             name="postCode"
                                                             placeholder="Post Code"
-                                                            value={postCode}
-                                                            onChange={(e) => setPostCode(e.target.value)}
+                                                            value={userInfo.postCode}
+                                                            onChange={handleInputChange}
                                                         />
-                                                        {showError && (
+                                                        {showError && !userInfo.postCode && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
@@ -435,6 +641,7 @@ const Dashboard = () => {
                                                         label="Update"
                                                         className="custom-btn-primary w-100 result-card-btn"
                                                         onClick={handleProfileUpdate}
+                                                        loading={loading}
                                                     />
                                                 </div>
                                             </div>
@@ -447,14 +654,46 @@ const Dashboard = () => {
                                         <div className="dashboard-profile-head">
                                             <h5>Bookings</h5>
                                         </div>
+                                        <div className="data-filter-area">
+                                            <div className="row">
+                                                <div className="col-12 col-lg-6 col-xl-4">
+                                                    <div className="custom-form-group mb-0 input-with-icon">
+                                                        <label
+                                                            htmlFor="filterDate"
+                                                            className="custom-form-label"
+                                                        >
+                                                            Filter by Date
+                                                        </label>
+                                                        <div className="form-icon-group">
+                                                            <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                                                            <Calendar
+                                                                id="filterDate"
+                                                                value={filterDate}
+                                                                placeholder="dd/mm/yyyy"
+                                                                maxDate={today}
+                                                                className="w-100"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="dash-table-area">
-                                                    <DataTable value={customers} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
-                                                        <Column field="name" header="Name" style={{ width: '25%' }}></Column>
-                                                        <Column field="country.name" header="Country" style={{ width: '25%' }}></Column>
-                                                        <Column field="company" header="Company" style={{ width: '25%' }}></Column>
-                                                        <Column field="representative.name" header="Representative" style={{ width: '25%' }}></Column>
+                                                    <DataTable
+                                                        value={bookings}
+                                                        paginator
+                                                        size="small"
+                                                        rows={5}
+                                                        rowsPerPageOptions={[5, 10, 25, 50]}
+                                                        tableStyle={{ minWidth: '50rem' }}
+                                                        className="dash-table">
+                                                        <Column field="id" header="Booking ID" style={{ width: '20%' }}></Column>
+                                                        <Column header="Date & Time" body={dateTimeTemplate} style={{ width: '30%' }}></Column>
+                                                        <Column header="Status" body={statusBodyTemplate} style={{ width: '25%' }}></Column>
+                                                        <Column body={searchBodyTemplate} header="Info" style={{ width: '10%' }}></Column>
+                                                        <Column body={cancelBodyTemplate} header="Cancel" style={{ width: '15%' }}></Column>
                                                     </DataTable>
                                                 </div>
                                             </div>
@@ -467,6 +706,189 @@ const Dashboard = () => {
                     </div>
                 </div>
             </section>
+            {/*  */}
+
+            {/* Booking detil modal */}
+            <div
+                class="modal fade"
+                id="bookingDetailModal"
+                tabindex="-1"
+                aria-labelledby="bookingDetailModalLabel"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                    <div class="modal-content custom-modal">
+                        <div class="modal-header p-2">
+                            <h1 class="modal-title fs-5" id="bookingDetailModalLabel">
+                                Booking Info
+                            </h1>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+
+                        <div class="modal-body p-2">
+                            <div className="data-view-area">
+                                <h5 className="data-view-head">Booking Details</h5>
+
+                                <div className="row mt-4">
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Provider :</h6>
+                                            <h6 className="data-view-data">Luton 247 Meet & Greet</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Location :</h6>
+                                            <h6 className="data-view-data">Luton</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3 mb-lg-0">
+                                            <h6 className="data-view-title">Drop Off Date & Time :</h6>
+                                            <h6 className="data-view-data">13/07/2024 12:56</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-0">
+                                            <h6 className="data-view-title">Return Date & Time :</h6>
+                                            <h6 className="data-view-data">20/07/2024 12:50</h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="data-view-sub mt-3">
+                                    <div className="row">
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Booking Quote :</h6>
+                                                <h6 className="data-view-data">£ 159</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Booking Fee :</h6>
+                                                <h6 className="data-view-data">£ 0.99</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3 mb-lg-0">
+                                                <h6 className="data-view-title">Discount :</h6>
+                                                <h6 className="data-view-data">---</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-0">
+                                                <h6 className="data-view-title">Total :</h6>
+                                                <h6 className="data-view-data">£ 160</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Divider className="mt-4 mb-4" />
+
+                                <h5 className="data-view-head">Travel Details</h5>
+
+                                <div className="row mt-4">
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Depart Terminal :</h6>
+                                            <h6 className="data-view-data">Terminal 1</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Arrival Terminal :</h6>
+                                            <h6 className="data-view-data">Terminal 2</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3 mb-lg-0">
+                                            <h6 className="data-view-title">Outbound Flight/Vessel :</h6>
+                                            <h6 className="data-view-data">Flight 2</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-0">
+                                            <h6 className="data-view-title">Inbound Flight/Vessel :</h6>
+                                            <h6 className="data-view-data">Flight 2</h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Divider className="mt-4 mb-4" />
+
+                                <h5 className="data-view-head">Vehicle Details</h5>
+
+                                <div className="data-view-sub mt-3">
+                                    <h6 className="data-view-sub-head">Vehicle 1</h6>
+                                    <div className="row">
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Registration Number :</h6>
+                                                <h6 className="data-view-data">123456789</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Make :</h6>
+                                                <h6 className="data-view-data">Audi</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3 mb-lg-0">
+                                                <h6 className="data-view-title">Model :</h6>
+                                                <h6 className="data-view-data">A6</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-0">
+                                                <h6 className="data-view-title">Color :</h6>
+                                                <h6 className="data-view-data">Black</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="data-view-sub mt-2">
+                                    <h6 className="data-view-sub-head">Vehicle 2</h6>
+                                    <div className="row">
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Registration Number :</h6>
+                                                <h6 className="data-view-data">123456789</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Make :</h6>
+                                                <h6 className="data-view-data">Honda</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3 mb-lg-0">
+                                                <h6 className="data-view-title">Model :</h6>
+                                                <h6 className="data-view-data">CIVIC</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-0">
+                                                <h6 className="data-view-title">Color :</h6>
+                                                <h6 className="data-view-data">Black</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {/*  */}
 
             <Footer />

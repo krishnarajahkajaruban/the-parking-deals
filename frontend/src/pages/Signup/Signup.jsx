@@ -15,6 +15,7 @@ import { Toast } from 'primereact/toast';
 import api from "../../api";
 import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 import withComponentName from "../../withComponentName";
+import Preloader from "../../Preloader";
 
 
 const Signup = () => {
@@ -55,7 +56,7 @@ const Signup = () => {
 
 
   const initialSignUpInfo = {
-    email: 'pragashconstantine13@gmail.com',
+    email: '',
     title: titles[0].name,
     firstName: "",
     lastName: "",
@@ -109,7 +110,7 @@ const Signup = () => {
 
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
-    await verifyOTP(otp, setShowError, setOTP, signUpInfo.email, setLoading, setPage, toast);
+    await verifyOTP(otp, setShowError, setOTP, signUpInfo.email, setLoading, setPage, toast, false, false);
   };
 
   useEffect(() => {
@@ -214,6 +215,7 @@ const Signup = () => {
 
   return (
     <>
+    <Preloader/>
       <Header />
 
       {/* Breadcrumb Section Start */}

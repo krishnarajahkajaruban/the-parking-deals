@@ -42,8 +42,8 @@ const getAllBookings = async (req, res) => {
 
         if (status) {
             // Validate status value
-            if (status !== 'Confirmed' && status !== 'Cancelled') {
-                return res.status(400).json({ error: "Status must be either 'Confirmed' or 'Cancelled'" });
+            if (status !== 'Paid' && status !== 'Pending' && status !== 'Failed' && status !== 'Cancelled') {
+                return res.status(400).json({ error: "Invalid Status" });
             }
             query.status = status;
         }
@@ -87,6 +87,7 @@ const getAllBookings = async (req, res) => {
         return res.status(200).json({
             currentPage: parsedPage,
             totalPages: Math.ceil(totalCount / parsedLimit),
+            totalCount,
             data: bookingDetailsWithUserAndCompanyDetails,
         });
 

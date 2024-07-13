@@ -314,3 +314,195 @@
     position: relative;
     width: 100%;
 }
+
+/*  */
+.dash-table-area .p-datatable-wrapper {
+    border-radius: 8px;
+    margin-bottom: 5px;
+    border: 2px solid #FFF;
+}
+
+.dash-table-area .p-datatable-table {
+    font-size: 15px !important;
+}
+
+.dash-table-area .p-datatable-table .p-datatable-thead tr {
+    background-color: #eeeefb !important;
+}
+
+.dash-table-area .p-datatable-table .p-datatable-thead tr th {
+    background-color: transparent !important;
+    padding: 0.8rem 1rem;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: #37348b !important;
+    border-color: #37348b !important;
+    color: #FFF !important;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+    color: #37348b !important;
+    font-size: 14px;
+}
+
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+    color: #37348b !important;
+    border-radius: 8px;
+}
+
+.p-paginator .p-dropdown .p-dropdown-label {
+    font-size: 14px !important;
+}
+
+.dash-table-area .p-paginator {
+    gap: 5px;
+}
+
+.dash-table-area .p-paginator .p-paginator-pages button:first-child {
+    border-top-left-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
+}
+
+.dash-table-area .p-paginator .p-paginator-pages button:last-child {
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+.dash-table-area .p-datatable.p-datatable-sm .p-datatable-tbody>tr>td {
+    padding: 0.5rem 1rem;
+}
+
+.data-view-button {
+    background-color: #d8d8f1;
+    color: #37348b;
+    border-color: #d8d8f1;
+    box-shadow: inset 0px 0px 8px #ababc971 !important;
+    line-height: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: ease 0.5s;
+}
+
+.data-view-button:focus {
+    box-shadow: 0px 0px 0px 3px #37348b71 !important;
+}
+
+.data-view-button:hover {
+    background-color: #37348b !important;
+    color: #c1c1db !important;
+    box-shadow: inset 0px 0px 8px #33337971 !important;
+}
+
+/*  */
+.data-view-area {
+    position: relative;
+    width: 100%;
+    background-color: #FFF;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.data-view-head {
+    font-size: 16px;
+    font-weight: 700;
+    display: block;
+    color: #37348b;
+    max-width: max-content;
+}
+
+.data-view-head::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    margin-right: 5px;
+    margin-top: 2px;
+    background-color: #d12788;
+}
+
+.data-view-title,
+.data-view-data {
+    font-size: 15px;
+    display: block;
+    margin-bottom: 0;
+}
+
+.data-view-title {
+    color: #000000;
+    font-weight: 600;
+}
+
+.data-view-data {
+    color: #929292;
+    font-weight: 500;
+}
+
+.data-view {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.data-view-title::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    vertical-align: middle;
+    background-color: #00000034;
+    /* border: 1px solid; */
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.data-view-sub {
+    border-radius: 10px;
+    padding: 15px;
+    position: relative;
+    background-color: #ebeafa;
+}
+
+.data-view-sub.bordered {
+    border: 1px solid #37348b;
+}
+
+.data-view-sub-head {
+    color: #37348b;
+    background-color: #ffffff;
+    padding: 5px 10px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    border-radius: 6px;
+    font-weight: 700;
+    max-width: max-content;
+    box-shadow: 0px 0px 15px #3333792f;
+}
+
+.data-filter-area {
+    padding: 15px;
+    background-color: #ffffff7a;
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 2px solid #FFF;
+}
+
+.cancel-button {
+    font-size: 14px !important;
+    padding: 5px 10px;
+    font-weight: 500;
+}
+
+.cancel-button:disabled {
+    background-color: #9c9c9c;
+    border-color: #aaaaaa;
+}
