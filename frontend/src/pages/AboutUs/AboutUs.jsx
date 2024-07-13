@@ -4,10 +4,12 @@ import './AboutUs-responsive.css';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import Tilt from 'react-parallax-tilt';
+import Preloader from "../../Preloader";
 
 const AboutUs = () => {
     return (
         <>
+            <Preloader />
             <Header />
 
             {/* Breadcrumb Section Start */}

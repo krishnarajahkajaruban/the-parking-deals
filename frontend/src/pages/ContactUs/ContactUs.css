@@ -63,6 +63,14 @@
     margin-bottom: 20px;
 }
 
+.content-card-desc {
+    color: #000;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7em;
+    display: block;
+}
+
 .contact-content i {
     font-size: 20px;
     position: relative;
@@ -102,7 +110,7 @@
     color: #FFF !important;
 }
 
-.map-section{
+.map-section {
     border-radius: 40px;
     overflow: hidden;
     border: #37348b 3px solid;

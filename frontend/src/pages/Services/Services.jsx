@@ -3,12 +3,14 @@ import './Services.css';
 import './Services-responsive.css';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import Preloader from "../../Preloader";
 
 import Tilt from 'react-parallax-tilt';
 
 const Services = () => {
     return (
         <>
+            <Preloader />
             <Header />
 
             {/* Breadcrumb Section Start */}

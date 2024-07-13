@@ -374,7 +374,7 @@ const VendorList = () => {
                         <div className="result-card-body-area">
                           <ul>
                             {quote.facilities.map((facility, index) => {
-                              return (
+                              return(
                                 <li key={index}>{facility}</li>
                               )
                             })}
@@ -715,9 +715,7 @@ const VendorList = () => {
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
-              >
-
-              </button>
+              ></button>
             </div>
             <div class="modal-body pt-0 p-3">
               <div className="tab-detail-tabs-area mt-3">

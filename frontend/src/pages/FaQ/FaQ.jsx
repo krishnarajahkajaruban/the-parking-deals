@@ -3,10 +3,12 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import Tilt from 'react-parallax-tilt';
 import { Accordion, AccordionTab } from 'primereact/accordion';
+import Preloader from "../../Preloader";
 
 const FaQ = () => {
     return (
         <>
+            <Preloader />
             <Header />
 
             {/* Breadcrumb Section Start */}

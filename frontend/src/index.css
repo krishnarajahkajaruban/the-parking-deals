@@ -106,6 +106,7 @@ code {
   text-decoration: none;
   outline: none;
   border: none;
+  background-color: transparent;
 }
 
 
@@ -156,6 +157,7 @@ code {
   transition: ease 0.5s;
   outline: none;
   border: none;
+  background-color: transparent;
 }
 
 .footer-link:focus {
@@ -335,6 +337,9 @@ code {
   display: block;
   outline: none;
   border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
 }
 
 .nav-logo-link:focus {
@@ -533,6 +538,14 @@ code {
   display: block;
   position: relative;
   max-width: max-content;
+  outline: none;
+  background-color: transparent;
+  border: none;
+}
+
+.menu-logo-link:focus {
+  outline: none;
+  border: none;
 }
 
 .menu-logo-link img {
@@ -560,6 +573,14 @@ code {
   font-size: 16px;
   font-weight: 600;
   color: #000000;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.menu-link:focus {
+  outline: none;
+  border: none;
 }
 
 .menu-link:focus {
@@ -656,6 +677,7 @@ code {
   display: block;
   text-align: center;
   border: none;
+  outline: none;
   background-color: #fff !important;
   display: flex;
   align-items: center;
@@ -680,6 +702,7 @@ code {
 
 .menu-profile-link.primary-btn:focus {
   outline: none;
+  border: none;
   box-shadow: 0px 0px 0px 4px #37348b38 !important;
 }
 
@@ -2305,6 +2328,12 @@ button.custom-form-link:disabled {
   align-items: center;
   font-size: 14px;
   overflow: hidden;
+  outline: none;
+  border: none;
+}
+
+.profile-dropdown-link:focus {
+  outline: none;
 }
 
 .profile-dropdown-link i {
@@ -2339,6 +2368,6 @@ button.custom-form-link:disabled {
   transition: transform 0.5s;
 }
 
-.tab-pane{
+.tab-pane {
   outline: none;
 }
