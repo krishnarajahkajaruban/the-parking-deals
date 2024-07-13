@@ -6,7 +6,7 @@ const generateToken = (user, secret, expiresIn = '1d') => {
     email: user.email,
     ...(user.role === "User" && { title: user.title }),
     ...(["Admin", "User"].includes(user.role) && { firstName: user.firstName }),
-    ...(["Admin", "User"].includes(user.role) && { lastName: user.lastName }),
+    ...(["Admin", "User"].includes(user.role) && { lastName: user.lastname }),
     ...(user.role === "Vendor" && { companyName: user.companyName }),
     ...(user.role === "User" && { mobileNumber: user.mobileNumber}),
     ...(user.role === "User" && {addressL1: user.addressL1}),

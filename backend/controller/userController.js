@@ -481,7 +481,7 @@ const sendEmailToCompany = async (booking, user, type) => {
                     <p>Your Parking slot for the airport of ${booking.airportName} from the date & time of ${booking.dropOffDate} at ${booking.dropOffTime} to the date & time of ${booking.pickUpDate} at ${booking.pickUpTime} ${type === "Cancelled" ? "booking Cancelled!" : "has been booked"} (Booking ID: #${booking._id}) by
                     <br>
                         <p>Customer Details:</p>
-                        <li>Full Name: ${user.title} ${user.firstName} ${user.lastName}</li>
+                        <li>Full Name: ${user.title} ${user.firstName} ${user.lastname}</li>
                         <li>Email: ${user.email}</li>
                         <li>Mobile No: ${user.mobileNumber}</li>
                     </br>
@@ -616,7 +616,7 @@ const cancelTheBooking = async (req, res) => {
             });
         }
 
-        const user = await User.findById(cancelledBooking.userId).select("email firstName title lastName mobileNumber").lean().exec();
+        const user = await User.findById(cancelledBooking.userId).select("email firstName title lastname mobileNumber").lean().exec();
 
         const [emailResponseForUser, emailResponseForCompany] = await Promise.all([
             sendEmailToUser(cancelledBooking, user, "Cancelled"),
@@ -819,7 +819,7 @@ const updateUserInfo = async (req, res) => {
           email: parsedEmail || userDetailTobeUpdated.email,
           title: parsedTitle || userDetailTobeUpdated.title, 
           firstName: parsedFirstName || userDetailTobeUpdated.firstName, 
-          lastName: parsedLastName || userDetailTobeUpdated.lastName,
+          lastName: parsedLastName || userDetailTobeUpdated.lastname,
           mobileNumber: parsedMobileNumber || userDetailTobeUpdated.mobileNumber, 
           addressL1: parsedAddressL1 || userDetailTobeUpdated.addressL1,
           addressL2: parsedAddressL2 || userDetailTobeUpdated.addressL2, 
