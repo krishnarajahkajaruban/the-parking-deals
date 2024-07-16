@@ -92,7 +92,7 @@ const Dashboard = () => {
     const initialUserInfo = {
         title: user?.title || titles[0].name,
         firstName: user?.firstName || "",
-        lastName: user?.lastName || "",
+        lastName: user?.lastname || "",
         mobileNumber: user?.mobileNumber || "",
         addressL1: user?.addressL1 || "",
         addressL2: user?.addressL2 || "",
