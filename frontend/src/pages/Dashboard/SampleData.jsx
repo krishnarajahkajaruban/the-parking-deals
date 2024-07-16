@@ -1,152 +1,58 @@
+import api from "../../api";
+
 export const SampleData = {
-    getData() {
-        return [
-            {
-                "id": 1000,
-                "date": "2015-09-13",
-                "time": "10:30",
-                "status": "Accepted"
+    getData(page = 1, limit = 10, status = '', date = '', token) {
+        return api.get(`/api/common-role/get-all-bookings`, {
+            params: {
+                page,
+                limit,
+                status,
+                date,
             },
-            {
-                "id": 1001,
-                "date": "2015-09-15",
-                "time": "12:30",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1002,
-                "date": "2015-09-17",
-                "time": "14:00",
-                "status": "Accepted"
-            },
-            {
-                "id": 1003,
-                "date": "2015-09-18",
-                "time": "16:30",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1004,
-                "date": "2015-09-19",
-                "time": "09:00",
-                "status": "Accepted"
-            },
-            {
-                "id": 1005,
-                "date": "2015-09-20",
-                "time": "11:15",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1006,
-                "date": "2015-09-21",
-                "time": "13:45",
-                "status": "Accepted"
-            },
-            {
-                "id": 1007,
-                "date": "2015-09-22",
-                "time": "15:30",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1008,
-                "date": "2015-09-23",
-                "time": "10:00",
-                "status": "Accepted"
-            },
-            {
-                "id": 1009,
-                "date": "2015-09-24",
-                "time": "12:45",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1010,
-                "date": "2015-09-13",
-                "time": "10:30",
-                "status": "Accepted"
-            },
-            {
-                "id": 1011,
-                "date": "2015-09-15",
-                "time": "12:30",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1012,
-                "date": "2015-09-17",
-                "time": "14:00",
-                "status": "Accepted"
-            },
-            {
-                "id": 1013,
-                "date": "2015-09-18",
-                "time": "16:30",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1014,
-                "date": "2015-09-19",
-                "time": "09:00",
-                "status": "Accepted"
-            },
-            {
-                "id": 1015,
-                "date": "2015-09-20",
-                "time": "11:15",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1016,
-                "date": "2015-09-21",
-                "time": "13:45",
-                "status": "Accepted"
-            },
-            {
-                "id": 1017,
-                "date": "2015-09-22",
-                "time": "15:30",
-                "status": "Cancelled"
-            },
-            {
-                "id": 1018,
-                "date": "2015-09-23",
-                "time": "10:00",
-                "status": "Accepted"
-            },
-            {
-                "id": 1019,
-                "date": "2015-09-24",
-                "time": "12:45",
-                "status": "Cancelled"
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
             }
-        ];
+        }).then(res => {
+            // Transform the response data to match the structure required by the DataTable
+            const bookings = res.data.data.map(booking => ({
+                id: booking._id,
+                date: new Date(booking.createdAt).toLocaleDateString(),
+                time: new Date(booking.createdAt).toLocaleTimeString(),
+                status: booking.status,
+                details: booking,
+            }));
+            return { bookings, totalRecords: res.totalCount };
+        }).catch(err => {
+            console.error(err);
+            return { bookings: [], totalRecords: 0 };
+        });
     },
 
-    getBookingsSmall() {
-        return Promise.resolve(this.getData().slice(0, 10));
+    // The other functions can remain the same
+    getBookingsSmall(token) {
+        return this.getData(1, 10, '', '', token);
     },
 
-    getBookingsMedium() {
-        return Promise.resolve(this.getData().slice(0, 50));
+    getBookingsMedium(token) {
+        return this.getData(1, 50, '', '', token);
     },
 
-    getBookingsLarge() {
-        return Promise.resolve(this.getData().slice(0, 200));
+    getBookingsLarge(token) {
+        return this.getData(1, 200, '', '', token);
     },
 
-    getBookingsXLarge() {
-        return Promise.resolve(this.getData());
+    getBookingsXLarge(token) {
+        return this.getData(undefined, undefined, '', '', token);
     },
 
-    getBookings(params) {
+    getBookings(params, token) {
         const queryParams = params
             ? Object.keys(params)
                 .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
                 .join('&')
             : '';
 
-        return fetch('https://www.primefaces.org/data/bookings?' + queryParams).then((res) => res.json());
+        return fetch(`https://www.primefaces.org/data/bookings?${queryParams}`).then((res) => res.json());
     }
 };
