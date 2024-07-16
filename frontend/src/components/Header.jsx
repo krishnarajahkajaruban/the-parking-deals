@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Preloader from '../Preloader';
 import { setLogout } from '../state';
 import { Ripple } from 'primereact/ripple';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -77,6 +78,11 @@ const Header = () => {
         setMenuOpen(false);
     };
 
+    const goToLink = (path) => {
+        navigate(path);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <>
             {/* <div className="loader-area" id="preloader">
@@ -88,37 +94,37 @@ const Header = () => {
                         <div className="row">
                             <div className="col-12">
                                 <div className="nav-container">
-                                    <a href="/" className='nav-logo-link'>
+                                    <button onClick={() => goToLink('/')} className='nav-logo-link'>
                                         <img src="assets/images/logo-light.png" className='nav-logo' alt="Logo" />
                                         <img src="assets/images/logo.png" className='scrolled-logo' alt="Logo" />
-                                    </a>
+                                    </button>
                                     <ul className="nav-link-area">
                                         <li className='nav-link-item'>
-                                            <a href="/about-us" className={`nav-link ${window.location.pathname === '/about-us' ? 'active' : ''}`}>
+                                            <button onClick={() => goToLink('/about-us')} className={`nav-link ${window.location.pathname === '/about-us' ? 'active' : ''}`}>
                                                 About
-                                            </a>
+                                            </button>
                                         </li>
 
                                         <li className='nav-link-item'>
-                                            <a href="/services" className={`nav-link ${window.location.pathname === '/services' ? 'active' : ''}`}>
+                                            <button onClick={() => goToLink('/services')} className={`nav-link ${window.location.pathname === '/services' ? 'active' : ''}`}>
                                                 Services
-                                            </a>
+                                            </button>
                                         </li>
 
                                         <li className='nav-link-item'>
-                                            <a href="/contact-us" className={`nav-link ${window.location.pathname === '/contact-us' ? 'active' : ''}`}>
+                                            <button onClick={() => goToLink('/contact-us')} className={`nav-link ${window.location.pathname === '/contact-us' ? 'active' : ''}`}>
                                                 Contact
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
 
                                     {!user ? (
                                         <ul className='nav-button-grp'>
                                             <li className='nav-button-grp-item'>
-                                                <a href="/sign-up" className='nav-link-button with-outline text-uppercase letter-spaced'>Sign up</a>
+                                                <button onClick={() => goToLink('/sign-up')} className='nav-link-button with-outline text-uppercase letter-spaced'>Sign up</button>
                                             </li>
                                             <li className='nav-button-grp-item'>
-                                                <a href="/sign-in" className='nav-link-button with-bg text-uppercase letter-spaced'>Sign in</a>
+                                                <button onClick={() => goToLink('/sign-in')} className='nav-link-button with-bg text-uppercase letter-spaced'>Sign in</button>
                                             </li>
                                         </ul>
                                     ) : (
@@ -147,22 +153,21 @@ const Header = () => {
                                                         </h6>
                                                     </div>
                                                     <li className='profile-dropdown-item mb-1 mt-1'>
-                                                        <a className="profile-dropdown-link profile p-ripple" href="/dashboard">
+                                                        <button onClick={() => goToLink('/dashboard')} className="profile-dropdown-link profile p-ripple">
                                                             <i className='bi bi-speedometer2 me-2'></i>
                                                             Dashboard
                                                             <Ripple />
-                                                        </a>
+                                                        </button>
                                                     </li>
-                                                    <li className='profile-dropdown-item'
-                                                     onClick={() => {
-                                                        dispatch(setLogout())
-                                                    }}>
-                                                        <a className="profile-dropdown-link logout p-ripple" role='button' href="#"
-                                                           >
+                                                    <li className='profile-dropdown-item'>
+                                                        <button className="profile-dropdown-link logout p-ripple" type='button'
+                                                            onClick={() => {
+                                                                dispatch(setLogout())
+                                                            }}>
                                                             <i className='bi bi-box-arrow-right me-2'></i>
                                                             Logout
                                                             <Ripple />
-                                                        </a>
+                                                        </button>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -188,29 +193,29 @@ const Header = () => {
                     <button className='menu-close-button' onClick={closeMenu}>
                         <i class="ri-close-large-line"></i>
                     </button>
-                    <a href="/" className='menu-logo-link'>
+                    <button onClick={() => goToLink('/')} className='menu-logo-link'>
                         <img src="assets/images/logo.png" alt="Logo" />
-                    </a>
+                    </button>
                     <ul className='menu-link-area'>
                         <li className='menu-link-item'>
-                            <a href="/" className={`menu-link ${window.location.pathname === '/' ? 'active' : ''}`}>
+                            <button onClick={() => goToLink('/')} className={`menu-link ${window.location.pathname === '/' ? 'active' : ''}`}>
                                 Home
-                            </a>
+                            </button>
                         </li>
                         <li className='menu-link-item'>
-                            <a href="/about-us" className={`menu-link ${window.location.pathname === '/about-us' ? 'active' : ''}`}>
+                            <button onClick={() => goToLink('/about-us')} className={`menu-link ${window.location.pathname === '/about-us' ? 'active' : ''}`}>
                                 About
-                            </a>
+                            </button>
                         </li>
                         <li className='menu-link-item'>
-                            <a href="/services" className={`menu-link ${window.location.pathname === '/services' ? 'active' : ''}`}>
+                            <button onClick={() => goToLink('/services')} className={`menu-link ${window.location.pathname === '/services' ? 'active' : ''}`}>
                                 Services
-                            </a>
+                            </button>
                         </li>
                         <li className='menu-link-item'>
-                            <a href="/contact-us" className={`menu-link ${window.location.pathname === '/contact-us' ? 'active' : ''}`}>
+                            <button onClick={() => goToLink('/contact-us')} className={`menu-link ${window.location.pathname === '/contact-us' ? 'active' : ''}`}>
                                 Contact
-                            </a>
+                            </button>
                         </li>
                     </ul>
 
@@ -229,26 +234,26 @@ const Header = () => {
                             </div>
                             <hr />
                             <div className="menu-profile-footer">
-                                <a href="/dashboard" className='menu-profile-link primary-btn'>
+                                <button onClick={() => goToLink('/dashboard')} className='menu-profile-link primary-btn'>
                                     <i className='bi bi-speedometer2'></i> Dashboard
-                                </a>
-                                <a href="#" role='button' className='menu-profile-link danger-btn'
+                                </button>
+                                <button type='button' className='menu-profile-link danger-btn'
                                     onClick={() => {
                                         dispatch(setLogout())
                                     }}>
                                     <i class="bi bi-box-arrow-right"></i>
                                     Logout
-                                </a>
+                                </button>
                             </div>
                         </div>
                     ) : (
                         <ul className='menu-btn-link-area'>
                             <li className='menu-btn-link-item'>
-                                <a href="/sign-up" className='menu-btn-link with-outline'>Sign up</a>
+                                <button onClick={() => goToLink('/sign-up')} className='menu-btn-link with-outline'>Sign up</button>
                             </li>
 
                             <li className='menu-btn-link-item'>
-                                <a href="/sign-in" className='menu-btn-link with-bg'>Sign in</a>
+                                <button onClick={() => goToLink('/sign-in')} className='menu-btn-link with-bg'>Sign in</button>
                             </li>
                         </ul>
                     )}

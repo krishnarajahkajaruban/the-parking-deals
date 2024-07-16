@@ -13,6 +13,7 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import VendorList from './pages/VendorList/VendorList';
 // import Booking from './pages/Booking/Booking';
 // import Dashboard from './pages/Dashboard/Dashboard';
+import ChangePassword from './pages/ChangePassword/ChangePassword';
 
 import Preloader from './Preloader';
 
@@ -74,6 +75,7 @@ function App() {
         <Route path='/results' element={<ProtectedRoute><VendorList /></ProtectedRoute>} />
         <Route path='/booking' element={<Suspense fallback={<Preloader />}><Booking /></Suspense>} />
         <Route path='/dashboard' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Dashboard /></ProtectedRoute></Suspense>} />
+        <Route path='/change-password' element={<ChangePassword />} />
       </Routes>
     </PrimeReactProvider>
   );

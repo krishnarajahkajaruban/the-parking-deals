@@ -10,6 +10,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { useForm } from 'react-hook-form';
 import api from "../../api";
+import Preloader from "../../Preloader";
 
 const ContactUs = () => {
     const [showError, setShowError] = useState(false);
@@ -34,13 +35,13 @@ const ContactUs = () => {
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    const submit = async(data) => {
+    const submit = async (data) => {
         // Handle form submission
         setLoading(true);
         console.log(data);
 
-        try{
-            const response = await api.post("/api/user/submit-contact-or-faq-form", {...data, type:"contact"});
+        try {
+            const response = await api.post("/api/user/submit-contact-or-faq-form", { ...data, type: "contact" });
             console.log(response.data);
             toast.current.show({
                 severity: 'success',
@@ -49,22 +50,23 @@ const ContactUs = () => {
                 life: 3000
             });
             reset();
-        }catch(e){
+        } catch (e) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Failed',
                 detail: 'Message sent failed!',
                 life: 3000
             });
-        }finally{
+        } finally {
             setLoading(false);
-            
+
         };
-        
+
     };
 
     return (
         <>
+            <Preloader />
             <Header />
 
             {/* Breadcrumb Section Start */}
@@ -160,15 +162,15 @@ const ContactUs = () => {
                                             </h4>
 
                                             <form action="" className="contact-form-area"
-                                            onSubmit={handleSubmit(submit)}
+                                                onSubmit={handleSubmit(submit)}
                                             >
                                                 <div className="row">
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="name" className="custom-form-label form-required">Name</label>
                                                             <InputText id="name" className="custom-form-input"
-                                                            {...register('name', { required: 'Name is required' })}
-                                                             />
+                                                                {...register('name', { required: 'Name is required' })}
+                                                            />
                                                             {errors.name &&
                                                                 <small className="text-danger form-error-msg">{errors.name.message}</small>
                                                             }
@@ -178,8 +180,8 @@ const ContactUs = () => {
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="email" className="custom-form-label form-required">Email</label>
-                                                            <InputText id="email" className="custom-form-input" keyfilter="email" 
-                                                            {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
+                                                            <InputText id="email" className="custom-form-input" keyfilter="email"
+                                                                {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
                                                             />
                                                             {errors.email &&
                                                                 <small className="text-danger form-error-msg">{errors.email.message}</small>
@@ -190,14 +192,14 @@ const ContactUs = () => {
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="phoneNumber" className="custom-form-label form-required">Phone number</label>
-                                                            <InputText id="mobileNumber" className="custom-form-input" keyfilter="num" 
-                                                            {...register('mobileNumber', {
-                                                                required: 'Phone number is required',
-                                                                pattern: {
-                                                                  value: /^\d{10}$/,
-                                                                  message: 'Phone number must be 10 digits'
-                                                                }
-                                                              })}
+                                                            <InputText id="mobileNumber" className="custom-form-input" keyfilter="num"
+                                                                {...register('mobileNumber', {
+                                                                    required: 'Phone number is required',
+                                                                    pattern: {
+                                                                        value: /^\d{10}$/,
+                                                                        message: 'Phone number must be 10 digits'
+                                                                    }
+                                                                })}
                                                             />
                                                             {errors.mobileNumber &&
                                                                 <small className="text-danger form-error-msg">{errors.mobileNumber.message}</small>
@@ -208,8 +210,8 @@ const ContactUs = () => {
                                                     <div className="col-12 col-sm-6">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="subject" className="custom-form-label form-required">Subject</label>
-                                                            <InputText id="subject" className="custom-form-input" 
-                                                            {...register('subject', { required: 'Subject is required' })}
+                                                            <InputText id="subject" className="custom-form-input"
+                                                                {...register('subject', { required: 'Subject is required' })}
                                                             />
                                                             {errors.subject &&
                                                                 <small className="text-danger form-error-msg">{errors.subject.message}</small>
@@ -220,8 +222,8 @@ const ContactUs = () => {
                                                     <div className="col-12">
                                                         <div className="custom-form-group mb-3 mb-sm-4">
                                                             <label htmlFor="message" className="custom-form-label form-required">Message</label>
-                                                            <InputTextarea id="message" className="custom-form-input" rows={5} cols={30} 
-                                                            {...register('message', { required: 'Message is required' })}
+                                                            <InputTextarea id="message" className="custom-form-input" rows={5} cols={30}
+                                                                {...register('message', { required: 'Message is required' })}
                                                             />
                                                             {errors.message &&
                                                                 <small className="text-danger form-error-msg mt-0">{errors.message.message}</small>

@@ -48,14 +48,14 @@ const Home = () => {
     // useEffect(() => {
     //     socket.on('checkout.session.completed', (session) => {
     //       console.log('Checkout session completed');
-          
+
     //     });
-    
+
     //     socket.on('payment_intent.payment_failed', (paymentIntent) => {
     //       console.log('Payment intent failed');
-         
+
     //     });
-    
+
     //     return () => {
     //       socket.off('checkout.session.completed');
     //       socket.off('payment_intent.payment_failed');
@@ -120,9 +120,15 @@ const Home = () => {
         scroll.animateScroll(reservationRef.current, null, { offset: 120 });
     };
 
+    const goToLink = (path) => {
+        navigate(path);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <>
-            {pageLoading && <Preloader />}
+            {/* {pageLoading && <Preloader />} */}
+            <Preloader />
             <Header />
 
             <section className='hero-section overflow-hidden'>
@@ -157,7 +163,7 @@ const Home = () => {
                                     Discover the easiest way to secure airport parking with The Parking Deals. We specialize in providing top-notch parking solutions tailored to meet your needs, ensuring your travel experience starts off on the right foot. Book now and enjoy unparalleled convenience and security.
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
-                                    <a href="/about-us" className='nav-link-button text-no-wrap with-bg'>More detail</a>
+                                    <button onClick={() => goToLink('/about-us')} className='nav-link-button text-no-wrap with-bg'>More detail</button>
                                     <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
@@ -170,7 +176,7 @@ const Home = () => {
                                     Welcome to The Parking Deals, your premier choice for airport parking. We provide a range of tailored services including Valet Parking, Self-Park Options, and Long-Term Parking. Enjoy peace of mind knowing your vehicle is secure, and experience the convenience of our premium features designed to make your travel stress-free.
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
-                                    <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
+                                    <button onClick={() => goToLink('/services')} className='nav-link-button text-no-wrap with-bg'>More detail</button>
                                     <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
@@ -183,7 +189,7 @@ const Home = () => {
                                     Have questions or need assistance? We're here to help! Reach out to us via email call us. Our dedicated customer service team is available 24hours of operation to ensure you have a smooth and stress-free parking experience. Visit our website for more information and support.
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
-                                    <a href="/contact-us" className='nav-link-button text-no-wrap with-bg'>More detail</a>
+                                    <button onClick={() => goToLink('/contact-us')} className='nav-link-button text-no-wrap with-bg'>More detail</button>
                                     <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
@@ -196,7 +202,7 @@ const Home = () => {
                                     At The Parking Deals, we prioritize your convenience. Our user-friendly online booking system makes reserving your spot quick and easy. With 24/7 access, covered parking options, and complimentary shuttle services, we ensure that your parking experience is seamless from start to finish.
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
-                                    <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
+                                    <button onClick={() => goToLink('/services')} className='nav-link-button text-no-wrap with-bg'>More detail</button>
                                     <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
@@ -209,7 +215,7 @@ const Home = () => {
                                     Your vehicle's safety is our top priority. The Parking Deals offers secure parking facilities with round-the-clock surveillance at competitive rates. Whether you're traveling for a day or an extended period, our short-term and long-term parking solutions provide the security and affordability you need.
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
-                                    <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
+                                    <button onClick={() => goToLink('/services')} className='nav-link-button text-no-wrap with-bg'>More detail</button>
                                     <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
@@ -222,7 +228,7 @@ const Home = () => {
                                     Business travel just got easier with The Parking Deals. Our Business Parking service features dedicated spots close to the terminal, priority shuttle services, and access to business facilities. Maximize your productivity and minimize travel stress with our premium parking solutions.
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
-                                    <a href="/services" className='nav-link-button text-no-wrap with-bg'>More detail</a>
+                                    <button onClick={() => goToLink('/services')} className='nav-link-button text-no-wrap with-bg'>More detail</button>
                                     <a href="#reservation" onClick={handleScroll} className='nav-link-button text-no-wrap with-outline'>Make Reservation</a>
                                 </div>
                             </div>
@@ -352,9 +358,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-        
-                <Footer />
-                                                 
+
+            <Footer />
+
         </>
     )
 }
