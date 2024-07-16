@@ -198,14 +198,15 @@ const VendorList = () => {
                         >
                           Airport
                         </label>
+                        <h6
+                          data-bs-toggle="modal"
+                          data-bs-target="#editSearchModal"
+                          className='show-data-head'
+                        >
+                          <i class="bi bi-airplane-fill input-grp-icon"></i>
+                          {selectedAirport?.name || quoteInfo?.selectedAirport.name}
+                        </h6>
                         <div className="form-icon-group">
-                          <h6
-                            data-bs-toggle="modal"
-                            data-bs-target="#editSearchModal"
-                          >
-                            <i class="bi bi-airplane-fill input-grp-icon"></i>
-                            {selectedAirport?.name || quoteInfo?.selectedAirport.name}
-                          </h6>
                           {/* <Dropdown
                               id="airport"
                               value={selectedAirport}
@@ -374,7 +375,7 @@ const VendorList = () => {
                         <div className="result-card-body-area">
                           <ul>
                             {quote.facilities.map((facility, index) => {
-                              return(
+                              return (
                                 <li key={index}>{facility}</li>
                               )
                             })}

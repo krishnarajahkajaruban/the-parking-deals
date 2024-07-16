@@ -707,3 +707,21 @@
     object-fit: cover;
     width: 100%;
 }
+
+.show-data-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    border-radius: 8px;
+    background-color: #ebeafc;
+    padding: 12px 15px;
+    margin-top: 5px;
+}
+
+.show-data-head i{
+    position: relative !important;
+    transform: none !important;
+    color: #37348b;
+}

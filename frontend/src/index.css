@@ -2371,3 +2371,13 @@ button.custom-form-link:disabled {
 .tab-pane {
   outline: none;
 }
+
+.p-icon.p-datepicker-next-icon,
+.p-icon.p-datepicker-prev-icon {
+  width: 4rem !important;
+  height: 4rem !important;
+}
+
+.p-datepicker table td > span.p-disabled{
+  color: #a1a1a1;
+}
