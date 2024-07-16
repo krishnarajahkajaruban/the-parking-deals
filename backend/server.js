@@ -14,6 +14,7 @@ const authRouter = require("./routes/authRouter");
 const userRouter = require("./routes/userRouter");
 const adminRouter = require("./routes/adminRouter");
 const commonRoleRouter = require("./routes/commonRoleRouter");
+const sendEmail = require('./common/mailService');
 
 // Load environment variables from .env file
 dotenv.config();
