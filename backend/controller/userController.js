@@ -396,15 +396,7 @@ const carParkingBookingDetail = async (req, res) => {
             newCarParkBooking: newCarParkingBooking.toObject(),
             user: user,
             token,
-            emailSentForUser: emailResponseForUser.emailSent,
-            mailMsgForUser: emailResponseForUser.message,
-            emailSentForCompany: emailResponseForCompany.emailSent,
-            mailMsgForCompany: emailResponseForCompany.message,
-            message: "Car park booking created successfully!",
-            infoForUser: emailResponseForUser.info || null,
-            errorForUser: emailResponseForUser.error || null,
-            infoForCompany: emailResponseForCompany.info || null,
-            errorForCompany: emailResponseForCompany.error || null
+            message: "Car park booking created successfully!"
         });
 
     } catch (err) {
