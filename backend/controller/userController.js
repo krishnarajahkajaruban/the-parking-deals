@@ -379,7 +379,7 @@ const carParkingBookingDetail = async (req, res) => {
                   images: ["https://res.cloudinary.com/piragashcloud/image/upload/v1721238830/logo512_dmvwkk.png"]
                 },
                 // unit_amount: Math.round(bookingResult.totalPayable * 100)
-                unit_amount: 0.1 * 100
+                unit_amount: 0.3 * 100
               },
               quantity: 1
             }
