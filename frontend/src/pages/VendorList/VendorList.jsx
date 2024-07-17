@@ -28,13 +28,13 @@ const VendorList = () => {
   const { quoteInfo } = location.state || {};
   const [pageLoading, setPageLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [dropOffDate, setDropOffDate] = useState(null);
-  const [pickupDate, setPickupDate] = useState(null);
+  const [dropOffDate, setDropOffDate] = useState(quoteInfo?.dropOffDate || null);
+  const [pickupDate, setPickupDate] = useState(quoteInfo?.pickupDate || null);
   const [showError, setShowError] = useState(false);
-  const [selectedAirport, setSelectedAirport] = useState(null);
+  const [selectedAirport, setSelectedAirport] = useState(quoteInfo?.selectedAirport || null);
   const today = new Date();
-  const [dropOffTime, setDropOffTime] = useState(null);
-  const [pickupTime, setPickupTime] = useState(null);
+  const [dropOffTime, setDropOffTime] = useState(quoteInfo?.dropOffTime || null);
+  const [pickupTime, setPickupTime] = useState(quoteInfo?.pickupTime || null);
   const [couponCode, setCouponCode] = useState(quoteInfo?.couponCode || "");
 
   const airports = useSelector((state) => state.vendor.airport);
@@ -709,7 +709,7 @@ const VendorList = () => {
           <div class="modal-content custom-modal">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="vendorDetailModalLabel">
-                Lion Parking
+                {selectedVendor?.name}
               </h1>
               <button
                 type="button"
@@ -1443,10 +1443,10 @@ const VendorList = () => {
                 <div className="col-12 col-xl-4 ps-xl-2">
                   <article className="detail-card mt-3 card-sticky">
                     <div className="detail-card-logo-area">
-                      <img src="assets/images/lion-parking.png" alt="" />
+                      <img src={selectedVendor?.logo} alt="" />
                     </div>
                     <div className="detail-card-label-area">
-                      <h5>Meet and Greet</h5>
+                      <h5>{selectedVendor?.type}</h5>
                     </div>
                     <div className="detail-card-info-area mb-1">
                       <div className="detail-card-info-icon-area">
@@ -1454,7 +1454,7 @@ const VendorList = () => {
                       </div>
                       <div className="detail-card-info-body">
                         <p>Company :</p>
-                        <h6>Lion Parking</h6>
+                        <h6>{selectedVendor?.name}</h6>
                       </div>
                     </div>
 
@@ -1464,28 +1464,28 @@ const VendorList = () => {
                       </div>
                       <div className="detail-card-info-body">
                         <p>Location :</p>
-                        <h6>Heathrow Airport</h6>
+                        <h6>{selectedAirport?.name}</h6>
                       </div>
                     </div>
 
                     <div className="detail-card-price-area">
                       <p>Price</p>
                       <h5>
-                        £ 76.78
-                        <span>£ 83.00</span>
+                        £ {selectedVendor?.finalQuote}
+                        {selectedVendor?.quote > 0 && <span>£ {selectedVendor.quote}</span>}
                       </h5>
                     </div>
 
                     <div className="detail-card-feature-area">
-                      <p>
-                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>
-                        Save <span>£ 6.23</span> Today
-                      </p>
+                          {selectedVendor?.quote > 0 && <p>
+                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                                Save <span>£ {selectedVendor.quote - selectedVendor.finalQuote}</span> Today
+                              </p>}
 
-                      <p>
+                              {selectedVendor?.cancellationCover &&<p>
                         <i class="bi bi-lightning-fill me-2"></i>
                         Cancellation Cover Available
-                      </p>
+                      </p>}
                     </div>
 
                     <Divider className="mt-2 mb-2" />
