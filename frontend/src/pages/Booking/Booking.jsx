@@ -380,6 +380,7 @@ const CheckoutForm = () => {
 
   const bookTheCarParkingSlot = async (details) => {
     console.log(details);
+    setLoading(true);
     try {
       const response = await api.post("/api/user/car-park-booking", details);
       console.log(response.data);
@@ -419,6 +420,8 @@ const CheckoutForm = () => {
         detail: err.response.data.error,
         life: 3000
       });
+    }finally {
+      setLoading(false);
     }
   };
   
@@ -1585,6 +1588,7 @@ const CheckoutForm = () => {
                       <div className="col-12 col-xl-4 col-md-6 col-lg-7 col-sm-6 mx-auto">
                         <Button
                           label="CONFIRM BOOKING"
+                          loading={loading}
                           className="custom-btn-primary w-100 result-card-btn"
                           onClick={handleBooking}
                           disabled={!isAgreed}
