@@ -111,7 +111,7 @@ const ForgotPassword = () => {
             toast.current.show({
                 severity: 'success',
                 summary: 'Reset Successfully',
-                detail: "You account password reset successfully",
+                detail: "Your account password reset successfully",
                 life: 3000
             });
             // window.location.href = "/sign-in";
@@ -350,7 +350,7 @@ const ForgotPassword = () => {
                                                         value={resetPasswordInfo.newPassword}
                                                         onChange={handleInputChange}
                                                         header={header} footer={footer} toggleMask />
-                                                    {showError &&
+                                                    {showError && !resetPasswordInfo.newPassword &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }
                                                     <small className='text-danger form-error-msg'>{(resetPasswordInfo.newPassword.length < 8 && resetPasswordInfo.newPassword) ? "Password must be atleast 8 characters long" : ""}</small>
@@ -365,7 +365,7 @@ const ForgotPassword = () => {
                                                         value={resetPasswordInfo.confirmPassword}
                                                         onChange={handleInputChange}
                                                         feedback={false} toggleMask />
-                                                    {showError &&
+                                                    {showError && !resetPasswordInfo.confirmPassword &&
                                                         <small className="text-danger form-error-msg">This field is required</small>
                                                     }
                                                     <small className='text-danger text-capitalized form-error-message'>{(resetPasswordInfo.newPassword !== resetPasswordInfo.confirmPassword && resetPasswordInfo.confirmPassword) ? "Password & Confirm Password must be equal" : ""}</small>
