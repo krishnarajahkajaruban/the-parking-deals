@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.secureserver.net',
-    port: 465, // or 587 if you use TLS
+    host: 'smtpout.secureserver.net',
+    port: 80, // or 587 if you use TLS
     secure: true, // use SSL, set to false if using port 587
     auth: {
         user: process.env.NODEMAILER_USER,

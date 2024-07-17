@@ -141,7 +141,7 @@ const sendEmailToUser = async (booking, user, type) => {
 
   return sendEmail(
       user.email,
-      `Booking ${type === "Cancelled" ? "Cancelled!" : "Failed" ? "Failed!" : "Confirmed!"}`,
+      `Booking ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"}`,
       `
           <div style="padding: 20px; font-family: Calibri;">
               <div style="text-align: center;">
@@ -149,7 +149,7 @@ const sendEmailToUser = async (booking, user, type) => {
               </div>
               <div style="margin-top: 40px; font-size: 15px;">
                   <p>Dear ${user.firstName},</p>
-                  <p>Your Booking has been ${type === "Cancelled" ? "Cancelled!" : "Confirmed!"} (Booking ID: #${booking._id}) We're excited to have you on board.</p>
+                  <p>Your Booking has been ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"} (Booking ID: #${booking._id}) We're excited to have you on board.</p>
                   <p>Company Details:</p>
                   <li>Company Name: ${company.companyName}</li>
                   <li>Email: ${company.email}</li>
@@ -182,7 +182,7 @@ const sendEmailToCompany = async (booking, user, type) => {
 
   return sendEmail(
       company.email,
-      `${type === "Cancelled" ? "Parking Slot Booking Cancelled!" : "Failed" ? "Parking Slot Booking Failed!" : "Parking slot has been Booked!"}`,
+      `${type === "Cancelled" ? "Parking Slot Booking Cancelled!" : type ==="Failed" ? "Parking Slot Booking Failed!" : "Parking slot has been Booked!"}`,
       `
           <div style="padding: 20px; font-family: Calibri;">
               <div style="text-align: center;">
@@ -190,7 +190,7 @@ const sendEmailToCompany = async (booking, user, type) => {
               </div>
               <div style="margin-top: 40px; font-size: 15px;">
                   <p>Dear ${company.companyName},</p>
-                  <p>Your Parking slot for the airport of ${booking.airportName} from the date & time of ${booking.dropOffDate} at ${booking.dropOffTime} to the date & time of ${booking.pickUpDate} at ${booking.pickUpTime} ${type === "Cancelled" ? "booking Cancelled!" : "has been booked"} (Booking ID: #${booking._id}) by
+                  <p>Your Parking slot for the airport of ${booking.airportName} from the date & time of ${booking.dropOffDate} at ${booking.dropOffTime} to the date & time of ${booking.pickUpDate} at ${booking.pickUpTime} ${type === "Cancelled" ? "booking Cancelled!" : type === "Failed" ? "booking Failed!" : "has been booked"} (Booking ID: #${booking._id}) by
                   <br>
                       <p>Customer Details:</p>
                       <li>Full Name: ${user.title} ${user.firstName} ${user.lastname}</li>
