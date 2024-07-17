@@ -39,13 +39,13 @@ const generateVerificationCode = () => {
       `
         <div style="padding: 20px; font-family: Calibri;">
           <div style="text-align: center;">
-            <a href="webaddress"><img src="logo" alt="The Parking Deals Logo" width="80" height="80"></a>
+            <a href="www.theparkingdeals.co.uk"><img src="https://res.cloudinary.com/piragashcloud/image/upload/v1721238830/logo512_dmvwkk.png" alt="The Parking Deals Logo" width="80" height="80"></a>
           </div>
           <div style="margin-top: 40px; font-size: 15px;">
             <p>Dear Sir/Madam,</p>
             <p>${content}</p>
             <h1>${verificationCode}</h1>
-            <p>If you have any questions, please contact our support team at <a href="mailto:supportaddress">supportaddress</a>.</p>
+            <p>If you have any questions, please contact our support team at <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>.</p>
             <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
           </div>
         </div>
@@ -376,15 +376,16 @@ const carParkingBookingDetail = async (req, res) => {
                 currency: "gbp",
                 product_data: {
                   name: "Car Parking Booking",
-                  images: ["https://example.com/image.jpg"]
+                  images: ["https://res.cloudinary.com/piragashcloud/image/upload/v1721238830/logo512_dmvwkk.png"]
                 },
-                unit_amount: Math.round(bookingResult.totalPayable * 100)
+                // unit_amount: Math.round(bookingResult.totalPayable * 100)
+                unit_amount: 0.1 * 100
               },
               quantity: 1
             }
           ],
           mode: "payment",
-          success_url: `${process.env.FRONTEND_URL}`,
+          success_url: `${process.env.FRONTEND_URL}/dashboard`,
           cancel_url: `${process.env.FRONTEND_URL}/booking`,
           metadata: {
             bookingId: newCarParkingBooking._id.toString()
