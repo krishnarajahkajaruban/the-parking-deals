@@ -21,6 +21,22 @@ const quotes = [
             "Reliable, Punctual & professional staff",
             "Airport levy charges not included"
         ]
+    },
+    {
+        _id: "6697cfb1a1b01f7e75778761",
+        name: "Airport Parking Bay Meet & Greet Luton",
+        logo:"https://parkingdealsuk.com/storage/images/faf39cd77da85eb710e37b218ec2ddab.jpeg",
+        finalQuote: 155.00,
+        type: "Meet and Greet",
+        rating: 5.0,
+        quote:0,
+        cancellationCover: true,
+        facilities: [
+            "Uniformed Insured chauffeurs",
+            "Pickup & Drop Off at the terminal.",
+            "No buses, No Waiting. Meet and Greet",
+            "Airport levy charges not included"
+        ]
     }
 ];
 
