@@ -516,7 +516,7 @@ const VendorList = () => {
                             options={airports}
                             optionLabel="name"
                             placeholder="Select a Airport"
-                            filter
+
                             valueTemplate={selectedAirportTemplate}
                             itemTemplate={airportOptionTemplate}
                             className="w-full w-100 custom-form-dropdown"
@@ -767,7 +767,8 @@ const VendorList = () => {
                       Return Procedure
                     </button>
                   </li>
-                  <li class="nav-item" role="presentation">
+
+                  {/* <li class="nav-item" role="presentation">
                     <button
                       class="nav-link tab-detail-btn"
                       id="view-map-tab"
@@ -780,8 +781,9 @@ const VendorList = () => {
                     >
                       View Map
                     </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
+                  </li> */}
+
+                  {/* <li class="nav-item" role="presentation">
                     <button
                       class="nav-link tab-detail-btn"
                       id="photos-tab"
@@ -794,7 +796,8 @@ const VendorList = () => {
                     >
                       Photos
                     </button>
-                  </li>
+                  </li> */}
+
                   <li class="nav-item" role="presentation">
                     <button
                       class="nav-link tab-detail-btn"
@@ -809,6 +812,7 @@ const VendorList = () => {
                       Reviews
                     </button>
                   </li>
+
                   <li class="nav-item" role="presentation">
                     <button
                       class="nav-link tab-detail-btn"
@@ -840,22 +844,22 @@ const VendorList = () => {
                       tabindex="0"
                     >
                       <div className="tab-detail-content-area">
-                        <h1>Why Use Lion Parking?</h1>
+                        <h1>Why Use {selectedVendor?.name}?</h1>
                         <ul>
                           <li>
-                            Lion Parking Meet and Greet airport parking
+                            {selectedVendor?.name} Meet and Greet airport parking
                             service offers the best option for those who are
                             traveling with heavy luggage or families traveling
                             with kids.
                           </li>
                           <li>
-                            Lion Parking at Heathrow Airport lets you drop
+                            {selectedVendor?.name} at Heathrow Airport lets you drop
                             your car in the nearest car park, so you can just
                             walk inside and board your flight while your car
                             is parked in a car park away from the terminal.
                           </li>
                           <li>
-                            Lion Parking aims to offer the best prices for
+                            {selectedVendor?.name} aims to offer the best prices for
                             both short stay airport parking as well as long
                             term airport parking.
                           </li>
@@ -907,7 +911,7 @@ const VendorList = () => {
                         <h2>Important</h2>
                         <ul>
                           <li>
-                            Lion Parking is a trading name of Lion Parking
+                            {selectedVendor?.name} is a trading name of {selectedVendor?.name}
                             ltd. Full instructions will be provided in booking
                             confirmation email.
                           </li>
@@ -1246,7 +1250,7 @@ const VendorList = () => {
                     {/*  */}
 
                     {/* View Map */}
-                    <div
+                    {/* <div
                       class="tab-pane tab-detail-content fade"
                       id="view-map-tab-pane"
                       role="tabpanel"
@@ -1264,11 +1268,11 @@ const VendorList = () => {
                           src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=London+(The%20Parking%20Deals)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
                         ></iframe>
                       </div>
-                    </div>
+                    </div> */}
                     {/*  */}
 
                     {/* Photos */}
-                    <div
+                    {/* <div
                       class="tab-pane tab-detail-content fade"
                       id="photos-tab-pane"
                       role="tabpanel"
@@ -1305,7 +1309,7 @@ const VendorList = () => {
                           preview
                         />
                       </div>
-                    </div>
+                    </div> */}
                     {/*  */}
 
                     {/* Reviews */}
@@ -1317,7 +1321,7 @@ const VendorList = () => {
                       tabindex="0"
                     >
                       <div className="tab-detail-review-area">
-                        <article className="review-data-area">
+                        {/* <article className="review-data-area">
                           <div className="review-data-header-area">
                             <div className="review-avatar-image-area">
                               <img src="assets/images/user.png" alt="" />
@@ -1403,14 +1407,13 @@ const VendorList = () => {
                               okay. Thank you, will definitely use again.
                             </p>
                           </div>
-                        </article>
+                        </article> */}
 
-                        {/*  */}
-                        {/* <div className="no-data-area">
-                                                    <img src="assets/images/no-data/no-data-found.png" className='no-data-img' alt="" />
-                                                    <h4>No review data!</h4>
-                                                </div> */}
-                        {/*  */}
+                        <div className="no-data-area">
+                          <img src="assets/images/no-data/no-data-found.png" className='no-data-img' alt="" />
+                          <h4>No review data!</h4>
+                        </div>
+
                       </div>
                     </div>
                     {/*  */}
@@ -1477,12 +1480,12 @@ const VendorList = () => {
                     </div>
 
                     <div className="detail-card-feature-area">
-                          {selectedVendor?.quote > 0 && <p>
-                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
-                                Save <span>£ {selectedVendor.quote - selectedVendor.finalQuote}</span> Today
-                              </p>}
+                      {selectedVendor?.quote > 0 && <p>
+                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                        Save <span>£ {selectedVendor.quote - selectedVendor.finalQuote}</span> Today
+                      </p>}
 
-                              {selectedVendor?.cancellationCover &&<p>
+                      {selectedVendor?.cancellationCover && <p>
                         <i class="bi bi-lightning-fill me-2"></i>
                         Cancellation Cover Available
                       </p>}

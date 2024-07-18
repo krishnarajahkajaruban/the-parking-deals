@@ -263,7 +263,7 @@ const Home = () => {
                                                     <div className="form-icon-group">
                                                         <i className="bi bi-airplane-fill input-grp-icon"></i>
                                                         <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
-                                                            filter valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
+                                                             valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
                                                     </div>
                                                     {(showError && !selectedAirport) &&
                                                         <small className="text-danger form-error-msg text-sm-center">This field is required</small>

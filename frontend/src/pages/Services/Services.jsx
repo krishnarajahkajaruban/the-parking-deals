@@ -64,6 +64,22 @@ const Services = () => {
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className="service-card">
                                     <div className="service-card-img-area">
+                                        <img src="assets/images/services/valet-parking.jpg" className="service-card-img" alt="Meet and Greet Service" />
+                                    </div>
+                                    <div className="service-card-body">
+                                        <h4 className="service-card-head">Meet and Greet</h4>
+                                        <p className="service-card-desc">
+                                            Experience a hassle-free start and end to your journey with our Meet and Greet service. Upon arrival at the airport, a friendly and professional driver will meet you at the terminal entrance. They will assist with your luggage and take care of parking your vehicle in a secure location, allowing you to proceed directly to check-in without any delay. On your return, your vehicle will be waiting for you at the terminal, ensuring a smooth and convenient departure. Our Meet and Greet service combines the highest level of convenience with personalized attention, making your travel experience seamless and enjoyable.
+                                        </p>
+                                    </div>
+                                </article>
+                            </Tilt>
+                        </div>
+
+                        {/* <div className="col-12 col-xl-4 col-lg-6 col-md-8 col-sm-8 mx-auto" data-aos="fade-up">
+                            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
+                                <article className="service-card">
+                                    <div className="service-card-img-area">
                                         <img src="assets/images/services/valet-parking.jpg" className="service-card-img" alt="Valet Parking" />
                                     </div>
                                     <div className="service-card-body">
@@ -202,7 +218,7 @@ const Services = () => {
                                     </div>
                                 </article>
                             </Tilt>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </section>

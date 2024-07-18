@@ -96,7 +96,7 @@ const Footer = () => {
                                     <img src="../assets/images/logo-light.png" className='footer-logo' alt="The Parking Deals" />
                                 </button>
                                 <p className='footer-desc'>
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis veritatis officia necessitatibus dolorum voluptate, tenetur modi nemo eaque eius. Tempora minus ea eum illo expedita a dolorem ratione voluptatibus qui facere, assumenda ducimus laboriosam excepturi, dignissimos pariatur, veniam quisquam velit.
+                                    Air Travel Extras Limited trades under the name The Parking Deals. We specialize in providing exceptional airport parking solutions to meet the diverse needs of travelers.
                                 </p>
                             </div>
 
@@ -127,7 +127,7 @@ const Footer = () => {
                                                 <button onClick={() => goToLink('/privacy-policy')} className='footer-link'>Privacy Policy</button>
                                             </li>
                                             <li className='footer-link-item'>
-                                                <button onClick={() => goToLink('/faq')} className='footer-link'>FaQ</button>
+                                                <button onClick={() => goToLink('/faq')} className='footer-link'>FAQ</button>
                                             </li>
                                         </ul>
                                     </div>
@@ -136,29 +136,29 @@ const Footer = () => {
                                         <h6 className='footer-link-head text-sm-center text-lg-start'>Contact</h6>
                                         <ul className='footer-link-area contact-detail'>
                                             <li className='footer-link-item'>
-                                                <a href="tel:" className='footer-link with-icon'>
+                                                <a href="tel:07399440027" className='footer-link with-icon'>
                                                     <div className="link-icon-area">
                                                         <i className="bi bi-telephone-fill"></i>
                                                     </div>
-                                                    <span>+94 00 000 0000</span>
+                                                    <span>07399440027</span>
                                                 </a>
                                             </li>
                                             <li className='footer-link-item'>
-                                                <a href="mailto:" className='footer-link with-icon'>
+                                                <a href="mailto:info@theparkingdeals.co.uk" className='footer-link with-icon'>
                                                     <div className="link-icon-area">
                                                         <i className="bi bi-envelope-fill"></i>
                                                     </div>
                                                     <span>info@theparkingdeals.co.uk</span>
                                                 </a>
                                             </li>
-                                            <li className='footer-link-item'>
+                                            {/* <li className='footer-link-item'>
                                                 <a href="mailto:" target='_blank' rel="noreferrer" className='footer-link with-icon'>
                                                     <div className="link-icon-area">
                                                         <i className="bi bi-geo-alt-fill"></i>
                                                     </div>
                                                     <span>info@theparkingdeals.co.uk</span>
                                                 </a>
-                                            </li>
+                                            </li> */}
                                         </ul>
                                     </div>
                                 </div>
@@ -214,7 +214,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="sub-footer">
-                    <p>© <span className='currentYear'>{currentYear}</span>, The Parking Deals. All rights reserved.</p>
+                    <p>© <span className='currentYear'>{currentYear}</span>, Air Travel Extras Limited. All rights reserved.</p>
                 </div>
             </footer>
         </>

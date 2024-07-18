@@ -130,26 +130,26 @@ const ContactUs = () => {
                                             </p>
 
                                             <div className="contact-content-area">
-                                                <div className="contact-content" data-aos="fade-left">
+                                                {/* <div className="contact-content" data-aos="fade-left">
                                                     <i className="bi bi-geo-alt-fill"></i>
                                                     <a href="#" target="_blank" className="contact-content-link">
                                                         9-13 Wensum St, Burnham-on-Sea <br />
                                                         Somerset County <br />
                                                         TA8 1AL
                                                     </a>
-                                                </div>
+                                                </div> */}
 
                                                 <div className="contact-content" data-aos="fade-left">
                                                     <i className="bi bi-envelope-fill"></i>
-                                                    <a href="mailto:" className="contact-content-link">
-                                                        info@theparkingdeals.uk
+                                                    <a href="mailto:info@theparkingdeals.co.uk" className="contact-content-link">
+                                                        info@theparkingdeals.co.uk
                                                     </a>
                                                 </div>
 
                                                 <div className="contact-content" data-aos="fade-left">
                                                     <i className="bi bi-telephone-fill"></i>
-                                                    <a href="tel:" className="contact-content-link">
-                                                        +44 000 000 0000
+                                                    <a href="tel:07399440027" className="contact-content-link">
+                                                        07399440027
                                                     </a>
                                                 </div>
                                             </div>
@@ -248,12 +248,12 @@ const ContactUs = () => {
             </section>
             {/* Contact us Section End */}
 
-            <section className="pb-5 overflow-hidden">
+            {/* <section className="pb-5 overflow-hidden">
                 <div className="w-100 map-section">
                     <iframe width="100%" height="600" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=London+(The%20Parking%20Deals)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
                     </iframe>
                 </div>
-            </section>
+            </section> */}
 
             <Footer />
         </>
