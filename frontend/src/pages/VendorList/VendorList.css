@@ -718,6 +718,7 @@
     background-color: #ebeafc;
     padding: 12px 15px;
     margin-top: 5px;
+    cursor: pointer;
 }
 
 .show-data-head i{
