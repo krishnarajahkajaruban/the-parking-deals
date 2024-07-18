@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware setup
 app.use(cors({ // CORS setup
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com', 'https://www.theparkingdeals.co.uk/'],
+  origin: ['https://www.theparkingdeals.co.uk', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials']
