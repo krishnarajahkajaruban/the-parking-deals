@@ -1,7 +1,9 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.office365.com',
+    port: 587, // or 587 if you use TLS
+    secure: false, // use SSL, set to false if using port 587
     auth: {
         user: process.env.NODEMAILER_USER,
         pass: process.env.NODEMAILER_USER_PASSWORD

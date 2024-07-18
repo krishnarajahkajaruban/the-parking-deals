@@ -13,7 +13,7 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import VendorList from './pages/VendorList/VendorList';
 // import Booking from './pages/Booking/Booking';
 // import Dashboard from './pages/Dashboard/Dashboard';
-import ChangePassword from './pages/ChangePassword/ChangePassword';
+// import ChangePassword from './pages/ChangePassword/ChangePassword';
 
 import Preloader from './Preloader';
 
@@ -36,6 +36,7 @@ const Services = React.lazy(()=>import('./pages/Services/Services'));
 // const VendorList = React.lazy(()=>import('./pages/VendorList/VendorList'));
 const Booking = React.lazy(()=>import('./pages/Booking/Booking'));
 const Dashboard = React.lazy(()=>import('./pages/Dashboard/Dashboard'));
+const ChangePassword = React.lazy(()=>import('./pages/ChangePassword/ChangePassword'));
 
 function App() {
   const value = {
@@ -75,7 +76,7 @@ function App() {
         <Route path='/results' element={<ProtectedRoute><VendorList /></ProtectedRoute>} />
         <Route path='/booking' element={<Suspense fallback={<Preloader />}><Booking /></Suspense>} />
         <Route path='/dashboard' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Dashboard /></ProtectedRoute></Suspense>} />
-        <Route path='/change-password' element={<ChangePassword />} />
+        <Route path='/change-password' element={<Suspense fallback={<Preloader />}><ProtectedRoute><ChangePassword /></ProtectedRoute></Suspense>} />
       </Routes>
     </PrimeReactProvider>
   );

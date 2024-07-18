@@ -37,25 +37,6 @@ const Dashboard = () => {
     const today = new Date();
     const navigate = useNavigate();
 
-    const logOut = () => {
-        confirmDialog({
-            message: 'Are you sure you want to log out?',
-            header: 'Logout Confirmation',
-            icon: 'bi bi-info-circle',
-            defaultFocus: 'reject',
-            acceptClassName: 'p-button-danger',
-            accept: () => {
-                dispatch(setLogout());
-            },
-        });
-    }
-
-
-    useEffect(() => {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map((tooltipTriggerEl) => new Tooltip(tooltipTriggerEl));
-    }, []);
-
     const titles = [
         { name: 'Mr.' },
         { name: 'Mrs.' },
@@ -78,21 +59,16 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [status, setStatus] = useState("Paid");
-
-    useEffect(() => {
-        api.get(`/api/common-role/get-all-bookings?page=${page}&limit=10&status=${status}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-        }).then(res => console.log(res.data))
-            .catch(err => console.log(err));
-    }, []);
+    const [bookings, setBookings] = useState([]);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [rows, setRows] = useState(10);
+    const [selectedBooking, setSelectedBooking] = useState(null);
+    
 
     const initialUserInfo = {
         title: user?.title || titles[0].name,
         firstName: user?.firstName || "",
-        lastName: user?.lastName || "",
+        lastName: user?.lastname || "",
         mobileNumber: user?.mobileNumber || "",
         addressL1: user?.addressL1 || "",
         addressL2: user?.addressL2 || "",
@@ -103,6 +79,23 @@ const Dashboard = () => {
 
     const [userInfo, setUserInfo] = useState(initialUserInfo);
 
+    useEffect(() => {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map((tooltipTriggerEl) => new Tooltip(tooltipTriggerEl));
+    }, []);
+
+    const logOut = () => {
+        confirmDialog({
+            message: 'Are you sure you want to log out?',
+            header: 'Logout Confirmation',
+            icon: 'bi bi-info-circle',
+            defaultFocus: 'reject',
+            acceptClassName: 'p-button-danger',
+            accept: () => {
+                dispatch(setLogout());
+            },
+        });
+    }
 
     const handleInputChange = async (e) => {
         const { name, value } = e.target;
@@ -129,8 +122,6 @@ const Dashboard = () => {
         // };
         // fileReader.readAsDataURL(file);
     };
-
-
 
     const updatingUserInfo = async (info) => {
         setLoading(true);
@@ -208,41 +199,66 @@ const Dashboard = () => {
         }
     };
 
-    const [bookings, setBookings] = useState([]);
+    const fetchBookings = async (page, rows) => {
+        setLoading(true);
+        const data = await SampleData.getData(page, rows, '', '', token);
+        setBookings(data.bookings);
+        setTotalRecords(data.totalRecords);
+        setLoading(false);
+    };
 
     useEffect(() => {
-        SampleData.getBookingsMedium().then((data) => setBookings(data));
-    }, []);
+        fetchBookings(page, rows);
+    }, [page, rows, token]);
 
-    const searchBodyTemplate = () => {
+    const onPageChange = (event) => {
+        setPage(event.page + 1);
+        setRows(event.rows);
+    };
+
+    const dateTimeTemplate = (rowData) => {
+        return `${rowData.date} ${rowData.time}`;
+    };
+
+    // const statusBodyTemplate = (rowData) => {
+    //     return <span>{rowData.status}</span>;
+    // };
+
+    // const cancelBodyTemplate = (rowData) => {
+    //     return <button>Cancel</button>;
+    // };
+
+    const searchBodyTemplate = (rowData) => {
         return (
             <Button
                 icon="bi bi-eye-fill"
                 className="data-view-button"
                 data-bs-toggle="modal"
                 data-bs-target="#bookingDetailModal"
+                onClick={() => setSelectedBooking(rowData.details)}
             />
         );
     };
 
-    const cancelBodyTemplate = () => {
+    const cancelBodyTemplate = (rowData) => {
         return (
+            rowData.details.cancellationCoverFee ?
             <Button
                 label="Cancel"
                 severity="danger"
                 className="cancel-button"
-                onClick={cancelBooking}
-            />
+                // onClick={cancelBooking}
+            /> : null
         );
     };
 
-    const dateTimeTemplate = (booking) => {
-        return (
-            <>
-                {booking.date + "/" + booking.time}
-            </>
-        );
-    };
+    // const dateTimeTemplate = (booking) => {
+    //     return (
+    //         <>
+    //             {booking.date + "/" + booking.time}
+    //         </>
+    //     );
+    // };
 
     const statusBodyTemplate = (booking) => {
         return (
@@ -252,10 +268,10 @@ const Dashboard = () => {
 
     const getSeverity = (booking) => {
         switch (booking.status) {
-            case 'Accepted':
+            case 'Paid':
                 return 'success';
 
-            case 'Cancelled':
+            case 'Failed':
                 return 'danger';
 
             default:
@@ -263,16 +279,16 @@ const Dashboard = () => {
         }
     };
 
-    const cancelBooking = () => {
-        confirmDialog({
-            message: 'Are you sure you want to cancel the booking?',
-            header: 'Booking Cancellation Confirmation',
-            icon: 'bi bi-info-circle',
-            defaultFocus: 'reject',
-            acceptClassName: 'p-button-danger',
-            accept: cancel
-        });
-    }
+    // const cancelBooking = () => {
+    //     confirmDialog({
+    //         message: 'Are you sure you want to cancel the booking?',
+    //         header: 'Booking Cancellation Confirmation',
+    //         icon: 'bi bi-info-circle',
+    //         defaultFocus: 'reject',
+    //         acceptClassName: 'p-button-danger',
+    //         accept: cancel
+    //     });
+    // }
 
     const cancel = () => { };
 
@@ -282,137 +298,219 @@ const Dashboard = () => {
     };
 
     return (
-        <>
-            <Header />
+      <>
+        <Header />
 
-            {/* Breadcrumb Section Start */}
-            <section className="breadcrumb-section overflow-hidden">
-                <div className="container-md">
-                    <div className="row">
-                        <div className="col-12">
-                            <h3 className='breadcrumb-title'>Dashboard</h3>
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb">
-                                    <li className="breadcrumb-item">
-                                        <a href="/">Home</a>
-                                    </li>
-                                    <li className="breadcrumb-item active" aria-current="page">Dashboard</li>
-                                </ol>
-                            </nav>
+        {/* Breadcrumb Section Start */}
+        <section className="breadcrumb-section overflow-hidden">
+          <div className="container-md">
+            <div className="row">
+              <div className="col-12">
+                <h3 className="breadcrumb-title">Dashboard</h3>
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
+                      <a href="/">Home</a>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                      Dashboard
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Breadcrumb Section End */}
 
-                        </div>
-                    </div>
+        <ConfirmDialog />
+
+        {/* Profile section */}
+        <section className="section-padding dashboard-section">
+          <div className="container-md">
+            <div className="row">
+              <div className="col-12 col-xl-3">
+                <div
+                  className="nav dashboard-tab-area tabs panel-sticky"
+                  id="dashboard-tab"
+                  role="tablist"
+                  aria-orientation="vertical"
+                >
+                  <button
+                    className="nav-link dashboard-tab-link p-ripple active"
+                    id="v-pills-profile-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-profile"
+                    type="button"
+                    role="tab"
+                    aria-controls="v-pills-profile"
+                    aria-selected="true"
+                  >
+                    <i className="bi bi-person-fill me-3"></i>
+                    Profile
+                    <Ripple />
+                  </button>
+                  <button
+                    className="nav-link dashboard-tab-link p-ripple"
+                    id="v-pills-bookings-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-bookings"
+                    type="button"
+                    role="tab"
+                    aria-controls="v-pills-bookings"
+                    aria-selected="false"
+                  >
+                    <i className="bi bi-calendar2-check-fill me-3"></i>
+                    My Bookings
+                    <Ripple />
+                  </button>
                 </div>
-            </section>
-            {/* Breadcrumb Section End */}
+              </div>
 
-            <ConfirmDialog />
+              <div className="col-12 col-xl-9">
+                <div
+                  className="dashboard-tab-area tab-content"
+                  id="dashboard-tabContent"
+                >
+                  <div
+                    className="tab-pane dashboard-tab-content fade show active"
+                    id="v-pills-profile"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-profile-tab"
+                    tabindex="0"
+                  >
+                    <article className="dashboard-profile-card">
+                      <div className="dashboard-profile-head">
+                        <h5>Profile</h5>
+                        <a
+                          href="#editProfile"
+                          className="prfile-edit-btn"
+                          type="button"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title={`${showEditArea ? "Cancel" : "Edit Profile"}`}
+                          onClick={togglePanel}
+                        >
+                          <i
+                            className={`bi ${
+                              showEditArea
+                                ? "bi-x-lg text-danger"
+                                : "bi-pencil-square"
+                            }`}
+                          ></i>
+                        </a>
+                      </div>
+                      <div className="dashboard-profile-container">
+                        <div className="row">
+                          <div className="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-3 my-auto mx-auto h-100">
+                            <div className="dashboard-profile-image-area">
+                              {user?.dp && (
+                                <Image
+                                  src={user?.dp}
+                                  className="dashboard-profile-img"
+                                  alt="Image"
+                                  preview
+                                />
+                              )}
 
-            {/* Profile section */}
-            <section className="section-padding dashboard-section">
-                <div className="container-md">
-                    <div className="row">
-                        <div className="col-12 col-xl-3">
-                            <div className="nav dashboard-tab-area tabs panel-sticky" id="dashboard-tab" role="tablist" aria-orientation="vertical">
-                                <button className="nav-link dashboard-tab-link p-ripple active" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="true">
-                                    <i className="bi bi-person-fill me-3"></i>
-                                    Profile
-                                    <Ripple />
-                                </button>
-                                <button className="nav-link dashboard-tab-link p-ripple" id="v-pills-bookings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-bookings" type="button" role="tab" aria-controls="v-pills-bookings" aria-selected="false">
-                                    <i className="bi bi-calendar2-check-fill me-3"></i>
-                                    My Bookings
-                                    <Ripple />
-                                </button>
+                              {/* if no image */}
+                              {!user?.dp && (
+                                <img
+                                  src="assets/images/user.png"
+                                  className="dashboard-profile-no-img"
+                                  alt=""
+                                />
+                              )}
+                              {/*  */}
                             </div>
+                          </div>
+                          <div className="col-12 col-xl-8 col-lg-8 col-md-8 col-sm-9 dash-tab-divider">
+                            <div className="dashboard-profile-detail-area">
+                              <div className="dashboard-profile-detail">
+                                <h6 className="dashboard-profile-detail-title">
+                                  <i className="bi bi-person-lines-fill"></i>
+                                  Name :
+                                </h6>
+                                <h6 className="dashboard-profile-content">
+                                  {user?.title}. {user?.firstName}{" "}
+                                  {user?.lastName}
+                                </h6>
+                              </div>
+
+                              {/* <Divider className='mt-3' /> */}
+                              <div className="dashboard-profile-detail">
+                                <h6 className="dashboard-profile-detail-title">
+                                  <i className="bi bi-telephone-fill"></i>
+                                  Mobile No. :
+                                </h6>
+                                <h6 className="dashboard-profile-content">
+                                  {user?.mobileNumber}
+                                </h6>
+                              </div>
+
+                              <div className="dashboard-profile-detail">
+                                <h6 className="dashboard-profile-detail-title">
+                                  <i className="bi bi-envelope-fill"></i>
+                                  Email :
+                                </h6>
+                                <h6 className="dashboard-profile-content">
+                                  {user?.email}
+                                </h6>
+                              </div>
+
+                              <div className="dashboard-profile-detail mb-0">
+                                <h6 className="dashboard-profile-detail-title">
+                                  <i className="bi bi-geo-alt-fill"></i>
+                                  Address :
+                                </h6>
+                                <h6 className="dashboard-profile-content">
+                                  {user?.addressL1 || "-"} {user?.addressL2}
+                                </h6>
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                      <div className="dashboard-profile-footer">
+                        <Button
+                          label="Change Password"
+                          onClick={() => goToLink("/change-password")}
+                          icon="bi bi-lock"
+                          className="primary dashboard-action-btn"
+                          text
+                        />
+                        <Button
+                          label="Logout"
+                          onClick={logOut}
+                          severity="danger"
+                          icon="bi bi-box-arrow-right"
+                          className="dashboard-action-btn"
+                          text
+                        />
+                      </div>
+                    </article>
 
-                        <div className="col-12 col-xl-9">
-                            <div className="dashboard-tab-area tab-content" id="dashboard-tabContent">
-                                <div className="tab-pane dashboard-tab-content fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
-                                    <article className="dashboard-profile-card">
-                                        <div className="dashboard-profile-head">
-                                            <h5>Profile</h5>
-                                            <a href="#editProfile" className="prfile-edit-btn" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title={`${showEditArea ? 'Cancel' : 'Edit Profile'}`}
-                                                onClick={togglePanel}>
-                                                <i className={`bi ${showEditArea ? 'bi-x-lg text-danger' : 'bi-pencil-square'}`}></i>
-                                            </a>
-                                        </div>
-                                        <div className="dashboard-profile-container">
-                                            <div className="row">
-                                                <div className="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-3 my-auto mx-auto h-100">
-                                                    <div className="dashboard-profile-image-area">
-                                                        {user?.dp && <Image src={user?.dp} className='dashboard-profile-img' alt="Image" preview />}
+                    <Toast ref={toast} />
 
-                                                        {/* if no image */}
-                                                        {!user?.dp && <img src="assets/images/user.png" className='dashboard-profile-no-img' alt="" />}
-                                                        {/*  */}
-
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-xl-8 col-lg-8 col-md-8 col-sm-9 dash-tab-divider">
-                                                    <div className="dashboard-profile-detail-area">
-                                                        <div className="dashboard-profile-detail">
-                                                            <h6 className="dashboard-profile-detail-title">
-                                                                <i className="bi bi-person-lines-fill"></i>
-                                                                Name :
-                                                            </h6>
-                                                            <h6 className="dashboard-profile-content">
-                                                                {user?.title}. {user?.firstName} {user?.lastName}
-                                                            </h6>
-                                                        </div>
-
-                                                        {/* <Divider className='mt-3' /> */}
-                                                        <div className="dashboard-profile-detail">
-                                                            <h6 className="dashboard-profile-detail-title">
-                                                                <i className="bi bi-telephone-fill"></i>
-                                                                Mobile No. :
-                                                            </h6>
-                                                            <h6 className="dashboard-profile-content">
-                                                                {user?.mobileNumber}
-                                                            </h6>
-                                                        </div>
-
-                                                        <div className="dashboard-profile-detail">
-                                                            <h6 className="dashboard-profile-detail-title">
-                                                                <i className="bi bi-envelope-fill"></i>
-                                                                Email :
-                                                            </h6>
-                                                            <h6 className="dashboard-profile-content">
-                                                                {user?.email}
-                                                            </h6>
-                                                        </div>
-
-                                                        <div className="dashboard-profile-detail mb-0">
-                                                            <h6 className="dashboard-profile-detail-title">
-                                                                <i className="bi bi-geo-alt-fill"></i>
-                                                                Address :
-                                                            </h6>
-                                                            <h6 className="dashboard-profile-content">
-                                                                {user?.addressL1 || "-"} {user?.addressL2}
-                                                            </h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="dashboard-profile-footer">
-                                            <Button label="Change Password" onClick={() => goToLink('/change-password')} icon="bi bi-lock" className="primary dashboard-action-btn" text />
-                                            <Button label="Logout" onClick={logOut} severity="danger" icon="bi bi-box-arrow-right" className="dashboard-action-btn" text />
-                                        </div>
-                                    </article>
-
-                                    <Toast ref={toast} />
-
-                                    <Panel ref={editProfile} id="editProfile" header="Edit Profile" className="mt-3 edit-profile-section" toggleable collapsed>
-                                        <div className="edit-profile-area">
-                                            <div className="row">
-                                                <div className="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
-                                                    <div className="custom-form-group mb-3 mb-sm-4">
-                                                        <label htmlFor="title" className="custom-form-label">
-                                                            Profile Picture
-                                                        </label>
-                                                        {/* <FileUpload
+                    <Panel
+                      ref={editProfile}
+                      id="editProfile"
+                      header="Edit Profile"
+                      className="mt-3 edit-profile-section"
+                      toggleable
+                      collapsed
+                    >
+                      <div className="edit-profile-area">
+                        <div className="row">
+                          <div className="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                              <label
+                                htmlFor="title"
+                                className="custom-form-label"
+                              >
+                                Profile Picture
+                              </label>
+                              {/* <FileUpload
                                                             mode="basic"
                                                             name="demo[]"
                                                             accept="image/*"
@@ -422,102 +520,112 @@ const Dashboard = () => {
                                                             auto
                                                             chooseLabel="Browse"
                                                         /> */}
-                                                        <FileUpload name="dp"
-                                                            accept="image/*"
-                                                            customUpload={true}
-                                                            uploadHandler={dpUploadHandler}
-                                                            className="profil-img-upload"
-                                                            mode="basic"
-                                                            auto={true}
-                                                            chooseLabel="Browse" />
-                                                        {/* {showError && (
+                              <FileUpload
+                                name="dp"
+                                accept="image/*"
+                                customUpload={true}
+                                uploadHandler={dpUploadHandler}
+                                className="profil-img-upload"
+                                mode="basic"
+                                auto={true}
+                                chooseLabel="Browse"
+                              />
+                              {/* {showError && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
                                                         )} */}
-                                                    </div>
-                                                </div>
-                                                <div className="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
-                                                    <div className="custom-form-group mb-3 mb-sm-4">
-                                                        <label htmlFor="title" className="custom-form-label form-required">
-                                                            Title
-                                                        </label>
-                                                        <Dropdown
-                                                            id="title"
-                                                            value={{ name: userInfo.title }}
-                                                            onChange={(e) => setUserInfo({ ...userInfo, title: e.value?.name })}
-                                                            options={titles}
-                                                            optionLabel="name"
-                                                            placeholder="Select"
-                                                            className="w-full w-100 custom-form-dropdown"
-                                                        />
-                                                        {showError && !userInfo.title && (
-                                                            <small className="text-danger form-error-msg">
-                                                                This field is required
-                                                            </small>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
+                            </div>
+                          </div>
+                          <div className="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                              <label
+                                htmlFor="title"
+                                className="custom-form-label form-required"
+                              >
+                                Title
+                              </label>
+                              <Dropdown
+                                id="title"
+                                value={{ name: userInfo.title }}
+                                onChange={(e) =>
+                                  setUserInfo({
+                                    ...userInfo,
+                                    title: e.value?.name,
+                                  })
+                                }
+                                options={titles}
+                                optionLabel="name"
+                                placeholder="Select"
+                                className="w-full w-100 custom-form-dropdown"
+                              />
+                              {showError && !userInfo.title && (
+                                <small className="text-danger form-error-msg">
+                                  This field is required
+                                </small>
+                              )}
+                            </div>
+                          </div>
+                        </div>
 
-                                            <div className="row">
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                                    <div className="custom-form-group mb-3 mb-sm-4">
-                                                        <label
-                                                            htmlFor="firstName"
-                                                            className="custom-form-label form-required"
-                                                        >
-                                                            First Name
-                                                        </label>
-                                                        <InputText
-                                                            id="firstName"
-                                                            className="custom-form-input"
-                                                            name="firstName"
-                                                            placeholder="Enter First Name"
-                                                            value={userInfo.firstName}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {showError && !userInfo.firstName && (
-                                                            <small className="text-danger form-error-msg">
-                                                                This field is required
-                                                            </small>
-                                                        )}
-                                                    </div>
-                                                </div>
+                        <div className="row">
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                              <label
+                                htmlFor="firstName"
+                                className="custom-form-label form-required"
+                              >
+                                First Name
+                              </label>
+                              <InputText
+                                id="firstName"
+                                className="custom-form-input"
+                                name="firstName"
+                                placeholder="Enter First Name"
+                                value={userInfo.firstName}
+                                onChange={handleInputChange}
+                              />
+                              {showError && !userInfo.firstName && (
+                                <small className="text-danger form-error-msg">
+                                  This field is required
+                                </small>
+                              )}
+                            </div>
+                          </div>
 
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                                    <div className="custom-form-group mb-3 mb-sm-4">
-                                                        <label
-                                                            htmlFor="lastName"
-                                                            className="custom-form-label"
-                                                        >
-                                                            Last Name
-                                                        </label>
-                                                        <InputText
-                                                            id="lastName"
-                                                            className="custom-form-input"
-                                                            name="lastName"
-                                                            placeholder="Enter Last Name"
-                                                            value={userInfo.lastName}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {/* {showError && (
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                              <label
+                                htmlFor="lastName"
+                                className="custom-form-label"
+                              >
+                                Last Name
+                              </label>
+                              <InputText
+                                id="lastName"
+                                className="custom-form-input"
+                                name="lastName"
+                                placeholder="Enter Last Name"
+                                value={userInfo.lastName}
+                                onChange={handleInputChange}
+                              />
+                              {/* {showError && (
                                                             <small className="text-danger form-error-msg">
                                                                 This field is required
                                                             </small>
                                                         )} */}
-                                                    </div>
-                                                </div>
+                            </div>
+                          </div>
 
-                                                <div className="col-12 col-sm-6 col-lg-6 col-xl-6">
-                                                    <div className="custom-form-group mb-3 mb-sm-4">
-                                                        <label
-                                                            htmlFor="mobileNumber"
-                                                            className="custom-form-label form-required"
-                                                        >
-                                                            Mobile Number
-                                                        </label>
-                                                        {/* <InputMask
+                          <div className="col-12 col-sm-6 col-lg-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                              <label
+                                htmlFor="mobileNumber"
+                                className="custom-form-label form-required"
+                              >
+                                Mobile Number
+                              </label>
+                              {/* <InputMask
                                                             id="mobileNumber"
                                                             className="custom-form-input"
                                                             name="mobileNumber"
@@ -526,197 +634,232 @@ const Dashboard = () => {
                                                             value={userInfo.mobileNumber}
                                                             onChange={handleInputChange}
                                                         ></InputMask> */}
-                                                        <InputText
-                                                            id="mobileNumber"
-                                                            keyfilter="num"
-                                                            className="custom-form-input"
-                                                            name="mobileNumber"
-                                                            value={userInfo.mobileNumber}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {showError && !userInfo.mobileNumber && (
-                                                            <small className="text-danger form-error-msg">
-                                                                This field is required
-                                                            </small>
-                                                        )}
-                                                        <small className='text-danger form-error-msg'>{(!(/^\d{9,}$/.test(userInfo.mobileNumber)) && userInfo.mobileNumber) ? "Enter valid phone number" : ""}</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="row">
-                                                <div className="col-12">
-                                                    <label
-                                                        htmlFor="address"
-                                                        className="custom-form-label form-required"
-                                                    >
-                                                        Address
-                                                    </label>
-                                                </div>
-
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                                    <div className="custom-form-group mb-3 mb-sm-4">
-                                                        <InputText
-                                                            id="addressL1"
-                                                            className="custom-form-input"
-                                                            name="addressL1"
-                                                            placeholder="Address Line 1"
-                                                            value={userInfo.addressL1}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {showError && !userInfo.addressL1 && (
-                                                            <small className="text-danger form-error-msg">
-                                                                This field is required
-                                                            </small>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                                    <div className="custom-form-group mb-3 mb-sm-0">
-                                                        <InputText
-                                                            id="addressL2"
-                                                            className="custom-form-input"
-                                                            name="addressL2"
-                                                            placeholder="Address Line 2"
-                                                            value={userInfo.addressL2}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                                                    <div className="custom-form-group mb-3 mb-sm-0">
-                                                        <InputText
-                                                            id="city"
-                                                            className="custom-form-input   form-required"
-                                                            name="city"
-                                                            placeholder="City"
-                                                            value={userInfo.city}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {showError && !userInfo.city && (
-                                                            <small className="text-danger form-error-msg">
-                                                                This field is required
-                                                            </small>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-4">
-                                                    <div className="custom-form-group mb-3 mb-sm-0">
-                                                        <InputText
-                                                            id="country"
-                                                            className="custom-form-input"
-                                                            name="country"
-                                                            placeholder="Country"
-                                                            value={userInfo.country}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {showError && !userInfo.country && (
-                                                            <small className="text-danger form-error-msg">
-                                                                This field is required
-                                                            </small>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-12 col-sm-3 col-md-3 col-lg-4 col-xl-4">
-                                                    <div className="custom-form-group mb-0">
-                                                        <InputText
-                                                            id="postCode"
-                                                            className="custom-form-input"
-                                                            name="postCode"
-                                                            placeholder="Post Code"
-                                                            value={userInfo.postCode}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {showError && !userInfo.postCode && (
-                                                            <small className="text-danger form-error-msg">
-                                                                This field is required
-                                                            </small>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <Divider className="divider-margin mt-3 mb-3 mt-sm-4 mb-sm-4" />
-
-                                            <div className="row">
-                                                <div className="col-12 mx-auto me-0 col-lg-3 col-xl-3 col-md-4 col-sm-4">
-                                                    <Button
-                                                        label="Update"
-                                                        className="custom-btn-primary w-100 result-card-btn"
-                                                        onClick={handleProfileUpdate}
-                                                        loading={loading}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Panel>
-                                </div>
-
-                                <div className="tab-pane dashboard-tab-content fade" id="v-pills-bookings" role="tabpanel" aria-labelledby="v-pills-bookings-tab" tabindex="0">
-                                    <article className="dashboard-profile-card">
-                                        <div className="dashboard-profile-head">
-                                            <h5>Bookings</h5>
-                                        </div>
-                                        <div className="data-filter-area">
-                                            <div className="row">
-                                                <div className="col-12 col-lg-6 col-xl-4">
-                                                    <div className="custom-form-group mb-0 input-with-icon">
-                                                        <label
-                                                            htmlFor="filterDate"
-                                                            className="custom-form-label"
-                                                        >
-                                                            Filter by Date
-                                                        </label>
-                                                        <div className="form-icon-group">
-                                                            <i class="bi bi-calendar-check-fill input-grp-icon"></i>
-                                                            <Calendar
-                                                                id="filterDate"
-                                                                value={filterDate}
-                                                                placeholder="dd/mm/yyyy"
-                                                                maxDate={today}
-                                                                className="w-100"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="dash-table-area">
-                                                    <DataTable
-                                                        value={bookings}
-                                                        paginator
-                                                        size="small"
-                                                        rows={5}
-                                                        rowsPerPageOptions={[5, 10, 25, 50]}
-                                                        tableStyle={{ minWidth: '50rem' }}
-                                                        className="dash-table">
-                                                        <Column field="id" header="Booking ID" style={{ width: '20%' }}></Column>
-                                                        <Column header="Date & Time" body={dateTimeTemplate} style={{ width: '30%' }}></Column>
-                                                        <Column header="Status" body={statusBodyTemplate} style={{ width: '25%' }}></Column>
-                                                        <Column body={searchBodyTemplate} header="Info" style={{ width: '10%' }}></Column>
-                                                        <Column body={cancelBodyTemplate} header="Cancel" style={{ width: '15%' }}></Column>
-                                                    </DataTable>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </article>
-                                </div>
+                              <InputText
+                                id="mobileNumber"
+                                keyfilter="num"
+                                className="custom-form-input"
+                                name="mobileNumber"
+                                value={userInfo.mobileNumber}
+                                onChange={handleInputChange}
+                              />
+                              {showError && !userInfo.mobileNumber && (
+                                <small className="text-danger form-error-msg">
+                                  This field is required
+                                </small>
+                              )}
+                              <small className="text-danger form-error-msg">
+                                {!/^\d{9,}$/.test(userInfo.mobileNumber) &&
+                                userInfo.mobileNumber
+                                  ? "Enter valid phone number"
+                                  : ""}
+                              </small>
                             </div>
-
+                          </div>
                         </div>
-                    </div>
-                </div>
-            </section>
-            {/*  */}
 
-            {/* Booking detail modal */}
-            <div
+                        <div className="row">
+                          <div className="col-12">
+                            <label
+                              htmlFor="address"
+                              className="custom-form-label form-required"
+                            >
+                              Address
+                            </label>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-4">
+                              <InputText
+                                id="addressL1"
+                                className="custom-form-input"
+                                name="addressL1"
+                                placeholder="Address Line 1"
+                                value={userInfo.addressL1}
+                                onChange={handleInputChange}
+                              />
+                              {showError && !userInfo.addressL1 && (
+                                <small className="text-danger form-error-msg">
+                                  This field is required
+                                </small>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                            <div className="custom-form-group mb-3 mb-sm-0">
+                              <InputText
+                                id="addressL2"
+                                className="custom-form-input"
+                                name="addressL2"
+                                placeholder="Address Line 2"
+                                value={userInfo.addressL2}
+                                onChange={handleInputChange}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <div className="custom-form-group mb-3 mb-sm-0">
+                              <InputText
+                                id="city"
+                                className="custom-form-input   form-required"
+                                name="city"
+                                placeholder="City"
+                                value={userInfo.city}
+                                onChange={handleInputChange}
+                              />
+                              {showError && !userInfo.city && (
+                                <small className="text-danger form-error-msg">
+                                  This field is required
+                                </small>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-4">
+                            <div className="custom-form-group mb-3 mb-sm-0">
+                              <InputText
+                                id="country"
+                                className="custom-form-input"
+                                name="country"
+                                placeholder="Country"
+                                value={userInfo.country}
+                                onChange={handleInputChange}
+                              />
+                              {showError && !userInfo.country && (
+                                <small className="text-danger form-error-msg">
+                                  This field is required
+                                </small>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-3 col-md-3 col-lg-4 col-xl-4">
+                            <div className="custom-form-group mb-0">
+                              <InputText
+                                id="postCode"
+                                className="custom-form-input"
+                                name="postCode"
+                                placeholder="Post Code"
+                                value={userInfo.postCode}
+                                onChange={handleInputChange}
+                              />
+                              {showError && !userInfo.postCode && (
+                                <small className="text-danger form-error-msg">
+                                  This field is required
+                                </small>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <Divider className="divider-margin mt-3 mb-3 mt-sm-4 mb-sm-4" />
+
+                        <div className="row">
+                          <div className="col-12 mx-auto me-0 col-lg-3 col-xl-3 col-md-4 col-sm-4">
+                            <Button
+                              label="Update"
+                              className="custom-btn-primary w-100 result-card-btn"
+                              onClick={handleProfileUpdate}
+                              loading={loading}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </Panel>
+                  </div>
+
+                  <div
+                    className="tab-pane dashboard-tab-content fade"
+                    id="v-pills-bookings"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-bookings-tab"
+                    tabindex="0"
+                  >
+                    <article className="dashboard-profile-card">
+                      <div className="dashboard-profile-head">
+                        <h5>Bookings</h5>
+                      </div>
+                      {/* <div className="data-filter-area">
+                        <div className="row">
+                          <div className="col-12 col-lg-6 col-xl-4">
+                            <div className="custom-form-group mb-0 input-with-icon">
+                              <label
+                                htmlFor="filterDate"
+                                className="custom-form-label"
+                              >
+                                Filter by Date
+                              </label>
+                              <div className="form-icon-group">
+                                <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                                <Calendar
+                                  id="filterDate"
+                                  value={filterDate}
+                                  placeholder="dd/mm/yyyy"
+                                  maxDate={today}
+                                  className="w-100"
+                                  onChange={(e) => setFilterDate(e.value)}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div> */}
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="dash-table-area">
+                            <DataTable
+                              value={bookings}
+                              paginator
+                              size="small"
+                              rows={rows}
+                              totalRecords={totalRecords}
+                              onPage={onPageChange}
+                              loading={loading}
+                              rowsPerPageOptions={[5, 10, 25, 50]}
+                              tableStyle={{ minWidth: "50rem" }}
+                              className="dash-table"
+                            >
+                              <Column
+                                field="id"
+                                header="Booking ID"
+                                style={{ width: "20%" }}
+                              ></Column>
+                              <Column
+                                header="Date & Time"
+                                body={dateTimeTemplate}
+                                style={{ width: "30%" }}
+                              ></Column>
+                              <Column
+                                header="Status"
+                                body={statusBodyTemplate}
+                                style={{ width: "25%" }}
+                              ></Column>
+                              <Column
+                                body={searchBodyTemplate}
+                                header="Info"
+                                style={{ width: "10%" }}
+                              ></Column>
+                              <Column
+                                body={cancelBodyTemplate}
+                                header="Cancel"
+                                style={{ width: "15%" }}
+                              ></Column>
+                            </DataTable>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/*  */}
+
+        {/* Booking detail modal */}
+        {/* <div
                 class="modal fade"
                 id="bookingDetailModal"
                 tabindex="-1"
@@ -895,12 +1038,206 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-            {/*  */}
+            </div> */}
 
-            <Footer />
-        </>
-    )
+        {selectedBooking && (
+          <div
+            className="modal fade"
+            id="bookingDetailModal"
+            tabIndex="-1"
+            aria-labelledby="bookingDetailModalLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div className="modal-content custom-modal">
+                <div className="modal-header p-2">
+                  <h1 className="modal-title fs-5" id="bookingDetailModalLabel">
+                    Booking Info
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div className="modal-body p-2">
+                  <div className="data-view-area">
+                    <h5 className="data-view-head">Booking Details</h5>
+                    <div className="row mt-4">
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-3">
+                          <h6 className="data-view-title">Provider :</h6>
+                          <h6 className="data-view-data">
+                            {selectedBooking.company.companyName}
+                          </h6>
+                        </div>
+                      </div>
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-3">
+                          <h6 className="data-view-title">Location :</h6>
+                          <h6 className="data-view-data">
+                            {selectedBooking.airportName}
+                          </h6>
+                        </div>
+                      </div>
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-3 mb-lg-0">
+                          <h6 className="data-view-title">
+                            Drop Off Date & Time :
+                          </h6>
+                          <h6 className="data-view-data">
+                            {new Date(
+                              selectedBooking.dropOffDate
+                            ).toLocaleString()}
+                          </h6>
+                        </div>
+                      </div>
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-0">
+                          <h6 className="data-view-title">
+                            Return Date & Time :
+                          </h6>
+                          <h6 className="data-view-data">
+                            {new Date(
+                              selectedBooking.pickUpDate
+                            ).toLocaleString()}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="data-view-sub mt-3">
+                      <div className="row">
+                        <div className="col-12 col-lg-6">
+                          <div className="data-view mb-3">
+                            <h6 className="data-view-title">Booking Quote :</h6>
+                            <h6 className="data-view-data">
+                              £ {selectedBooking.bookingQuote}
+                            </h6>
+                          </div>
+                        </div>
+                        <div className="col-12 col-lg-6">
+                          <div className="data-view mb-3">
+                            <h6 className="data-view-title">Booking Fee :</h6>
+                            <h6 className="data-view-data">
+                              £ {selectedBooking.bookingFee}
+                            </h6>
+                          </div>
+                        </div>
+                        <div className="col-12 col-lg-6">
+                          <div className="data-view mb-3 mb-lg-0">
+                            <h6 className="data-view-title">Discount :</h6>
+                            <h6 className="data-view-data">
+                              £ {selectedBooking.couponDiscount}
+                            </h6>
+                          </div>
+                        </div>
+                        <div className="col-12 col-lg-6">
+                          <div className="data-view mb-0">
+                            <h6 className="data-view-title">Total :</h6>
+                            <h6 className="data-view-data">
+                              £ {selectedBooking.totalPayable}
+                            </h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <Divider className="mt-4 mb-4" />
+                    <h5 className="data-view-head">Travel Details</h5>
+                    <div className="row mt-4">
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-3">
+                          <h6 className="data-view-title">Depart Terminal :</h6>
+                          <h6 className="data-view-data">
+                            {selectedBooking.travelDetail.departureTerminal}
+                          </h6>
+                        </div>
+                      </div>
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-3">
+                          <h6 className="data-view-title">
+                            Arrival Terminal :
+                          </h6>
+                          <h6 className="data-view-data">
+                            {selectedBooking.travelDetail.arrivalTerminal}
+                          </h6>
+                        </div>
+                      </div>
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-3 mb-lg-0">
+                          <h6 className="data-view-title">
+                            Outbound Flight/Vessel :
+                          </h6>
+                          <h6 className="data-view-data">
+                            {selectedBooking.travelDetail.outBoundFlight}
+                          </h6>
+                        </div>
+                      </div>
+                      <div className="col-12 col-lg-6">
+                        <div className="data-view mb-0">
+                          <h6 className="data-view-title">
+                            Inbound Flight/Vessel :
+                          </h6>
+                          <h6 className="data-view-data">
+                            {selectedBooking.travelDetail.inBoundFlight}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                    <Divider className="mt-4 mb-4" />
+                    <h5 className="data-view-head">Vehicle Details</h5>
+                    {selectedBooking.vehicleDetail.map((vehicle, index) => (
+                      <div key={index} className="data-view-sub mt-3">
+                        <h6 className="data-view-sub-head">
+                          Vehicle {index + 1}
+                        </h6>
+                        <div className="row">
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-3">
+                              <h6 className="data-view-title">
+                                Registration Number :
+                              </h6>
+                              <h6 className="data-view-data">
+                                {vehicle.regNo}
+                              </h6>
+                            </div>
+                          </div>
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-3">
+                              <h6 className="data-view-title">Make :</h6>
+                              <h6 className="data-view-data">{vehicle.make}</h6>
+                            </div>
+                          </div>
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-3 mb-lg-0">
+                              <h6 className="data-view-title">Model :</h6>
+                              <h6 className="data-view-data">
+                                {vehicle.model}
+                              </h6>
+                            </div>
+                          </div>
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-0">
+                              <h6 className="data-view-title">Color :</h6>
+                              <h6 className="data-view-data">
+                                {vehicle.color}
+                              </h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {/*  */}
+
+        <Footer />
+      </>
+    );
 }
 
 export default Dashboard;

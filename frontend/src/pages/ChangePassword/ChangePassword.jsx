@@ -8,9 +8,14 @@ import { Button } from 'primereact/button';
 
 import { Toast } from 'primereact/toast';
 import Preloader from "../../Preloader";
+import api from "../../api";
+import { setLogout } from "../../state";
+import { useDispatch, useSelector } from "react-redux";
 
 const ChangePassword = () => {
     const toast = useRef(null);
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.auth.token);
     const [loading, setLoading] = useState(false);
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -35,6 +40,91 @@ const ChangePassword = () => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    const initialChangePasswordInfo = {
+        currentPassword: '', 
+        newPassword: '',
+        confirmPassword: ''
+    };
+    const [changePasswordInfo, setChangePasswordInfo] = useState(initialChangePasswordInfo);
+
+    const handleInputChange = async (e) => {
+        const { name, value } = e.target;
+        setChangePasswordInfo({ ...changePasswordInfo, [name]: value });
+    };
+
+    const changePassword = async (changeInfo) => {
+        setLoading(true);
+        try {
+            const response = await api.patch("/api/user/update-user-password", changeInfo, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response.data);
+            toast.current.show({
+                severity: 'success',
+                summary: 'Updated Successfully',
+                detail: "Your account password updated successfully, Please Login again!",
+                life: 3000
+            });
+            setTimeout(() => {
+                dispatch(
+                    setLogout()
+                )
+            }, 2000);
+        } catch (err) {
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed to Update!',
+                detail: err.response.data.error,
+                life: 3000
+            });
+        }finally{
+            setLoading(false);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!changePasswordInfo.currentPassword || !changePasswordInfo.newPassword || !changePasswordInfo.confirmPassword) {
+            setShowError(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
+        }
+        if (changePasswordInfo.newPassword !== changePasswordInfo.confirmPassword) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "New Password & Confirm Password do not match!",
+                life: 3000
+            });
+            return;
+        }
+        if (changePasswordInfo.newPassword.length < 8) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Submission',
+                detail: "New Password must be atleast 8 characters long!",
+                life: 3000
+            });
+            return;
+        }
+
+        const { confirmPassword, ...updatedChangeInfo } = changePasswordInfo;
+
+        await changePassword(updatedChangeInfo);
+
+        setChangePasswordInfo(initialChangePasswordInfo);
+
+    };
 
     return (
         <>
@@ -97,16 +187,17 @@ const ChangePassword = () => {
                                 </div>
                                 <h3 className="custom-card-tile">Change Your Password</h3>
                                 <h6 className="custom-card-sub-tile">Please enter your old password below to change your password.</h6>
-                                <form action="" className="custom-card-form">
+                                <form action="" className="custom-card-form"
+                                onSubmit={handleSubmit}>
                                     <div className="row">
                                         <div className="col-12">
                                             <div className="custom-form-group mb-3 mb-sm-4">
                                                 <label htmlFor="password" className="custom-form-label form-required">Old password</label>
-                                                <Password id="password" className="custom-form-input" name="oldPassword"
-                                                    value={oldPassword}
-                                                    onChange={(e) => setOldPassword(e.target.value)}
+                                                <Password id="password" className="custom-form-input" name="currentPassword"
+                                                    value={changePasswordInfo.currentPassword}
+                                                    onChange={handleInputChange}
                                                     feedback={false} toggleMask />
-                                                {showError &&
+                                                {showError && !changePasswordInfo.currentPassword &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
                                                 }
                                             </div>
@@ -116,12 +207,13 @@ const ChangePassword = () => {
                                             <div className="custom-form-group mb-3 mb-sm-4">
                                                 <label htmlFor="password" className="custom-form-label form-required">New password</label>
                                                 <Password id="password" className="custom-form-input" name="newPassword"
-                                                    value={newPassword}
-                                                    onChange={(e) => setNewPassword(e.target.value)}
+                                                    value={changePasswordInfo.newPassword}
+                                                    onChange={handleInputChange}
                                                     header={header} footer={footer} toggleMask />
-                                                {showError &&
+                                                {showError && !changePasswordInfo.newPassword &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
                                                 }
+                                                <small className='text-danger form-error-msg'>{(changePasswordInfo.newPassword.length < 8 && changePasswordInfo.newPassword) ? "Password must be atleast 8 characters long" : ""}</small>
                                             </div>
                                         </div>
 
@@ -130,12 +222,13 @@ const ChangePassword = () => {
                                                 <label htmlFor="confirmPassword" className="custom-form-label form-required">Confirm password</label>
                                                 <Password id="confirmPassword" className="custom-form-input"
                                                     name="confirmPassword"
-                                                    value={confirmPassword}
-                                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                                    value={changePasswordInfo.confirmPassword}
+                                                    onChange={handleInputChange}
                                                     feedback={false} toggleMask />
-                                                {showError &&
+                                                {showError && !changePasswordInfo.confirmPassword &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
                                                 }
+                                                <small className='text-danger text-capitalized form-error-message'>{(changePasswordInfo.newPassword !== changePasswordInfo.confirmPassword && changePasswordInfo.confirmPassword) ? "Password & Confirm Password must be equal" : ""}</small>
                                             </div>
                                         </div>
                                     </div>
