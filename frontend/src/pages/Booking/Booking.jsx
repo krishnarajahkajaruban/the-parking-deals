@@ -1011,7 +1011,7 @@ const CheckoutForm = () => {
                               </div>
                             </div>
 
-                            <div className="row">
+                            {/* <div className="row">
                               <div className="col-12">
                                 <label
                                   htmlFor="address"
@@ -1021,7 +1021,7 @@ const CheckoutForm = () => {
                                 </label>
                               </div>
 
-                              {/* <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
+                              <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <InputText
                                     id="addressLine1"
@@ -1050,9 +1050,9 @@ const CheckoutForm = () => {
                                     onChange={handleInputChange}
                                   />
                                 </div>
-                              </div> */}
+                              </div>
 
-                              {/* <div className="col-12 col-sm-6 col-xl-6">
+                              <div className="col-12 col-sm-6 col-xl-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <InputText
                                     id="city"
@@ -1104,8 +1104,8 @@ const CheckoutForm = () => {
                                     </small>
                                   )}
                                 </div>
-                              </div> */}
-                            </div>
+                              </div>
+                            </div> */}
                             {/*  */}
 
                             <Divider className="divider-margin" />
