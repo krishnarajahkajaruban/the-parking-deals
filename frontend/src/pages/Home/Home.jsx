@@ -32,14 +32,23 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [dropOffDate, setDropOffDate] = useState(null);
     const [pickupDate, setPickupDate] = useState(null);
+    const [dayDifference, setDayDifference] = useState(0);
     const [showError, setShowError] = useState(false);
     const [selectedAirport, setSelectedAirport] = useState(null);
     const today = new Date();
     const [dropOffTime, setDropOffTime] = useState(null);
     const [pickupTime, setPickupTime] = useState(null);
-    const [couponCode, setCouponCode] = useState("");
+    const [couponCode, setCouponCode] = useState("WLCME");
 
     const airports = useSelector((state) => state.vendor.airport);
+
+    useEffect(()=>{
+        const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
+
+       const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+       setDayDifference(dayDifference);
+    },[dropOffDate, pickupDate]);
 
     useEffect(() => {
         fetchAllAirports(dispatch);
@@ -96,7 +105,7 @@ const Home = () => {
             return;
         }
 
-        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode }
+        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode, dayDifference }
         navigate('/results', { state: { quoteInfo } });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -336,6 +345,7 @@ const Home = () => {
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-gift-fill input-grp-icon"></i>
                                                     <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError}
+                                                    value={couponCode}
                                                         onChange={(e) => setCouponCode(e.target.value)} />
                                                 </div>
                                                 {/* {showError &&

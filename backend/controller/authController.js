@@ -38,8 +38,8 @@ const checkUserAlreadyRegistered = async (req, res) => {
   
 
 /* register */
-const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, addressL1, addressL2, city, country, postCode, role) => {
-  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, addressL1, addressL2, city, country, postCode, role);
+const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role) => {
+  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, role);
   try{
     // Check for required fields
     if (!email || 
@@ -48,10 +48,10 @@ const register = async (email, title, firstName, lastName, companyName, password
       (role === 'Vendor' && !companyName) || 
       !password || 
       (role === "User" && !mobileNumber) || 
-      (role === "User" && !addressL1) ||
-      (role === "User" && !city) ||
-      (role === "User" && !country) ||
-      (role === "User" && !postCode) ||
+      // (role === "User" && !addressL1) ||
+      // (role === "User" && !city) ||
+      // (role === "User" && !country) ||
+      // (role === "User" && !postCode) ||
       !role) {
       return {
           error: "Please fill all required fields!",
@@ -113,12 +113,12 @@ const register = async (email, title, firstName, lastName, companyName, password
         ...(["Admin", "User"].includes(role) && { lastname: lastName || "" }),
         ...(role === "Vendor" && { companyName }),
         ...(role === "User" && { mobileNumber }),
-        ...(role === "User" && { addressL1 }),
-        ...(role === "User" && { addressL2: addressL2 || "" }),
+        // ...(role === "User" && { addressL1 }),
+        // ...(role === "User" && { addressL2: addressL2 || "" }),
         role,
-        ...(role === "User" && { city }),
-        ...(role === "User" && { country }),
-        ...(role === "User" && { postCode }),
+        // ...(role === "User" && { city }),
+        // ...(role === "User" && { country }),
+        // ...(role === "User" && { postCode }),
         password: hashedPassword,
         ...(role === "User" && { dp: "" })
     });

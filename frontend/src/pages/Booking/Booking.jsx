@@ -88,18 +88,18 @@ const Booking = () => {
     firstName: "",
     lastName: "",
     mobileNumber: "",
-    addressL1: "",
-    addressL2: "",
-    city: "",
-    country: "",
-    postCode: "",
+    // addressL1: "",
+    // addressL2: "",
+    // city: "",
+    // country: "",
+    // postCode: "",
     role: "User"
   };
 
   const initialTravelDetails = {
     departureTerminal: "",
     arrivalTerminal: "",
-    outBoundFlight: "",
+    // outBoundFlight: "",
     inBoundFlight: ""
   };
 
@@ -447,7 +447,7 @@ const CheckoutForm = () => {
       }
     } else {
       // Validate all required fields
-      if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title || !userDetails.addressL1 || !userDetails.city || !userDetails.country || !userDetails.postCode) {
+      if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title) {
         setShowError(true);
         toast.current.show({
           severity: 'error',
@@ -545,11 +545,11 @@ const CheckoutForm = () => {
         password: userDetails.password,
         mobileNumber: userDetails.mobileNumber,
         title: userDetails.title,
-        addressL1: userDetails.addressL1,
-        addressL2: userDetails.addressL2,
-        city: userDetails.city,
-        country: userDetails.country,
-        postCode: userDetails.postCode,
+        // addressL1: userDetails.addressL1,
+        // addressL2: userDetails.addressL2,
+        // city: userDetails.city,
+        // country: userDetails.country,
+        // postCode: userDetails.postCode,
       };
     }
   
@@ -1021,7 +1021,7 @@ const CheckoutForm = () => {
                                 </label>
                               </div>
 
-                              <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
+                              {/* <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <InputText
                                     id="addressLine1"
@@ -1050,9 +1050,9 @@ const CheckoutForm = () => {
                                     onChange={handleInputChange}
                                   />
                                 </div>
-                              </div>
+                              </div> */}
 
-                              <div className="col-12 col-sm-6 col-xl-6">
+                              {/* <div className="col-12 col-sm-6 col-xl-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <InputText
                                     id="city"
@@ -1104,7 +1104,7 @@ const CheckoutForm = () => {
                                     </small>
                                   )}
                                 </div>
-                              </div>
+                              </div> */}
                             </div>
                             {/*  */}
 
@@ -1166,7 +1166,7 @@ const CheckoutForm = () => {
                         </div>
                       </div>
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      {/* <div className="col-12 col-sm-6 col-xl-6">
                         <div className="custom-form-group mb-3 mb-sm-0">
                           <label
                             htmlFor="outBoundFlight"
@@ -1183,7 +1183,7 @@ const CheckoutForm = () => {
                             placeholder="Enter Outbound"
                           />
                         </div>
-                      </div>
+                      </div> */}
 
                       <div className="col-12 col-sm-6 col-xl-6">
                         <div className="custom-form-group mb-0">
@@ -1319,7 +1319,7 @@ const CheckoutForm = () => {
                     <h4 className="booking-card-head">Optional Extras</h4>
 
                     <div className="row mt-4">
-                      <div className="col-12">
+                      {/* <div className="col-12">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <div className="form-checkbox-area">
                             <Checkbox
@@ -1337,7 +1337,7 @@ const CheckoutForm = () => {
                             </label>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
 
                       <div className="col-12">
                         <div className="custom-form-group mb-0">
@@ -1356,7 +1356,7 @@ const CheckoutForm = () => {
                               htmlFor="cancellationCover"
                               className="ml-2"
                             >
-                              Cancellation Cover - £ 2
+                              Cancellation Cover - £ 8
                             </label>
                           </div>
                         </div>
@@ -1415,7 +1415,7 @@ const CheckoutForm = () => {
 
                     <div className="total-price-area">
                       <h5 className="total-price-text">Total :</h5>
-                      <h5 className="total-price">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
+                      <h5 className="total-price">£ {bookingCharge?.totalPayable || 0}</h5>
                     </div>
 
                     {/* <Divider className="divider-margin" /> */}
@@ -1744,7 +1744,7 @@ const CheckoutForm = () => {
                     <h5 className="total-detail-head text-bold">
                       Total Payable
                     </h5>
-                    <h5 className="total-detail-price text-bold">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
+                    <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalPayable || 0}</h5>
                   </div>
                 </div>
               </article>
