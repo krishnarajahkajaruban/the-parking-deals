@@ -32,6 +32,7 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [dropOffDate, setDropOffDate] = useState(null);
     const [pickupDate, setPickupDate] = useState(null);
+    const [dayDifference, setDayDifference] = useState(0);
     const [showError, setShowError] = useState(false);
     const [selectedAirport, setSelectedAirport] = useState(null);
     const today = new Date();
@@ -40,6 +41,14 @@ const Home = () => {
     const [couponCode, setCouponCode] = useState("WLCME");
 
     const airports = useSelector((state) => state.vendor.airport);
+
+    useEffect(()=>{
+        const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
+
+       const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+       setDayDifference(dayDifference);
+    },[dropOffDate, pickupDate]);
 
     useEffect(() => {
         fetchAllAirports(dispatch);
@@ -96,7 +105,7 @@ const Home = () => {
             return;
         }
 
-        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode }
+        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode, dayDifference }
         navigate('/results', { state: { quoteInfo } });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }

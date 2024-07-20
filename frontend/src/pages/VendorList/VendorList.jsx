@@ -30,6 +30,7 @@ const VendorList = () => {
   const [loading, setLoading] = useState(false);
   const [dropOffDate, setDropOffDate] = useState(quoteInfo?.dropOffDate || null);
   const [pickupDate, setPickupDate] = useState(quoteInfo?.pickupDate || null);
+  const [dayDifference, setDayDifference] = useState(quoteInfo?.dayDifference || 0);
   const [showError, setShowError] = useState(false);
   const [selectedAirport, setSelectedAirport] = useState(quoteInfo?.selectedAirport || null);
   const today = new Date();
@@ -41,6 +42,14 @@ const VendorList = () => {
   const quotes = useSelector((state) => state.vendor.quotes);
 
   const [selectedVendor, setSelectedVendor] = useState(null);
+
+    useEffect(()=>{
+      const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
+
+    const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+    setDayDifference(dayDifference);
+  },[dropOffDate, pickupDate]);
 
   useEffect(() => {
     fetchAllAirports(dispatch);
@@ -62,7 +71,7 @@ const VendorList = () => {
     });
     setLoading(true);
     setPageLoading(true);
-    getAvailableQuotes(queryParams, dispatch, toast, setLoading, setPageLoading);
+    getAvailableQuotes(queryParams, dispatch, toast, setLoading, setPageLoading, dayDifference);
   };
 
   const selectedAirportTemplate = (option, props) => {
@@ -287,7 +296,7 @@ const VendorList = () => {
                       <Divider className="mt-4 mb-4" />
                     </div>
 
-                    <div className="col-12 col-xl-8 col-lg-10 mx-auto">
+                    {/* <div className="col-12 col-xl-8 col-lg-10 mx-auto">
                       <div className="row">
                         <div className="col-12 col-sm-6">
                           <div className="custom-form-group mb-3 mb-md-0 input-with-icon">
@@ -321,7 +330,7 @@ const VendorList = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </article>
@@ -844,7 +853,7 @@ const VendorList = () => {
                       tabindex="0"
                     >
                       <div className="tab-detail-content-area">
-                        <h1>Why Use {selectedVendor?.name}?</h1>
+                        {/* <h1>Why Use {selectedVendor?.name}?</h1>
                         <ul>
                           <li>
                             {selectedVendor?.name} Meet and Greet airport parking
@@ -947,9 +956,10 @@ const VendorList = () => {
                           the airport to avoid any penalty tickets. The
                           operator will not be liable in case you receive a
                           penalty for not paying the ULEZ charge.
-                        </p>
-                      </div>
-                    </div>
+                        </p> */}
+                        {selectedVendor?.overView}
+                      </div> 
+                      </div> 
                     {/*  */}
 
                     {/* Drop-Off Procedure */}
@@ -961,7 +971,7 @@ const VendorList = () => {
                       tabindex="0"
                     >
                       <div className="tab-detail-content-area">
-                        <p>
+                        {/* <p>
                           Beginning on August 29, 2023, the Ultra Low Emission
                           Zone (ULEZ) in London has been extended to cover the
                           entire Greater London area, Heathrow Airport
@@ -1167,7 +1177,8 @@ const VendorList = () => {
                             ticket pay machine. They will be wearing black
                             jackets and be expecting you.
                           </li>
-                        </ul>
+                        </ul> */}
+                        {selectedVendor?.dropOffProcedure}
                       </div>
                     </div>
                     {/*  */}
@@ -1181,7 +1192,7 @@ const VendorList = () => {
                       tabindex="0"
                     >
                       <div className="tab-detail-content-area">
-                        <p>
+                        {/* <p>
                           Please do call us on 07479 259 475 once arrived at
                           the airport.
                         </p>
@@ -1244,7 +1255,8 @@ const VendorList = () => {
                           (Level 4, Short Stay car park), where your car will
                           be ready and waiting for you in Row R or S Off
                           Airport Parking Meet & Greet bays.
-                        </p>
+                        </p> */}
+                        {selectedVendor?.pickUpProcedure}
                       </div>
                     </div>
                     {/*  */}

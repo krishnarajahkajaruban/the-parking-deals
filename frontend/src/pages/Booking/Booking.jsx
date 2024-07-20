@@ -1319,7 +1319,7 @@ const CheckoutForm = () => {
                     <h4 className="booking-card-head">Optional Extras</h4>
 
                     <div className="row mt-4">
-                      <div className="col-12">
+                      {/* <div className="col-12">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <div className="form-checkbox-area">
                             <Checkbox
@@ -1337,7 +1337,7 @@ const CheckoutForm = () => {
                             </label>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
 
                       <div className="col-12">
                         <div className="custom-form-group mb-0">
@@ -1356,7 +1356,7 @@ const CheckoutForm = () => {
                               htmlFor="cancellationCover"
                               className="ml-2"
                             >
-                              Cancellation Cover - £ 2
+                              Cancellation Cover - £ 8
                             </label>
                           </div>
                         </div>
@@ -1415,7 +1415,7 @@ const CheckoutForm = () => {
 
                     <div className="total-price-area">
                       <h5 className="total-price-text">Total :</h5>
-                      <h5 className="total-price">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
+                      <h5 className="total-price">£ {bookingCharge?.totalPayable || 0}</h5>
                     </div>
 
                     {/* <Divider className="divider-margin" /> */}
@@ -1744,7 +1744,7 @@ const CheckoutForm = () => {
                     <h5 className="total-detail-head text-bold">
                       Total Payable
                     </h5>
-                    <h5 className="total-detail-price text-bold">£ {Math.round(bookingCharge?.totalPayable) || 0}</h5>
+                    <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalPayable || 0}</h5>
                   </div>
                 </div>
               </article>

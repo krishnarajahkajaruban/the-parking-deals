@@ -323,19 +323,29 @@ const carParkingBookingDetail = async (req, res) => {
             token = generateToken(user, process.env.JWT_SECRET);
         }
 
-        const dropOff = new Date(dropOffDate);
-        const pickUp = new Date(pickUpDate);
+        const fromDateObj = new Date(dropOffDate);
+        const toDateObj = new Date(pickUpDate);
         const now = new Date();
-        
+
+        // Function to get the date part only in ISO format
+        const getDatePart = (date) => date.toISOString().split('T')[0];
+
+        const fromDatePart = getDatePart(fromDateObj);
+        const toDatePart = getDatePart(toDateObj);
+        const nowDatePart = getDatePart(now);
+
+        console.log('From Date:', fromDatePart);
+        console.log('Now:', nowDatePart);
+
         // Check if dropOffDate is today or in the future
-        if (dropOff < now) {
-          return res.status(400).json({ error: "dropOffDate must be today or in the future."});
-        };
+        if (fromDatePart < nowDatePart) {
+          return res.status(400).json({ error: "dropOffDate must be today or in the future." });
+        }
 
         // Check if dropOffDate is less than pickUpDate
-        if (dropOff >= pickUp) {
-          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate."});
-        };
+        if (fromDatePart > toDatePart) {
+          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
+        }
 
         const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
 
@@ -378,8 +388,7 @@ const carParkingBookingDetail = async (req, res) => {
                   name: "Car Parking Booking",
                   images: ["https://res.cloudinary.com/piragashcloud/image/upload/v1721238830/logo512_dmvwkk.png"]
                 },
-                // unit_amount: Math.round(bookingResult.totalPayable * 100)
-                unit_amount: 0.3 * 100
+                unit_amount: Math.round(bookingResult.totalPayable * 100)
               },
               quantity: 1
             }
@@ -443,9 +452,9 @@ const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfir
         const cancellationCoverCharge = cancellationCover ? cancellationCoverFee : 0;
 
         // Calculate total amounts
-        const totalBeforeDiscount = Number(bookingQuote) + bookingFee + smsConfirmationCharge + cancellationCoverCharge;
+        const totalBeforeDiscount = Math.round(Number(bookingQuote) + bookingFee + smsConfirmationCharge + cancellationCoverCharge);
         const discountAmount = totalBeforeDiscount * (couponDiscount / 100);
-        const totalPayable = totalBeforeDiscount - discountAmount;
+        const totalPayable = Math.round(totalBeforeDiscount - discountAmount);
 
         // Respond with calculated values
         return {
@@ -556,16 +565,26 @@ const findAllVendorDetailForUserSearchedParkingSlot = async (req, res) => {
       const fromDateObj = new Date(fromDate);
       const toDateObj = new Date(toDate);
       const now = new Date();
-        
-        // Check if dropOffDate is today or in the future
-        if (fromDateObj < now) {
-          return res.status(400).json({ error: "dropOffDate must be today or in the future."});
-        };
 
-        // Check if dropOffDate is less than pickUpDate
-        if (fromDateObj >= toDateObj) {
-          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate."});
-        };
+      // Function to get the date part only in ISO format
+      const getDatePart = (date) => date.toISOString().split('T')[0];
+
+      const fromDatePart = getDatePart(fromDateObj);
+      const toDatePart = getDatePart(toDateObj);
+      const nowDatePart = getDatePart(now);
+
+      console.log('From Date:', fromDatePart);
+      console.log('Now:', nowDatePart);
+
+      // Check if dropOffDate is today or in the future
+      if (fromDatePart < nowDatePart) {
+        return res.status(400).json({ error: "dropOffDate must be today or in the future." });
+      }
+
+      // Check if dropOffDate is less than pickUpDate
+      if (fromDatePart >= toDatePart) {
+        return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
+      }
 
       // Using aggregation to get the user details
       const result = await AirportParkingAvailability.aggregate([
