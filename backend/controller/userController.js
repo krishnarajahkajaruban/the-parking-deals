@@ -272,7 +272,7 @@ const carParkingBookingDetail = async (req, res) => {
             cancellationCover
         } = req.body;
 
-        const { email, title, firstName, lastName, password, mobileNumber, addressL1, addressL2, city, country, postCode, accessToken, registeredStatus } = userDetail;
+        const { email, title, firstName, lastName, password, mobileNumber, accessToken, registeredStatus } = userDetail;
 
         if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail 
           // || !cardDetail 
@@ -313,7 +313,7 @@ const carParkingBookingDetail = async (req, res) => {
             user = result.user;
             token = result.token;
         } else {
-            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, addressL1, addressL2, city, country, postCode, "User");
+            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User");
 
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
@@ -650,7 +650,7 @@ const updateUserInfo = async (req, res) => {
   try {
       const {
           email, title, firstName, lastName,
-          mobileNumber, addressL1, addressL2, city, country, postCode
+          mobileNumber,
       } = req.body;
 
       const { id } = req.user;
@@ -671,11 +671,11 @@ const updateUserInfo = async (req, res) => {
       const parsedFirstName = firstName 
       const parsedLastName = lastName 
       const parsedMobileNumber = mobileNumber 
-      const parsedAddressL1 = addressL1 
-      const parsedAddressL2 = addressL2 
-      const parsedCity = city 
-      const parsedCountry = country 
-      const parsedPostCode = postCode 
+      // const parsedAddressL1 = addressL1 
+      // const parsedAddressL2 = addressL2 
+      // const parsedCity = city 
+      // const parsedCountry = country 
+      // const parsedPostCode = postCode 
 
       const userDetailTobeUpdated = await User.findById(id);
 
@@ -719,11 +719,11 @@ const updateUserInfo = async (req, res) => {
           firstName: parsedFirstName || userDetailTobeUpdated.firstName, 
           lastName: parsedLastName || userDetailTobeUpdated.lastname,
           mobileNumber: parsedMobileNumber || userDetailTobeUpdated.mobileNumber, 
-          addressL1: parsedAddressL1 || userDetailTobeUpdated.addressL1,
-          addressL2: parsedAddressL2 || userDetailTobeUpdated.addressL2, 
-          city: parsedCity || userDetailTobeUpdated.city, 
-          country: parsedCountry || userDetailTobeUpdated.country, 
-          postCode: parsedPostCode || userDetailTobeUpdated.postCode
+          // addressL1: parsedAddressL1 || userDetailTobeUpdated.addressL1,
+          // addressL2: parsedAddressL2 || userDetailTobeUpdated.addressL2, 
+          // city: parsedCity || userDetailTobeUpdated.city, 
+          // country: parsedCountry || userDetailTobeUpdated.country, 
+          // postCode: parsedPostCode || userDetailTobeUpdated.postCode
       };
 
       // Only set 'dp' field if a new file was uploaded

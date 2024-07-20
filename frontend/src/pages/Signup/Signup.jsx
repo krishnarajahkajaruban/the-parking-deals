@@ -63,11 +63,11 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
     mobileNumber: "",
-    addressL1: "",
-    addressL2: "",
-    city: "",
-    country: "",
-    postCode: "",
+    // addressL1: "",
+    // addressL2: "",
+    // city: "",
+    // country: "",
+    // postCode: "",
     role: "User"
   };
   const [signUpInfo, setSignUpInfo] = useState(initialSignUpInfo);
@@ -168,7 +168,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!signUpInfo.email || !signUpInfo.firstName || !signUpInfo.password || !signUpInfo.confirmPassword || !signUpInfo.mobileNumber || !signUpInfo.title || !signUpInfo.addressL1 || !signUpInfo.city || !signUpInfo.country || !signUpInfo.postCode) {
+    if (!signUpInfo.email || !signUpInfo.firstName || !signUpInfo.password || !signUpInfo.confirmPassword || !signUpInfo.mobileNumber || !signUpInfo.title) {
       setShowError(true);
       toast.current.show({
         severity: 'error',
@@ -656,7 +656,7 @@ const Signup = () => {
                         </div>
                       </div>
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      {/* <div className="col-12 col-sm-6 col-xl-6">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
                             htmlFor="addressLine1"
@@ -695,37 +695,13 @@ const Signup = () => {
                             value={signUpInfo.addressL2}
                             onChange={handleInputChange}
                           />
-                          {/* {showError && (
-                            <small className="text-danger form-error-msg">
-                              This field is required
-                            </small>
-                          )} */}
-                        </div>
-                      </div>
-
-                      {/* <div className="col-12">
-                        <div className="custom-form-group mb-3 mb-sm-4">
-                          <label
-                            htmlFor="address"
-                            className="custom-form-label"
-                          >
-                            Address
-                          </label>
-                          <textarea
-                            id="address"
-                            className="custom-form-input"
-                            name="address"
-                            value={signUpInfo.address}
-                            onChange={handleInputChange}
-                          ></textarea>
                           {showError && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
                           )}
                         </div>
-                      </div> */}
-
+                      </div>
                       <div className="col-12 col-sm-6 col-xl-4 col-lg-4">
                         <div className="custom-form-group mb-3 mb-sm-4">
                           <label
@@ -793,7 +769,7 @@ const Signup = () => {
                             </small>
                           )}
                         </div>
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="custom-form-group contains-float-input">

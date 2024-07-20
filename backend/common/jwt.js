@@ -9,12 +9,12 @@ const generateToken = (user, secret, expiresIn = '1d') => {
     ...(["Admin", "User"].includes(user.role) && { lastName: user.lastname }),
     ...(user.role === "Vendor" && { companyName: user.companyName }),
     ...(user.role === "User" && { mobileNumber: user.mobileNumber}),
-    ...(user.role === "User" && {addressL1: user.addressL1}),
-    ...(user.role === "User" && {addressL2: user.addressL2}),
+    // ...(user.role === "User" && {addressL1: user.addressL1}),
+    // ...(user.role === "User" && {addressL2: user.addressL2}),
     role: user.role,
-    ...(user.role === "User" && {city: user.city}),
-    ...(user.role === "User" && {country: user.country}),
-    ...(user.role === "User" && {postCode: user.postCode}),
+    // ...(user.role === "User" && {city: user.city}),
+    // ...(user.role === "User" && {country: user.country}),
+    // ...(user.role === "User" && {postCode: user.postCode}),
     ...(user.role === "User" && {dp: user.dp})
   };
 

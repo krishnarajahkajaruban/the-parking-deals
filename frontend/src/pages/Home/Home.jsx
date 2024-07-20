@@ -37,7 +37,7 @@ const Home = () => {
     const today = new Date();
     const [dropOffTime, setDropOffTime] = useState(null);
     const [pickupTime, setPickupTime] = useState(null);
-    const [couponCode, setCouponCode] = useState("");
+    const [couponCode, setCouponCode] = useState("WLCME");
 
     const airports = useSelector((state) => state.vendor.airport);
 
@@ -336,6 +336,7 @@ const Home = () => {
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-gift-fill input-grp-icon"></i>
                                                     <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError}
+                                                    value={couponCode}
                                                         onChange={(e) => setCouponCode(e.target.value)} />
                                                 </div>
                                                 {/* {showError &&

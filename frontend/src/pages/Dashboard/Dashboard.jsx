@@ -47,11 +47,11 @@ const Dashboard = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
-    const [addressL1, setAddressL1] = useState('');
-    const [addressL2, setAddressL2] = useState('');
-    const [city, setCity] = useState('');
-    const [country, setCountry] = useState('');
-    const [postCode, setPostCode] = useState('');
+    // const [addressL1, setAddressL1] = useState('');
+    // const [addressL2, setAddressL2] = useState('');
+    // const [city, setCity] = useState('');
+    // const [country, setCountry] = useState('');
+    // const [postCode, setPostCode] = useState('');
 
     const user = useSelector((state) => state.auth.user);
     const token = useSelector((state) => state.auth.token);
@@ -70,11 +70,11 @@ const Dashboard = () => {
         firstName: user?.firstName || "",
         lastName: user?.lastname || "",
         mobileNumber: user?.mobileNumber || "",
-        addressL1: user?.addressL1 || "",
-        addressL2: user?.addressL2 || "",
-        city: user?.city || "",
-        country: user?.country || "",
-        postCode: user?.postCode || "",
+        // addressL1: user?.addressL1 || "",
+        // addressL2: user?.addressL2 || "",
+        // city: user?.city || "",
+        // country: user?.country || "",
+        // postCode: user?.postCode || "",
     };
 
     const [userInfo, setUserInfo] = useState(initialUserInfo);
@@ -159,7 +159,7 @@ const Dashboard = () => {
     };
 
     const handleProfileUpdate = () => {
-        if (!userInfo.firstName || !userInfo.mobileNumber || !userInfo.title || !userInfo.addressL1 || !userInfo.city || !userInfo.country || !userInfo.postCode) {
+        if (!userInfo.firstName || !userInfo.mobileNumber || !userInfo.title) {
             setShowError(true);
             toast.current.show({
                 severity: 'error',
@@ -175,11 +175,11 @@ const Dashboard = () => {
         formData.append('firstName', userInfo.firstName);
         formData.append('lastName', userInfo.lastName);
         formData.append('mobileNumber', userInfo.mobileNumber);
-        formData.append('addressL1', userInfo.addressL1);
-        formData.append('addressL2', userInfo.addressL2);
-        formData.append('city', userInfo.city);
-        formData.append('country', userInfo.country);
-        formData.append('postCode', userInfo.postCode);
+        // formData.append('addressL1', userInfo.addressL1);
+        // formData.append('addressL2', userInfo.addressL2);
+        // formData.append('city', userInfo.city);
+        // formData.append('country', userInfo.country);
+        // formData.append('postCode', userInfo.postCode);
 
         if (imgFile) {
             formData.append('dp', imgFile);
@@ -458,7 +458,7 @@ const Dashboard = () => {
                                 </h6>
                               </div>
 
-                              <div className="dashboard-profile-detail mb-0">
+                              {/* <div className="dashboard-profile-detail mb-0">
                                 <h6 className="dashboard-profile-detail-title">
                                   <i className="bi bi-geo-alt-fill"></i>
                                   Address :
@@ -466,7 +466,7 @@ const Dashboard = () => {
                                 <h6 className="dashboard-profile-content">
                                   {user?.addressL1 || "-"} {user?.addressL2}
                                 </h6>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>
@@ -667,7 +667,7 @@ const Dashboard = () => {
                             </label>
                           </div>
 
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                             <div className="custom-form-group mb-3 mb-sm-4">
                               <InputText
                                 id="addressL1"
@@ -696,9 +696,9 @@ const Dashboard = () => {
                                 onChange={handleInputChange}
                               />
                             </div>
-                          </div>
+                          </div> */}
 
-                          <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                          {/* <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                             <div className="custom-form-group mb-3 mb-sm-0">
                               <InputText
                                 id="city"
@@ -750,7 +750,7 @@ const Dashboard = () => {
                                 </small>
                               )}
                             </div>
-                          </div>
+                          </div> */}
                         </div>
 
                         <Divider className="divider-margin mt-3 mb-3 mt-sm-4 mb-sm-4" />

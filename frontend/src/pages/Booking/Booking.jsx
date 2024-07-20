@@ -88,18 +88,18 @@ const Booking = () => {
     firstName: "",
     lastName: "",
     mobileNumber: "",
-    addressL1: "",
-    addressL2: "",
-    city: "",
-    country: "",
-    postCode: "",
+    // addressL1: "",
+    // addressL2: "",
+    // city: "",
+    // country: "",
+    // postCode: "",
     role: "User"
   };
 
   const initialTravelDetails = {
     departureTerminal: "",
     arrivalTerminal: "",
-    outBoundFlight: "",
+    // outBoundFlight: "",
     inBoundFlight: ""
   };
 
@@ -447,7 +447,7 @@ const CheckoutForm = () => {
       }
     } else {
       // Validate all required fields
-      if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title || !userDetails.addressL1 || !userDetails.city || !userDetails.country || !userDetails.postCode) {
+      if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title) {
         setShowError(true);
         toast.current.show({
           severity: 'error',
@@ -545,11 +545,11 @@ const CheckoutForm = () => {
         password: userDetails.password,
         mobileNumber: userDetails.mobileNumber,
         title: userDetails.title,
-        addressL1: userDetails.addressL1,
-        addressL2: userDetails.addressL2,
-        city: userDetails.city,
-        country: userDetails.country,
-        postCode: userDetails.postCode,
+        // addressL1: userDetails.addressL1,
+        // addressL2: userDetails.addressL2,
+        // city: userDetails.city,
+        // country: userDetails.country,
+        // postCode: userDetails.postCode,
       };
     }
   
@@ -1021,7 +1021,7 @@ const CheckoutForm = () => {
                                 </label>
                               </div>
 
-                              <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
+                              {/* <div className="col-12 col-sm-6 col-lg-12 col-xl-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <InputText
                                     id="addressLine1"
@@ -1050,9 +1050,9 @@ const CheckoutForm = () => {
                                     onChange={handleInputChange}
                                   />
                                 </div>
-                              </div>
+                              </div> */}
 
-                              <div className="col-12 col-sm-6 col-xl-6">
+                              {/* <div className="col-12 col-sm-6 col-xl-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <InputText
                                     id="city"
@@ -1104,7 +1104,7 @@ const CheckoutForm = () => {
                                     </small>
                                   )}
                                 </div>
-                              </div>
+                              </div> */}
                             </div>
                             {/*  */}
 
@@ -1166,7 +1166,7 @@ const CheckoutForm = () => {
                         </div>
                       </div>
 
-                      <div className="col-12 col-sm-6 col-xl-6">
+                      {/* <div className="col-12 col-sm-6 col-xl-6">
                         <div className="custom-form-group mb-3 mb-sm-0">
                           <label
                             htmlFor="outBoundFlight"
@@ -1183,7 +1183,7 @@ const CheckoutForm = () => {
                             placeholder="Enter Outbound"
                           />
                         </div>
-                      </div>
+                      </div> */}
 
                       <div className="col-12 col-sm-6 col-xl-6">
                         <div className="custom-form-group mb-0">

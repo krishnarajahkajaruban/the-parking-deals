@@ -51,41 +51,41 @@ const userSchema = new Schema(
       enum: ["Admin", "User", "Vendor"],
       required: [true, "Role must be provided"]
     },
-    addressL1: {
-      type: String,
-      required: function() {
-        return this.role === "User";
-      },
-    },
-    addressL2: {
-      type: String,
-      set: function(value) {
-        // If the role is not 'User', return undefined to prevent setting a default value
-        if (this.role !== "User") {
-          return undefined;
-        }
-        // If the role is 'User', return the provided value or an empty string if not provided
-        return value || "";
-      }
-    },
-    city: {
-      type: String,
-      required: function() {
-        return this.role === "User";
-      },
-    },
-    country: {
-      type: String,
-      required: function() {
-        return this.role === "User";
-      },
-    },
-    postCode: {
-      type: String,
-      required: function() {
-        return this.role === "User";
-      },
-    },
+    // addressL1: {
+    //   type: String,
+    //   required: function() {
+    //     return this.role === "User";
+    //   },
+    // },
+    // addressL2: {
+    //   type: String,
+    //   set: function(value) {
+    //     // If the role is not 'User', return undefined to prevent setting a default value
+    //     if (this.role !== "User") {
+    //       return undefined;
+    //     }
+    //     // If the role is 'User', return the provided value or an empty string if not provided
+    //     return value || "";
+    //   }
+    // },
+    // city: {
+    //   type: String,
+    //   required: function() {
+    //     return this.role === "User";
+    //   },
+    // },
+    // country: {
+    //   type: String,
+    //   required: function() {
+    //     return this.role === "User";
+    //   },
+    // },
+    // postCode: {
+    //   type: String,
+    //   required: function() {
+    //     return this.role === "User";
+    //   },
+    // },
     dp: {
       type: String,
       set: function(value) {
