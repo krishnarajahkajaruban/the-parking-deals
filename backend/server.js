@@ -157,16 +157,19 @@ const sendEmailToUser = async (booking, user, type) => {
                   <p>Travel Details:</p>
                   <li>Departure Terminal: ${booking.travelDetail.departureTerminal}</li>
                   <li>Arrival Terminal: ${booking.travelDetail.arrivalTerminal}</li>
+                  <li>Inbound Flight: ${booking.travelDetail.inBoundFlight}</li>
                   <br>
                   <p>Vehicle Details:</p>
                   ${booking.vehicleDetail.map(vehicle => `
                       <ul>
                           <li>Reg No: ${vehicle.regNo}</li>
                           <li>Color: ${vehicle.color}</li>
+                          <li>Make: ${vehicle.make || "-"}</li>
+                          <li>Model: ${vehicle.model || "-"}</li>
                       </ul>
                   `).join('')}
                   <p>If you have any questions, please contact our support team at <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>.</p>
-                  <p>Thank you for choosing Air Wing Parking Hub. We look forward to serving you.</p>
+                  <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
               </div>
           </div>
       `
@@ -201,6 +204,7 @@ const sendEmailToCompany = async (booking, user, type) => {
                       <p>Travel Details:</p>
                       <li>Departure Terminal: ${booking.travelDetail.departureTerminal}</li>
                       <li>Arrival Terminal: ${booking.travelDetail.arrivalTerminal}</li>
+                      <li>Inbound Flight: ${booking.travelDetail.inBoundFlight}</li>
                   </br>
                   <br>
                       <p>Vehicle Details:</p>
@@ -208,17 +212,18 @@ const sendEmailToCompany = async (booking, user, type) => {
                           <ul>
                               <li>Reg No: ${vehicle.regNo}</li>
                               <li>Color: ${vehicle.color}</li>
+                              <li>Make: ${vehicle.make || "-"}</li>
+                              <li>Model: ${vehicle.model || "-"}</li>
                           </ul>
                       `).join('')}
                   ! We're excited to have you on board.</p>
                   <p>If you have any questions, please contact our support team at <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>.</p>
-                  <p>Thank you for choosing Air Wing Parking Hub. We look forward to serving you.</p>
+                  <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
               </div>
           </div>
       `
   );
 };
-
 
 // Routes
 app.use("/api/auth", authRouter);
