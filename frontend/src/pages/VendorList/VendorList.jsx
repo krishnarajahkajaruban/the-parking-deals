@@ -1508,6 +1508,9 @@ const VendorList = () => {
                     <Button
                       label="BOOK"
                       className="custom-btn-primary w-100 result-card-btn"
+                      // class="btn-close"
+                      data-bs-dismiss="modal"
+                      // aria-label="Close"
                       onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.name, selectedVendor?.logo, selectedVendor?.finalQuote, selectedVendor?.type)}
                     />
                   </article>
