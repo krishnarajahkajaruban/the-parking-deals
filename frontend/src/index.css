@@ -308,7 +308,7 @@ code {
   position: fixed;
   z-index: 999;
   width: 100%;
-  top: 0px;
+  top: 35px;
   left: 0;
   padding: 45px 0;
   /* background: transparent; */
@@ -824,6 +824,7 @@ code {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  margin-top: 35px;
 }
 
 .breadcrumb-title {
@@ -1690,7 +1691,9 @@ button.custom-form-link:disabled {
 .content-collapse-section .p-accordion .p-accordion-content a:hover {
   text-decoration: underline;
 }
-
+.p-toast{
+  z-index: 99999 !important;
+}
 .p-toast .p-toast-message {
   border: none;
   border-radius: 10px;
@@ -2378,6 +2381,28 @@ button.custom-form-link:disabled {
   height: 4rem !important;
 }
 
-.p-datepicker table td > span.p-disabled{
+.p-datepicker table td>span.p-disabled {
   color: #a1a1a1;
+}
+
+.promotion-label {
+  text-align: center;
+  padding: 10px;
+  background-color: var(--color-secondary);
+  width: 100%;
+  top: 0;
+  z-index: 9999;
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+}
+
+.promotion-label h6 {
+  margin-bottom: 0;
+  font-size: 13px;
+  color: #ffffff;
 }

@@ -42,13 +42,13 @@ const Home = () => {
 
     const airports = useSelector((state) => state.vendor.airport);
 
-    useEffect(()=>{
+    useEffect(() => {
         const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
 
-       const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+        const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-       setDayDifference(dayDifference);
-    },[dropOffDate, pickupDate]);
+        setDayDifference(dayDifference);
+    }, [dropOffDate, pickupDate]);
 
     useEffect(() => {
         fetchAllAirports(dispatch);
@@ -272,7 +272,7 @@ const Home = () => {
                                                     <div className="form-icon-group">
                                                         <i className="bi bi-airplane-fill input-grp-icon"></i>
                                                         <Dropdown id='airport' value={selectedAirport} onChange={(e) => setSelectedAirport(e.value)} options={airports} optionLabel="name" placeholder="Select a Airport"
-                                                             valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
+                                                            valueTemplate={selectedAirportTemplate} itemTemplate={airportOptionTemplate} className="w-full w-100 custom-form-dropdown" invalid={showError} />
                                                     </div>
                                                     {(showError && !selectedAirport) &&
                                                         <small className="text-danger form-error-msg text-sm-center">This field is required</small>
@@ -292,7 +292,7 @@ const Home = () => {
                                                 <label htmlFor="dropOffDate" className="custom-form-label form-required">Drop off date</label>
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-calendar-check-fill input-grp-icon"></i>
-                                                    <Calendar id="dropOffDate" value={dropOffDate} onChange={handleDropOffDateChange} placeholder='dd/mm/yyyy' minDate={today} className='w-100' invalid={showError} />
+                                                    <Calendar id="dropOffDate" value={dropOffDate} onChange={handleDropOffDateChange} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={today} className='w-100' invalid={showError} />
                                                 </div>
                                                 {(showError && !dropOffDate) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
@@ -318,7 +318,7 @@ const Home = () => {
                                                 <label htmlFor="pickupDate" className="custom-form-label form-required">Pickup date</label>
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-calendar-check-fill input-grp-icon"></i>
-                                                    <Calendar id="pickupDate" value={pickupDate} onChange={(e) => setPickupDate(e.value)} placeholder='dd/mm/yyyy' minDate={dropOffDate} disabled={!dropOffDate} className='w-100' invalid={showError} />
+                                                    <Calendar id="pickupDate" value={pickupDate} onChange={(e) => setPickupDate(e.value)} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={dropOffDate} disabled={!dropOffDate} className='w-100' invalid={showError} />
                                                 </div>
                                                 {(showError && !pickupDate) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
@@ -345,7 +345,7 @@ const Home = () => {
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-gift-fill input-grp-icon"></i>
                                                     <InputText id="couponCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError}
-                                                    value={couponCode}
+                                                        value={couponCode}
                                                         onChange={(e) => setCouponCode(e.target.value)} />
                                                 </div>
                                                 {/* {showError &&

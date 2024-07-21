@@ -14,6 +14,8 @@ const Header = () => {
     const user = useSelector((state) => state.auth.user);
     const [pageLoading, setPageLoading] = useState(false);
 
+    const [couponCode, setCouponCode] = useState("WLCME");
+
     const handleNavigate = (url) => {
         setPageLoading(true);
         setTimeout(() => {
@@ -89,6 +91,9 @@ const Header = () => {
                 <div class="loader"></div>
             </div> */}
             <header>
+                <div className='promotion-label'>
+                    <h6>Use <b>{couponCode}</b> promo code to get 10% off for your bookings</h6>
+                </div>
                 <nav className={`nav-section ${scrolled ? 'scrolled' : ''}`}>
                     <div className="container-md">
                         <div className="row">

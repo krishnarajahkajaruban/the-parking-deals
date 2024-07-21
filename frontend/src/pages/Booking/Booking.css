@@ -145,7 +145,7 @@
     gap: 15px;
 }
 
-.custom-form-flex-group .aply-btn {
+.aply-btn {
     background-color: #37348b;
     border-color: #37348b !important;
     justify-content: center;
@@ -153,11 +153,11 @@
     padding-right: 30px;
 }
 
-.custom-form-flex-group .aply-btn:hover {
+.aply-btn:hover {
     background-color: #222057;
 }
 
-.custom-form-flex-group .aply-btn:focus {
+.aply-btn:focus {
     box-shadow: 0px 0px 0px 4px #37348b2c !important;
     border-color: #222057 !important;
 }

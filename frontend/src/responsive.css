@@ -94,12 +94,12 @@
         font-size: 15px !important;
     }
 
-    .detail-card-info-icon-area i{
+    .detail-card-info-icon-area i {
         font-size: 18px;
     }
 
     .account-agree-area label,
-    .account-agree-area label a{
+    .account-agree-area label a {
         font-size: 13px;
     }
 }
@@ -625,6 +625,11 @@
 
     .custom-modal .modal-header {
         padding: 10px;
+    }
+
+    .promotion-label h6 {
+        font-size: 12px;
+        text-wrap: nowrap;
     }
 }
 

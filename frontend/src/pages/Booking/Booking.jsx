@@ -20,7 +20,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../../api';
 import { sendVerificationEmail, verifyOTP } from '../../utils/authUtil';
-import {loadStripe} from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { setLogin } from '../../state';
 
@@ -79,7 +79,7 @@ const Booking = () => {
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
 
-  
+
   const initalUserDetails = {
     email: "",
     password: "",
@@ -129,81 +129,81 @@ const Booking = () => {
   const [cardDetails, setCardDetails] = useState(initialCardDetails);
   const [bookingCharge, setBookingCharge] = useState();
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
+  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
-const CheckoutForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const CheckoutForm = () => {
+    const stripe = useStripe();
+    const elements = useElements();
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    const handleSubmit = async (event) => {
+      event.preventDefault();
 
-    if (!stripe || !elements) {
-      return;
-    }
+      if (!stripe || !elements) {
+        return;
+      }
 
-    const cardElement = elements.getElement(CardElement);
+      const cardElement = elements.getElement(CardElement);
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
-    });
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+      });
 
-    if (error) {
-      setError(error.message);
-      return;
-    }
+      if (error) {
+        setError(error.message);
+        return;
+      }
 
-    const response = await fetch(`${process.env.REACT_APP_BASEURL}/create-payment-intent`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ amount: 1000 }), // Amount in cents
-    });
+      const response = await fetch(`${process.env.REACT_APP_BASEURL}/create-payment-intent`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: 1000 }), // Amount in cents
+      });
 
-    const { clientSecret } = await response.json();
+      const { clientSecret } = await response.json();
 
-    const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: paymentMethod.id,
-    });
+      const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: paymentMethod.id,
+      });
 
-    if (confirmError) {
-      setError(confirmError.message);
-      return;
-    }
+      if (confirmError) {
+        setError(confirmError.message);
+        return;
+      }
 
-    if (paymentIntent.status === 'succeeded') {
-      setSuccess(true);
-    }
-  };
+      if (paymentIntent.status === 'succeeded') {
+        setSuccess(true);
+      }
+    };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button type="submit" disabled={!stripe}>Pay</button> 
-      {/* <Button
+    return (
+      <form onSubmit={handleSubmit}>
+        <CardElement />
+        <button type="submit" disabled={!stripe}>Pay</button>
+        {/* <Button
         type='submit'
         label="CONFIRM BOOKING"
         className="custom-btn-primary w-100 result-card-btn"
         // onClick={handleBooking}
         disabled={!isAgreed || !stripe}
         /> */}
-      {error && <div>{error}</div>}
-      {success && <div>Payment successful!</div>}
-    </form>
-  );
-};
+        {error && <div>{error}</div>}
+        {success && <div>Payment successful!</div>}
+      </form>
+    );
+  };
 
-    const PaymentForm = () => {
-      return (
-        <Elements stripe={stripePromise}>
-          <CheckoutForm />
-        </Elements>
-      );
-    };
+  const PaymentForm = () => {
+    return (
+      <Elements stripe={stripePromise}>
+        <CheckoutForm />
+      </Elements>
+    );
+  };
 
   const calculatingBookingCharge = async () => {
     try {
@@ -230,7 +230,7 @@ const CheckoutForm = () => {
 
   useEffect(() => {
     if (bookingDetails?.bookingQuote) {
-      
+
       calculatingBookingCharge();
     }
   }, [bookingDetails, checkedCancellationCover, checkedSmsConfirmation]);
@@ -387,17 +387,17 @@ const CheckoutForm = () => {
 
       dispatch(
         setLogin({
-        user: response.data.user,
-        token: response.data.token
+          user: response.data.user,
+          token: response.data.token
         })
       );
-  
+
       const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
-  
+
       const result = await stripe.redirectToCheckout({
         sessionId: response.data.id
       });
-  
+
       console.log(result);
 
       toast.current.show({
@@ -407,11 +407,11 @@ const CheckoutForm = () => {
         life: 3000
       });
 
-      setTimeout(()=>{
+      setTimeout(() => {
         navigate("/");
       }, 2000);
-  
-  
+
+
     } catch (err) {
       console.log(err);
       toast.current.show({
@@ -420,19 +420,19 @@ const CheckoutForm = () => {
         detail: err.response.data.error,
         life: 3000
       });
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
-  
-  
+
+
 
   function validateUserDetails(userDetails, isUserPresent, doesEmailExist) {
     // Check if user is present
     if (isUserPresent) {
       return true; // No validation needed if user is already present
     }
-  
+
     // Check if email exists in the system
     if (doesEmailExist) {
       if (!userDetails.email || !userDetails.password) {
@@ -458,7 +458,7 @@ const CheckoutForm = () => {
         return false;
       }
     }
-  
+
     // Check if passwords match
     if (!doesEmailExist && (userDetails.password !== userDetails.confirmPassword)) {
       toast.current.show({
@@ -469,7 +469,7 @@ const CheckoutForm = () => {
       });
       return false;
     }
-  
+
     // Check if password length is at least 8 characters
     if (userDetails.password.length < 8) {
       toast.current.show({
@@ -480,17 +480,17 @@ const CheckoutForm = () => {
       });
       return false;
     }
-  
+
     return true; // All validations passed
   }
-  
+
   const handleBooking = () => {
     console.log(userDetails, user, emailExist);
-    
+
     if (!validateUserDetails(userDetails, user, emailExist)) {
       return; // Exit if validation fails
     }
-  
+
     // Check if travel details are filled
     if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
       setShowError(true);
@@ -502,7 +502,7 @@ const CheckoutForm = () => {
       });
       return;
     }
-  
+
     // Check if all vehicle details are filled
     const hasError = vehiclesDetails.some(vehicle => !vehicle.regNo || !vehicle.color);
     if (hasError) {
@@ -515,7 +515,7 @@ const CheckoutForm = () => {
       });
       return;
     }
-  
+
     // Check if terms and privacy policy are agreed
     if (!isAgreed) {
       toast.current.show({
@@ -526,7 +526,7 @@ const CheckoutForm = () => {
       });
       return;
     }
-  
+
     // Prepare user details object
     let userDetail = {};
     if (user) {
@@ -552,7 +552,7 @@ const CheckoutForm = () => {
         // postCode: userDetails.postCode,
       };
     }
-  
+
     // Prepare booking details object
     const carParkingSlotBookingDetails = {
       airportName: bookingDetails?.airportName,
@@ -570,10 +570,10 @@ const CheckoutForm = () => {
       smsConfirmation: checkedSmsConfirmation,
       cancellationCover: checkedCancellationCover
     };
-  
+
     bookTheCarParkingSlot(carParkingSlotBookingDetails);
   };
-  
+
   const header = <div className="font-bold mb-3">Password Strength</div>;
   const footer = (
     <>
@@ -1298,7 +1298,7 @@ const CheckoutForm = () => {
                         <div className="col-12">
                           <Button
                             label="Add Vehicle"
-                            className="btn btn-primary mt-3"
+                            className="aply-btn mt-3"
                             onClick={addVehicle}
                           />
                           {index !== 0 && (
@@ -1344,7 +1344,7 @@ const CheckoutForm = () => {
                           <div className="form-checkbox-area">
                             <Checkbox
                               inputId="cancellationCover"
-                              onChange={(e) =>{
+                              onChange={(e) => {
                                 setCheckedCancellationCover(e.checked)
                               }
                               }
@@ -1710,14 +1710,14 @@ const CheckoutForm = () => {
                     </div>
                   </>}
 
-          {           checkedCancellationCover &&         <>
-                      <Divider className="divider-primary" />
+                  {checkedCancellationCover && <>
+                    <Divider className="divider-primary" />
 
-                      <div className="total-detail">
-                        <h5 className="total-detail-head">Cancellation Cover</h5>
-                        <h5 className="total-detail-price">£ {bookingCharge?.cancellationCover || 0}</h5>
-                      </div>
-                    </>}
+                    <div className="total-detail">
+                      <h5 className="total-detail-head">Cancellation Cover</h5>
+                      <h5 className="total-detail-price">£ {bookingCharge?.cancellationCover || 0}</h5>
+                    </div>
+                  </>}
 
                   {((couponCode && couponValid) || !couponCode) && <>
                     <Divider className="divider-primary" />

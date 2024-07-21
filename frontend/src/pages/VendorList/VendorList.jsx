@@ -43,13 +43,13 @@ const VendorList = () => {
 
   const [selectedVendor, setSelectedVendor] = useState(null);
 
-    useEffect(()=>{
-      const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
+  useEffect(() => {
+    const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
 
     const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
 
     setDayDifference(dayDifference);
-  },[dropOffDate, pickupDate]);
+  }, [dropOffDate, pickupDate]);
 
   useEffect(() => {
     fetchAllAirports(dispatch);
@@ -365,7 +365,7 @@ const VendorList = () => {
                               <Rating value={quote.rating} readOnly cancel={false} />
                             </div>
                             <h3 className="result-card-price">
-                              £ {quote.finalQuote}
+                              £ {Math.round(quote.finalQuote)}
                               {quote.quote > 0 && <span className="cut-price ms-3">£ {quote.quote}</span>}
                             </h3>
                             <div className="result-card-sub">
@@ -561,6 +561,7 @@ const VendorList = () => {
                           value={dropOffDate}
                           onChange={handleDropOffDateChange}
                           placeholder="dd/mm/yyyy"
+                          dateFormat="dd/mm/yy"
                           minDate={today}
                           className="w-100"
                           invalid={showError}
@@ -619,6 +620,7 @@ const VendorList = () => {
                           placeholder="dd/mm/yyyy"
                           minDate={dropOffDate}
                           disabled={!dropOffDate}
+                          dateFormat="dd/mm/yy"
                           className="w-100"
                           invalid={showError}
                         />
@@ -958,8 +960,8 @@ const VendorList = () => {
                           penalty for not paying the ULEZ charge.
                         </p> */}
                         {selectedVendor?.overView}
-                      </div> 
-                      </div> 
+                      </div>
+                    </div>
                     {/*  */}
 
                     {/* Drop-Off Procedure */}
