@@ -79,7 +79,7 @@ const FaQ = () => {
 
                                     <AccordionTab header="04. Can I cancel or modify my reservation?">
                                         <p className="m-0">
-                                            Yes, you can cancel or modify your reservation. Please refer to our Cancellation and Refund Policy on our website for specific details regarding time frames and potential fees. To cancel or modify your reservation, contact our customer service team at <a href="mailto:">info@theparkingdeals.uk</a>, <a href="tel:">+44 000 000 0000</a>.
+                                            Yes, you can cancel or modify your reservation. Please refer to our Cancellation and Refund Policy on our website for specific details regarding time frames and potential fees. To cancel or modify your reservation, contact our customer service team at <a href="mailto:">info@theparkingdeals.uk</a>, <a href="tel:">07399440027</a>.
                                         </p>
                                     </AccordionTab>
 

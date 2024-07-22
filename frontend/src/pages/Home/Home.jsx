@@ -195,7 +195,7 @@ const Home = () => {
                             <div className="hero-section-title-area">
                                 <h3 className='hero-section-title' data-aos="fade-up">Easy and Convenient Contact</h3>
                                 <p className='hero-section-para' data-aos="fade-up">
-                                    Have questions or need assistance? We're here to help! Reach out to us via email call us. Our dedicated customer service team is available 24hours of operation to ensure you have a smooth and stress-free parking experience. Visit our website for more information and support.
+                                    Have questions or need assistance? We're here to help! Reach out to us via email call us. Our dedicated customer service team ensure you have a smooth and stress-free parking experience. Visit our website for more information and support.
                                 </p>
                                 <div className="hero-section-btn-area" data-aos="fade-up">
                                     <button onClick={() => goToLink('/contact-us')} className='nav-link-button text-no-wrap with-bg'>More detail</button>

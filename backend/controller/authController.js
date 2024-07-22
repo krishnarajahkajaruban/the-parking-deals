@@ -140,7 +140,7 @@ const register = async (email, title, firstName, lastName, companyName, password
                   <p>Dear ${user.firstName || user.companyName},</p>
                   <p>Thank you for registering in The Parking Deals! We're excited to have you on board.</p>
                   <p>If you have any questions, please contact our support team at <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>.</p>
-                  <p>Thank you for choosing Air Wing Parking Hub. We look forward to serving you.</p>
+                  <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
               </div>
           </div>
       `

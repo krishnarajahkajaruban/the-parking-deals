@@ -209,14 +209,14 @@ const PrivacyPolicy = () => {
                                     <Divider />
 
                                     <h6 className="content-contact-head mt-4">The Parking Deals</h6>
-                                    <div className="content-contact-detail">
+                                    {/* <div className="content-contact-detail">
                                         <i className="bi bi-geo-alt-fill"></i>
                                         <a href="#">
                                             9-13 Wensum St, Burnham-on-Sea <br />
                                             Somerset County <br />
                                             TA8 1AL
                                         </a>
-                                    </div>
+                                    </div> */}
 
                                     <div className="content-contact-detail">
                                         <i className="bi bi-envelope-fill"></i>
@@ -225,7 +225,7 @@ const PrivacyPolicy = () => {
 
                                     <div className="content-contact-detail">
                                         <i className="bi bi-telephone-fill"></i>
-                                        <a href="tel:">+44 000 000 0000</a>
+                                        <a href="tel:">07399440027</a>
                                     </div>
                                 </div>
                             </article>

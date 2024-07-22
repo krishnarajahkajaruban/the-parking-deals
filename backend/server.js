@@ -216,7 +216,7 @@ const sendEmailToCompany = async (booking, user, type) => {
                               <li>Model: ${vehicle.model || "-"}</li>
                           </ul>
                       `).join('')}
-                  ! We're excited to have you on board.</p>
+                  We're excited to have you on board.</p>
                   <p>If you have any questions, please contact our support team at <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>.</p>
                   <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
               </div>
