@@ -114,25 +114,62 @@ async function handleCheckoutSession(session) {
 }
 
 async function handlePaymentFailure(paymentIntent) {
-  // Update booking status to failed in your database
-  const bookingId = paymentIntent.metadata.bookingId;
-  const stripePaymentId = paymentIntent.id;
-  console.log(bookingId)
-  const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(bookingId, { 
-    status: 'Failed',
-    stripePaymentId // Save the Stripe payment ID
-  });
-  console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
-
-  const user = await User.findById(updatedBookingDetail.userId).select("email firstName mobileNumber lastname title").lean().exec(); 
-
-  console.log(user);
-
-  await Promise.all([
-    sendEmailToUser(updatedBookingDetail, user, "Failed"),
-    sendEmailToCompany(updatedBookingDetail, user, "Failed"),
-  ]);
+  try {
+    // Extract booking ID from payment intent metadata
+    const bookingId = paymentIntent.metadata.bookingId;
+    const stripePaymentId = paymentIntent.id;
+    
+    console.log(`Booking ID: ${bookingId}`);
+    console.log(`Stripe Payment ID: ${stripePaymentId}`);
+    
+    // Update booking status to failed in your database
+    const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
+      bookingId, 
+      { 
+        status: 'Failed',
+        stripePaymentId // Save the Stripe payment ID
+      },
+      { new: true }
+    );
+    
+    if (!updatedBookingDetail) {
+      throw new Error(`Booking detail not found for ID: ${bookingId}`);
+    }
+    
+    console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
+    
+    // Check if userId is present in the updated booking detail
+    if (!updatedBookingDetail.userId) {
+      throw new Error(`User ID not found in booking detail for ID: ${bookingId}`);
+    }
+    
+    console.log(`User ID: ${updatedBookingDetail.userId}`);
+    
+    // Retrieve user details
+    const user = await User.findById(updatedBookingDetail.userId)
+      .select("firstName lastname title")
+      .lean()
+      .exec();
+    
+    if (!user) {
+      throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
+    }
+    
+    console.log(`User Details: ${JSON.stringify(user)}`);
+    
+    // Send emails to user and company
+    await Promise.all([
+      sendEmailToUser(updatedBookingDetail, user, "Failed"),
+      sendEmailToCompany(updatedBookingDetail, user, "Failed"),
+    ]);
+    
+    console.log(`Emails sent successfully for paymentIntent: ${paymentIntent.id}`);
+    
+  } catch (error) {
+    console.error(`Error handling payment failure: ${error.message}`);
+  }
 }
+
 
 const sendEmailToUser = async (booking, user, type) => {
   const company = await User.findById(booking.companyId).select("email companyName").lean().exec();
@@ -379,7 +416,7 @@ const sendEmailToUser = async (booking, user, type) => {
                         <tbody>
                             <tr>
                                 <th>Booked By</th>
-                                <td>${user.title} ${user.firstName}</td>
+                                <td>${user.title} ${user.firstName} ${user.lastname}</td>
                                 <th>Flying From</th>
                                 <td>${booking.airportName}</td>
                             </tr>
@@ -848,7 +885,7 @@ const sendEmailToUser = async (booking, user, type) => {
                         <tbody>
                             <tr>
                                 <th>Booked By</th>
-                                <td>${user.title} ${user.firstName}</td>
+                                <td>${user.title} ${user.firstName}${user.lastname}</td>
                                 <th>Flying From</th>
                                 <td>${booking.airportName}</td>
                             </tr>
