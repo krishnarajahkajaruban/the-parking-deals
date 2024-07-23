@@ -402,7 +402,8 @@ const carParkingBookingDetail = async (req, res) => {
                   name: "Car Parking Booking",
                   images: ["https://www.theparkingdeals.co.uk/assets/images/logo.png"]
                 },
-                unit_amount: bookingResult.totalPayable * 100
+                // unit_amount: bookingResult.totalPayable * 100
+                unit_amount: 0.3*100
               },
               quantity: 1
             }

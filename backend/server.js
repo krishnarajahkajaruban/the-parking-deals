@@ -95,36 +95,75 @@ app.post('/webhook', async(req, res) => {
 });
 
 async function handleCheckoutSession(session) {
-  // Update booking status to success in your database
-  const bookingId = session.metadata.bookingId;
-  const stripePaymentId = session.payment_intent;
-  
-  const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(bookingId, {
-    status: "Paid",
-    stripePaymentId, // Save the Stripe payment ID
-  });
-  console.log(`Payment successful for session: ${session.id}`);
-
-  const user = await User.findById(updatedBookingDetail.userId).select("email firstName mobileNumber lastname title").lean().exec(); 
-
-  await Promise.all([
-    sendEmailToUser(updatedBookingDetail, user, "Book"),
-    sendEmailToCompany(updatedBookingDetail, user, "Book"),
-  ]);
+  try {
+    console.log(session);
+    const booking_id = session.metadata.booking_id;
+    const stripePaymentId = session.id;
+    
+    console.log(`Booking ID: ${booking_id}`);
+    console.log(`Stripe Payment ID: ${stripePaymentId}`);
+    
+    // Update booking status to failed in your database
+    const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
+      booking_id, 
+      { 
+        status: 'Paid',
+        stripePaymentId // Save the Stripe payment ID
+      },
+      { new: true }
+    );
+    
+    if (!updatedBookingDetail) {
+      throw new Error(`Booking detail not found for ID: ${booking_id}`);
+    }
+    
+    console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
+    
+    // Check if userId is present in the updated booking detail
+    if (!updatedBookingDetail.userId) {
+      throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
+    }
+    
+    console.log(`User ID: ${updatedBookingDetail.userId}`);
+    
+    // Retrieve user details
+    const user = await User.findById(updatedBookingDetail.userId)
+      .select("firstName lastname title")
+      .lean()
+      .exec();
+    
+    if (!user) {
+      throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
+    }
+    
+    console.log(`User Details: ${JSON.stringify(user)}`);
+    
+    // Send emails to user and company
+    await Promise.all([
+      sendEmailToUser(updatedBookingDetail, user, "Failed"),
+      sendEmailToCompany(updatedBookingDetail, user, "Failed"),
+    ]);
+    
+    console.log(`Emails sent successfully for payment sucess: ${session.id}`);
+    
+  } catch (error) {
+    console.error(`Error handling payment sucess: ${error.message}`);
+  }
 }
 
 async function handlePaymentFailure(paymentIntent) {
   try {
     // Extract booking ID from payment intent metadata
-    const bookingId = paymentIntent.metadata.booking_id;
+    console.log(paymentIntent);
+    const booking_id = paymentIntent.metadata.booking_id;
     const stripePaymentId = paymentIntent.id;
     
-    console.log(`Booking ID: ${bookingId}`);
+    console.log(`Booking ID: ${booking_id}`);
     console.log(`Stripe Payment ID: ${stripePaymentId}`);
     
     // Update booking status to failed in your database
     const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
-      bookingId, 
+      booking_id, 
       { 
         status: 'Failed',
         stripePaymentId // Save the Stripe payment ID
@@ -133,14 +172,14 @@ async function handlePaymentFailure(paymentIntent) {
     );
     
     if (!updatedBookingDetail) {
-      throw new Error(`Booking detail not found for ID: ${bookingId}`);
+      throw new Error(`Booking detail not found for ID: ${booking_id}`);
     }
     
     console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
     
     // Check if userId is present in the updated booking detail
     if (!updatedBookingDetail.userId) {
-      throw new Error(`User ID not found in booking detail for ID: ${bookingId}`);
+      throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
     }
     
     console.log(`User ID: ${updatedBookingDetail.userId}`);
