@@ -252,6 +252,17 @@ const resettingPassword = async (req, res) => {
     }
   };
 
+  async function generateBookingId() {
+    const latestBooking = await BookingDetail.findOne().sort({ createdAt: -1 }).select("bookingId").exec();
+    if (latestBooking && latestBooking.bookingId) {
+      const lastIdNumber = parseInt(latestBooking.bookingId.split("-")[1]);
+      const newIdNumber = lastIdNumber + 1;
+      return `TPD-${newIdNumber.toString().padStart(6, "0")}`;
+    } else {
+      return "TPD-000100";
+    }
+  }
+
 /* create a document for car park booking */
 const carParkingBookingDetail = async (req, res) => {
     try {
@@ -355,7 +366,10 @@ const carParkingBookingDetail = async (req, res) => {
 
         // console.log(user);
 
+        const bookingId = await generateBookingId();
+
         const newCarParkingBooking = new BookingDetail({
+            bookingId,
             airportName,
             dropOffDate,
             dropOffTime,
@@ -386,9 +400,9 @@ const carParkingBookingDetail = async (req, res) => {
                 currency: "gbp",
                 product_data: {
                   name: "Car Parking Booking",
-                  images: ["https://res.cloudinary.com/piragashcloud/image/upload/v1721238830/logo512_dmvwkk.png"]
+                  images: ["https://www.theparkingdeals.co.uk/assets/images/logo.png"]
                 },
-                unit_amount: Math.round(bookingResult.totalPayable * 100)
+                unit_amount: bookingResult.totalPayable * 100
               },
               quantity: 1
             }
