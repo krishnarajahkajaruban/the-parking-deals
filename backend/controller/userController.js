@@ -473,7 +473,7 @@ const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfir
 
         // Respond with calculated values
         return {
-            bookingQuote: Number(bookingQuote),
+            bookingQuote: Math.round(Number(bookingQuote)),
             bookingFee,
             smsConfirmation: smsConfirmationCharge,
             cancellationCover: cancellationCoverCharge,
