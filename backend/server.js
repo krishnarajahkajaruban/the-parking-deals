@@ -116,7 +116,7 @@ async function handleCheckoutSession(session) {
 async function handlePaymentFailure(paymentIntent) {
   try {
     // Extract booking ID from payment intent metadata
-    const bookingId = paymentIntent.metadata.bookingId;
+    const bookingId = paymentIntent.metadata.booking_id;
     const stripePaymentId = paymentIntent.id;
     
     console.log(`Booking ID: ${bookingId}`);

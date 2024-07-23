@@ -411,7 +411,7 @@ const carParkingBookingDetail = async (req, res) => {
           success_url: `${process.env.FRONTEND_URL}/dashboard`,
           cancel_url: `${process.env.FRONTEND_URL}/booking`,
           metadata: {
-            bookingId: newCarParkingBooking._id.toString()
+            booking_id: newCarParkingBooking._id.toString()
           }
         });
 
