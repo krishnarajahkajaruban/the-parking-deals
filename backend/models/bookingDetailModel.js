@@ -73,6 +73,10 @@ const cardDetailSchema = new Schema({
 // Define the main schema
 const bookingDetailSchema = new Schema(
   {
+    bookingId : {
+      type: String,
+      required: [true, "BookingId must be provided"]
+    },
     airportName : {
         type: String,
         required: [true, "Airport Name must be provided"]

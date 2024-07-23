@@ -34,6 +34,12 @@ const userSchema = new Schema(
         return this.role === 'Vendor';
       }
     },
+    serviceType : {
+      type: String,
+      required: function() {
+        return this.role === 'Vendor';
+      }
+    },
     password: {
       type: String,
       min: 8,
@@ -43,7 +49,7 @@ const userSchema = new Schema(
     mobileNumber: {
       type: Number,
       required: function() {
-        return this.role === "User";
+        return ["Vendor", "User"].includes(this.role);
       },
     },
     role: {
