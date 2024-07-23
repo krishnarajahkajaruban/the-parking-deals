@@ -16,7 +16,7 @@ export const SampleData = {
         }).then(res => {
             // Transform the response data to match the structure required by the DataTable
             const bookings = res.data.data.map(booking => ({
-                id: booking._id,
+                id: booking.bookingId,
                 date: new Date(booking.createdAt).toLocaleDateString(),
                 time: new Date(booking.createdAt).toLocaleTimeString(),
                 status: booking.status,
