@@ -211,7 +211,7 @@ async function handlePaymentFailure(paymentIntent) {
 
 
 const sendEmailToUser = async (booking, user, type) => {
-  const company = await User.findById(booking.companyId).select("email companyName").lean().exec();
+  const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
 
   if (!company) {
       throw new Error("Company not found");
@@ -690,7 +690,7 @@ const sendEmailToUser = async (booking, user, type) => {
         };
 
         const sendEmailToCompany = async (booking, user, type) => {
-          const company = await User.findById(booking.companyId).select("email companyName").lean().exec();
+          const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
 
           if (!company) {
               throw new Error("Company not found");
