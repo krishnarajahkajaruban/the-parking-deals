@@ -519,7 +519,7 @@ const sendEmailToUser = async (booking, user, type) => {
 
                 <p class="mt-2">
                     <b>
-                        Complaint Number: <a href="tel::07399440027">info@theparkingdeals.co.uk</a>
+                        Complaint Number: <a href="tel::07399440027">07399440027</a>
                     </b>
                 </p>
                 <p class="mt-2">
