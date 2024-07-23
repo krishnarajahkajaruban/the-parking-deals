@@ -6,7 +6,7 @@ const airports = [
 ];
 
 const quoteForDayForLuton247 = (day) => {
-    const initialAmount = 129.99;
+    const initialAmount = 60.99;
     const incrementPerDay = 5;
     const extraIncrementPerDay = 10;
     const thresholdDay = 30;
@@ -31,7 +31,7 @@ const quoteForDayForLuton247 = (day) => {
 };
 
 const quoteForDayForAirportParkingBay = (day) => {
-    const initialAmount = 124.99;
+    const initialAmount = 55.99;
     const incrementPerDay = 5;
     const extraIncrementPerDay = 10;
     const thresholdDay = 30;
@@ -61,7 +61,7 @@ const settingQuotes = (day) => {
             _id: "6695cc3066ed88bb45742d72",
             name: "Luton 247 Meet & Greet",
             logo:"https://parkingdealsuk.com/storage/images/2d8140f4b6d3175fd7e2e3bd7b6eb433.png",
-            finalQuote: quoteForDayForLuton247(day),
+            finalQuote: Math.round(quoteForDayForLuton247(day)),
             type: "Meet and Greet",
             rating: 4.6,
             quote:0,
@@ -184,7 +184,7 @@ const settingQuotes = (day) => {
             _id: "6697cfb1a1b01f7e75778761",
             name: "Airport Parking Bay Meet & Greet Luton",
             logo:"https://parkingdealsuk.com/storage/images/faf39cd77da85eb710e37b218ec2ddab.jpeg",
-            finalQuote: quoteForDayForAirportParkingBay(day),
+            finalQuote: Math.round(quoteForDayForAirportParkingBay(day)),
             type: "Meet and Greet",
             rating: 5.0,
             quote:0,

@@ -128,7 +128,7 @@ async function handleCheckoutSession(session) {
     
     // Retrieve user details
     const user = await User.findById(updatedBookingDetail.userId)
-      .select("firstName lastname title")
+      .select("firstName lastname title email")
       .lean()
       .exec();
     
@@ -140,14 +140,14 @@ async function handleCheckoutSession(session) {
     
     // Send emails to user and company
     await Promise.all([
-      sendEmailToUser(updatedBookingDetail, user, "Failed"),
-      sendEmailToCompany(updatedBookingDetail, user, "Failed"),
+      sendEmailToUser(updatedBookingDetail, user, "Confirmed"),
+      sendEmailToCompany(updatedBookingDetail, user, "Confirmed"),
     ]);
     
-    console.log(`Emails sent successfully for payment sucess: ${session.id}`);
+    console.log(`Emails sent successfully for payment success: ${session.id}`);
     
   } catch (error) {
-    console.error(`Error handling payment sucess: ${error.message}`);
+    console.error(`Error handling payment success: ${error.message}`);
   }
 }
 
@@ -186,7 +186,7 @@ async function handlePaymentFailure(paymentIntent) {
     
     // Retrieve user details
     const user = await User.findById(updatedBookingDetail.userId)
-      .select("firstName lastname title")
+      .select("firstName lastname title email")
       .lean()
       .exec();
     
@@ -924,7 +924,7 @@ const sendEmailToUser = async (booking, user, type) => {
                         <tbody>
                             <tr>
                                 <th>Booked By</th>
-                                <td>${user.title} ${user.firstName}${user.lastname}</td>
+                                <td>${user.title} ${user.firstName} ${user.lastname}</td>
                                 <th>Flying From</th>
                                 <td>${booking.airportName}</td>
                             </tr>
