@@ -98,7 +98,7 @@ async function handleCheckoutSession(session) {
   // Update booking status to success in your database
   const bookingId = session.metadata.bookingId;
   const stripePaymentId = session.payment_intent;
-
+  
   const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(bookingId, {
     status: "Paid",
     stripePaymentId, // Save the Stripe payment ID
@@ -117,7 +117,7 @@ async function handlePaymentFailure(paymentIntent) {
   // Update booking status to failed in your database
   const bookingId = paymentIntent.metadata.bookingId;
   const stripePaymentId = paymentIntent.id;
-
+  console.log(bookingId)
   const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(bookingId, { 
     status: 'Failed',
     stripePaymentId // Save the Stripe payment ID
@@ -125,6 +125,8 @@ async function handlePaymentFailure(paymentIntent) {
   console.log(`Payment failed for paymentIntent: ${paymentIntent.id}`);
 
   const user = await User.findById(updatedBookingDetail.userId).select("email firstName mobileNumber lastname title").lean().exec(); 
+
+  console.log(user);
 
   await Promise.all([
     sendEmailToUser(updatedBookingDetail, user, "Failed"),
