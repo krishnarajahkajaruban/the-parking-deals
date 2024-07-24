@@ -1356,7 +1356,7 @@ const Booking = () => {
                               htmlFor="cancellationCover"
                               className="ml-2"
                             >
-                              Cancellation Cover - £ {bookingCharge?.cancellationCover || 0}
+                              Cancellation Cover - £ 5
                             </label>
                           </div>
                         </div>
