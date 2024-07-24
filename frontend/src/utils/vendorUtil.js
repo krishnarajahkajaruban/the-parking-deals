@@ -330,6 +330,7 @@ export const getAvailableQuotes = async (queryParams, dispatch, toast, setLoadin
             severity: 'error',
             summary: 'Error occur while finding suitable parking slots!',
             detail: err.response?.data.error,
+            
             life: 3000
         });
     }finally{

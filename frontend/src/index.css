@@ -2391,7 +2391,7 @@ button.custom-form-link:disabled {
   background-color: var(--color-secondary);
   width: 100%;
   top: 0;
-  z-index: 9999;
+  z-index: 999;
   position: fixed;
   left: 0;
   right: 0;

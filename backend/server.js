@@ -7,7 +7,7 @@ const http = require('http');
 // const { Server } = require('socket.io');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const rawBody = require('raw-body');
-const BookingDetail = require('./models/bookingDetailModel'); 
+const BookingDetail = require('./models/bookingDetailModel');
 const User = require("./models/userModel");
 
 const authRouter = require("./routes/authRouter");
@@ -30,10 +30,10 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware setup
 app.use(cors({ // CORS setup
-  origin: ['https://www.theparkingdeals.co.uk', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials']
+    origin: ['https://www.theparkingdeals.co.uk', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials']
 }));
 
 // const io = new Server(server, {
@@ -47,19 +47,19 @@ app.use(morgan("tiny")); // Logging
 
 // Middleware to handle raw body for Stripe webhook
 app.use((req, res, next) => {
-  if (req.originalUrl === '/webhook') {
-    rawBody(req, {
-      length: req.headers['content-length'],
-      limit: '1mb',
-      type: 'application/json',
-    }, (err, string) => {
-      if (err) return next(err);
-      req.rawBody = string;
-      next();
-    });
-  } else {
-    express.json()(req, res, next);
-  }
+    if (req.originalUrl === '/webhook') {
+        rawBody(req, {
+            length: req.headers['content-length'],
+            limit: '1mb',
+            type: 'application/json',
+        }, (err, string) => {
+            if (err) return next(err);
+            req.rawBody = string;
+            next();
+        });
+    } else {
+        express.json()(req, res, next);
+    }
 });
 
 // io.on('connection', (socket) => {
@@ -67,160 +67,160 @@ app.use((req, res, next) => {
 // });
 
 // Webhook endpoint to handle Stripe events
-app.post('/webhook', async(req, res) => {
-  let event;
+app.post('/webhook', async (req, res) => {
+    let event;
 
-  try {
-    const sig = req.headers['stripe-signature'];
-    event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error(`Webhook Error: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    try {
+        const sig = req.headers['stripe-signature'];
+        event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+        console.error(`Webhook Error: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
 
-  // Handle the checkout.session.completed event
-  if (event.type === 'checkout.session.completed') {
-    console.log("checkout session completed")
-    const session = event.data.object;
-    await handleCheckoutSession(session);
-    // io.emit('checkout.session.completed', session);
-  } else if (event.type === 'payment_intent.payment_failed') {
-    console.log("payment intent failed")
-    const paymentIntent = event.data.object;
-    await handlePaymentFailure(paymentIntent);
-    // io.emit('payment_intent.payment_failed', paymentIntent); 
-  }
+    // Handle the checkout.session.completed event
+    if (event.type === 'checkout.session.completed') {
+        console.log("checkout session completed")
+        const session = event.data.object;
+        await handleCheckoutSession(session);
+        // io.emit('checkout.session.completed', session);
+    } else if (event.type === 'payment_intent.payment_failed') {
+        console.log("payment intent failed")
+        const paymentIntent = event.data.object;
+        await handlePaymentFailure(paymentIntent);
+        // io.emit('payment_intent.payment_failed', paymentIntent); 
+    }
 
-  res.json({ received: true });
+    res.json({ received: true });
 });
 
 async function handleCheckoutSession(session) {
-  try {
-    console.log(session);
-    const booking_id = session.metadata.booking_id;
-    const stripePaymentId = session.id;
-    
-    console.log(`Booking ID: ${booking_id}`);
-    console.log(`Stripe Payment ID: ${stripePaymentId}`);
-    
-    // Update booking status to failed in your database
-    const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
-      booking_id, 
-      { 
-        status: 'Paid',
-        stripePaymentId // Save the Stripe payment ID
-      },
-      { new: true }
-    );
-    
-    if (!updatedBookingDetail) {
-      throw new Error(`Booking detail not found for ID: ${booking_id}`);
+    try {
+        console.log(session);
+        const booking_id = session.metadata.booking_id;
+        const stripePaymentId = session.id;
+
+        console.log(`Booking ID: ${booking_id}`);
+        console.log(`Stripe Payment ID: ${stripePaymentId}`);
+
+        // Update booking status to failed in your database
+        const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
+            booking_id,
+            {
+                status: 'Paid',
+                stripePaymentId // Save the Stripe payment ID
+            },
+            { new: true }
+        );
+
+        if (!updatedBookingDetail) {
+            throw new Error(`Booking detail not found for ID: ${booking_id}`);
+        }
+
+        console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
+
+        // Check if userId is present in the updated booking detail
+        if (!updatedBookingDetail.userId) {
+            throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
+        }
+
+        console.log(`User ID: ${updatedBookingDetail.userId}`);
+
+        // Retrieve user details
+        const user = await User.findById(updatedBookingDetail.userId)
+            .select("firstName lastname title email")
+            .lean()
+            .exec();
+
+        if (!user) {
+            throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
+        }
+
+        console.log(`User Details: ${JSON.stringify(user)}`);
+
+        // Send emails to user and company
+        await Promise.all([
+            sendEmailToUser(updatedBookingDetail, user, "Confirmed"),
+            sendEmailToCompany(updatedBookingDetail, user, "Confirmed"),
+        ]);
+
+        console.log(`Emails sent successfully for payment success: ${session.id}`);
+
+    } catch (error) {
+        console.error(`Error handling payment success: ${error.message}`);
     }
-    
-    console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
-    
-    // Check if userId is present in the updated booking detail
-    if (!updatedBookingDetail.userId) {
-      throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
-    }
-    
-    console.log(`User ID: ${updatedBookingDetail.userId}`);
-    
-    // Retrieve user details
-    const user = await User.findById(updatedBookingDetail.userId)
-      .select("firstName lastname title email")
-      .lean()
-      .exec();
-    
-    if (!user) {
-      throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
-    }
-    
-    console.log(`User Details: ${JSON.stringify(user)}`);
-    
-    // Send emails to user and company
-    await Promise.all([
-      sendEmailToUser(updatedBookingDetail, user, "Confirmed"),
-      sendEmailToCompany(updatedBookingDetail, user, "Confirmed"),
-    ]);
-    
-    console.log(`Emails sent successfully for payment success: ${session.id}`);
-    
-  } catch (error) {
-    console.error(`Error handling payment success: ${error.message}`);
-  }
 }
 
 async function handlePaymentFailure(paymentIntent) {
-  try {
-    // Extract booking ID from payment intent metadata
-    console.log(paymentIntent);
-    const booking_id = paymentIntent.metadata.booking_id;
-    const stripePaymentId = paymentIntent.id;
-    
-    console.log(`Booking ID: ${booking_id}`);
-    console.log(`Stripe Payment ID: ${stripePaymentId}`);
-    
-    // Update booking status to failed in your database
-    const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
-      booking_id, 
-      { 
-        status: 'Failed',
-        stripePaymentId // Save the Stripe payment ID
-      },
-      { new: true }
-    );
-    
-    if (!updatedBookingDetail) {
-      throw new Error(`Booking detail not found for ID: ${booking_id}`);
+    try {
+        // Extract booking ID from payment intent metadata
+        console.log(paymentIntent);
+        const booking_id = paymentIntent.metadata.booking_id;
+        const stripePaymentId = paymentIntent.id;
+
+        console.log(`Booking ID: ${booking_id}`);
+        console.log(`Stripe Payment ID: ${stripePaymentId}`);
+
+        // Update booking status to failed in your database
+        const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
+            booking_id,
+            {
+                status: 'Failed',
+                stripePaymentId // Save the Stripe payment ID
+            },
+            { new: true }
+        );
+
+        if (!updatedBookingDetail) {
+            throw new Error(`Booking detail not found for ID: ${booking_id}`);
+        }
+
+        console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
+
+        // Check if userId is present in the updated booking detail
+        if (!updatedBookingDetail.userId) {
+            throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
+        }
+
+        console.log(`User ID: ${updatedBookingDetail.userId}`);
+
+        // Retrieve user details
+        const user = await User.findById(updatedBookingDetail.userId)
+            .select("firstName lastname title email")
+            .lean()
+            .exec();
+
+        if (!user) {
+            throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
+        }
+
+        console.log(`User Details: ${JSON.stringify(user)}`);
+
+        // Send emails to user and company
+        await Promise.all([
+            sendEmailToUser(updatedBookingDetail, user, "Failed"),
+            sendEmailToCompany(updatedBookingDetail, user, "Failed"),
+        ]);
+
+        console.log(`Emails sent successfully for paymentIntent: ${paymentIntent.id}`);
+
+    } catch (error) {
+        console.error(`Error handling payment failure: ${error.message}`);
     }
-    
-    console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
-    
-    // Check if userId is present in the updated booking detail
-    if (!updatedBookingDetail.userId) {
-      throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
-    }
-    
-    console.log(`User ID: ${updatedBookingDetail.userId}`);
-    
-    // Retrieve user details
-    const user = await User.findById(updatedBookingDetail.userId)
-      .select("firstName lastname title email")
-      .lean()
-      .exec();
-    
-    if (!user) {
-      throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
-    }
-    
-    console.log(`User Details: ${JSON.stringify(user)}`);
-    
-    // Send emails to user and company
-    await Promise.all([
-      sendEmailToUser(updatedBookingDetail, user, "Failed"),
-      sendEmailToCompany(updatedBookingDetail, user, "Failed"),
-    ]);
-    
-    console.log(`Emails sent successfully for paymentIntent: ${paymentIntent.id}`);
-    
-  } catch (error) {
-    console.error(`Error handling payment failure: ${error.message}`);
-  }
 }
 
 
 const sendEmailToUser = async (booking, user, type) => {
-  const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
+    const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
 
-  if (!company) {
-      throw new Error("Company not found");
-  }
+    if (!company) {
+        throw new Error("Company not found");
+    }
 
-  return sendEmail(
-      user.email,
-      `Booking ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"}`,
-      `
+    return sendEmail(
+        user.email,
+        `Booking ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"}`,
+        `
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -231,8 +231,10 @@ const sendEmailToUser = async (booking, user, type) => {
                 href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
                 rel="stylesheet">
             <title>The Parking Deals</title>
+        </head>
 
-            <style>
+        <body>
+        <style>
                 * {
                     box-sizing: border-box;
                     font-family: "Poppins", sans-serif !important;
@@ -321,6 +323,7 @@ const sendEmailToUser = async (booking, user, type) => {
 
                 .booking_info_header img {
                     height: 60px;
+                    object-fit: contain;
                 }
 
                 .booking_info_title {
@@ -427,9 +430,6 @@ const sendEmailToUser = async (booking, user, type) => {
                     }
                 }
             </style>
-        </head>
-
-        <body>
             <div class="booking_info_area">
                 <div class="booking_info_header">
                     <img src="https://www.theparkingdeals.co.uk/assets/images/logo.png" alt="The Parking Deals">
@@ -637,7 +637,7 @@ const sendEmailToUser = async (booking, user, type) => {
                 </p>
 
                 <h6 class="mt-5 booking_footer_text">
-                    The Parking Deals is a trading name of Compare Parking Prices Ltd. The Parking Deals uses 3rd party payment
+                    The Parking Deals is a trading name of Air Travel Extras Limited. The Parking Deals uses 3rd party payment
                     processing
                     companies to accept payments. Therefore, you may see their name on your bank/card statements.
                 </h6>
@@ -686,20 +686,20 @@ const sendEmailToUser = async (booking, user, type) => {
             </div>
         </body>
               `
-          );
-        };
+    );
+};
 
-        const sendEmailToCompany = async (booking, user, type) => {
-          const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
+const sendEmailToCompany = async (booking, user, type) => {
+    const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
 
-          if (!company) {
-              throw new Error("Company not found");
-          }
+    if (!company) {
+        throw new Error("Company not found");
+    }
 
-          return sendEmail(
-              company.email,
-              `${type === "Cancelled" ? "Parking Slot Booking Cancelled!" : type ==="Failed" ? "Parking Slot Booking Failed!" : "Parking slot has been Booked!"}`,
-              `
+    return sendEmail(
+        company.email,
+        `${type === "Cancelled" ? "Parking Slot Booking Cancelled!" : type === "Failed" ? "Parking Slot Booking Failed!" : "Parking slot has been Booked!"}`,
+        `
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -710,8 +710,10 @@ const sendEmailToUser = async (booking, user, type) => {
                 href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
                 rel="stylesheet">
             <title>The Parking Deals</title>
+        </head>
 
-            <style>
+        <body>
+        <style>
                 * {
                     box-sizing: border-box;
                     font-family: "Poppins", sans-serif !important;
@@ -800,6 +802,7 @@ const sendEmailToUser = async (booking, user, type) => {
 
                 .booking_info_header img {
                     height: 60px;
+                    object-fit: contain;
                 }
 
                 .booking_info_title {
@@ -906,9 +909,7 @@ const sendEmailToUser = async (booking, user, type) => {
                     }
                 }
             </style>
-        </head>
 
-        <body>
             <div class="booking_info_area">
                 <div class="booking_info_header">
                     <img src="https://www.theparkingdeals.co.uk/assets/images/logo.png" alt="The Parking Deals">
@@ -933,12 +934,6 @@ const sendEmailToUser = async (booking, user, type) => {
                                 <td>${company.companyName}</td>
                                 <th>Inbound Flight</th>
                                 <td>${booking.travelDetail.inBoundFlight || "-"}</td>
-                            </tr>
-                            <tr>
-                                <th>Service Type</th>
-                                <td>${company.serviceType}</td>
-                                <th>Extras</th>
-                                <td>Cancellation Cover: ${booking.cancellationCoverFee ? "Yes" : "No"}</td>
                             </tr>
                             <tr>
                                 <th>From</th>
@@ -977,7 +972,7 @@ const sendEmailToUser = async (booking, user, type) => {
                 </div>
 
                 <h6 class="mt-5 booking_footer_text">
-                    The Parking Deals is a trading name of Compare Parking Prices Ltd. The Parking Deals uses 3rd party payment
+                    The Parking Deals is a trading name of Air Travel Extras Limited. The Parking Deals uses 3rd party payment
                     processing
                     companies to accept payments. Therefore, you may see their name on your bank/card statements.
                 </h6>
@@ -1016,7 +1011,7 @@ const sendEmailToUser = async (booking, user, type) => {
             </div>
         </body>
               `
-  );
+    );
 };
 
 // Routes
@@ -1027,31 +1022,31 @@ app.use("/api/common-role", commonRoleRouter);
 
 // Error handling middleware for Multer errors
 app.use((err, req, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (err instanceof Multer.MulterError) {
-    res.status(400).json({ error: err.message });
-  } else if (err) {
-    res.status(400).json({ error: err.message });
-  } else {
-    next();
-  }
+    res.setHeader('Content-Type', 'application/json');
+    if (err instanceof Multer.MulterError) {
+        res.status(400).json({ error: err.message });
+    } else if (err) {
+        res.status(400).json({ error: err.message });
+    } else {
+        next();
+    }
 });
 
 
 // Start the server
-server.listen(PORT, async() => {
-  await connectDb();
-  console.log(`Server started on port ${PORT}`);
+server.listen(PORT, async () => {
+    await connectDb();
+    console.log(`Server started on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Promise rejection:', err);
-  process.exit(1); // Exit process on unhandled promise rejection
+    console.error('Unhandled Promise rejection:', err);
+    process.exit(1); // Exit process on unhandled promise rejection
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1); // Exit process on uncaught exception
+    console.error('Uncaught Exception:', err);
+    process.exit(1); // Exit process on uncaught exception
 });
