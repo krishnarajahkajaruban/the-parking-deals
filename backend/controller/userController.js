@@ -466,13 +466,13 @@ const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfir
         const cancellationCoverCharge = cancellationCover ? cancellationCoverFee : 0;
 
         // Calculate total amounts
-        const totalBeforeDiscount = Math.round(Number(bookingQuote) + bookingFee + smsConfirmationCharge + cancellationCoverCharge);
+        const totalBeforeDiscount = Math.floor((Number(bookingQuote) + bookingFee + smsConfirmationCharge + cancellationCoverCharge)*100)/100;
         const discountAmount = totalBeforeDiscount * (couponDiscount / 100);
-        const totalPayable = Math.round(totalBeforeDiscount - discountAmount);
+        const totalPayable = Math.floor((totalBeforeDiscount - discountAmount)*100)/100;
 
         // Respond with calculated values
         return {
-            bookingQuote: Math.round(Number(bookingQuote)),
+            bookingQuote: Number(bookingQuote),
             bookingFee,
             smsConfirmation: smsConfirmationCharge,
             cancellationCover: cancellationCoverCharge,
