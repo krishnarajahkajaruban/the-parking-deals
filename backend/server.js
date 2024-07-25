@@ -128,7 +128,7 @@ async function handleCheckoutSession(session) {
 
         // Retrieve user details
         const user = await User.findById(updatedBookingDetail.userId)
-            .select("firstName lastname title email")
+            .select("firstName lastname title email mobileNumber")
             .lean()
             .exec();
 
@@ -186,7 +186,7 @@ async function handlePaymentFailure(paymentIntent) {
 
         // Retrieve user details
         const user = await User.findById(updatedBookingDetail.userId)
-            .select("firstName lastname title email")
+            .select("firstName lastname title email mobileNumber")
             .lean()
             .exec();
 
@@ -946,6 +946,12 @@ const sendEmailToCompany = async (booking, user, type) => {
                                 <td>${String(new Date(booking.pickUpDate).getDate()).padStart(2, '0')}-${String(new Date(booking.pickUpDate).getMonth() + 1).padStart(2, '0')}-${new Date(booking.pickUpDate).getFullYear()} ${booking.pickUpTime}</td>
                                 <th>Outbound Terminal</th>
                                 <td>${booking.travelDetail.departureTerminal}</td>
+                            </tr>
+                            <tr>
+                                <th>Mobile Number</th>
+                                <td>${user.mobileNumber}</td>
+                                <th>Service Type</th>
+                                <td>${company.serviceType}</td>
                             </tr>
                             ${booking.vehicleDetail.map(vehicle => `
                             <tr>

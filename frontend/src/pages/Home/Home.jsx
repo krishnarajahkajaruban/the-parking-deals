@@ -93,6 +93,9 @@ const Home = () => {
         { time: '23:30' },
     ];
 
+    // console.log(dropOffTime);
+    // console.log(pickupTime);
+
     const parseTime = (time) => {
         const [hours, minutes] = time.split(':').map(Number);
         const date = new Date();
@@ -176,7 +179,7 @@ const Home = () => {
             return;
         }
 
-        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, couponCode, dayDifference }
+        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime:dropOffTime?.time, pickupDate, pickupTime:pickupTime?.time, couponCode, dayDifference }
         navigate('/results', { state: { quoteInfo } });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -376,8 +379,8 @@ const Home = () => {
                                                 <label htmlFor="dropOffTime" className="custom-form-label form-required">Drop off time</label>
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-clock-fill input-grp-icon"></i>
-                                                    <Calendar id="dropOffTime" className='w-100' value={dropOffTime} onChange={(e) => setDropOffTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
-                                                    {/* <Dropdown
+                                                    {/* <Calendar id="dropOffTime" className='w-100' value={dropOffTime} onChange={(e) => setDropOffTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} /> */}
+                                                    <Dropdown
                                                         id='dropOffTime'
                                                         value={dropOffTime}
                                                         onChange={(e) => setDropOffTime(e.value)}
@@ -388,7 +391,7 @@ const Home = () => {
                                                         itemTemplate={timeTemplate}
                                                         className="w-full w-100 custom-form-dropdown"
                                                         invalid={showError}
-                                                    /> */}
+                                                    />
                                                 </div>
                                                 {(showError && !dropOffTime) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
@@ -414,8 +417,8 @@ const Home = () => {
                                                 <label htmlFor="pickupTime" className="custom-form-label form-required">Pickup time</label>
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-clock-fill input-grp-icon"></i>
-                                                    <Calendar id="pickupTime" className='w-100' value={pickupTime} onChange={(e) => setPickupTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} />
-                                                    {/* <Dropdown
+                                                    {/* <Calendar id="pickupTime" className='w-100' value={pickupTime} onChange={(e) => setPickupTime(e.value)} placeholder='hh:mm' timeOnly invalid={showError} /> */}
+                                                    <Dropdown
                                                         id='pickupTime'
                                                         value={pickupTime}
                                                         onChange={(e) => setPickupTime(e.value)}
@@ -426,7 +429,7 @@ const Home = () => {
                                                         itemTemplate={timeTemplate}
                                                         className="w-full w-100 custom-form-dropdown"
                                                         invalid={showError}
-                                                    /> */}
+                                                    />
                                                 </div>
                                                 {(showError && !pickupTime) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>

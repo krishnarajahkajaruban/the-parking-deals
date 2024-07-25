@@ -206,6 +206,7 @@ const Booking = () => {
   };
 
   const calculatingBookingCharge = async () => {
+    // setBookingCharge();
     try {
       const response = await api.post("/api/user/calculate-total-booking-charge",
         {
@@ -391,7 +392,7 @@ const Booking = () => {
           token: response.data.token
         })
       );
-
+      setLoading(false);
       const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
       const result = await stripe.redirectToCheckout({
@@ -559,7 +560,7 @@ const Booking = () => {
       dropOffDate: bookingDetails?.dropOffDate,
       dropOffTime: bookingDetails?.dropOffTime,
       pickUpDate: bookingDetails?.pickUpDate,
-      pickUpTime: bookingDetails?.pickUpTime,
+      pickUpTime: bookingDetails?.pickupTime,
       companyId: bookingDetails?.companyId,
       userDetail: userDetail,
       travelDetail: travelDetails,
@@ -1345,6 +1346,7 @@ const Booking = () => {
                             <Checkbox
                               inputId="cancellationCover"
                               onChange={(e) => {
+                                // setBookingCharge();
                                 setCheckedCancellationCover(e.checked)
                               }
                               }
@@ -1644,7 +1646,8 @@ const Booking = () => {
                       </div>
                       <div className="detail-card-info-body">
                         <p>Drop Off Time :</p>
-                        <h6>{formatTime(bookingDetails?.dropOffTime)}</h6>
+                        <h6>{bookingDetails?.dropOffTime}</h6>
+                        {/* <h6>{formatTime(bookingDetails?.dropOffTime)}</h6> */}
                       </div>
                     </div>
                   </div>
@@ -1669,7 +1672,8 @@ const Booking = () => {
                       </div>
                       <div className="detail-card-info-body">
                         <p>Return Time :</p>
-                        <h6>{formatTime(bookingDetails?.pickUpTime)}</h6>
+                        <h6>{bookingDetails?.pickupTime}</h6>
+                        {/* <h6>{formatTime(bookingDetails?.pickUpTime)}</h6> */}
                       </div>
                     </div>
                   </div>
@@ -1710,12 +1714,12 @@ const Booking = () => {
                     </div>
                   </>}
 
-                  {checkedCancellationCover && <>
+                  {(checkedCancellationCover && bookingCharge?.cancellationCover>0) && <>
                     <Divider className="divider-primary" />
 
                     <div className="total-detail">
                       <h5 className="total-detail-head">Cancellation Cover</h5>
-                      <h5 className="total-detail-price">£ {bookingCharge?.cancellationCover || 0}</h5>
+                      <h5 className="total-detail-price">£ {bookingCharge?.cancellationCover}</h5>
                     </div>
                   </>}
 

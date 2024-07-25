@@ -34,8 +34,8 @@ const VendorList = () => {
   const [showError, setShowError] = useState(false);
   const [selectedAirport, setSelectedAirport] = useState(quoteInfo?.selectedAirport || null);
   const today = new Date();
-  const [dropOffTime, setDropOffTime] = useState(quoteInfo?.dropOffTime || null);
-  const [pickupTime, setPickupTime] = useState(quoteInfo?.pickupTime || null);
+  const [dropOffTime, setDropOffTime] = useState({time:quoteInfo?.dropOffTime} || null);
+  const [pickupTime, setPickupTime] = useState({time:quoteInfo?.pickupTime} || null);
   const [couponCode, setCouponCode] = useState(quoteInfo?.couponCode || "");
 
   const airports = useSelector((state) => state.vendor.airport);
@@ -136,9 +136,11 @@ const VendorList = () => {
     const queryParams = new URLSearchParams({
       airport: selectedAirport,
       fromDate: new Date(dropOffDate).toISOString(),
-      fromTime: new Date(dropOffTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
+      fromTime: dropOffTime,
+      // fromTime: new Date(dropOffTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
       toDate: new Date(pickupDate).toISOString(),
-      toTime: new Date(pickupTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
+      toTime: pickupTime
+      // toTime: new Date(pickupTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
     });
     setLoading(true);
     setPageLoading(true);
@@ -207,7 +209,7 @@ const VendorList = () => {
       return;
     }
 
-    handleFunctionForApi(selectedAirport?.name, dropOffDate, dropOffTime, pickupDate, pickupTime);
+    handleFunctionForApi(selectedAirport?.name, dropOffDate, dropOffTime?.time, pickupDate, pickupTime?.time);
 
   }
 
@@ -222,9 +224,11 @@ const VendorList = () => {
     const bookingDetails = {
       airportName: selectedAirport?.name || quoteInfo?.selectedAirport?.name,
       dropOffDate: new Date(dropOffDate || quoteInfo?.dropOffDate).toISOString(),
-      dropOffTime: new Date(dropOffTime || quoteInfo?.dropOffTime).toTimeString().split(' ')[0],
+      dropOffTime: dropOffTime?.time || quoteInfo?.dropOffTime,
+      // dropOffTime: new Date(dropOffTime || quoteInfo?.dropOffTime).toTimeString().split(' ')[0],
       pickUpDate: new Date(pickupDate || quoteInfo?.pickupDate).toISOString(),
-      pickUpTime: new Date(pickupTime || quoteInfo?.pickupTime).toTimeString().split(' ')[0],
+      pickupTime: pickupTime?.time || quoteInfo?.pickupTime,
+      // pickUpTime: new Date(pickupTime || quoteInfo?.pickupTime).toTimeString().split(' ')[0],
       couponCode,
       companyId,
       companyName,
@@ -328,7 +332,8 @@ const VendorList = () => {
                                   data-bs-target="#editSearchModal"
                                 >
                                   <i class="bi bi-clock-fill me-2"></i>
-                                  {dropOffTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.dropOffTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                                  {/* {dropOffTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.dropOffTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} */}
+                                  {dropOffTime?.time || quoteInfo?.dropOffTime}
                                 </h6>
                               </div>
                             </div>
@@ -354,7 +359,8 @@ const VendorList = () => {
                                   data-bs-target="#editSearchModal"
                                 >
                                   <i class="bi bi-clock-fill me-2"></i>
-                                  {pickupTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.pickupTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                                  {/* {pickupTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.pickupTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} */}
+                                  {pickupTime?.time || quoteInfo?.pickupTime}
                                 </h6>
                               </div>
                             </div>
@@ -436,7 +442,7 @@ const VendorList = () => {
                               <Rating value={quote.rating} readOnly cancel={false} />
                             </div>
                             <h3 className="result-card-price">
-                              £ {Math.round(quote.finalQuote)}
+                              £ {quote.finalQuote}
                               {quote.quote > 0 && <span className="cut-price ms-3">£ {quote.quote}</span>}
                             </h3>
                             <div className="result-card-sub">
@@ -656,7 +662,7 @@ const VendorList = () => {
                       </label>
                       <div className="form-icon-group">
                         <i class="bi bi-clock-fill input-grp-icon"></i>
-                        <Calendar
+                        {/* <Calendar
                           id="dropOffTime"
                           className="w-100"
                           value={dropOffTime}
@@ -664,9 +670,9 @@ const VendorList = () => {
                           placeholder="hh:mm"
                           timeOnly
                           invalid={showError}
-                        />
+                        /> */}
 
-                        {/* <Dropdown
+                        <Dropdown
                           id='dropOffTime'
                           value={dropOffTime}
                           onChange={(e) => setDropOffTime(e.value)}
@@ -677,7 +683,7 @@ const VendorList = () => {
                           itemTemplate={timeTemplate}
                           className="w-full w-100 custom-form-dropdown"
                           invalid={showError}
-                        /> */}
+                        />
                       </div>
                       {(showError && !dropOffTime) && (
                         <small className="text-danger form-error-msg">
@@ -727,7 +733,7 @@ const VendorList = () => {
                       </label>
                       <div className="form-icon-group">
                         <i class="bi bi-clock-fill input-grp-icon"></i>
-                        <Calendar
+                        {/* <Calendar
                           id="pickupTime"
                           className="w-100"
                           value={pickupTime}
@@ -735,9 +741,9 @@ const VendorList = () => {
                           placeholder="hh:mm"
                           timeOnly
                           invalid={showError}
-                        />
+                        /> */}
 
-                        {/* <Dropdown
+                        <Dropdown
                           id='pickupTime'
                           value={pickupTime}
                           onChange={(e) => setPickupTime(e.value)}
@@ -748,7 +754,7 @@ const VendorList = () => {
                           itemTemplate={timeTemplate}
                           className="w-full w-100 custom-form-dropdown"
                           invalid={showError}
-                        /> */}
+                        />
                       </div>
                       {(showError && !pickupTime) && (
                         <small className="text-danger form-error-msg">
