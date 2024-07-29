@@ -116,10 +116,21 @@ const Home = () => {
         return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
-    useEffect(() => {
-        const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
+    function normalizeDate(dateString) {
+        const date = new Date(dateString);
+        date.setHours(0, 0, 0, 0);
+        return date;
+    }
 
+    useEffect(() => {
+
+        const normalizedPickupDate = normalizeDate(pickupDate);
+        const normalizedDropOffDate = normalizeDate(dropOffDate);
+
+        const timeDifference = normalizedPickupDate - normalizedDropOffDate;
         const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+        console.log(dayDifference);
 
         setDayDifference(dayDifference);
     }, [dropOffDate, pickupDate]);

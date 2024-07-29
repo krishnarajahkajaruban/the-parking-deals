@@ -349,14 +349,14 @@ const carParkingBookingDetail = async (req, res) => {
         console.log('Now:', nowDatePart);
 
         // Check if dropOffDate is today or in the future
-        if (fromDatePart < nowDatePart) {
-          return res.status(400).json({ error: "dropOffDate must be today or in the future." });
-        }
+        // if (fromDatePart < nowDatePart) {
+        //   return res.status(400).json({ error: "dropOffDate must be today or in the future." });
+        // }
 
-        // Check if dropOffDate is less than pickUpDate
-        if (fromDatePart > toDatePart) {
-          return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
-        }
+        // // Check if dropOffDate is less than pickUpDate
+        // if (fromDatePart > toDatePart) {
+        //   return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
+        // }
 
         const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
 
@@ -591,14 +591,14 @@ const findAllVendorDetailForUserSearchedParkingSlot = async (req, res) => {
       console.log('Now:', nowDatePart);
 
       // Check if dropOffDate is today or in the future
-      if (fromDatePart < nowDatePart) {
-        return res.status(400).json({ error: "dropOffDate must be today or in the future." });
-      }
+      // if (fromDatePart < nowDatePart) {
+      //   return res.status(400).json({ error: "dropOffDate must be today or in the future." });
+      // }
 
-      // Check if dropOffDate is less than pickUpDate
-      if (fromDatePart >= toDatePart) {
-        return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
-      }
+      // // Check if dropOffDate is less than pickUpDate
+      // if (fromDatePart >= toDatePart) {
+      //   return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
+      // }
 
       // Using aggregation to get the user details
       const result = await AirportParkingAvailability.aggregate([
