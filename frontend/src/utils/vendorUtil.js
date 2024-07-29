@@ -10,7 +10,7 @@ const quoteForDayForLuton247 = (day) => {
     const incrementPerDay = 5;
     const extraIncrementPerDay = 10;
     const thresholdDay = 30;
-
+    console.log(day);
     if (day === 0) {
         day = 1;
     }
@@ -319,6 +319,7 @@ export const fetchAllAirports = async (dispatch) => {
 };
 
 export const getAvailableQuotes = async (queryParams, dispatch, toast, setLoading, setPageLoading, day) => {
+    console.log(day);
     dispatch(setQuotes(settingQuotes(day)));
     try {
         const response = await api.get(`/api/user/find-vendor-detail?${queryParams.toString()}`);

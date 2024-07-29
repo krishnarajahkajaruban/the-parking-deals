@@ -114,14 +114,27 @@ const VendorList = () => {
     return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  useEffect(() => {
-    const timeDifference = new Date(pickupDate) - new Date(dropOffDate);
+  function normalizeDate(dateString) {
+    const date = new Date(dateString);
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
 
+console.log(dropOffDate);
+console.log(pickupDate);
+
+useEffect(() => {
+
+    const normalizedPickupDate = normalizeDate(pickupDate);
+    const normalizedDropOffDate = normalizeDate(dropOffDate);
+
+    const timeDifference = normalizedPickupDate - normalizedDropOffDate;
     const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-    setDayDifference(dayDifference);
-  }, [dropOffDate, pickupDate]);
+    console.log(dayDifference);
 
+    setDayDifference(dayDifference);
+}, [dropOffDate, pickupDate]);
   useEffect(() => {
     fetchAllAirports(dispatch);
   }, [dispatch]);
@@ -133,6 +146,8 @@ const VendorList = () => {
   }, [quoteInfo]);
 
   const handleFunctionForApi = (selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime) => {
+    console.log(dropOffDate);
+    console.log(pickupDate);
     const queryParams = new URLSearchParams({
       airport: selectedAirport,
       fromDate: new Date(dropOffDate).toISOString(),
