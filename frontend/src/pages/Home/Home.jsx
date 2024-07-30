@@ -93,8 +93,8 @@ const Home = () => {
         { time: '23:30' },
     ];
 
-    // console.log(dropOffTime);
-    // console.log(pickupTime);
+    console.log(dropOffDate);
+    console.log(pickupDate);
 
     const parseTime = (time) => {
         const [hours, minutes] = time.split(':').map(Number);
