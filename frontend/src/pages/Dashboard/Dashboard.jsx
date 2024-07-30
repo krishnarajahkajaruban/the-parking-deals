@@ -1089,7 +1089,7 @@ const Dashboard = () => {
                           <h6 className="data-view-data">
                             {new Date(
                               selectedBooking.dropOffDate
-                            ).toLocaleString()}
+                            ).toLocaleString().split(",")[0]} & {selectedBooking.dropOffTime}
                           </h6>
                         </div>
                       </div>
@@ -1101,7 +1101,7 @@ const Dashboard = () => {
                           <h6 className="data-view-data">
                             {new Date(
                               selectedBooking.pickUpDate
-                            ).toLocaleString()}
+                            ).toLocaleString().split(",")[0]} & {selectedBooking.pickUpTime}
                           </h6>
                         </div>
                       </div>
@@ -1163,7 +1163,7 @@ const Dashboard = () => {
                           </h6>
                         </div>
                       </div>
-                      <div className="col-12 col-lg-6">
+                      {/* <div className="col-12 col-lg-6">
                         <div className="data-view mb-3 mb-lg-0">
                           <h6 className="data-view-title">
                             Outbound Flight/Vessel :
@@ -1172,14 +1172,14 @@ const Dashboard = () => {
                             {selectedBooking.travelDetail.outBoundFlight}
                           </h6>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col-12 col-lg-6">
                         <div className="data-view mb-0">
                           <h6 className="data-view-title">
                             Inbound Flight/Vessel :
                           </h6>
                           <h6 className="data-view-data">
-                            {selectedBooking.travelDetail.inBoundFlight}
+                            {selectedBooking.travelDetail.inBoundFlight || "-"}
                           </h6>
                         </div>
                       </div>
@@ -1205,14 +1205,14 @@ const Dashboard = () => {
                           <div className="col-12 col-lg-6">
                             <div className="data-view mb-3">
                               <h6 className="data-view-title">Make :</h6>
-                              <h6 className="data-view-data">{vehicle.make}</h6>
+                              <h6 className="data-view-data">{vehicle.make || "-"}</h6>
                             </div>
                           </div>
                           <div className="col-12 col-lg-6">
                             <div className="data-view mb-3 mb-lg-0">
                               <h6 className="data-view-title">Model :</h6>
                               <h6 className="data-view-data">
-                                {vehicle.model}
+                                {vehicle.model || "-"}
                               </h6>
                             </div>
                           </div>

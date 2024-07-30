@@ -13,6 +13,7 @@ const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
 const ContactForm = require("../models/contact");
 const SubscribedEmail = require("../models/subcribedEmail");
 
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 // Utility function to generate a 6-digit verification code
@@ -336,27 +337,18 @@ const carParkingBookingDetail = async (req, res) => {
 
         const fromDateObj = new Date(dropOffDate);
         const toDateObj = new Date(pickUpDate);
-        const now = new Date();
-
-        // Function to get the date part only in ISO format
-        const getDatePart = (date) => date.toISOString().split('T')[0];
-
-        const fromDatePart = getDatePart(fromDateObj);
-        const toDatePart = getDatePart(toDateObj);
-        const nowDatePart = getDatePart(now);
-
-        console.log('From Date:', fromDatePart);
-        console.log('Now:', nowDatePart);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Remove the time part from today's date
 
         // Check if dropOffDate is today or in the future
-        // if (fromDatePart < nowDatePart) {
-        //   return res.status(400).json({ error: "dropOffDate must be today or in the future." });
-        // }
+        if (fromDateObj < today) {
+          return res.status(400).json({ error: "dropOffDate must be today or in the future." });
+        }
 
         // // Check if dropOffDate is less than pickUpDate
-        // if (fromDatePart > toDatePart) {
-        //   return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
-        // }
+        if (fromDateObj > toDateObj) {
+          return res.status(400).json({ error: "dropOffDate must be less than or equal to pickUpDate." });
+        }
 
         const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
 
@@ -576,29 +568,40 @@ const findAllVendorDetailForUserSearchedParkingSlot = async (req, res) => {
           });
       }
 
-      const fromDateObj = new Date(fromDate);
-      const toDateObj = new Date(toDate);
-      const now = new Date();
 
-      // Function to get the date part only in ISO format
-      const getDatePart = (date) => date.toISOString().split('T')[0];
+    // Convert date strings to Date objects
+    const fromDateObj = new Date(fromDate);
+    const toDateObj = new Date(toDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Remove the time part from today's date
 
-      const fromDatePart = getDatePart(fromDateObj);
-      const toDatePart = getDatePart(toDateObj);
-      const nowDatePart = getDatePart(now);
+    console.log(fromDateObj);
+    console.log(toDateObj);
+    console.log(today);
+     
 
-      console.log('From Date:', fromDatePart);
-      console.log('Now:', nowDatePart);
+      // const dropOffDate = moment(fromDate);
+      // const pickUpDate = moment(toDate);
+      
+
+      // // Function to get the date part only in ISO format
+      // const getDatePart = (date) => date.toISOString().split('T')[0];
+
+      // const fromDatePart = getDatePart(fromDateObj);
+      // const toDatePart = getDatePart(toDateObj);
+      // const nowDatePart = getDatePart(now);
+
+      
 
       // Check if dropOffDate is today or in the future
-      // if (fromDatePart < nowDatePart) {
-      //   return res.status(400).json({ error: "dropOffDate must be today or in the future." });
-      // }
+      if (fromDateObj < today) {
+        return res.status(400).json({ error: "dropOffDate must be today or in the future." });
+      }
 
       // // Check if dropOffDate is less than pickUpDate
-      // if (fromDatePart >= toDatePart) {
-      //   return res.status(400).json({ error: "dropOffDate must be less than pickUpDate." });
-      // }
+      if (fromDateObj > toDateObj) {
+        return res.status(400).json({ error: "dropOffDate must be less than or equal to pickUpDate." });
+      }
 
       // Using aggregation to get the user details
       const result = await AirportParkingAvailability.aggregate([
