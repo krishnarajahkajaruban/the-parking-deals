@@ -15,7 +15,10 @@ const Header = () => {
     const user = useSelector((state) => state.auth.user);
     const [pageLoading, setPageLoading] = useState(false);
 
-    const [couponCode, setCouponCode] = useState(useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode));
+    const [couponCode, setCouponCode] = useState("");
+    const couponCodeObj = useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode);
+
+    useEffect(() => {setCouponCode(couponCodeObj)},[couponCodeObj]);
 
     const handleNavigate = (url) => {
         setPageLoading(true);

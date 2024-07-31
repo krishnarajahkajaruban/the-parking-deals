@@ -39,9 +39,13 @@ const Home = () => {
     const today = new Date();
     const [dropOffTime, setDropOffTime] = useState(null);
     const [pickupTime, setPickupTime] = useState(null);
-    const [couponCode, setCouponCode] = useState(useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode)|| "");
+    const [couponCode, setCouponCode] = useState("");
+
 
     const airports = useSelector((state) => state.vendor.airport);
+    const couponCodeObj = useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode);
+
+    useEffect(() => {setCouponCode(couponCodeObj)},[couponCodeObj]);
 
     const times = [
         { time: '00:00' },
