@@ -308,7 +308,8 @@ code {
   position: fixed;
   z-index: 999;
   width: 100%;
-  top: 35px;
+  /* top: 35px; */
+  top: 0px;
   left: 0;
   padding: 45px 0;
   /* background: transparent; */
@@ -824,7 +825,8 @@ code {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  margin-top: 35px;
+  /* margin-top: 35px; */
+  margin-top: 0px;
 }
 
 .breadcrumb-title {
