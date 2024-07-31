@@ -60,7 +60,7 @@ const Services = () => {
                     </div>
 
                     <div className='row content-card-row mt-5'>
-                        <div className="col-12 col-xl-4 col-lg-6 col-md-8 col-sm-8 mx-auto" data-aos="fade-up">
+                        <div className="col-12 col-xl-6 col-lg-6 col-md-8 col-sm-8 mx-auto" data-aos="fade-up">
                             <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className='h-100'>
                                 <article className="service-card">
                                     <div className="service-card-img-area">

@@ -96,9 +96,9 @@ const Header = () => {
                 <div class="loader"></div>
             </div> */}
             <header>
-                <div className='promotion-label'>
+                {/* <div className='promotion-label'>
                     <h6>Use <b>{couponCode}</b> promo code to get 10% off for your bookings</h6>
-                </div>
+                </div> */}
                 <nav className={`nav-section ${scrolled ? 'scrolled' : ''}`}>
                     <div className="container-md">
                         <div className="row">
