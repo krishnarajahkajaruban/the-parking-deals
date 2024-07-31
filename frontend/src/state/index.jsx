@@ -10,6 +10,11 @@ const initialVendorState = {
   quotes: []
 };
 
+const initialBookingChargeAndCouponCodeState = {
+  bookingCharge: null,
+  couponCode: null
+};
+
 export const authSlice = createSlice({
   name: "auth",
   initialState: initialAuthState,
@@ -38,8 +43,23 @@ export const vendorSlice = createSlice({
   },
 });
 
+export const bookingChargeCouponCodeSlice = createSlice({
+  name: "bookingChargeCouponCode",
+  initialState: initialBookingChargeAndCouponCodeState,
+  reducers: {
+    setBookingCharge: (state, action) => {
+      state.bookingCharge = action.payload;
+    },
+    setCouponCode: (state, action) => {
+      state.couponCode = action.payload;
+    },
+  },
+});
+
 export const { setLogin, setLogout } = authSlice.actions;
 export const { setAirports, setQuotes } = vendorSlice.actions;
+export const { setBookingCharge, setCouponCode } = bookingChargeCouponCodeSlice.actions;
 
 export const authReducer = authSlice.reducer;
 export const vendorReducer = vendorSlice.reducer;
+export const bookingChargeCouponCodeReducer = bookingChargeCouponCodeSlice.reducer;

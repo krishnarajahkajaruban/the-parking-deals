@@ -11,7 +11,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'remixicon/fonts/remixicon.css';
 import 'aos/dist/aos.css';
 import 'aos/dist/aos.js';
-import {authReducer, vendorReducer} from "./state";
+import {authReducer, vendorReducer, bookingChargeCouponCodeReducer} from "./state";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import {
@@ -33,7 +33,8 @@ const persistedReducer = persistReducer(persistConfig, authReducer);
 const store = configureStore({
   reducer: {
     auth: persistedReducer,
-    vendor: vendorReducer
+    vendor: vendorReducer,
+    bookingChargeCouponCode: bookingChargeCouponCodeReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
