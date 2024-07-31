@@ -1,5 +1,7 @@
 const BookingDetail = require("../models/bookingDetailModel");
 const User = require("../models/userModel");
+const BookingCharges = require("../models/bookingFareModel");
+const CouponCodeDiscount = require("../models/couponCodeDiscountModel");
 
 /* view bookings (common for both user, vendor and admin) */
 const getAllBookings = async (req, res) => {
@@ -109,7 +111,27 @@ const getAllBookings = async (req, res) => {
     }
 };
 
+/* find all booking charge and coupon code with discount */
+const getBookingChargesWithCouponCodeAndCorrespondingDiscount = async (req, res) => {
+    try {
+      const [bookingCharges, couponCodeDiscounts] = await Promise.all([
+        BookingCharges.findOne(),
+        CouponCodeDiscount.findOne()
+      ]);
+  
+      res.status(200).json({
+        bookingCharges,
+        couponCodeDiscounts,
+      });
+  
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+
+
 
 module.exports = {
-    getAllBookings
+    getAllBookings,
+    getBookingChargesWithCouponCodeAndCorrespondingDiscount
 };

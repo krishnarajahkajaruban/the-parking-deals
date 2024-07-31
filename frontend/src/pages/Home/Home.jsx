@@ -20,6 +20,7 @@ import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
 import Footer from '../../components/Footer';
+import { getBookingChargesWithCouponCodeAndCorrespondingDiscount } from '../../utils/chargesAndCouponCode';
 // import { SocketContext } from '../../context/SocketContext';
 
 const Home = () => {
@@ -38,7 +39,7 @@ const Home = () => {
     const today = new Date();
     const [dropOffTime, setDropOffTime] = useState(null);
     const [pickupTime, setPickupTime] = useState(null);
-    const [couponCode, setCouponCode] = useState("WLCME");
+    const [couponCode, setCouponCode] = useState(useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode)|| "");
 
     const airports = useSelector((state) => state.vendor.airport);
 
