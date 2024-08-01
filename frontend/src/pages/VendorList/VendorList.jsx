@@ -30,6 +30,8 @@ const VendorList = () => {
   const [loading, setLoading] = useState(false);
   const [dropOffDate, setDropOffDate] = useState(quoteInfo?.dropOffDate || null);
   const [pickupDate, setPickupDate] = useState(quoteInfo?.pickupDate || null);
+  const [dropOffDateStr, setDropOffDateStr] = useState(quoteInfo?.dropOffDateStr || "");
+  const [pickupDateStr, setPickupDateStr] = useState(quoteInfo?.pickupDateStr || "");
   const [dayDifference, setDayDifference] = useState(quoteInfo?.dayDifference || 0);
   const [showError, setShowError] = useState(false);
   const [selectedAirport, setSelectedAirport] = useState(quoteInfo?.selectedAirport || null);
@@ -200,13 +202,16 @@ useEffect(() => {
   const handleDropOffDateChange = (e) => {
     const newDropOffDate = e.value;
     setDropOffDate(newDropOffDate);
+    setDropOffDateStr(newDropOffDate.toLocaleDateString('en-GB'))
 
     if (newDropOffDate) {
       const newPickupDate = new Date(newDropOffDate);
       newPickupDate.setDate(newPickupDate.getDate() + 7);
       setPickupDate(newPickupDate);
+      setPickupDateStr(newPickupDate.toLocaleDateString('en-GB'));
     } else {
       setPickupDate(null);
+      setPickupDateStr("");
     }
   };
 
@@ -239,11 +244,11 @@ useEffect(() => {
     const bookingDetails = {
       airportName: selectedAirport?.name || quoteInfo?.selectedAirport?.name,
       // dropOffDate: new Date(dropOffDate || quoteInfo?.dropOffDate).toISOString(),
-      dropOffDate: dropOffDate || quoteInfo?.dropOffDate,
+      dropOffDate: dropOffDateStr || quoteInfo?.dropOffDateStr,
       dropOffTime: dropOffTime?.time || quoteInfo?.dropOffTime,
       // dropOffTime: new Date(dropOffTime || quoteInfo?.dropOffTime).toTimeString().split(' ')[0],
       // pickUpDate: new Date(pickupDate || quoteInfo?.pickupDate).toISOString(),
-      pickUpDate:pickupDate || quoteInfo?.pickupDate,
+      pickUpDate:pickupDateStr || quoteInfo?.pickupDateStr,
       pickupTime: pickupTime?.time || quoteInfo?.pickupTime,
       // pickUpTime: new Date(pickupTime || quoteInfo?.pickupTime).toTimeString().split(' ')[0],
       couponCode,
@@ -723,7 +728,7 @@ useEffect(() => {
                         <Calendar
                           id="pickupDate"
                           value={pickupDate}
-                          onChange={(e) => setPickupDate(e.value)}
+                          onChange={(e) => {setPickupDate(e.value); setPickupDateStr(e.value.toLocaleDateString('en-GB'))}}
                           placeholder="dd/mm/yyyy"
                           minDate={dropOffDate}
                           disabled={!dropOffDate}
