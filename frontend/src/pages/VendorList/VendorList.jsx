@@ -238,10 +238,12 @@ useEffect(() => {
     // }, 800);
     const bookingDetails = {
       airportName: selectedAirport?.name || quoteInfo?.selectedAirport?.name,
-      dropOffDate: new Date(dropOffDate || quoteInfo?.dropOffDate).toISOString(),
+      // dropOffDate: new Date(dropOffDate || quoteInfo?.dropOffDate).toISOString(),
+      dropOffDate: dropOffDate || quoteInfo?.dropOffDate,
       dropOffTime: dropOffTime?.time || quoteInfo?.dropOffTime,
       // dropOffTime: new Date(dropOffTime || quoteInfo?.dropOffTime).toTimeString().split(' ')[0],
-      pickUpDate: new Date(pickupDate || quoteInfo?.pickupDate).toISOString(),
+      // pickUpDate: new Date(pickupDate || quoteInfo?.pickupDate).toISOString(),
+      pickUpDate:pickupDate || quoteInfo?.pickupDate,
       pickupTime: pickupTime?.time || quoteInfo?.pickupTime,
       // pickUpTime: new Date(pickupTime || quoteInfo?.pickupTime).toTimeString().split(' ')[0],
       couponCode,
