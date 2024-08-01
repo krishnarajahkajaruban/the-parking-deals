@@ -12,6 +12,7 @@ const ForgotUserEmail = require("../models/forgotUserEmail");
 const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
 const ContactForm = require("../models/contact");
 const SubscribedEmail = require("../models/subcribedEmail");
+const moment = require('moment');
 
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
@@ -292,8 +293,11 @@ const carParkingBookingDetail = async (req, res) => {
             return res.status(400).json({ error: "All fields must be provided" });
         }
 
-        console.log("dropOffDate", new Date(dropOffDate).toLocaleDateString('en-GB'));
-        console.log("pickUpDate", new Date(pickUpDate).toLocaleDateString('en-GB'));
+        console.log("dropOff-Date", dropOffDate);
+        console.log("pickUp-Date", pickUpDate);
+
+        // console.log("dropOffDate", moment(dropOffDate).utc().format('DD/MM/YYYY'));
+        // console.log("pickUpDate", moment(pickUpDate).utc().format('DD/MM/YYYY'));
 
         let user;
         let token;
@@ -338,20 +342,20 @@ const carParkingBookingDetail = async (req, res) => {
             token = generateToken(user, process.env.JWT_SECRET);
         }
 
-        const fromDateObj = new Date(dropOffDate);
-        const toDateObj = new Date(pickUpDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Remove the time part from today's date
+        // const fromDateObj = new Date(dropOffDate);
+        // const toDateObj = new Date(pickUpDate);
+        // const today = new Date();
+        // today.setHours(0, 0, 0, 0); // Remove the time part from today's date
 
-        // Check if dropOffDate is today or in the future
-        if (fromDateObj < today) {
-          return res.status(400).json({ error: "dropOffDate must be today or in the future." });
-        }
+        // // Check if dropOffDate is today or in the future
+        // if (fromDateObj < today) {
+        //   return res.status(400).json({ error: "dropOffDate must be today or in the future." });
+        // }
 
-        // // Check if dropOffDate is less than pickUpDate
-        if (fromDateObj > toDateObj) {
-          return res.status(400).json({ error: "dropOffDate must be less than or equal to pickUpDate." });
-        }
+        // // // Check if dropOffDate is less than pickUpDate
+        // if (fromDateObj > toDateObj) {
+        //   return res.status(400).json({ error: "dropOffDate must be less than or equal to pickUpDate." });
+        // }
 
         const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
 

@@ -33,6 +33,8 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [dropOffDate, setDropOffDate] = useState(null);
     const [pickupDate, setPickupDate] = useState(null);
+    const [dropOffDateStr, setDropOffDateStr] = useState("");
+    const [pickupDateStr, setPickupDateStr] = useState("");
     const [dayDifference, setDayDifference] = useState(0);
     const [showError, setShowError] = useState(false);
     const [selectedAirport, setSelectedAirport] = useState(null);
@@ -195,7 +197,7 @@ const Home = () => {
             return;
         }
 
-        const quoteInfo = { selectedAirport, dropOffDate, dropOffTime:dropOffTime?.time, pickupDate, pickupTime:pickupTime?.time, couponCode, dayDifference }
+        const quoteInfo = { selectedAirport, dropOffDate, dropOffDateStr, dropOffTime:dropOffTime?.time, pickupDate, pickupDateStr, pickupTime:pickupTime?.time, couponCode, dayDifference }
         navigate('/results', { state: { quoteInfo } });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -203,13 +205,16 @@ const Home = () => {
     const handleDropOffDateChange = (e) => {
         const newDropOffDate = e.value;
         setDropOffDate(newDropOffDate);
+        setDropOffDateStr(newDropOffDate.toLocaleDateString('en-GB'));
 
         if (newDropOffDate) {
             const newPickupDate = new Date(newDropOffDate);
             newPickupDate.setDate(newPickupDate.getDate() + 7);
             setPickupDate(newPickupDate);
+            setPickupDateStr(newPickupDate.toLocaleDateString('en-GB'));
         } else {
             setPickupDate(null);
+            setPickupDate("");
         }
     };
 
@@ -420,7 +425,7 @@ const Home = () => {
                                                 <label htmlFor="pickupDate" className="custom-form-label form-required">Pickup date</label>
                                                 <div className="form-icon-group">
                                                     <i className="bi bi-calendar-check-fill input-grp-icon"></i>
-                                                    <Calendar id="pickupDate" value={pickupDate} onChange={(e) => setPickupDate(e.value)} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={dropOffDate} disabled={!dropOffDate} className='w-100' invalid={showError} />
+                                                    <Calendar id="pickupDate" value={pickupDate} onChange={(e) => {setPickupDate(e.value); setPickupDateStr(e.value.toLocaleDateString('en-GB'))}} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={dropOffDate} disabled={!dropOffDate} className='w-100' invalid={showError} />
                                                 </div>
                                                 {(showError && !pickupDate) &&
                                                     <small className="text-danger form-error-msg">This field is required</small>
