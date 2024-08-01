@@ -292,8 +292,8 @@ const carParkingBookingDetail = async (req, res) => {
             return res.status(400).json({ error: "All fields must be provided" });
         }
 
-        console.log("dropOffDate", dropOffDate);
-        console.log("pickUpDate", pickUpDate);
+        console.log("dropOffDate", new Date(dropOffDate).toLocaleDateString('en-GB'));
+        console.log("pickUpDate", new Date(pickUpDate).toLocaleDateString('en-GB'));
 
         let user;
         let token;

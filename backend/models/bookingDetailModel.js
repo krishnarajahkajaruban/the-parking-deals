@@ -82,7 +82,7 @@ const bookingDetailSchema = new Schema(
         required: [true, "Airport Name must be provided"]
     },
     dropOffDate : {
-        type: Date,
+        type: String,
         required: [true, "Drop Off Date must be provided"]
     },
     dropOffTime : {
@@ -90,7 +90,7 @@ const bookingDetailSchema = new Schema(
         required: [true, "Drop Off Time must be provided"]
     },
     pickUpDate : {
-        type: Date,
+        type: String,
         required: [true, "Pick Up Date must be provided"]
     },
     pickUpTime : {

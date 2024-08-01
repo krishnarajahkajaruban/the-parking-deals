@@ -473,13 +473,13 @@ const sendEmailToUser = async (booking, user, type) => {
                             </tr>
                             <tr>
                                 <th>From</th>
-                                <td>${String(new Date(booking.dropOffDate).getDate()).padStart(2, '0')}-${String(new Date(booking.dropOffDate).getMonth() + 1).padStart(2, '0')}-${new Date(booking.dropOffDate).getFullYear()} ${booking.dropOffTime}</td>
+                                <td>${booking.dropOffDate}</td>
                                 <th>Inbound Terminal</th>
                                 <td>${booking.travelDetail.arrivalTerminal}</td>
                             </tr>
                             <tr>
                                 <th>To</th>
-                                <td>${String(new Date(booking.pickUpDate).getDate()).padStart(2, '0')}-${String(new Date(booking.pickUpDate).getMonth() + 1).padStart(2, '0')}-${new Date(booking.pickUpDate).getFullYear()} ${booking.pickUpTime}</td>
+                                <td>${booking.pickUpDate}</td>
                                 <th>Outbound Terminal</th>
                                 <td>${booking.travelDetail.departureTerminal}</td>
                             </tr>
@@ -937,13 +937,13 @@ const sendEmailToCompany = async (booking, user, type) => {
                             </tr>
                             <tr>
                                 <th>From</th>
-                                <td>${String(new Date(booking.dropOffDate).getDate()).padStart(2, '0')}-${String(new Date(booking.dropOffDate).getMonth() + 1).padStart(2, '0')}-${new Date(booking.dropOffDate).getFullYear()} ${booking.dropOffTime}</td>
+                                <td>${booking.dropOffDate}</td>
                                 <th>Inbound Terminal</th>
                                 <td>${booking.travelDetail.arrivalTerminal}</td>
                             </tr>
                             <tr>
                                 <th>To</th>
-                                <td>${String(new Date(booking.pickUpDate).getDate()).padStart(2, '0')}-${String(new Date(booking.pickUpDate).getMonth() + 1).padStart(2, '0')}-${new Date(booking.pickUpDate).getFullYear()} ${booking.pickUpTime}</td>
+                                <td>${booking.pickUpDate}</td>
                                 <th>Outbound Terminal</th>
                                 <td>${booking.travelDetail.departureTerminal}</td>
                             </tr>
