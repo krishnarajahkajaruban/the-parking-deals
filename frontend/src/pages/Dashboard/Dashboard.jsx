@@ -1086,10 +1086,15 @@ const Dashboard = () => {
                           <h6 className="data-view-title">
                             Drop Off Date & Time :
                           </h6>
-                          <h6 className="data-view-data">
+                          {/*<h6 className="data-view-data">
                             {new Date(
                               selectedBooking.dropOffDate
                             ).toLocaleString().split(",")[0]} & {selectedBooking.dropOffTime}
+                          </h6>*/}
+                          <h6 className="data-view-data">
+                            {
+                              selectedBooking.dropOffDate
+                            } & {selectedBooking.dropOffTime}
                           </h6>
                         </div>
                       </div>
@@ -1099,9 +1104,9 @@ const Dashboard = () => {
                             Return Date & Time :
                           </h6>
                           <h6 className="data-view-data">
-                            {new Date(
+                            {
                               selectedBooking.pickUpDate
-                            ).toLocaleString().split(",")[0]} & {selectedBooking.pickUpTime}
+                            } & {selectedBooking.pickUpTime}
                           </h6>
                         </div>
                       </div>

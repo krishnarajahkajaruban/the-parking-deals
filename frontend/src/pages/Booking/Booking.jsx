@@ -1634,7 +1634,8 @@ const Booking = () => {
                       </div>
                       <div className="detail-card-info-body">
                         <p>Drop Off Date :</p>
-                        <h6>{formatDate(bookingDetails?.dropOffDate)}</h6>
+                        {/* <h6>{formatDate(bookingDetails?.dropOffDate)}</h6> */}
+                        <h6>{bookingDetails?.dropOffDate}</h6>
                       </div>
                     </div>
                   </div>
@@ -1660,7 +1661,8 @@ const Booking = () => {
                       </div>
                       <div className="detail-card-info-body">
                         <p>Return Date :</p>
-                        <h6>{formatDate(bookingDetails?.pickUpDate)}</h6>
+                        {/* <h6>{formatDate(bookingDetails?.pickUpDate)}</h6> */}
+                        <h6>{bookingDetails?.pickUpDate}</h6>
                       </div>
                     </div>
                   </div>

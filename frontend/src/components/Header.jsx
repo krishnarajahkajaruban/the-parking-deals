@@ -5,6 +5,7 @@ import Preloader from '../Preloader';
 import { setLogout } from '../state';
 import { Ripple } from 'primereact/ripple';
 import { Link } from 'react-router-dom';
+import { getBookingChargesWithCouponCodeAndCorrespondingDiscount } from '../utils/chargesAndCouponCode';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -14,7 +15,10 @@ const Header = () => {
     const user = useSelector((state) => state.auth.user);
     const [pageLoading, setPageLoading] = useState(false);
 
-    const [couponCode, setCouponCode] = useState("WLCME");
+    const [couponCode, setCouponCode] = useState("");
+    const couponCodeObj = useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode);
+
+    useEffect(() => {setCouponCode(couponCodeObj)},[couponCodeObj]);
 
     const handleNavigate = (url) => {
         setPageLoading(true);
@@ -58,6 +62,10 @@ const Header = () => {
         };
 
     }, []);
+
+    useEffect(() => {
+        getBookingChargesWithCouponCodeAndCorrespondingDiscount(dispatch);
+    }, [dispatch]);
 
     // useEffect(() => {
     //     const preloader = document.getElementById('preloader');
