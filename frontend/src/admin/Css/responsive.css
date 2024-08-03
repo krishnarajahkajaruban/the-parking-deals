@@ -1,0 +1,22 @@
+
+/* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
+@media (min-width: 1399.99px) {}
+
+/* For XL Screen (Laptop - HD Ready Display) */
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {}
+
+/* For LG (Large) Screen  */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {}
+
+/* For MD (Medium) Screen (ipad) */
+@media only screen and (min-width: 768px) and (max-width: 991px) {}
+
+/* For SM (Small) Screen (Tab) */
+@media (min-width: 576px) and (max-width: 767px) {}
+
+/* For Mobile Screen */
+@media (max-width: 575px) {
+    .login_bg{
+        background-position: right;
+    }
+}

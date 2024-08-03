@@ -23,20 +23,25 @@ import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/bootstrap4-light-purple/theme.css";
 import ProtectedRoute from './ProtectedRoute';
 
-const Home = React.lazy(()=>import('./pages/Home/Home'));
-const AboutUs = React.lazy(()=>import('./pages/AboutUs/AboutUs'));
+
+/* For admin dashboard */
+import AdminLogin from './admin/AdminLogin/AdminLogin';
+/*  */
+
+const Home = React.lazy(() => import('./pages/Home/Home'));
+const AboutUs = React.lazy(() => import('./pages/AboutUs/AboutUs'));
 // const Signin = React.lazy(()=>import('./pages/Signin/ModifiedSigin'));
 // const Signup = React.lazy(()=>import('./pages/Signup/Signup'));
-const PrivacyPolicy = React.lazy(()=>import('./pages/PrivacyPolicy/PrivacyPolicy'));
-const TermsAndConditions = React.lazy(()=>import('./pages/TermsAndConditions/TermsAndConditions'));
-const FaQ = React.lazy(()=>import('./pages/FaQ/FaQ'));
-const ContactUs = React.lazy(()=>import('./pages/ContactUs/ContactUs'));
+const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
+const TermsAndConditions = React.lazy(() => import('./pages/TermsAndConditions/TermsAndConditions'));
+const FaQ = React.lazy(() => import('./pages/FaQ/FaQ'));
+const ContactUs = React.lazy(() => import('./pages/ContactUs/ContactUs'));
 // const ForgotPassword = React.lazy(()=>import('./pages/ForgotPassword/ForgotPassword'));
-const Services = React.lazy(()=>import('./pages/Services/Services'));
+const Services = React.lazy(() => import('./pages/Services/Services'));
 // const VendorList = React.lazy(()=>import('./pages/VendorList/VendorList'));
-const Booking = React.lazy(()=>import('./pages/Booking/Booking'));
-const Dashboard = React.lazy(()=>import('./pages/Dashboard/Dashboard'));
-const ChangePassword = React.lazy(()=>import('./pages/ChangePassword/ChangePassword'));
+const Booking = React.lazy(() => import('./pages/Booking/Booking'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
+const ChangePassword = React.lazy(() => import('./pages/ChangePassword/ChangePassword'));
 
 function App() {
   const value = {
@@ -77,6 +82,10 @@ function App() {
         <Route path='/booking' element={<Suspense fallback={<Preloader />}><Booking /></Suspense>} />
         <Route path='/dashboard' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Dashboard /></ProtectedRoute></Suspense>} />
         <Route path='/change-password' element={<Suspense fallback={<Preloader />}><ProtectedRoute><ChangePassword /></ProtectedRoute></Suspense>} />
+
+        {/* Admin routes */}
+        <Route path='/admin-login' element={<Suspense fallback={<Preloader />}><AdminLogin /></Suspense>} />
+        {/*  */}
       </Routes>
     </PrimeReactProvider>
   );

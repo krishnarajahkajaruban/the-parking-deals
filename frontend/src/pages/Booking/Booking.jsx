@@ -770,7 +770,6 @@ const Booking = () => {
                                         setShowError(false);
                                         setOTP(e.value);
                                       }}
-                                      integerOnly
                                     />
                                   </div>
                                   {(showError && !otp) && (
