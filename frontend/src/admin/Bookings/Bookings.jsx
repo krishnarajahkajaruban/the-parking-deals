@@ -3,6 +3,7 @@ import './Bookings.css';
 
 import { Calendar } from 'primereact/calendar';
 import { Ripple } from 'primereact/ripple';
+import { Divider } from 'primereact/divider';
 import { InputText } from "primereact/inputtext";
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
@@ -140,6 +141,183 @@ const Bookings = () => {
                     </div>
                 </div>
             </div>
+
+            <div
+                className="modal fade"
+                id="bookingDetailModal"
+                tabIndex="-1"
+                aria-labelledby="bookingDetailModalLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                    <div className="modal-content custom-modal">
+                        <div className="modal-header p-2">
+                            <h1 className="modal-title fs-5" id="bookingDetailModalLabel">
+                                Booking Info
+                            </h1>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body p-2">
+                            <div className="data-view-area">
+                                <h5 className="data-view-head">Booking Details</h5>
+                                <div className="row mt-4">
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Provider :</h6>
+                                            <h6 className="data-view-data">
+                                                Parking deals
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Location :</h6>
+                                            <h6 className="data-view-data">
+                                                London UK
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3 mb-lg-0">
+                                            <h6 className="data-view-title">
+                                                Drop Off Date & Time :
+                                            </h6>
+                                            <h6 className="data-view-data">
+                                                10-06-2024 & 10:36 AM
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-0">
+                                            <h6 className="data-view-title">
+                                                Return Date & Time :
+                                            </h6>
+                                            <h6 className="data-view-data">
+                                                12-06-2024 & 10:20 AM
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="data-view-sub mt-3">
+                                    <div className="row">
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Booking Quote :</h6>
+                                                <h6 className="data-view-data">
+                                                    £ 150
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Booking Fee :</h6>
+                                                <h6 className="data-view-data">
+                                                    £ 250
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3 mb-lg-0">
+                                                <h6 className="data-view-title">Discount :</h6>
+                                                <h6 className="data-view-data">
+                                                    £ 50
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-0">
+                                                <h6 className="data-view-title">Total :</h6>
+                                                <h6 className="data-view-data">
+                                                    £ 200
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Divider className="mt-4 mb-4" />
+                                <h5 className="data-view-head">Travel Details</h5>
+                                <div className="row mt-4">
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Depart Terminal :</h6>
+                                            <h6 className="data-view-data">
+                                                Terminal 1
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">
+                                                Arrival Terminal :
+                                            </h6>
+                                            <h6 className="data-view-data">
+                                                Terminal 2
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-0">
+                                            <h6 className="data-view-title">
+                                                Inbound Flight/Vessel :
+                                            </h6>
+                                            <h6 className="data-view-data">
+                                                ---
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Divider className="mt-4 mb-4" />
+                                <h5 className="data-view-head">Vehicle Details</h5>
+                                <div className="data-view-sub mt-3">
+                                    <h6 className="data-view-sub-head">
+                                        Vehicle 1
+                                    </h6>
+                                    <div className="row">
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">
+                                                    Registration Number :
+                                                </h6>
+                                                <h6 className="data-view-data">
+                                                    123456
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3">
+                                                <h6 className="data-view-title">Make :</h6>
+                                                <h6 className="data-view-data">Audi</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-3 mb-lg-0">
+                                                <h6 className="data-view-title">Model :</h6>
+                                                <h6 className="data-view-data">
+                                                    A8
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                            <div className="data-view mb-0">
+                                                <h6 className="data-view-title">Color :</h6>
+                                                <h6 className="data-view-data">
+                                                    Black
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/*  */}
         </>
     )
 }
