@@ -1,4 +1,3 @@
-
 /* For XXL Screen (768p(1366 x 768) above - 1080p , 1920 x 1080) */
 @media (min-width: 1399.99px) {}
 
@@ -16,7 +15,58 @@
 
 /* For Mobile Screen */
 @media (max-width: 575px) {
-    .login_bg{
+    .login_bg {
         background-position: right;
+    }
+
+    .navigation_area.active {
+        width: 100% !important;
+    }
+}
+
+/* Common */
+@media (max-width: 991.9px) {
+    .navigation_area {
+        top: 0 !important;
+        border-radius: 0 !important;
+        height: 100% !important;
+    }
+
+    .navigation_area ul {
+        padding: 0 20px !important;
+    }
+
+    .navigation_area ul li.active a::before,
+    .navigation_area ul li.active a::after {
+        display: none !important;
+    }
+
+    .navigation_area ul li {
+        border-radius: 30px !important;
+    }
+
+    .navigation_area ul li:hover a::before,
+    .navigation_area ul li.hovered a::before,
+    .navigation_area ul li:hover a::after,
+    .navigation_area ul li.hovered a::after {
+        display: none !important;
+    }
+
+    .toggle_menu {
+        display: flex;
+    }
+
+    .toggle_close {
+        display: flex;
+    }
+
+    .navigation_area ul li a .icon {
+        height: 55px;
+        width: 55px;
+    }
+
+    .navigation_area ul li a .title{
+        line-height: 55px;
+        height: 55px;
     }
 }

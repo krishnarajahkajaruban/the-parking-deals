@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "../AdminLayout/Layout";
 
 import { InputText } from "primereact/inputtext";
@@ -12,6 +13,7 @@ import Preloader from "../../Preloader";
 
 const AdminLogin = () => {
     const toast = useRef(null);
+    const navigate = useNavigate();
     const [checked, setChecked] = useState(false);
     const [require, setRequire] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -38,6 +40,8 @@ const AdminLogin = () => {
                     life: 3000
                 });
             }
+
+            navigate('/admin-dashboard');
         } catch (err) {
             console.log(err);
             toast.current.show({
@@ -73,7 +77,7 @@ const AdminLogin = () => {
             <Toast ref={toast} />
 
             <div className="login_bg">
-                <div className="col-11 col-xl-4 col-lg-6 col-sm-8 col-md-88 mx-auto">
+                <div className="col-12 col-xl-4 col-lg-6 col-sm-8 col-md-88 mx-auto">
                     <article className="custom-card" data-aos="fade-up">
                         <div className="custom-card-logo-area">
                             <img src="assets/images/logo.png" className='custom-card-logo' alt="The Parking Deals" />

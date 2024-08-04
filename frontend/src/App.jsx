@@ -24,8 +24,12 @@ import "primereact/resources/themes/bootstrap4-light-purple/theme.css";
 import ProtectedRoute from './ProtectedRoute';
 
 
-/* For admin dashboard */
+/* For admin panel */
 import AdminLogin from './admin/AdminLogin/AdminLogin';
+import Layout from './admin/AdminLayout/Layout';
+import AdminDashboard from './admin/AdminDashboard/AdminDashboard';
+import Reservation from './admin/Reservation/Reservation';
+import Bookings from './admin/Bookings/Bookings';
 /*  */
 
 const Home = React.lazy(() => import('./pages/Home/Home'));
@@ -85,6 +89,11 @@ function App() {
 
         {/* Admin routes */}
         <Route path='/admin-login' element={<Suspense fallback={<Preloader />}><AdminLogin /></Suspense>} />
+        <Route path="/" element={<Layout />}>
+          <Route path='admin-dashboard' element={<Suspense fallback={<Preloader />}><AdminDashboard /></Suspense>} />
+          <Route path='reservation' element={<Suspense fallback={<Preloader />}><Reservation /></Suspense>} />
+          <Route path='bookings' element={<Suspense fallback={<Preloader />}><Bookings /></Suspense>} />
+        </Route>
         {/*  */}
       </Routes>
     </PrimeReactProvider>
