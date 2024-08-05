@@ -143,10 +143,17 @@
         font-size: 1.4rem !important;
     }
 
-    .p-dialog{
+    .p-dialog {
         width: 85vw !important;
     }
-    .p-dialog.p-confirm-dialog .p-confirm-dialog-message{
+
+    .p-dialog.p-confirm-dialog .p-confirm-dialog-message {
         font-size: 13px !important;
+    }
+
+    .data-view-title,
+    .data-view-data {
+        font-size: 14px;
+        font-weight: 500;
     }
 }

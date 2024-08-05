@@ -60,7 +60,7 @@ const Layout = () => {
                 <ul>
                     <li>
                         <Link href="#" className="logo_title_area">
-                            <span class="icon">
+                            <span class="icon logo">
                                 <img src="/assets/images/parking-deals-icon-logo-light.png" alt="" />
                             </span>
                             <span class="logo_title">
@@ -70,7 +70,7 @@ const Layout = () => {
                         </Link>
                     </li>
                     <li className={`${pathname === '/admin-dashboard' ? 'active' : ''}`}>
-                        <Link to={'/admin-dashboard'}>
+                        <Link to={'/admin-dashboard'} onClick={() => setMenuOpen(false)} >
                             <span className="icon">
                                 <i className="bi bi-speedometer2"></i>
                             </span>
@@ -79,7 +79,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/reservation' ? 'active' : ''}`}>
-                        <Link to={'/reservation'}>
+                        <Link to={'/reservation'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-calendar2-event"></i>
                             </span>
@@ -88,7 +88,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/bookings' ? 'active' : ''}`}>
-                        <Link to={'/bookings'}>
+                        <Link to={'/bookings'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-calendar2-check"></i>
                             </span>
@@ -97,7 +97,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/customers' ? 'active' : ''}`}>
-                        <Link to={'/'}>
+                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-people"></i>
                             </span>
@@ -106,7 +106,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/vendors' ? 'active' : ''}`}>
-                        <Link to={'/'}>
+                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-building"></i>
                             </span>
@@ -116,7 +116,7 @@ const Layout = () => {
 
 
                     <li className={`${pathname === '/users' ? 'active' : ''}`}>
-                        <Link to={'/'}>
+                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-person"></i>
                             </span>
@@ -125,7 +125,7 @@ const Layout = () => {
                     </li>
 
                     <li>
-                        <Link to={'/'}>
+                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-box-arrow-in-right"></i>
                             </span>
@@ -162,7 +162,7 @@ const Layout = () => {
                             </div>
                             <li className='profile-dropdown-item mb-1 mt-1'>
                                 <button className="profile-dropdown-link profile p-ripple">
-                                    <i className='bi bi-speedometer2 me-2'></i>
+                                    <i className='bi bi-person me-2'></i>
                                     Profile
                                     <Ripple />
                                 </button>
