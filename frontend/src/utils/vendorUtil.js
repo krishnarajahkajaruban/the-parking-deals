@@ -6,7 +6,7 @@ const airports = [
 ];
 
 const quoteForDayForLuton247 = (day) => {
-    const initialAmount = 60.99;
+    const initialAmount = 130;
     const incrementPerDay = 5;
     const extraIncrementPerDay = 10;
     const thresholdDay = 30;
@@ -31,7 +31,7 @@ const quoteForDayForLuton247 = (day) => {
 };
 
 const quoteForDayForAirportParkingBay = (day) => {
-    const initialAmount = 55.99;
+    const initialAmount = 125;
     const incrementPerDay = 5;
     const extraIncrementPerDay = 10;
     const thresholdDay = 30;
