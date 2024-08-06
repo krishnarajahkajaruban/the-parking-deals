@@ -23,7 +23,7 @@ const Users = () => {
     const [showError, setShowError] = useState(false);
     const [userData, setUserData] = useState(null);
     const [dataState, setDataState] = useState('Add');
-    const [selectedUsers, setSelectedUsers] = useState(null);
+    const [selectedUserId, setSelectedUserId] = useState(null);
 
     const roles = [
         { name: 'Moderator' },
@@ -163,7 +163,7 @@ const Users = () => {
                     onClick={() => {
                         setShowUserModal(true);
                         setDataState('Edit');
-                        setSelectedUsers(rowData.id);
+                        setSelectedUserId(rowData.id);
                     }}
                 />
 
@@ -229,7 +229,6 @@ const Users = () => {
     return (
         <>
             <Preloader />
-            <ConfirmDialog />
             <Toast ref={toast} />
 
             <div>

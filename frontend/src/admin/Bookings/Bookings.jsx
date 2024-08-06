@@ -90,7 +90,9 @@ const Bookings = () => {
         <>
             <Preloader />
             <div>
-                <h4 className="page_heading">Bookings</h4>
+                <div className="page_header_area">
+                    <h4 className="page_heading">Bookings</h4>
+                </div>
 
                 <div className="filter_area">
                     <div className="row">

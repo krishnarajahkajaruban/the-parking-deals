@@ -31,6 +31,7 @@ import AdminDashboard from './admin/AdminDashboard/AdminDashboard';
 import Reservation from './admin/Reservation/Reservation';
 import Bookings from './admin/Bookings/Bookings';
 import Users from './admin/Users/Users';
+import Customers from './admin/Customers/Customers';
 /*  */
 
 const Home = React.lazy(() => import('./pages/Home/Home'));
@@ -95,6 +96,7 @@ function App() {
           <Route path='reservation' element={<Suspense fallback={<Preloader />}><Reservation /></Suspense>} />
           <Route path='bookings' element={<Suspense fallback={<Preloader />}><Bookings /></Suspense>} />
           <Route path='users' element={<Suspense fallback={<Preloader />}><Users /></Suspense>} />
+          <Route path='customers' element={<Suspense fallback={<Preloader />}><Customers /></Suspense>} />
         </Route>
         {/*  */}
       </Routes>

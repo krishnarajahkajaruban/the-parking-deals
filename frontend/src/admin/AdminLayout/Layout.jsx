@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link, useLocation, Outlet } from "react-router-dom";
+import Preloader from '../../Preloader';
 
 import { Ripple } from 'primereact/ripple';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -57,11 +58,15 @@ const Layout = () => {
             acceptClassName: 'p-button-danger',
             accept: () => { },
         });
+        setMenuOpen(false);
     }
+
     return (
         <>
             <div className={`menu-backdrop ${menuOpen ? 'show' : ''}`} onClick={closeMenu}></div>
 
+            <ConfirmDialog />
+            <Preloader />
 
             {/* Side bar */}
             <aside className={`navigation_area ${menuOpen ? 'active' : ''} `}>
@@ -109,7 +114,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/customers' ? 'active' : ''}`}>
-                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
+                        <Link to={'/customers'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-people"></i>
                             </span>
@@ -137,7 +142,7 @@ const Layout = () => {
                     </li>
 
                     <li>
-                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
+                        <Link onClick={handleLogOut}>
                             <span className="icon">
                                 <i className="bi bi-box-arrow-in-right"></i>
                             </span>
