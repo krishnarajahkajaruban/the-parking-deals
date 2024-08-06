@@ -61,7 +61,7 @@ const Bookings = () => {
         );
     };
 
-    const searchBodyTemplate = (rowData) => {
+    const infoBodyTemplate = (rowData) => {
         return (
             <Button
                 icon="bi bi-eye-fill"
@@ -86,12 +86,6 @@ const Bookings = () => {
         )
     }
 
-    const bookingModalFooter = () => {
-        return (
-            <>
-            </>
-        )
-    }
     return (
         <>
             <Preloader />
@@ -160,7 +154,7 @@ const Bookings = () => {
                                 style={{ width: "25%" }}
                             ></Column>
                             <Column
-                                body={searchBodyTemplate}
+                                body={infoBodyTemplate}
                                 header="Info"
                                 style={{ width: "10%" }}
                             ></Column>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link, useLocation, Outlet } from "react-router-dom";
 
 import { Ripple } from 'primereact/ripple';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import '../Css/style.css';
 import '../Css/responsive.css';
@@ -46,6 +47,17 @@ const Layout = () => {
         navigate(path);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    const handleLogOut = () => {
+        confirmDialog({
+            message: 'Are you sure you want to log out?',
+            header: 'Logout Confirmation',
+            icon: 'bi bi-info-circle',
+            defaultFocus: 'reject',
+            acceptClassName: 'p-button-danger',
+            accept: () => { },
+        });
+    }
     return (
         <>
             <div className={`menu-backdrop ${menuOpen ? 'show' : ''}`} onClick={closeMenu}></div>
@@ -116,7 +128,7 @@ const Layout = () => {
 
 
                     <li className={`${pathname === '/users' ? 'active' : ''}`}>
-                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
+                        <Link to={'/users'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-person"></i>
                             </span>
@@ -168,7 +180,8 @@ const Layout = () => {
                                 </button>
                             </li>
                             <li className='profile-dropdown-item'>
-                                <button className="profile-dropdown-link logout p-ripple" type='button'>
+                                <button className="profile-dropdown-link logout p-ripple" type='button'
+                                    onClick={handleLogOut}>
                                     <i className='bi bi-box-arrow-right me-2'></i>
                                     Logout
                                     <Ripple />

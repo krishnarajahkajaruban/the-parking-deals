@@ -1693,9 +1693,11 @@ button.custom-form-link:disabled {
 .content-collapse-section .p-accordion .p-accordion-content a:hover {
   text-decoration: underline;
 }
-.p-toast{
+
+.p-toast {
   z-index: 99999 !important;
 }
+
 .p-toast .p-toast-message {
   border: none;
   border-radius: 10px;
@@ -1825,7 +1827,7 @@ button.custom-form-link:disabled {
   padding: 20px;
   background-color: #d7d7f1;
   border-radius: 12px;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .custom-modal .modal-footer {
@@ -1858,7 +1860,10 @@ button.custom-form-link:disabled {
   border: none;
   border-radius: 10px !important;
   border: 2px solid #FFF;
-  width: 300px;
+}
+
+.p-dialog.p-confirm-dialog {
+  max-width: 500px;
 }
 
 .p-dialog-header {
