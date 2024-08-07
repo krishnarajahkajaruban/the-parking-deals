@@ -27,11 +27,11 @@ import ProtectedRoute from './ProtectedRoute';
 /* For admin panel */
 import AdminLogin from './admin/AdminLogin/AdminLogin';
 import Layout from './admin/AdminLayout/Layout';
-import AdminDashboard from './admin/AdminDashboard/AdminDashboard';
-import Reservation from './admin/Reservation/Reservation';
-import Bookings from './admin/Bookings/Bookings';
-import Users from './admin/Users/Users';
-import Customers from './admin/Customers/Customers';
+// import AdminDashboard from './admin/AdminDashboard/AdminDashboard';
+// import Reservation from './admin/Reservation/Reservation';
+// import Bookings from './admin/Bookings/Bookings';
+// import Users from './admin/Users/Users';
+// import Customers from './admin/Customers/Customers';
 /*  */
 
 const Home = React.lazy(() => import('./pages/Home/Home'));
@@ -50,7 +50,11 @@ const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 const ChangePassword = React.lazy(() => import('./pages/ChangePassword/ChangePassword'));
 
 /* For admin panel */
-
+const AdminDashboard = React.lazy(() => import('./admin/AdminDashboard/AdminDashboard'));
+const Reservation = React.lazy(() => import('./admin/Reservation/Reservation'));
+const Bookings = React.lazy(() => import('./admin/Bookings/Bookings'));
+const Users = React.lazy(() => import('./admin/Users/Users'));
+const Customers = React.lazy(() => import('./admin/Customers/Customers'));
 
 function App() {
   const value = {
@@ -68,25 +72,17 @@ function App() {
 
   return (
     <PrimeReactProvider value={value}>
-      {/* <Preloader /> */}
-      {/* <Suspense fallback={<Preloader />}>
-            <Routes>
-                <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} />
-                <Route path='/sign-up' element={<ProtectedRoute><Signup /></ProtectedRoute>} />
-                <Route path='/forgot-password' element={<ProtectedRoute><ForgotPassword /></ProtectedRoute>} />
-            </Routes>
-        </Suspense> */}
       <Routes>
-        <Route path='/' element={<Suspense fallback={<Preloader />}><Home /></Suspense>} />
-        <Route path='/about-us' element={<Suspense fallback={<Preloader />}><AboutUs /></Suspense>} />
+        <Route path='/' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Home /></ProtectedRoute></Suspense>} />
+        <Route path='/about-us' element={<Suspense fallback={<Preloader />}><ProtectedRoute><AboutUs /></ProtectedRoute></Suspense>} />
         <Route path='/sign-in' element={<ProtectedRoute><Signin /></ProtectedRoute>} />
         <Route path='/sign-up' element={<ProtectedRoute><Signup /></ProtectedRoute>} />
         <Route path='/forgot-password' element={<ProtectedRoute><ForgotPassword /></ProtectedRoute>} />
-        <Route path='/privacy-policy' element={<Suspense fallback={<Preloader />}><PrivacyPolicy /></Suspense>} />
-        <Route path='/terms-and-conditions' element={<Suspense fallback={<Preloader />}><TermsAndConditions /></Suspense>} />
-        <Route path='/faq' element={<Suspense fallback={<Preloader />}><FaQ /></Suspense>} />
-        <Route path='/contact-us' element={<Suspense fallback={<Preloader />}><ContactUs /></Suspense>} />
-        <Route path='/services' element={<Suspense fallback={<Preloader />}><Services /></Suspense>} />
+        <Route path='/privacy-policy' element={<Suspense fallback={<Preloader />}><ProtectedRoute><PrivacyPolicy /></ProtectedRoute></Suspense>} />
+        <Route path='/terms-and-conditions' element={<Suspense fallback={<Preloader />}><ProtectedRoute><TermsAndConditions /></ProtectedRoute></Suspense>} />
+        <Route path='/faq' element={<Suspense fallback={<Preloader />}><ProtectedRoute><FaQ /></ProtectedRoute></Suspense>} />
+        <Route path='/contact-us' element={<Suspense fallback={<Preloader />}><ProtectedRoute><ContactUs /></ProtectedRoute></Suspense>} />
+        <Route path='/services' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Services /></ProtectedRoute></Suspense>} />
         <Route path='/results' element={<ProtectedRoute><VendorList /></ProtectedRoute>} />
         <Route path='/booking' element={<Suspense fallback={<Preloader />}><Booking /></Suspense>} />
         <Route path='/dashboard' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Dashboard /></ProtectedRoute></Suspense>} />
@@ -96,10 +92,10 @@ function App() {
         <Route path='/admin-login' element={<ProtectedRoute><AdminLogin /></ProtectedRoute>} />
         <Route path="/" element={<Layout />}>
           <Route path='admin-dashboard' element={<Suspense fallback={<Preloader />}><ProtectedRoute><AdminDashboard /></ProtectedRoute></Suspense>} />
-          <Route path='reservation' element={<Suspense fallback={<Preloader />}><Reservation /></Suspense>} />
-          <Route path='bookings' element={<Suspense fallback={<Preloader />}><Bookings /></Suspense>} />
-          <Route path='users' element={<Suspense fallback={<Preloader />}><Users /></Suspense>} />
-          <Route path='customers' element={<Suspense fallback={<Preloader />}><Customers /></Suspense>} />
+          <Route path='reservation' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Reservation /></ProtectedRoute></Suspense>} />
+          <Route path='bookings' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Bookings /></ProtectedRoute></Suspense>} />
+          <Route path='users' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Users /></ProtectedRoute></Suspense>} />
+          <Route path='customers' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Customers /></ProtectedRoute></Suspense>} />
         </Route>
         {/*  */}
       </Routes>

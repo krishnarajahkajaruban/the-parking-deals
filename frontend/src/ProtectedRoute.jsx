@@ -10,7 +10,6 @@ const ProtectedRoute = ({ children }) => {
     const token = useSelector((state) => state.auth.token);
     const dispatch = useDispatch();
     const location = useLocation();
-    const pathname = location.pathname;
 
     useEffect(() => {
         const validateToken = async () => {
@@ -21,14 +20,11 @@ const ProtectedRoute = ({ children }) => {
 
             try {
                 const response = await api.get('/api/user/check-token-validity', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-                console.log(response.data);
                 setIsAuth(response.data?.user);
             } catch (error) {
-                dispatch(setLogout()); // Remove invalid token from the store
+                dispatch(setLogout());
                 setIsAuth(false);
             }
         };
@@ -37,31 +33,42 @@ const ProtectedRoute = ({ children }) => {
     }, [token, dispatch]);
 
     if (isAuth === null) {
-        // You can add a loading spinner here if needed
-        return <Preloader/>;
+        return <Preloader />;
     }
 
+    const { pathname } = location;
     const childType = children.type?.componentName;
-
-    console.log(childType);
-
     const isAuthPage = ['Signin', 'Signup', 'ForgotPassword', 'AdminLogin'].includes(childType);
 
-    if(childType === 'VenderList' && isAuth !== null){
-        return children;
-    }
-
     if (isAuthPage && isAuth) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return isAuth?.role === "User" ? <Navigate to="/" /> : isAuth?.role === "Admin" ? <Navigate to="/admin-dashboard" /> : null;
+        const redirectPath = isAuth.role === 'Admin' ? '/admin-dashboard' : '/';
+        return <Navigate to={redirectPath} />;
     }
 
     if (!isAuth && !isAuthPage) {
-        return (pathname === "/change-password" || pathname === "/dashboard") ? <Navigate to="/sign-in" /> : <Navigate to="/admin-login" />;
+        if (['/change-password', '/dashboard'].includes(pathname)) {
+            return <Navigate to="/sign-in" />;
+        }
+    }
+
+    const isUser = isAuth?.role === 'User';
+    const isAdmin = isAuth?.role === 'Admin';
+    const adminRoutes = ['/admin-login', '/admin-dashboard', '/reservation', '/bookings', '/users', '/customers'];
+    const userRoutes = ['/', '/about-us', '/sign-in', '/sign-up', '/forgot-password', '/privacy-policy', '/terms-and-conditions', '/faq', '/contact-us', '/services', '/results', '/booking', '/dashboard', '/change-password'];
+
+    if (isUser && adminRoutes.includes(pathname)) {
+        return <Navigate to="/" />;
+    }
+
+    if (isAdmin && userRoutes.includes(pathname)) {
+        return <Navigate to="/admin-dashboard" />;
+    }
+
+    if (childType === 'VendorList') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     return children;
-}
+};
 
 export default ProtectedRoute;
-
