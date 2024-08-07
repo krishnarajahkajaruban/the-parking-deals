@@ -386,6 +386,7 @@
     height: 35px;
     display: flex;
     align-items: center;
+    flex-shrink: 0;
     justify-content: center;
     transition: ease 0.5s;
 }
@@ -398,6 +399,31 @@
     background-color: #37348b !important;
     color: #c1c1db !important;
     box-shadow: inset 0px 0px 8px #33337971 !important;
+}
+
+.data-delete-button {
+    background-color: #fde6e6;
+    color: #dd0f0f;
+    border-color: #fde6e6;
+    box-shadow: inset 0px 0px 8px #e9979770 !important;
+    line-height: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    transition: ease 0.5s;
+}
+
+.data-delete-button:focus {
+    box-shadow: 0px 0px 0px 3px #8b343471 !important;
+}
+
+.data-delete-button:hover {
+    background-color: #dd0f0f !important;
+    color: #fde6e6 !important;
+    box-shadow: inset 0px 0px 8px #79333371 !important;
 }
 
 /*  */

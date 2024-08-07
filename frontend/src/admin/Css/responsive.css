@@ -8,10 +8,18 @@
 @media only screen and (min-width: 992px) and (max-width: 1199px) {}
 
 /* For MD (Medium) Screen (ipad) */
-@media only screen and (min-width: 768px) and (max-width: 991px) {}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .p-dialog.modal_dialog_md {
+        width: 600px !important;
+    }
+}
 
 /* For SM (Small) Screen (Tab) */
-@media (min-width: 576px) and (max-width: 767px) {}
+@media (min-width: 576px) and (max-width: 767px) {
+    .p-dialog.modal_dialog_md {
+        width: 600px !important;
+    }
+}
 
 /* For Mobile Screen */
 @media (max-width: 575px) {
@@ -21,6 +29,49 @@
 
     .navigation_area.active {
         width: 100% !important;
+    }
+
+    .p-dialog.modal_dialog_md {
+        width: 96vw !important;
+    }
+
+    .navigation_area ul li a .icon.logo {
+        height: 80px;
+        width: 80px;
+    }
+
+    .navigation_area ul li a {
+        align-items: center;
+    }
+
+    .main_area {
+        padding: 0 15px !important;
+    }
+
+    .p-dialog.modal_dialog .p-dialog-footer .custom_modal_footer {
+        gap: 8px !important;
+    }
+
+    .p-dialog .p-dialog-footer .p-button.modal_btn {
+        font-size: 14px !important;
+        width: 100%;
+    }
+
+    .page_heading {
+        font-size: 17px;
+    }
+
+    .p-datatable.p-datatable-sm .p-datatable-tbody>tr>td {
+        font-size: 14px !important;
+    }
+
+    .btn_primary {
+        font-size: 14px !important;
+    }
+
+    .p-datatable .p-datatable-thead>tr>th {
+        font-size: 14px !important;
+        text-wrap: nowrap;
     }
 }
 
@@ -65,7 +116,7 @@
         width: 55px;
     }
 
-    .navigation_area ul li a .title{
+    .navigation_area ul li a .title {
         line-height: 55px;
         height: 55px;
     }

@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link, useLocation, Outlet } from "react-router-dom";
+import Preloader from '../../Preloader';
 
 import { Ripple } from 'primereact/ripple';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import '../Css/style.css';
 import '../Css/responsive.css';
@@ -46,10 +48,25 @@ const Layout = () => {
         navigate(path);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    const handleLogOut = () => {
+        confirmDialog({
+            message: 'Are you sure you want to log out?',
+            header: 'Logout Confirmation',
+            icon: 'bi bi-info-circle',
+            defaultFocus: 'reject',
+            acceptClassName: 'p-button-danger',
+            accept: () => { },
+        });
+        setMenuOpen(false);
+    }
+
     return (
         <>
             <div className={`menu-backdrop ${menuOpen ? 'show' : ''}`} onClick={closeMenu}></div>
 
+            <ConfirmDialog />
+            <Preloader />
 
             {/* Side bar */}
             <aside className={`navigation_area ${menuOpen ? 'active' : ''} `}>
@@ -60,7 +77,7 @@ const Layout = () => {
                 <ul>
                     <li>
                         <Link href="#" className="logo_title_area">
-                            <span class="icon">
+                            <span class="icon logo">
                                 <img src="/assets/images/parking-deals-icon-logo-light.png" alt="" />
                             </span>
                             <span class="logo_title">
@@ -70,7 +87,7 @@ const Layout = () => {
                         </Link>
                     </li>
                     <li className={`${pathname === '/admin-dashboard' ? 'active' : ''}`}>
-                        <Link to={'/admin-dashboard'}>
+                        <Link to={'/admin-dashboard'} onClick={() => setMenuOpen(false)} >
                             <span className="icon">
                                 <i className="bi bi-speedometer2"></i>
                             </span>
@@ -79,7 +96,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/reservation' ? 'active' : ''}`}>
-                        <Link to={'/reservation'}>
+                        <Link to={'/reservation'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-calendar2-event"></i>
                             </span>
@@ -88,7 +105,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/bookings' ? 'active' : ''}`}>
-                        <Link to={'/bookings'}>
+                        <Link to={'/bookings'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-calendar2-check"></i>
                             </span>
@@ -97,7 +114,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/customers' ? 'active' : ''}`}>
-                        <Link to={'/'}>
+                        <Link to={'/customers'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-people"></i>
                             </span>
@@ -106,7 +123,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/vendors' ? 'active' : ''}`}>
-                        <Link to={'/'}>
+                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-building"></i>
                             </span>
@@ -116,7 +133,7 @@ const Layout = () => {
 
 
                     <li className={`${pathname === '/users' ? 'active' : ''}`}>
-                        <Link to={'/'}>
+                        <Link to={'/users'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-person"></i>
                             </span>
@@ -125,7 +142,7 @@ const Layout = () => {
                     </li>
 
                     <li>
-                        <Link to={'/'}>
+                        <Link onClick={handleLogOut}>
                             <span className="icon">
                                 <i className="bi bi-box-arrow-in-right"></i>
                             </span>
@@ -162,13 +179,14 @@ const Layout = () => {
                             </div>
                             <li className='profile-dropdown-item mb-1 mt-1'>
                                 <button className="profile-dropdown-link profile p-ripple">
-                                    <i className='bi bi-speedometer2 me-2'></i>
+                                    <i className='bi bi-person me-2'></i>
                                     Profile
                                     <Ripple />
                                 </button>
                             </li>
                             <li className='profile-dropdown-item'>
-                                <button className="profile-dropdown-link logout p-ripple" type='button'>
+                                <button className="profile-dropdown-link logout p-ripple" type='button'
+                                    onClick={handleLogOut}>
                                     <i className='bi bi-box-arrow-right me-2'></i>
                                     Logout
                                     <Ripple />
