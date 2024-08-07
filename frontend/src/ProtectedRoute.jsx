@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import api from './api';
 import { setLogout } from './state';
 import Preloader from './Preloader';
@@ -9,6 +9,7 @@ const ProtectedRoute = ({ children }) => {
     const [isAuth, setIsAuth] = useState(null);
     const token = useSelector((state) => state.auth.token);
     const dispatch = useDispatch();
+    const location = useLocation();
 
     useEffect(() => {
         const validateToken = async () => {
@@ -19,14 +20,11 @@ const ProtectedRoute = ({ children }) => {
 
             try {
                 const response = await api.get('/api/user/check-token-validity', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-                console.log(response.data);
-                setIsAuth(true);
+                setIsAuth(response.data?.user);
             } catch (error) {
-                dispatch(setLogout()); // Remove invalid token from the store
+                dispatch(setLogout());
                 setIsAuth(false);
             }
         };
@@ -35,31 +33,42 @@ const ProtectedRoute = ({ children }) => {
     }, [token, dispatch]);
 
     if (isAuth === null) {
-        // You can add a loading spinner here if needed
-        return <Preloader/>;
+        return <Preloader />;
     }
 
+    const { pathname } = location;
     const childType = children.type?.componentName;
-
-    console.log(childType);
-
-    const isAuthPage = ['Signin', 'Signup', 'ForgotPassword'].includes(childType);
-
-    if(childType === 'VenderList' && isAuth !== null){
-        return children;
-    }
+    const isAuthPage = ['Signin', 'Signup', 'ForgotPassword', 'AdminLogin'].includes(childType);
 
     if (isAuthPage && isAuth) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return <Navigate to="/" />;
+        const redirectPath = isAuth.role === 'Admin' ? '/admin-dashboard' : '/';
+        return <Navigate to={redirectPath} />;
     }
 
     if (!isAuth && !isAuthPage) {
-        return <Navigate to="/sign-in" />;
+        if (['/change-password', '/dashboard'].includes(pathname)) {
+            return <Navigate to="/sign-in" />;
+        }
+    }
+
+    const isUser = isAuth?.role === 'User';
+    const isAdmin = isAuth?.role === 'Admin';
+    const adminRoutes = ['/admin-login', '/admin-dashboard', '/reservation', '/bookings', '/users', '/customers'];
+    const userRoutes = ['/', '/about-us', '/sign-in', '/sign-up', '/forgot-password', '/privacy-policy', '/terms-and-conditions', '/faq', '/contact-us', '/services', '/results', '/booking', '/dashboard', '/change-password'];
+
+    if (isUser && adminRoutes.includes(pathname)) {
+        return <Navigate to="/" />;
+    }
+
+    if (isAdmin && userRoutes.includes(pathname)) {
+        return <Navigate to="/admin-dashboard" />;
+    }
+
+    if (childType === 'VendorList') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     return children;
-}
+};
 
 export default ProtectedRoute;
-

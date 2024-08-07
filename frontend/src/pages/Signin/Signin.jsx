@@ -23,7 +23,8 @@ const Signin = () => {
 
     const initialSigInInfo = {
         email: '',
-        password: ''
+        password: '',
+        role: "User"
     }
     const [signInInfo, setSignInInfo] = useState(initialSigInInfo);
 

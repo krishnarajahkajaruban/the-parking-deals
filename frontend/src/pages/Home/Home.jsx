@@ -47,7 +47,7 @@ const Home = () => {
     const airports = useSelector((state) => state.vendor.airport);
     const couponCodeObj = useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode);
 
-    useEffect(() => {setCouponCode(couponCodeObj)},[couponCodeObj]);
+    // useEffect(() => {setCouponCode(couponCodeObj)},[couponCodeObj]);
 
     const times = [
         { time: '00:00' },

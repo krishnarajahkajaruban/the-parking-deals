@@ -15,10 +15,10 @@ const Header = () => {
     const user = useSelector((state) => state.auth.user);
     const [pageLoading, setPageLoading] = useState(false);
 
-    const [couponCode, setCouponCode] = useState("");
-    const couponCodeObj = useSelector((state) => state.bookingChargeCouponCode.couponCode?.couponCode);
+    const [couponCodeAndDiscount, setCouponCodeAndDiscount] = useState(null);
+    const couponCodeDiscountObj = useSelector((state) => state.bookingChargeCouponCode.couponCode);
 
-    useEffect(() => {setCouponCode(couponCodeObj)},[couponCodeObj]);
+    useEffect(() => {if(couponCodeDiscountObj)setCouponCodeAndDiscount(couponCodeDiscountObj)},[couponCodeDiscountObj]);
 
     const handleNavigate = (url) => {
         setPageLoading(true);
@@ -99,9 +99,9 @@ const Header = () => {
                 <div class="loader"></div>
             </div> */}
             <header>
-                {/* <div className='promotion-label'>
-                    <h6>Use <b>{couponCode}</b> promo code to get 10% off for your bookings</h6>
-                </div> */}
+                <div className='promotion-label'>
+                    <h6>Use <b>{couponCodeAndDiscount?.couponCode}</b> promo code to get {couponCodeAndDiscount?.discount}% off for your bookings</h6>
+                </div>
                 <nav className={`nav-section ${scrolled ? 'scrolled' : ''}`}>
                     <div className="container-md">
                         <div className="row">

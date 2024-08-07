@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 // import './Bookings.css';
 import '../../pages/Dashboard/Dashboard.css';
 import '../../pages/Dashboard/Dashboard-responsive.css';
@@ -14,29 +14,48 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 
-import { BookingData } from "./SampleData";
+import { SampleData } from '../../BookingData';
+import { useSelector } from "react-redux";
 
 const Bookings = () => {
     const today = new Date();
     const [loading, setLoading] = useState(false);
     const [bookingDate, setBookingDate] = useState(null);
     const [searchKey, setSearchKey] = useState(null);
-    const [bookingData, setBookingData] = useState(null);
+    const [bookings, setBookings] = useState([]);
     const [totalRecords, setTotalRecords] = useState(0);
     const [rows, setRows] = useState(10);
+    const [page, setPage] = useState(1);
+    const [selectedBooking, setSelectedBooking] = useState(null);
     const [showBookingModal, setShowBookingModal] = useState(false);
+
+    // eslint-disable-next-line no-undef
+    const token = useSelector((state) => state.auth.token);
 
     const handleFilterByDate = (e) => {
         const bookdate = e.value;
     }
 
+    const fetchBookings = async (page, rows) => {
+        setLoading(true);
+        const data = await SampleData.getData(page, rows, '', '', token);
+        setBookings(data.bookings);
+        setTotalRecords(data.totalRecords);
+        setLoading(false);
+    };
+
     useEffect(() => {
-        const data = BookingData.getBookingsData
-        setBookingData(data);
-    }, [])
+        fetchBookings(page, rows);
+    }, [page, rows, token]);
 
     const onPageChange = (event) => {
+        console.log(event);
+        setPage(event.page + 1);
         setRows(event.rows);
+    };
+
+    const dateTimeTemplate = (rowData) => {
+        return `${rowData.date} ${rowData.time}`;
     };
 
     const getSeverity = (booking) => {
@@ -44,7 +63,7 @@ const Bookings = () => {
             case 'Pending':
                 return 'warning';
 
-            case 'Confirmed':
+            case 'Paid':
                 return 'success';
 
             case 'Cancelled':
@@ -66,7 +85,7 @@ const Bookings = () => {
             <Button
                 icon="bi bi-eye-fill"
                 className="data-view-button"
-                onClick={() => setShowBookingModal(true)}
+                onClick={() => {setShowBookingModal(true); setSelectedBooking(rowData.details)}}
             />
         );
     };
@@ -129,11 +148,12 @@ const Bookings = () => {
                 <div className="page_content">
                     <div className="dash-table-area">
                         <DataTable
-                            value={bookingData}
+                            value={bookings}
                             paginator
                             size="small"
                             rows={rows}
                             totalRecords={totalRecords}
+                            onPage={onPageChange}
                             loading={loading}
                             rowsPerPageOptions={[5, 10, 25, 50]}
                             tableStyle={{ minWidth: "50rem" }}
@@ -142,12 +162,12 @@ const Bookings = () => {
                         >
                             <Column
                                 header="Booking ID"
-                                field="bookingId"
+                                field="id"
                                 style={{ width: "20%" }}
                             ></Column>
                             <Column
-                                header="Date"
-                                field="date"
+                                header="Date & Time"
+                                body={dateTimeTemplate}
                                 style={{ width: "30%" }}
                             ></Column>
                             <Column
@@ -166,7 +186,7 @@ const Bookings = () => {
             </div>
 
             {/* Booking view modal */}
-            <Dialog header={bookingModalHeader} visible={showBookingModal}
+            {selectedBooking && <Dialog header={bookingModalHeader} visible={showBookingModal}
                 onHide={() => { if (!showBookingModal) return; setShowBookingModal(false); }}
                 className="custom-modal modal_dialog modal_dialog_md">
                 <div className="modal-body p-2">
@@ -177,7 +197,7 @@ const Bookings = () => {
                                 <div className="data-view mb-3">
                                     <h6 className="data-view-title">Provider :</h6>
                                     <h6 className="data-view-data">
-                                        Parking deals
+                                    {selectedBooking.company.companyName}
                                     </h6>
                                 </div>
                             </div>
@@ -185,7 +205,7 @@ const Bookings = () => {
                                 <div className="data-view mb-3">
                                     <h6 className="data-view-title">Location :</h6>
                                     <h6 className="data-view-data">
-                                        London UK
+                                    {selectedBooking.airportName}
                                     </h6>
                                 </div>
                             </div>
@@ -195,7 +215,9 @@ const Bookings = () => {
                                         Drop Off Date & Time :
                                     </h6>
                                     <h6 className="data-view-data">
-                                        10-06-2024 & 10:36 AM
+                                    {
+                              selectedBooking.dropOffDate
+                            } & {selectedBooking.dropOffTime}
                                     </h6>
                                 </div>
                             </div>
@@ -205,7 +227,9 @@ const Bookings = () => {
                                         Return Date & Time :
                                     </h6>
                                     <h6 className="data-view-data">
-                                        12-06-2024 & 10:20 AM
+                                    {
+                              selectedBooking.pickUpDate
+                            } & {selectedBooking.pickUpTime}
                                     </h6>
                                 </div>
                             </div>
@@ -216,7 +240,7 @@ const Bookings = () => {
                                     <div className="data-view mb-3">
                                         <h6 className="data-view-title">Booking Quote :</h6>
                                         <h6 className="data-view-data">
-                                            £ 150
+                                            £ {selectedBooking.bookingQuote}
                                         </h6>
                                     </div>
                                 </div>
@@ -224,7 +248,7 @@ const Bookings = () => {
                                     <div className="data-view mb-3">
                                         <h6 className="data-view-title">Booking Fee :</h6>
                                         <h6 className="data-view-data">
-                                            £ 250
+                                            £ {selectedBooking.bookingFee}
                                         </h6>
                                     </div>
                                 </div>
@@ -232,7 +256,7 @@ const Bookings = () => {
                                     <div className="data-view mb-3 mb-lg-0">
                                         <h6 className="data-view-title">Discount :</h6>
                                         <h6 className="data-view-data">
-                                            £ 50
+                                            £ {selectedBooking.couponDiscount}
                                         </h6>
                                     </div>
                                 </div>
@@ -240,7 +264,7 @@ const Bookings = () => {
                                     <div className="data-view mb-0">
                                         <h6 className="data-view-title">Total :</h6>
                                         <h6 className="data-view-data">
-                                            £ 200
+                                            £ {selectedBooking.totalPayable}
                                         </h6>
                                     </div>
                                 </div>
@@ -253,7 +277,7 @@ const Bookings = () => {
                                 <div className="data-view mb-3">
                                     <h6 className="data-view-title">Depart Terminal :</h6>
                                     <h6 className="data-view-data">
-                                        Terminal 1
+                                    {selectedBooking.travelDetail.departureTerminal}
                                     </h6>
                                 </div>
                             </div>
@@ -263,7 +287,7 @@ const Bookings = () => {
                                         Arrival Terminal :
                                     </h6>
                                     <h6 className="data-view-data">
-                                        Terminal 2
+                                    {selectedBooking.travelDetail.arrivalTerminal}
                                     </h6>
                                 </div>
                             </div>
@@ -273,55 +297,57 @@ const Bookings = () => {
                                         Inbound Flight/Vessel :
                                     </h6>
                                     <h6 className="data-view-data">
-                                        ---
+                                    {selectedBooking.travelDetail.inBoundFlight || "-"}
                                     </h6>
                                 </div>
                             </div>
                         </div>
                         <Divider className="mt-4 mb-4" />
                         <h5 className="data-view-head">Vehicle Details</h5>
-                        <div className="data-view-sub mt-3">
-                            <h6 className="data-view-sub-head">
-                                Vehicle 1
-                            </h6>
-                            <div className="row">
-                                <div className="col-12 col-lg-6">
-                                    <div className="data-view mb-3">
-                                        <h6 className="data-view-title">
-                                            Registration Number :
-                                        </h6>
-                                        <h6 className="data-view-data">
-                                            123456
-                                        </h6>
-                                    </div>
-                                </div>
-                                <div className="col-12 col-lg-6">
-                                    <div className="data-view mb-3">
-                                        <h6 className="data-view-title">Make :</h6>
-                                        <h6 className="data-view-data">Audi</h6>
-                                    </div>
-                                </div>
-                                <div className="col-12 col-lg-6">
-                                    <div className="data-view mb-3 mb-lg-0">
-                                        <h6 className="data-view-title">Model :</h6>
-                                        <h6 className="data-view-data">
-                                            A8
-                                        </h6>
-                                    </div>
-                                </div>
-                                <div className="col-12 col-lg-6">
-                                    <div className="data-view mb-0">
-                                        <h6 className="data-view-title">Color :</h6>
-                                        <h6 className="data-view-data">
-                                            Black
-                                        </h6>
-                                    </div>
-                                </div>
+                        {selectedBooking.vehicleDetail.map((vehicle, index) => (
+                      <div key={index} className="data-view-sub mt-3">
+                        <h6 className="data-view-sub-head">
+                          Vehicle {index + 1}
+                        </h6>
+                        <div className="row">
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-3">
+                              <h6 className="data-view-title">
+                                Registration Number :
+                              </h6>
+                              <h6 className="data-view-data">
+                                {vehicle.regNo}
+                              </h6>
                             </div>
+                          </div>
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-3">
+                              <h6 className="data-view-title">Make :</h6>
+                              <h6 className="data-view-data">{vehicle.make || "-"}</h6>
+                            </div>
+                          </div>
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-3 mb-lg-0">
+                              <h6 className="data-view-title">Model :</h6>
+                              <h6 className="data-view-data">
+                                {vehicle.model || "-"}
+                              </h6>
+                            </div>
+                          </div>
+                          <div className="col-12 col-lg-6">
+                            <div className="data-view mb-0">
+                              <h6 className="data-view-title">Color :</h6>
+                              <h6 className="data-view-data">
+                                {vehicle.color}
+                              </h6>
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                    ))}
                     </div>
                 </div>
-            </Dialog>
+            </Dialog>}
             {/*  */}
         </>
     )
