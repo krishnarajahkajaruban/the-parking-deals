@@ -37,9 +37,9 @@ router.post("/register", async (req, res) => {
 
 //login endpoint
 router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
-    const result = await login(email, password);
+    const result = await login(email, password, role);
 
     if (result.status !== 200) {
         return res.status(result.status).json({ error: result.error });

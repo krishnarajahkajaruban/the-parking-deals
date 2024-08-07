@@ -47,6 +47,9 @@ const Booking = React.lazy(() => import('./pages/Booking/Booking'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 const ChangePassword = React.lazy(() => import('./pages/ChangePassword/ChangePassword'));
 
+/* For admin panel */
+
+
 function App() {
   const value = {
     ripple: true,
@@ -88,9 +91,9 @@ function App() {
         <Route path='/change-password' element={<Suspense fallback={<Preloader />}><ProtectedRoute><ChangePassword /></ProtectedRoute></Suspense>} />
 
         {/* Admin routes */}
-        <Route path='/admin-login' element={<Suspense fallback={<Preloader />}><AdminLogin /></Suspense>} />
+        <Route path='/admin-login' element={<ProtectedRoute><AdminLogin /></ProtectedRoute>} />
         <Route path="/" element={<Layout />}>
-          <Route path='admin-dashboard' element={<Suspense fallback={<Preloader />}><AdminDashboard /></Suspense>} />
+          <Route path='admin-dashboard' element={<Suspense fallback={<Preloader />}><ProtectedRoute><AdminDashboard /></ProtectedRoute></Suspense>} />
           <Route path='reservation' element={<Suspense fallback={<Preloader />}><Reservation /></Suspense>} />
           <Route path='bookings' element={<Suspense fallback={<Preloader />}><Bookings /></Suspense>} />
         </Route>
