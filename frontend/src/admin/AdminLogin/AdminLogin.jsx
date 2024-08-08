@@ -10,17 +10,23 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
 import Preloader from "../../Preloader";
+import api from "../../api";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../state";
+import withComponentName from "../../withComponentName";
 
 const AdminLogin = () => {
     const toast = useRef(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [checked, setChecked] = useState(false);
     const [require, setRequire] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const initialSigInInfo = {
         email: '',
-        password: ''
+        password: '',
+        role: "Admin"
     }
     const [signInInfo, setSignInInfo] = useState(initialSigInInfo);
 
@@ -32,6 +38,8 @@ const AdminLogin = () => {
     const login = async (loginInfo) => {
         setLoading(true);
         try {
+            const response = await api.post("/api/auth/login", loginInfo);
+            console.log(response.data);
             if (toast.current) {
                 toast.current.show({
                     severity: 'success',
@@ -40,14 +48,21 @@ const AdminLogin = () => {
                     life: 3000
                 });
             }
-
-            navigate('/admin-dashboard');
+            setTimeout(() => {
+                dispatch(
+                    setLogin({
+                        user: response.data.user,
+                        token: response.data.token
+                    })
+                )
+            }, 2000);
+            // navigate('/admin-dashboard');
         } catch (err) {
             console.log(err);
             toast.current.show({
                 severity: 'error',
                 summary: 'Failed to Logged In',
-                detail: err,
+                detail: err.response.data.error,
                 life: 3000
             });
         } finally {
@@ -147,4 +162,4 @@ const AdminLogin = () => {
     )
 }
 
-export default AdminLogin;
+export default withComponentName(AdminLogin, 'AdminLogin');

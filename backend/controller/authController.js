@@ -165,7 +165,7 @@ const register = async (email, title, firstName, lastName, companyName, password
 }
 
 /* login */
-const login = async (email, password) => {
+const login = async (email, password, role) => {
     try { 
       if (!email || !password) {
         return {
@@ -173,8 +173,15 @@ const login = async (email, password) => {
           status: 403
         };
       }
+
+      if (!role) {
+        return {
+          error: "Please provide role of login",
+          status: 403
+        };
+      }
   
-      const user = await User.findOne({ email: email.toLowerCase() }).select('+password').lean();
+      const user = await User.findOne({ email: email.toLowerCase(), role }).select('+password').lean();
       if (!user) {
         return {
           error: "User does not exist.",

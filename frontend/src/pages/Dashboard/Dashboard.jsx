@@ -20,7 +20,7 @@ import { Tag } from 'primereact/tag';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-import { SampleData } from './SampleData';
+import { SampleData } from '../../BookingData';
 import { useDispatch, useSelector } from "react-redux";
 import { setLogin, setLogout } from "../../state";
 import { Toast } from 'primereact/toast';
@@ -268,6 +268,9 @@ const Dashboard = () => {
 
     const getSeverity = (booking) => {
         switch (booking.status) {
+            case 'Pending':
+                return 'warning';
+                
             case 'Paid':
                 return 'success';
 
@@ -818,11 +821,12 @@ const Dashboard = () => {
                               loading={loading}
                               rowsPerPageOptions={[5, 10, 25, 50]}
                               tableStyle={{ minWidth: "50rem" }}
+                              rowHover
                               className="dash-table"
                             >
                               <Column
                                 field="id"
-                                header="Booking ID"
+                                header="bookingId"
                                 style={{ width: "20%" }}
                               ></Column>
                               <Column

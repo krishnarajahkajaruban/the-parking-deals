@@ -1,4 +1,4 @@
-import api from "../../api";
+import api from "./api";
 
 export const SampleData = {
     getData(page = 1, limit = 10, status = '', date = '', token) {
