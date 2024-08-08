@@ -127,41 +127,48 @@ const Bookings = () => {
                 </div>
 
                 <div className="page_content">
-                    <div className="dash-table-area">
-                        <DataTable
-                            value={bookingData}
-                            paginator
-                            size="small"
-                            rows={rows}
-                            totalRecords={totalRecords}
-                            loading={loading}
-                            rowsPerPageOptions={[5, 10, 25, 50]}
-                            tableStyle={{ minWidth: "50rem" }}
-                            rowHover
-                            className="dash-table"
-                        >
-                            <Column
-                                header="Booking ID"
-                                field="bookingId"
-                                style={{ width: "20%" }}
-                            ></Column>
-                            <Column
-                                header="Date"
-                                field="date"
-                                style={{ width: "30%" }}
-                            ></Column>
-                            <Column
-                                header="Status"
-                                body={statusBodyTemplate}
-                                style={{ width: "25%" }}
-                            ></Column>
-                            <Column
-                                body={infoBodyTemplate}
-                                header="Info"
-                                style={{ width: "10%" }}
-                            ></Column>
-                        </DataTable>
-                    </div>
+                    {bookingData?.length > 0 ? (
+                        <div className="dash-table-area">
+                            <DataTable
+                                value={bookingData}
+                                paginator
+                                size="small"
+                                rows={rows}
+                                totalRecords={totalRecords}
+                                loading={loading}
+                                rowsPerPageOptions={[5, 10, 25, 50]}
+                                tableStyle={{ minWidth: "50rem" }}
+                                rowHover
+                                className="dash-table"
+                            >
+                                <Column
+                                    header="Booking ID"
+                                    field="bookingId"
+                                    style={{ width: "20%" }}
+                                ></Column>
+                                <Column
+                                    header="Date"
+                                    field="date"
+                                    style={{ width: "30%" }}
+                                ></Column>
+                                <Column
+                                    header="Status"
+                                    body={statusBodyTemplate}
+                                    style={{ width: "25%" }}
+                                ></Column>
+                                <Column
+                                    body={infoBodyTemplate}
+                                    header="Info"
+                                    style={{ width: "10%" }}
+                                ></Column>
+                            </DataTable>
+                        </div>
+                    ) : (
+                        <div className="no_data_found_area">
+                            <img src="/assets/images/no_data_2.svg" alt="No booking data!" />
+                            <h6>No booking data!</h6>
+                        </div>
+                    )}
                 </div>
             </div>
 
