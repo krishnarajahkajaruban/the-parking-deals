@@ -22,7 +22,7 @@ export const SampleData = {
                 status: booking.status,
                 details: booking,
             }));
-            return { bookings, totalRecords: res.totalCount };
+            return { bookings, totalRecords: res.data.totalCount };
         }).catch(err => {
             console.error(err);
             return { bookings: [], totalRecords: 0 };

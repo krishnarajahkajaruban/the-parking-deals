@@ -63,7 +63,7 @@ const Dashboard = () => {
     const [totalRecords, setTotalRecords] = useState(0);
     const [rows, setRows] = useState(10);
     const [selectedBooking, setSelectedBooking] = useState(null);
-    
+    const [rowPerPage, setRowsPerPage] = useState([5]);
 
     const initialUserInfo = {
         title: user?.title || titles[0].name,
@@ -204,8 +204,12 @@ const Dashboard = () => {
         const data = await SampleData.getData(page, rows, '', '', token);
         setBookings(data.bookings);
         setTotalRecords(data.totalRecords);
+        const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
+        setRowsPerPage([...newRowPerPage, Number(data.totalRecords)])
         setLoading(false);
     };
+
+    // console.log(rowPerPage);
 
     useEffect(() => {
         fetchBookings(page, rows);
@@ -819,7 +823,7 @@ const Dashboard = () => {
                               totalRecords={totalRecords}
                               onPage={onPageChange}
                               loading={loading}
-                              rowsPerPageOptions={[5, 10, 25, 50]}
+                              rowsPerPageOptions={rowPerPage}
                               tableStyle={{ minWidth: "50rem" }}
                               rowHover
                               className="dash-table"

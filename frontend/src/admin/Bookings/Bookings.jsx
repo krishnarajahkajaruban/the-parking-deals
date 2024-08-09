@@ -28,6 +28,7 @@ const Bookings = () => {
     const [page, setPage] = useState(1);
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [showBookingModal, setShowBookingModal] = useState(false);
+    const [rowPerPage, setRowsPerPage] = useState([5]);
 
     // eslint-disable-next-line no-undef
     const token = useSelector((state) => state.auth.token);
@@ -35,12 +36,14 @@ const Bookings = () => {
     const handleFilterByDate = (e) => {
         const bookdate = e.value;
     }
-
+    
     const fetchBookings = async (page, rows) => {
         setLoading(true);
         const data = await SampleData.getData(page, rows, '', '', token);
         setBookings(data.bookings);
         setTotalRecords(data.totalRecords);
+        const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
+        setRowsPerPage([...newRowPerPage, Number(data.totalRecords)])
         setLoading(false);
     };
 
@@ -148,14 +151,14 @@ const Bookings = () => {
                 <div className="page_content">
                     <div className="dash-table-area">
                         <DataTable
+                            loading={loading}
                             value={bookings}
                             paginator
+                            onPage={onPageChange}
                             size="small"
                             rows={rows}
-                            totalRecords={totalRecords}
-                            onPage={onPageChange}
-                            loading={loading}
-                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            totalRecords={Number(totalRecords)}
+                            rowsPerPageOptions={rowPerPage}
                             tableStyle={{ minWidth: "50rem" }}
                             rowHover
                             className="dash-table"

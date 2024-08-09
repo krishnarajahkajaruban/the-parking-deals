@@ -251,6 +251,7 @@ const Users = () => {
                         <DataTable
                             value={userData}
                             paginator
+                            // onPage={(event)=>{console.log(event)}}
                             size="small"
                             rows={rows}
                             totalRecords={totalRecords}

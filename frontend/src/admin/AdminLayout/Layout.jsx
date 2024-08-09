@@ -8,14 +8,18 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import '../Css/style.css';
 import '../Css/responsive.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLogout } from '../../state';
 
 const Layout = () => {
     const navigate = useNavigate;
     const { pathname } = useLocation();
+    const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
 
     const [isOpen, setIsOpen] = useState(false);
     const dropdowMenuRef = useRef(null);
+    const user = useSelector((state)=>state.auth.user)
 
     const toggleDropdownMenu = () => {
         setIsOpen(!isOpen);
@@ -56,7 +60,7 @@ const Layout = () => {
             icon: 'bi bi-info-circle',
             defaultFocus: 'reject',
             acceptClassName: 'p-button-danger',
-            accept: () => { },
+            accept: () => { dispatch(setLogout()); },
         });
         setMenuOpen(false);
     }
@@ -174,7 +178,7 @@ const Layout = () => {
                                     <img src={"assets/images/user.png"} className='profile-dropdown-no-img' alt="" />
                                 </div>
                                 <h6 className='dropdown-profile-name'>
-                                    User Name
+                                    {user?.firstName} {user?.lastname}
                                 </h6>
                             </div>
                             <li className='profile-dropdown-item mb-1 mt-1'>
