@@ -22,7 +22,7 @@ const Bookings = () => {
     const [loading, setLoading] = useState(false);
     const [bookingDate, setBookingDate] = useState(null);
     const [searchKey, setSearchKey] = useState(null);
-    const [bookings, setBookings] = useState([]);
+    const [bookings, setBookings] = useState(null);
     const [totalRecords, setTotalRecords] = useState(0);
     const [rows, setRows] = useState(10);
     const [page, setPage] = useState(1);
