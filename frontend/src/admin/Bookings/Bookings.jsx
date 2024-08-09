@@ -88,7 +88,7 @@ const Bookings = () => {
             <Button
                 icon="bi bi-eye-fill"
                 className="data-view-button"
-                onClick={() => {setShowBookingModal(true); setSelectedBooking(rowData.details)}}
+                onClick={() => { setShowBookingModal(true); setSelectedBooking(rowData.details) }}
             />
         );
     };
@@ -149,15 +149,16 @@ const Bookings = () => {
                 </div>
 
                 <div className="page_content">
+                {bookings?.length > 0 ? (
                     <div className="dash-table-area">
                         <DataTable
-                            loading={loading}
                             value={bookings}
                             paginator
-                            onPage={onPageChange}
                             size="small"
                             rows={rows}
-                            totalRecords={Number(totalRecords)}
+                            totalRecords={totalRecords}
+                            onPage={onPageChange}
+                            loading={loading}
                             rowsPerPageOptions={rowPerPage}
                             tableStyle={{ minWidth: "50rem" }}
                             rowHover
@@ -185,6 +186,12 @@ const Bookings = () => {
                             ></Column>
                         </DataTable>
                     </div>
+                    ) : (
+                        <div className="no_data_found_area">
+                            <img src="/assets/images/no_data_2.svg" alt="No booking data!" />
+                            <h6>No booking data!</h6>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -200,7 +207,7 @@ const Bookings = () => {
                                 <div className="data-view mb-3">
                                     <h6 className="data-view-title">Provider :</h6>
                                     <h6 className="data-view-data">
-                                    {selectedBooking.company.companyName}
+                                        {selectedBooking.company.companyName}
                                     </h6>
                                 </div>
                             </div>
@@ -208,7 +215,7 @@ const Bookings = () => {
                                 <div className="data-view mb-3">
                                     <h6 className="data-view-title">Location :</h6>
                                     <h6 className="data-view-data">
-                                    {selectedBooking.airportName}
+                                        {selectedBooking.airportName}
                                     </h6>
                                 </div>
                             </div>
@@ -218,9 +225,9 @@ const Bookings = () => {
                                         Drop Off Date & Time :
                                     </h6>
                                     <h6 className="data-view-data">
-                                    {
-                              selectedBooking.dropOffDate
-                            } & {selectedBooking.dropOffTime}
+                                        {
+                                            selectedBooking.dropOffDate
+                                        } & {selectedBooking.dropOffTime}
                                     </h6>
                                 </div>
                             </div>
@@ -230,9 +237,9 @@ const Bookings = () => {
                                         Return Date & Time :
                                     </h6>
                                     <h6 className="data-view-data">
-                                    {
-                              selectedBooking.pickUpDate
-                            } & {selectedBooking.pickUpTime}
+                                        {
+                                            selectedBooking.pickUpDate
+                                        } & {selectedBooking.pickUpTime}
                                     </h6>
                                 </div>
                             </div>
@@ -280,7 +287,7 @@ const Bookings = () => {
                                 <div className="data-view mb-3">
                                     <h6 className="data-view-title">Depart Terminal :</h6>
                                     <h6 className="data-view-data">
-                                    {selectedBooking.travelDetail.departureTerminal}
+                                        {selectedBooking.travelDetail.departureTerminal}
                                     </h6>
                                 </div>
                             </div>
@@ -290,7 +297,7 @@ const Bookings = () => {
                                         Arrival Terminal :
                                     </h6>
                                     <h6 className="data-view-data">
-                                    {selectedBooking.travelDetail.arrivalTerminal}
+                                        {selectedBooking.travelDetail.arrivalTerminal}
                                     </h6>
                                 </div>
                             </div>
@@ -300,7 +307,7 @@ const Bookings = () => {
                                         Inbound Flight/Vessel :
                                     </h6>
                                     <h6 className="data-view-data">
-                                    {selectedBooking.travelDetail.inBoundFlight || "-"}
+                                        {selectedBooking.travelDetail.inBoundFlight || "-"}
                                     </h6>
                                 </div>
                             </div>
@@ -308,46 +315,46 @@ const Bookings = () => {
                         <Divider className="mt-4 mb-4" />
                         <h5 className="data-view-head">Vehicle Details</h5>
                         {selectedBooking.vehicleDetail.map((vehicle, index) => (
-                      <div key={index} className="data-view-sub mt-3">
-                        <h6 className="data-view-sub-head">
-                          Vehicle {index + 1}
-                        </h6>
-                        <div className="row">
-                          <div className="col-12 col-lg-6">
-                            <div className="data-view mb-3">
-                              <h6 className="data-view-title">
-                                Registration Number :
-                              </h6>
-                              <h6 className="data-view-data">
-                                {vehicle.regNo}
-                              </h6>
+                            <div key={index} className="data-view-sub mt-3">
+                                <h6 className="data-view-sub-head">
+                                    Vehicle {index + 1}
+                                </h6>
+                                <div className="row">
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">
+                                                Registration Number :
+                                            </h6>
+                                            <h6 className="data-view-data">
+                                                {vehicle.regNo}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3">
+                                            <h6 className="data-view-title">Make :</h6>
+                                            <h6 className="data-view-data">{vehicle.make || "-"}</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-3 mb-lg-0">
+                                            <h6 className="data-view-title">Model :</h6>
+                                            <h6 className="data-view-data">
+                                                {vehicle.model || "-"}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                        <div className="data-view mb-0">
+                                            <h6 className="data-view-title">Color :</h6>
+                                            <h6 className="data-view-data">
+                                                {vehicle.color}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-                          <div className="col-12 col-lg-6">
-                            <div className="data-view mb-3">
-                              <h6 className="data-view-title">Make :</h6>
-                              <h6 className="data-view-data">{vehicle.make || "-"}</h6>
-                            </div>
-                          </div>
-                          <div className="col-12 col-lg-6">
-                            <div className="data-view mb-3 mb-lg-0">
-                              <h6 className="data-view-title">Model :</h6>
-                              <h6 className="data-view-data">
-                                {vehicle.model || "-"}
-                              </h6>
-                            </div>
-                          </div>
-                          <div className="col-12 col-lg-6">
-                            <div className="data-view mb-0">
-                              <h6 className="data-view-title">Color :</h6>
-                              <h6 className="data-view-data">
-                                {vehicle.color}
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                        ))}
                     </div>
                 </div>
             </Dialog>}

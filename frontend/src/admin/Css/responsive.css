@@ -2,15 +2,27 @@
 @media (min-width: 1399.99px) {}
 
 /* For XL Screen (Laptop - HD Ready Display) */
-@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {}
+@media only screen and (min-width: 1199.9px) and (max-width: 1399.98px) {
+    .no_data_found_area {
+        width: 35%;
+    }
+}
 
 /* For LG (Large) Screen  */
-@media only screen and (min-width: 992px) and (max-width: 1199px) {}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .no_data_found_area {
+        width: 45%;
+    }
+}
 
 /* For MD (Medium) Screen (ipad) */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .p-dialog.modal_dialog_md {
         width: 600px !important;
+    }
+
+    .no_data_found_area {
+        width: 50%;
     }
 }
 
@@ -18,6 +30,10 @@
 @media (min-width: 576px) and (max-width: 767px) {
     .p-dialog.modal_dialog_md {
         width: 600px !important;
+    }
+
+    .no_data_found_area {
+        width: 55%;
     }
 }
 
@@ -73,6 +89,37 @@
         font-size: 14px !important;
         text-wrap: nowrap;
     }
+
+    .no_data_found_area {
+        width: 80%;
+    }
+
+    .no_data_found_area h6 {
+        font-size: 14px;
+    }
+
+    .topbar {
+        width: calc(100% - 20px) !important;
+        right: 10px !important;
+    }
+
+    .toggle_menu,
+    .fullscreen_toggle {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .toggle_menu {
+        font-size: 1.7rem !important;
+    }
+
+    .fullscreen_toggle {
+        font-size: 1.2rem !important;
+    }
+
+    .navigation_area ul li:nth-child(1){
+        margin-bottom: 30px;
+    }
 }
 
 /* Common */
@@ -119,5 +166,11 @@
     .navigation_area ul li a .title {
         line-height: 55px;
         height: 55px;
+    }
+
+    .topbar {
+        width: calc(100% - 30px);
+        right: 15px;
+        top: 10px !important;
     }
 }

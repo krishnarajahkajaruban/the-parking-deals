@@ -16,6 +16,8 @@ const Layout = () => {
     const { pathname } = useLocation();
     const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [fullScreen, setFullScreen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
     const [isOpen, setIsOpen] = useState(false);
     const dropdowMenuRef = useRef(null);
@@ -44,6 +46,17 @@ const Layout = () => {
         setMenuOpen(!menuOpen);
     };
 
+    const toggleFullScreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen()
+                .then(() => setFullScreen(true))
+                .catch((err) => console.error(`Failed to enter fullscreen mode: ${err.message}`));
+        } else {
+            document.exitFullscreen()
+                .then(() => setFullScreen(false))
+                .catch((err) => console.error(`Failed to exit fullscreen mode: ${err.message}`));
+        }
+    };
     const closeMenu = () => {
         setMenuOpen(false);
     };
@@ -64,6 +77,20 @@ const Layout = () => {
         });
         setMenuOpen(false);
     }
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const isScrolled = window.scrollY > 10;
+            setScrolled(isScrolled);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+
+    }, []);
 
     return (
         <>
@@ -158,10 +185,14 @@ const Layout = () => {
 
             <div className="main_area">
                 {/* Nav bar */}
-                <nav className="topbar">
-                    <div>
+                <nav className={`topbar ${scrolled ? 'scrolled' : ''}`}>
+                    <div className='d-flex'>
                         <div className="toggle_menu p-ripple" onClick={toggleMenu}>
                             <i class={`bi bi-list`}></i>
+                            <Ripple />
+                        </div>
+                        <div className="fullscreen_toggle p-ripple" onClick={toggleFullScreen}>
+                            <i class={`bi ${fullScreen ? 'bi-fullscreen-exit' : 'bi-fullscreen'}`}></i>
                             <Ripple />
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Preloader from "../../Preloader";
+import { Link } from "react-router-dom";
 
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from 'primereact/dropdown';
@@ -226,6 +227,18 @@ const Users = () => {
     );
     /*  */
 
+    const mobileNumberBody = (rowData) => {
+        return (
+            <Link to={`tel:${rowData.mobileNo}`}>{rowData.mobileNo}</Link>
+        )
+    };
+
+    const emailBody = (rowData) => {
+        return (
+            <Link to={`mailto:${rowData.email}`}>{rowData.email}</Link>
+        )
+    };
+
     return (
         <>
             <Preloader />
@@ -247,32 +260,38 @@ const Users = () => {
                 </div>
 
                 <div className="page_content">
-                    <div className="dash-table-area">
-                        <DataTable
-                            value={userData}
-                            paginator
-                            // onPage={(event)=>{console.log(event)}}
-                            size="small"
-                            rows={rows}
-                            totalRecords={totalRecords}
-                            rowsPerPageOptions={[5, 10, 25, 50]}
-                            tableStyle={{ minWidth: "50rem" }}
-                            rowHover
-                            className="dash-table"
-                        >
-                            <Column header="First name" field="firstName" style={{ width: "20%" }} ></Column>
+                    {userData?.length > 0 ? (
+                        <div className="dash-table-area">
+                            <DataTable
+                                value={userData}
+                                paginator
+                                size="small"
+                                rows={rows}
+                                totalRecords={totalRecords}
+                                rowsPerPageOptions={[5, 10, 25, 50]}
+                                tableStyle={{ minWidth: "50rem" }}
+                                rowHover
+                                className="dash-table"
+                            >
+                                <Column header="First name" field="firstName" style={{ width: "20%" }} ></Column>
 
-                            <Column header="Last name" field="lastName" style={{ width: "20%" }} ></Column>
+                                <Column header="Last name" field="lastName" style={{ width: "20%" }} ></Column>
 
-                            <Column header="Email" field="email" style={{ width: "20%" }} ></Column>
+                                <Column header="Email" body={emailBody} style={{ width: "20%" }} ></Column>
 
-                            <Column header="Mobile no." field="mobileNo" style={{ width: "15%" }} ></Column>
+                                <Column header="Mobile no." body={mobileNumberBody} style={{ width: "15%" }} ></Column>
 
-                            <Column header="Role" field="role" style={{ width: "10%" }}></Column>
+                                <Column header="Role" field="role" style={{ width: "10%" }}></Column>
 
-                            <Column body={actionBodyTemplate} alignHeader={'center'} className="" header="Action" style={{ width: "15%" }}></Column>
-                        </DataTable>
-                    </div>
+                                <Column body={actionBodyTemplate} alignHeader={'center'} className="" header="Action" style={{ width: "15%" }}></Column>
+                            </DataTable>
+                        </div>
+                    ) : (
+                        <div className="no_data_found_area">
+                            <img src="/assets/images/no_data_2.svg" alt="No user data!" />
+                            <h6>No user data!</h6>
+                        </div>
+                    )}
                 </div>
             </div>
 

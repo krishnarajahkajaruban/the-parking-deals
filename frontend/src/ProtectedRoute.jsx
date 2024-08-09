@@ -48,7 +48,7 @@ const ProtectedRoute = ({ children }) => {
     if (!isAuth && !isAuthPage) {
         if (['/change-password', '/dashboard'].includes(pathname)) {
             return <Navigate to="/sign-in" />;
-        }else if (['/admin-dashboard'].includes(pathname)) {
+        }else if (['/admin-dashboard', '/reservation', '/bookings', '/users', '/customers'].includes(pathname)) {
             return <Navigate to="/admin-login" />;
         }
     }
