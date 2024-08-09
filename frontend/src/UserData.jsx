@@ -1,13 +1,12 @@
 import api from "./api";
 
 export const SampleData = {
-    getData(page = 1, limit = 10, status = '', date = '', token) {
-        return api.get(`/api/common-role/get-all-bookings`, {
+    getData(page = 1, limit = 10, type, token) {
+        return api.get(`/api/admin/get-all-users`, {
             params: {
                 page,
                 limit,
-                status,
-                date,
+                type
             },
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -15,17 +14,18 @@ export const SampleData = {
             }
         }).then(res => {
             // Transform the response data to match the structure required by the DataTable
-            const bookings = res.data.data.map(booking => ({
-                id: booking.bookingId,
-                date: new Date(booking.createdAt).toLocaleDateString(),
-                time: new Date(booking.createdAt).toLocaleTimeString(),
-                status: booking.status,
-                details: booking,
+            const users = res.data.data.map(user => ({
+                title: user.title,
+                firstName: user.firstName,
+                lastName: user.lastname,
+                email: user.email,
+                mobileNumber: user.mobileNumber,
+                details: user
             }));
-            return { bookings, totalRecords: res.data.totalCount };
+            return { users, totalRecords: res.data.totalCount };
         }).catch(err => {
             console.error(err);
-            return { bookings: [], totalRecords: 0 };
+            return { users: [], totalRecords: 0 };
         });
     },
 
