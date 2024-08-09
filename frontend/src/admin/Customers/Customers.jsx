@@ -121,6 +121,7 @@ const Customers = () => {
                     {customerData?.length > 0 ? (
                         <div className="dash-table-area">
                             <DataTable
+                                loading={loading}
                                 value={customerData}
                                 paginator
                                 size="small"
