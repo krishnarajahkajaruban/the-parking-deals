@@ -87,7 +87,7 @@ const getAllUsersByType = async (req, res) => {
             return res.status(403).json({ error: "You are not authorized" });
         }
 
-        if( !type.includes(["User", "Vendor"]) ) {
+        if( !(["User", "Vendor"].includes(type)) ) {
             return res.status(403).json({ error: "Invalid user role" });
         }
 
@@ -119,6 +119,7 @@ const getAllUsersByType = async (req, res) => {
             currentPage: parsedPage,
             totalPages: Math.ceil(totalCount / parsedLimit),
             data: allUsers,
+            totalCount
         });
 
     } catch (err) {

@@ -12,22 +12,35 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from "primereact/toast";
 import { Divider } from "primereact/divider";
 
-import { SampleCustomerData } from "./SampleCustomerData";
+import { SampleData } from "../../UserData";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Customers = () => {
     const toast = useRef(null);
     const [totalRecords, setTotalRecords] = useState(0);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
     const [rows, setRows] = useState(10);
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
     const [customerData, setCustomerData] = useState(null);
+    const [rowPerPage, setRowsPerPage] = useState([5]);
+    const token = useSelector((state) => state.auth.token);
+
+    const fetchCustomers = async (page, rows) => {
+        setLoading(true);
+        const data = await SampleData.getData(page, rows, 'User', token);
+        setCustomerData(data.users);
+        setTotalRecords(data.totalRecords);
+        const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
+        setRowsPerPage([...newRowPerPage, Number(data.totalRecords)])
+        setLoading(false);
+    };
 
     useEffect(() => {
-        const data = SampleCustomerData.getCustomersData
-        setCustomerData(data);
-    }, []);
+        fetchCustomers(page, rows);
+    }, [page, rows, token]);
 
     const handleDeleteCustomer = (customerId) => {
         confirmDialog({
@@ -78,7 +91,7 @@ const Customers = () => {
 
     const mobileNumberBody = (rowData) => {
         return (
-            <Link to={`tel:${rowData.mobileNo}`}>{rowData.mobileNo}</Link>
+            <Link to={`tel:${rowData.mobileNumber}`}>{rowData.mobileNumber}</Link>
         )
     };
 
@@ -86,6 +99,12 @@ const Customers = () => {
         return (
             <Link to={`mailto:${rowData.email}`}>{rowData.email}</Link>
         )
+    };
+
+    const onPageChange = (event) => {
+        console.log(event);
+        setPage(event.page + 1);
+        setRows(event.rows);
     };
 
     return (
@@ -102,12 +121,14 @@ const Customers = () => {
                     {customerData?.length > 0 ? (
                         <div className="dash-table-area">
                             <DataTable
+                                loading={loading}
                                 value={customerData}
                                 paginator
                                 size="small"
                                 rows={rows}
                                 totalRecords={totalRecords}
-                                rowsPerPageOptions={[5, 10, 25, 50]}
+                                onPage={onPageChange}
+                                rowsPerPageOptions={rowPerPage}
                                 tableStyle={{ minWidth: "50rem" }}
                                 rowHover
                                 className="dash-table"

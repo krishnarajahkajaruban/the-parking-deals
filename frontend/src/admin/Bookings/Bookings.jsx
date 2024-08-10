@@ -22,12 +22,13 @@ const Bookings = () => {
     const [loading, setLoading] = useState(false);
     const [bookingDate, setBookingDate] = useState(null);
     const [searchKey, setSearchKey] = useState(null);
-    const [bookings, setBookings] = useState([]);
+    const [bookings, setBookings] = useState(null);
     const [totalRecords, setTotalRecords] = useState(0);
     const [rows, setRows] = useState(10);
     const [page, setPage] = useState(1);
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [showBookingModal, setShowBookingModal] = useState(false);
+    const [rowPerPage, setRowsPerPage] = useState([5]);
 
     // eslint-disable-next-line no-undef
     const token = useSelector((state) => state.auth.token);
@@ -35,12 +36,14 @@ const Bookings = () => {
     const handleFilterByDate = (e) => {
         const bookdate = e.value;
     }
-
+    
     const fetchBookings = async (page, rows) => {
         setLoading(true);
         const data = await SampleData.getData(page, rows, '', '', token);
         setBookings(data.bookings);
         setTotalRecords(data.totalRecords);
+        const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
+        setRowsPerPage([...newRowPerPage, Number(data.totalRecords)])
         setLoading(false);
     };
 
@@ -146,43 +149,43 @@ const Bookings = () => {
                 </div>
 
                 <div className="page_content">
-                    {bookings?.length > 0 ? (
-                        <div className="dash-table-area">
-                            <DataTable
-                                value={bookings}
-                                paginator
-                                size="small"
-                                rows={rows}
-                                totalRecords={totalRecords}
-                                onPage={onPageChange}
-                                loading={loading}
-                                rowsPerPageOptions={[5, 10, 25, 50]}
-                                tableStyle={{ minWidth: "50rem" }}
-                                rowHover
-                                className="dash-table"
-                            >
-                                <Column
-                                    header="Booking ID"
-                                    field="id"
-                                    style={{ width: "20%" }}
-                                ></Column>
-                                <Column
-                                    header="Date & Time"
-                                    body={dateTimeTemplate}
-                                    style={{ width: "30%" }}
-                                ></Column>
-                                <Column
-                                    header="Status"
-                                    body={statusBodyTemplate}
-                                    style={{ width: "25%" }}
-                                ></Column>
-                                <Column
-                                    body={infoBodyTemplate}
-                                    header="Info"
-                                    style={{ width: "10%" }}
-                                ></Column>
-                            </DataTable>
-                        </div>
+                {bookings?.length > 0 ? (
+                    <div className="dash-table-area">
+                        <DataTable
+                            value={bookings}
+                            paginator
+                            size="small"
+                            rows={rows}
+                            totalRecords={totalRecords}
+                            onPage={onPageChange}
+                            loading={loading}
+                            rowsPerPageOptions={rowPerPage}
+                            tableStyle={{ minWidth: "50rem" }}
+                            rowHover
+                            className="dash-table"
+                        >
+                            <Column
+                                header="Booking ID"
+                                field="id"
+                                style={{ width: "20%" }}
+                            ></Column>
+                            <Column
+                                header="Date & Time"
+                                body={dateTimeTemplate}
+                                style={{ width: "30%" }}
+                            ></Column>
+                            <Column
+                                header="Status"
+                                body={statusBodyTemplate}
+                                style={{ width: "25%" }}
+                            ></Column>
+                            <Column
+                                body={infoBodyTemplate}
+                                header="Info"
+                                style={{ width: "10%" }}
+                            ></Column>
+                        </DataTable>
+                    </div>
                     ) : (
                         <div className="no_data_found_area">
                             <img src="/assets/images/no_data_2.svg" alt="No booking data!" />
