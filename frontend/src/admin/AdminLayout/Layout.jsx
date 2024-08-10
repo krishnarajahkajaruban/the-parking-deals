@@ -150,7 +150,7 @@ const Layout = () => {
                     </li>
 
                     <li className={`${pathname === '/vendors' ? 'active' : ''}`}>
-                        <Link to={'/'} onClick={() => setMenuOpen(false)}>
+                        <Link to={'/vendors'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-building"></i>
                             </span>

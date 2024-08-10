@@ -13,7 +13,7 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Rating } from "primereact/rating";
-import { Image } from 'primereact/image';
+import { Dialog } from 'primereact/dialog';
 import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
@@ -42,6 +42,9 @@ const VendorList = () => {
 
   const airports = useSelector((state) => state.vendor.airport);
   const quotes = useSelector((state) => state.vendor.quotes);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
 
   const [selectedVendor, setSelectedVendor] = useState(null);
 

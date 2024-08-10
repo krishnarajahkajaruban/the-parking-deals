@@ -55,6 +55,7 @@ const Reservation = React.lazy(() => import('./admin/Reservation/Reservation'));
 const Bookings = React.lazy(() => import('./admin/Bookings/Bookings'));
 const Users = React.lazy(() => import('./admin/Users/Users'));
 const Customers = React.lazy(() => import('./admin/Customers/Customers'));
+const Vendors = React.lazy(() => import('./admin/Vendors/Vendors'));
 
 function App() {
   const value = {
@@ -96,6 +97,7 @@ function App() {
           <Route path='bookings' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Bookings /></ProtectedRoute></Suspense>} />
           <Route path='users' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Users /></ProtectedRoute></Suspense>} />
           <Route path='customers' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Customers /></ProtectedRoute></Suspense>} />
+          <Route path='vendors' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Vendors /></ProtectedRoute></Suspense>} />
         </Route>
         {/*  */}
       </Routes>
