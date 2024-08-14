@@ -1077,6 +1077,16 @@ code {
   box-shadow: 0px 0px 0px 4px #37348b2c !important;
 }
 
+.p-dropdown-clear-icon,
+.p-dropdown-filter-icon,
+.p-dropdown-filter-clear-icon:focus svg,
+.p-dropdown-clear-icon,
+.p-dropdown-filter-icon,
+.p-dropdown-filter-clear-icon:active svg {
+  outline: none !important;
+  border: none !important;
+}
+
 .p-calendar:not(.p-calendar-disabled).p-focus>.p-inputtext {
   box-shadow: 0px 0px 0px 4px #37348b2c !important;
   border-color: var(--color-primary) !important;
@@ -1392,6 +1402,11 @@ code {
   font-weight: 500;
   letter-spacing: 2px;
   border-color: var(--color-primary);
+}
+
+.submit-button.plain{
+  letter-spacing: normal;
+  font-weight: 400;
 }
 
 .submit-button:hover {

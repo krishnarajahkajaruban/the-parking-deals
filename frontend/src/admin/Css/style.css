@@ -3,6 +3,7 @@
     --color-primary-dark: #222057;
     --color-secondary: #d12788;
     --color-secondary-dark: #b10867;
+    --color-danger: #f60000;
     --text-color: #000;
 
     --white: #fff;
@@ -846,3 +847,188 @@ a:focus {
     text-decoration: underline;
     color: var(--color-secondary);
 }
+
+.p-editor-container .p-editor-toolbar {
+    background: #e2e1f7;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+.p-editor-container .p-editor-content .ql-editor,
+.p-editor-container .p-editor-content {
+    border-bottom-right-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
+    transition: ease 0.5s;
+}
+
+.ql-editor.ql-blank::before {
+    color: #d7d6e2 !important;
+}
+
+.p-editor-container .ql-snow.ql-toolbar button.ql-active,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
+    color: var(--color-primary) !important;
+}
+
+.p-checkbox.p-highlight .p-checkbox-box {
+    border-color: var(--color-primary) !important;
+    background: var(--color-primary) !important;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.add_more_btn {
+    font-size: 14px !important;
+    min-width: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+/*  */
+.form_img_upload_area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: #f3f2ff;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.logo_label {
+    font-size: 15px;
+    color: var(--color-primary);
+    text-align: center;
+    font-weight: 600;
+}
+
+.form_img_upload {
+    position: relative;
+}
+
+.form_img_upload .form_img_upload_input {
+    display: none;
+}
+
+
+.form_img_upload_label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    flex-shrink: 0;
+    width: 105px;
+    height: 105px;
+    border: 2px solid var(--color-primary);
+    position: relative;
+    cursor: pointer;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #FFF;
+    transition: background-color ease 0.5 !important;
+    transition: ease 0.5s;
+}
+
+.form_img_upload_label.uploaded {
+    overflow: hidden;
+}
+
+.form_img_upload_label:hover {
+    background-color: #e2e1f7;
+}
+
+.upload_icon i {
+    color: var(--color-primary);
+    font-size: 25px;
+    filter: drop-shadow(0px 5px 10px #00000040);
+}
+
+.form_img_upload_label .upload_icon.update {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.form_img_upload_label_area {
+    position: relative;
+    border-radius: 20px;
+}
+
+.form_img_upload_label_area .upload_update_icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #FFF;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid var(--color-primary2);
+    cursor: pointer;
+    transition: ease 0.5s;
+}
+
+.form_img_upload_label_area .upload_update_icon:hover {
+    background-color: var(--color-primary2);
+}
+
+.form_img_upload_label_area .upload_update_icon:hover i {
+    color: #FFF !important;
+}
+
+.form_img_upload_label_area .upload_update_icon i {
+    color: var(--color-primary2);
+    font-size: 17px;
+    line-height: 0;
+    transition: ease 0.5s;
+}
+
+/* .form_img_upload_label .upload_icon.update i {
+    color: var(--color-primary2);
+  } */
+
+.upload_clear_button {
+    background-color: var(--color-danger);
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid var(--color-danger);
+    padding: 3px 10px;
+    font-size: 12px;
+    color: #FFF;
+    transition: ease 0.5s;
+    font-weight: 500;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.upload_clear_button:focus {
+    outline: none;
+}
+
+.upload_clear_button:hover {
+    background-color: #FFF;
+    color: var(--color-danger);
+}
+
+.add_image_label {
+    font-size: 13px;
+    color: #08134A;
+    font-weight: 600;
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.4;
+    cursor: pointer;
+}
+
+/*  */
