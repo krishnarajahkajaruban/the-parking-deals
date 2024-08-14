@@ -473,13 +473,15 @@ const sendEmailToUser = async (booking, user, type) => {
                             </tr>
                             <tr>
                                 <th>From</th>
-                                <td>${booking.dropOffDate}</td>
+                                <td>${booking.dropOffDate} ${
+                                    booking.dropOffTime}</td>
                                 <th>Inbound Terminal</th>
                                 <td>${booking.travelDetail.arrivalTerminal}</td>
                             </tr>
                             <tr>
                                 <th>To</th>
-                                <td>${booking.pickUpDate}</td>
+                                <td>${booking.pickUpDate} ${booking.
+                                    pickUpTime}</td>
                                 <th>Outbound Terminal</th>
                                 <td>${booking.travelDetail.departureTerminal}</td>
                             </tr>
@@ -937,13 +939,15 @@ const sendEmailToCompany = async (booking, user, type) => {
                             </tr>
                             <tr>
                                 <th>From</th>
-                                <td>${booking.dropOffDate}</td>
+                                <td>${booking.dropOffDate} ${
+                                    booking.dropOffTime}</td>
                                 <th>Inbound Terminal</th>
                                 <td>${booking.travelDetail.arrivalTerminal}</td>
                             </tr>
                             <tr>
                                 <th>To</th>
-                                <td>${booking.pickUpDate}</td>
+                                <td>${booking.pickUpDate} ${booking.
+                                    pickUpTime}</td>
                                 <th>Outbound Terminal</th>
                                 <td>${booking.travelDetail.departureTerminal}</td>
                             </tr>

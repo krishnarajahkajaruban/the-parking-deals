@@ -146,12 +146,12 @@ const Customers = () => {
                                 <Column body={actionBodyTemplate} alignHeader={'center'} className="" header="Action" style={{ width: "15%" }}></Column>
                             </DataTable>
                         </div>
-                    ) : (
+                    ) : !loading ? (
                         <div className="no_data_found_area">
                             <img src="/assets/images/no_data_2.svg" alt="No customer data!" />
                             <h6>No customer data!</h6>
                         </div>
-                    )}
+                    ) : null}
 
                 </div>
             </div>
