@@ -318,7 +318,7 @@
 /*  */
 .dash-table-area .p-datatable-wrapper {
     border-radius: 8px;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     border: 2px solid #FFF;
 }
 

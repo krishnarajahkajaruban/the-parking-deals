@@ -211,7 +211,7 @@ a:focus {
     min-height: 100vh;
     background: var(--white);
     transition: 0.5s;
-    padding: 0 20px;
+    padding: 0 20px 40px 20px;
     overflow-x: hidden;
 }
 
@@ -1032,3 +1032,34 @@ a:focus {
 }
 
 /*  */
+
+.flex_end {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+}
+
+.flex_center {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.text_no_wrap {
+    text-wrap: nowrap !important;
+}
+
+.p-datatable-tfoot tr td {
+    background-color: #eeeefb !important;
+    border-top: 1px solid #37348b;
+    padding: 12px 15px;
+}
+
+
+.p-datatable-tfoot tr td:first-child {
+    border-bottom-left-radius: 15px !important;
+}
+
+.p-datatable-tfoot tr td:last-child {
+    border-bottom-right-radius: 15px !important;
+}

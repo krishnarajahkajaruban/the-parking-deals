@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Preloader from "../../Preloader";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../../pages/Dashboard/Dashboard.css';
 import '../../pages/Dashboard/Dashboard-responsive.css';
 
@@ -22,6 +22,7 @@ import { SampleVendorData } from "./SampleVendorData";
 
 const Vendors = () => {
     const toast = useRef(null);
+    const navigate = useNavigate();
     const [totalRecords, setTotalRecords] = useState(0);
     const [showVendorModal, setShowVendorModal] = useState(false);
     const [rows, setRows] = useState(10);
@@ -42,6 +43,7 @@ const Vendors = () => {
     const [type, setType] = useState(null);
     const [quote, setQuote] = useState(null);
     const [rating, setRating] = useState(0);
+    const [dealPercentage, setDealPercentage] = useState(null);
     const [hasCancellationCover, setHasCancellationCover] = useState(false);
     const [cancellationCoverAmount, setCancellationCoverAmount] = useState(null);
     const [facilities, setFacilities] = useState([{ facility: '' }]);
@@ -184,6 +186,7 @@ const Vendors = () => {
                 <Button
                     icon="bi bi-pencil-square"
                     className="data-view-button"
+                    tooltip="Edit" tooltipOptions={{ position: 'top' }}
                     onClick={() => {
                         setShowVendorModal(true);
                         setDataState('Edit');
@@ -194,7 +197,15 @@ const Vendors = () => {
                 <Button
                     icon="bi bi-trash3"
                     className="data-delete-button"
+                    tooltip="Delete" tooltipOptions={{ position: 'top' }}
                     onClick={() => handleDeleteVendor(rowData.id)}
+                />
+
+                <Button
+                    icon="bi bi-calendar3"
+                    className="data-view-button"
+                    tooltip="Bookings" tooltipOptions={{ position: 'top' }}
+                    onClick={() => navigate('/vendors/bookings')}
                 />
             </div>
         );
@@ -480,6 +491,35 @@ const Vendors = () => {
                                         <Checkbox inputId="cancellationCover" onChange={e => setHasCancellationCover(e.checked)} checked={hasCancellationCover}></Checkbox>
                                         <label htmlFor="cancellationCover" className="ms-2 custom-form-label cursor-pointer">Cancellation cover</label>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div className="col-12 col-sm-6">
+                                <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label htmlFor="dealPercentage" className="custom-form-label form-required">
+                                        Deal percentage
+                                    </label>
+                                    <InputNumber
+                                        id="dealPercentage"
+                                        className="custom-form-input"
+                                        placeholder="Percentage"
+                                        name="dealPercentage"
+                                        value={dealPercentage}
+                                        onChange={(e) => setDealPercentage(e.value)}
+                                        maxFractionDigits={2}
+                                        useGrouping={false}
+                                        mode="decimal"
+                                        min={0}
+                                        max={100}
+                                        step={0.1}
+                                        suffix="%"
+                                    />
+
+                                    {showError &&
+                                        <small className="text-danger form-error-msg">
+                                            This field is required
+                                        </small>
+                                    }
                                 </div>
                             </div>
 
