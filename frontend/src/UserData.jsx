@@ -1,11 +1,9 @@
 import api from "./api";
 
 export const SampleData = {
-    getData(page = 1, limit = 10, type, token) {
+    getData(type, token) {
         return api.get(`/api/admin/get-all-users`, {
             params: {
-                page,
-                limit,
                 type
             },
             headers: {

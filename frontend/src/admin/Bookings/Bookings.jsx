@@ -30,16 +30,19 @@ const Bookings = () => {
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [rowPerPage, setRowsPerPage] = useState([5]);
 
-    // eslint-disable-next-line no-undef
     const token = useSelector((state) => state.auth.token);
 
     const handleFilterByDate = (e) => {
-        const bookdate = e.value;
-    }
-    
-    const fetchBookings = async (page, rows) => {
+        const date = e.value ? e.value.toLocaleDateString('en-GB') : null;
+        fetchBookings(null, date);
+    };
+
+    const fetchBookings = async (bookingId, date) => {
+        console.log(bookingId);   
+        console.log(date);
         setLoading(true);
-        const data = await SampleData.getData(page, rows, '', '', token);
+        const data = await SampleData.getData(token, bookingId, date);
+        console.log(data.bookings);
         setBookings(data.bookings);
         setTotalRecords(data.totalRecords);
         const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
@@ -48,13 +51,13 @@ const Bookings = () => {
     };
 
     useEffect(() => {
-        fetchBookings(page, rows);
-    }, [page, rows, token]);
+        fetchBookings(null, null);
+    }, []);
 
     const onPageChange = (event) => {
         console.log(event);
-        setPage(event.page + 1);
-        setRows(event.rows);
+        // setPage(event.page + 1);
+        // setRows(event.rows);
     };
 
     const dateTimeTemplate = (rowData) => {
@@ -123,7 +126,14 @@ const Bookings = () => {
                                 <label htmlFor="bookingDate" className="custom-form-label">Filter by booking date : </label>
                                 <div className="form-icon-group">
                                     <i className="bi bi-calendar2-fill input-grp-icon"></i>
-                                    <Calendar id="bookingDate" value={bookingDate} onChange={handleFilterByDate} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={today} className='w-100' />
+                                    <Calendar id="bookingDate" value={bookingDate} onChange={(e)=>
+                                        {
+                                            setBookingDate(e.value); 
+                                            handleFilterByDate(e); 
+                                        }
+                                    } placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" 
+                                    // minDate={today} 
+                                    className='w-100' />
                                 </div>
                             </div>
                         </div>
@@ -139,7 +149,12 @@ const Bookings = () => {
                                         name="searchKey"
                                         placeholder="Search here.."
                                         value={searchKey}
-                                        onChange={(e) => setSearchKey(e.target.value)}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                                setSearchKey(value); 
+                                                const bookingId = value ? value : null;         
+                                                fetchBookings(bookingId, null);
+                                        }}
                                     />
                                     {/* <Calendar id="dropOffDate" value={bookingDate} onChange={handleFilterByDate} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={today} className='w-100' /> */}
                                 </div>
@@ -149,7 +164,7 @@ const Bookings = () => {
                 </div>
 
                 <div className="page_content">
-                {bookings?.length > 0 ? (
+                {bookings && bookings?.length > 0 && (
                     <div className="dash-table-area">
                         <DataTable
                             value={bookings}
@@ -157,7 +172,7 @@ const Bookings = () => {
                             size="small"
                             rows={rows}
                             totalRecords={totalRecords}
-                            onPage={onPageChange}
+                            // onPage={onPageChange}
                             loading={loading}
                             rowsPerPageOptions={rowPerPage}
                             tableStyle={{ minWidth: "50rem" }}
@@ -186,7 +201,14 @@ const Bookings = () => {
                             ></Column>
                         </DataTable>
                     </div>
-                    ) : (
+                    ) }
+                   {loading &&  (
+                        <div className="no_data_found_area">
+                            {/* <img src="/assets/images/no_data_2.svg" alt="No booking data!" /> */}
+                            <h6>Loading...</h6>
+                        </div>
+                    )}
+                    {!loading && bookings && bookings?.length === 0 && (
                         <div className="no_data_found_area">
                             <img src="/assets/images/no_data_2.svg" alt="No booking data!" />
                             <h6>No booking data!</h6>
@@ -355,6 +377,70 @@ const Bookings = () => {
                                 </div>
                             </div>
                         ))}
+                        <Divider className="mt-4 mb-4" />
+                        <h5 className="data-view-head">Customer Details</h5>
+                        <div className="row mt-4">
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-3">
+                                    <h6 className="data-view-title">Name :</h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.user.title + ' ' + selectedBooking.user.firstName + ' ' + selectedBooking.user.lastname}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-3">
+                                    <h6 className="data-view-title">
+                                        Email :
+                                    </h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.user.email}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-0">
+                                    <h6 className="data-view-title">
+                                        Mobile Number :
+                                    </h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.user.mobileNumber}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <Divider className="mt-4 mb-4" />
+                        <h5 className="data-view-head">Vendor Details</h5>
+                        <div className="row mt-4">
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-3">
+                                    <h6 className="data-view-title">Vendor :</h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.company.companyName}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-3">
+                                    <h6 className="data-view-title">
+                                        Email :
+                                    </h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.company.email}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-0">
+                                    <h6 className="data-view-title">
+                                        Mobile Number :
+                                    </h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.company.mobileNumber}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </Dialog>}

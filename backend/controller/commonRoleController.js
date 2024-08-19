@@ -7,7 +7,7 @@ const CouponCodeDiscount = require("../models/couponCodeDiscountModel");
 const getAllBookings = async (req, res) => {
     try {
         // Extract query parameters and user information from the request
-        const { page, limit, status, date } = req.query;
+        const { page, limit, status, date, bookingId } = req.query;
         const { id, role } = req.user;
 
         // Initialize userId if the role is "User"
@@ -23,13 +23,13 @@ const getAllBookings = async (req, res) => {
         }
 
         // Parse page and limit as integers
-        const parsedPage = parseInt(page);
-        const parsedLimit = parseInt(limit);
+        // const parsedPage = parseInt(page);
+        // const parsedLimit = parseInt(limit);
 
         // Validate page and limit values
-        if (isNaN(parsedPage) || parsedPage <= 0 || isNaN(parsedLimit) || parsedLimit <= 0) {
-            return res.status(400).json({ error: "Page and limit must be positive integers" });
-        }
+        // if (isNaN(parsedPage) || parsedPage <= 0 || isNaN(parsedLimit) || parsedLimit <= 0) {
+        //     return res.status(400).json({ error: "Page and limit must be positive integers" });
+        // }
 
         // Construct the query object based on userId, companyId, status, and date
         const query = {};
@@ -51,28 +51,36 @@ const getAllBookings = async (req, res) => {
         }
 
         if (date) {
-            // Parse the date string into a Date object
-            const selectedDate = new Date(date);
+            // Convert the date string (dd/mm/yyyy) to a Date object
+            const [day, month, year] = date.split('/');
+            const startDate = new Date(Number(year), Number(month) - 1, Number(day));
+            
+            // Set the time range to include the whole day
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 1);
 
-            // Set the start and end of the day for the selected date
-            const startOfDay = new Date(selectedDate.setHours(0, 0, 0, 0));
-            const endOfDay = new Date(selectedDate.setHours(23, 59, 59, 999));
+            console.log(startDate);
+            console.log(endDate);
+    
+            query.createdAt = { $gte: startDate, $lt: endDate };
+        };
 
-            // Add the date filter to the query
-            query.createdAt = { $gte: startOfDay, $lte: endOfDay };
+        if (bookingId) {
+            // Use a regex to find booking IDs that start with the provided bookingId
+            query.bookingId = { $regex: `^${bookingId}`, $options: 'i' }; // 'i' option makes the search case-insensitive
         }
 
         // Count total documents matching the query
         const totalCount = await BookingDetail.countDocuments(query);
 
         // Calculate the number of documents to skip based on the current page
-        const skip = (parsedPage - 1) * parsedLimit;
+        // const skip = (parsedPage - 1) * parsedLimit;
 
         // Fetch the bookings matching the query with pagination
         const allBookings = await BookingDetail.find(query)
             .sort({ updatedAt: -1 })
-            .skip(skip)
-            .limit(parsedLimit)
+            // .skip(skip)
+            // .limit(parsedLimit)
             .lean()
             .exec();
 
@@ -97,12 +105,16 @@ const getAllBookings = async (req, res) => {
             })
         );
 
-        // Return the fetched bookings along with pagination details
+        // Calculate the remaining data count
+        // const remainingDataCount = totalCount - (skip + allBookings.length);
+
+        // Return the fetched bookings along with pagination details and remaining data count
         return res.status(200).json({
-            currentPage: parsedPage,
-            totalPages: Math.ceil(totalCount / parsedLimit),
+            // currentPage: parsedPage,
+            // totalPages: Math.ceil(totalCount / parsedLimit),
             totalCount,
             data: bookingDetailsWithUserAndCompanyDetails,
+            // remainingDataCount: remainingDataCount < 0 ? 0 : remainingDataCount, // Ensure non-negative value
         });
 
     } catch (err) {
@@ -129,9 +141,25 @@ const getBookingChargesWithCouponCodeAndCorrespondingDiscount = async (req, res)
     }
   };
 
-
+/* get all vendors */
+const findAllVendors = async(req, res) => {
+    try{
+        const allVendors = await User.find({ role: "Vendor"}).sort({ updatedAt: -1 });
+        if(allVendors.length === 0) {
+            return res.status(404).json({ error: "No vendors found" });
+        };
+        return res.status(200).json({
+            data: allVendors
+        });
+    }catch (err) {
+        return res.status(500).json({
+            error: err.message
+        });
+    };
+};
 
 module.exports = {
     getAllBookings,
-    getBookingChargesWithCouponCodeAndCorrespondingDiscount
+    getBookingChargesWithCouponCodeAndCorrespondingDiscount,
+    findAllVendors
 };

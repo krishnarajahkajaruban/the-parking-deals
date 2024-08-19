@@ -48,14 +48,14 @@ const ProtectedRoute = ({ children }) => {
     if (!isAuth && !isAuthPage) {
         if (['/change-password', '/dashboard'].includes(pathname)) {
             return <Navigate to="/sign-in" />;
-        }else if (['/admin-dashboard', '/reservation', '/bookings', '/users', '/customers'].includes(pathname)) {
+        }else if (['/admin-dashboard', '/reservation', '/bookings', '/users', '/customers', '/vendors'].includes(pathname)) {
             return <Navigate to="/admin-login" />;
         }
     }
 
     const isUser = isAuth?.role === 'User';
     const isAdmin = isAuth?.role === 'Admin';
-    const adminRoutes = ['/admin-login', '/admin-dashboard', '/reservation', '/bookings', '/users', '/customers'];
+    const adminRoutes = ['/admin-login', '/admin-dashboard', '/reservation', '/bookings', '/users', '/customers', '/vendors'];
     const userRoutes = ['/', '/about-us', '/sign-in', '/sign-up', '/forgot-password', '/privacy-policy', '/terms-and-conditions', '/faq', '/contact-us', '/services', '/results', '/booking', '/dashboard', '/change-password'];
 
     if (isUser && adminRoutes.includes(pathname)) {

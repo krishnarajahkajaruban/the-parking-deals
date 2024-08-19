@@ -38,8 +38,10 @@ const checkUserAlreadyRegistered = async (req, res) => {
   
 
 /* register */
-const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role) => {
-  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, role);
+const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure) => {
+
+  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure);
+  
   try{
     // Check for required fields
     if (!email || 
@@ -47,18 +49,19 @@ const register = async (email, title, firstName, lastName, companyName, password
       (["Admin", "User"].includes(role) && !firstName) || 
       (role === 'Vendor' && !companyName) || 
       !password || 
-      (role === "User" && !mobileNumber) || 
+      (["Vendor", "User"].includes(role) && !mobileNumber) || 
       // (role === "User" && !addressL1) ||
       // (role === "User" && !city) ||
       // (role === "User" && !country) ||
       // (role === "User" && !postCode) ||
-      !role) {
+      !role || (role === 'Vendor' && !serviceType) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !rating) || (role === 'Vendor' && !overView) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !finalQuote) || (role === 'Vendor' && !quote) || (role === 'Vendor' && !cancellationCover) || (role === 'Vendor' && !facilities) || (role === 'Vendor' && !dropOffProcedure) || (role === 'Vendor' && !pickUpProcedure)) {
       return {
           error: "Please fill all required fields!",
           status: 400
       };
   };
 
+  if(role === "User"){
     const isEmailVerified = await EmailVerify.findOne({ email: email.toLowerCase(), verifyStatus: true});
 
     if(!isEmailVerified){
@@ -67,6 +70,7 @@ const register = async (email, title, firstName, lastName, companyName, password
         status: 400
       };
     };
+  };
 
     // Validate email and phone number
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -77,9 +81,9 @@ const register = async (email, title, firstName, lastName, companyName, password
             error: "Invalid email format!",
             status: 400
         };
-    }
+    } 
 
-    if (role === "User" && !phoneRegex.test(mobileNumber)) {
+    if (["Vendor", "User"].includes(role) && !phoneRegex.test(mobileNumber)) {
         return {
             error: "Invalid phone number format!",
             status: 400
@@ -102,6 +106,13 @@ const register = async (email, title, firstName, lastName, companyName, password
         };
     }
 
+    if (role === "Vendor" && JSON.parse(quote) < JSON.parse(finalQuote)) {
+      return {
+          error: "Discount Quote must be less then actual quote!",
+          status: 400
+      };
+  }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -112,7 +123,7 @@ const register = async (email, title, firstName, lastName, companyName, password
         ...(["Admin", "User"].includes(role) && { firstName }),
         ...(["Admin", "User"].includes(role) && { lastname: lastName || "" }),
         ...(role === "Vendor" && { companyName }),
-        ...(role === "User" && { mobileNumber }),
+        ...(["Vendor", "User"].includes(role) && { mobileNumber }),
         // ...(role === "User" && { addressL1 }),
         // ...(role === "User" && { addressL2: addressL2 || "" }),
         role,
@@ -120,7 +131,16 @@ const register = async (email, title, firstName, lastName, companyName, password
         // ...(role === "User" && { country }),
         // ...(role === "User" && { postCode }),
         password: hashedPassword,
-        ...(role === "User" && { dp: "" })
+        ...(["Vendor", "User"].includes(role) && { dp: role === "User" ? "" : dp}),
+        ...(role === "Vendor" && { serviceType }),
+        ...(role === "Vendor" && { rating: parseInt(JSON.parse(rating)) }),
+        ...(role === "Vendor" && { overView }),
+        ...(role === "Vendor" && { cancellationCover: JSON.parse(cancellationCover) }),
+        ...(role === "Vendor" && { quote: parseInt(JSON.parse(finalQuote)) === parseInt(JSON.parse(quote)) ? 0 : parseInt(JSON.parse(quote)) }),
+        ...(role === "Vendor" && { finalQuote: parseInt(JSON.parse(finalQuote)) }),
+        ...(role === "Vendor" && { facilities: JSON.parse(facilities) }),
+        ...(role === "Vendor" && { dropOffProcedure }),
+        ...(role === "Vendor" && { pickUpProcedure })
     });
 
     // Save the user to the database
@@ -128,33 +148,35 @@ const register = async (email, title, firstName, lastName, companyName, password
     const userObject = user.toObject({ getters: true });
     delete userObject.password;
 
-    const emailResponse = await sendEmail(
-      user.email,
-      'Welcome to The Parking Deals!',
-      `
-          <div style="padding: 20px; font-family: Calibri;">
-              <div style="text-align: center;">
-                  <a href="www.theparkingdeals.co.uk"><img src="https://res.cloudinary.com/piragashcloud/image/upload/v1721238830/logo512_dmvwkk.png" alt="The Parking Deals Logo" width="80" height="80"></a>
-              </div>
-              <div style="margin-top: 40px; font-size: 15px;">
-                  <p>Dear ${user.firstName || user.companyName},</p>
-                  <p>Thank you for registering in The Parking Deals! We're excited to have you on board.</p>
-                  <p>If you have any questions, please contact our support team at <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>.</p>
-                  <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
-              </div>
-          </div>
-      `
-  );
+    if(role === "User"){
+      const emailResponse = await sendEmail(
+        user.email,
+        'Welcome to The Parking Deals!',
+        `
+            <div style="padding: 20px; font-family: Calibri;">
+                <div style="text-align: center;">
+                    <a href="www.theparkingdeals.co.uk"><img src="https://res.cloudinary.com/piragashcloud/image/upload/v1721238830/logo512_dmvwkk.png" alt="The Parking Deals Logo" width="80" height="80"></a>
+                </div>
+                <div style="margin-top: 40px; font-size: 15px;">
+                    <p>Dear ${user.firstName || user.companyName},</p>
+                    <p>Thank you for registering in The Parking Deals! We're excited to have you on board.</p>
+                    <p>If you have any questions, please contact our support team at <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>.</p>
+                    <p>Thank you for choosing The Parking Deals. We look forward to serving you.</p>
+                </div>
+            </div>
+        `
+      );
+    };
 
     // Return the created user
     return {
         user : userObject,
         status: 201,
-        emailSent: emailResponse.emailSent,
-        mailMsg: emailResponse.message,
+        ...(role === "User" && {emailSent: emailResponse.emailSent}),
+        ...(role === "User" && {mailMsg: emailResponse.message}),
         message:"Registered successfully!",
-        info: emailResponse.info || null,
-        error: emailResponse.error || null
+        ...(role === "User" && {info: emailResponse.info || null}),
+        ...(role === "User" && {error: emailResponse.error || null})
     };
   }catch(err){
     return {

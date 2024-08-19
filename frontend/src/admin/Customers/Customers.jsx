@@ -28,9 +28,9 @@ const Customers = () => {
     const [rowPerPage, setRowsPerPage] = useState([5]);
     const token = useSelector((state) => state.auth.token);
 
-    const fetchCustomers = async (page, rows) => {
+    const fetchCustomers = async () => {
         setLoading(true);
-        const data = await SampleData.getData(page, rows, 'User', token);
+        const data = await SampleData.getData('User', token);
         setCustomerData(data.users);
         setTotalRecords(data.totalRecords);
         const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
@@ -39,8 +39,8 @@ const Customers = () => {
     };
 
     useEffect(() => {
-        fetchCustomers(page, rows);
-    }, [page, rows, token]);
+        fetchCustomers();
+    }, []);
 
     const handleDeleteCustomer = (customerId) => {
         confirmDialog({
@@ -118,7 +118,7 @@ const Customers = () => {
                 </div>
 
                 <div className="page_content">
-                    {customerData?.length > 0 ? (
+                    {customerData?.length > 0 && (
                         <div className="dash-table-area">
                             <DataTable
                                 loading={loading}
@@ -127,7 +127,7 @@ const Customers = () => {
                                 size="small"
                                 rows={rows}
                                 totalRecords={totalRecords}
-                                onPage={onPageChange}
+                                // onPage={onPageChange}
                                 rowsPerPageOptions={rowPerPage}
                                 tableStyle={{ minWidth: "50rem" }}
                                 rowHover
@@ -146,12 +146,20 @@ const Customers = () => {
                                 <Column body={actionBodyTemplate} alignHeader={'center'} className="" header="Action" style={{ width: "15%" }}></Column>
                             </DataTable>
                         </div>
-                    ) : !loading ? (
+                    ) } 
+
+                    {loading &&  (
+                        <div className="no_data_found_area">
+                            <h6>Loading...</h6>
+                        </div>
+                    )}
+
+                    {!loading && customerData && customerData?.length === 0 && (
                         <div className="no_data_found_area">
                             <img src="/assets/images/no_data_2.svg" alt="No customer data!" />
                             <h6>No customer data!</h6>
                         </div>
-                    ) : null}
+                    )}
 
                 </div>
             </div>

@@ -455,14 +455,14 @@ useEffect(() => {
                     >
                       <article className="result-card">
                         <div className="result-card-label-area">
-                          <h5>{quote.type}</h5>
+                          <h5>{quote.serviceType}</h5>
                         </div>
                         <div className="result-card-head-area">
                           <div className="result-card-logo-area">
-                            <img src={quote.logo || "assets/images/lion-parking.png"} alt="" />
+                            <img src={quote.dp || "assets/images/lion-parking.png"} alt="" />
                           </div>
                           <div className="result-card-head-detail-area">
-                            <h4 className="result-card-head">{quote.name}</h4>
+                            <h4 className="result-card-head">{quote.companyName}</h4>
                             <div className="result-card-star-area">
                               <Rating value={quote.rating} readOnly cancel={false} />
                             </div>
@@ -557,7 +557,7 @@ useEffect(() => {
                             <Button
                               label="BOOK"
                               className="custom-btn-primary result-card-btn"
-                              onClick={() => handleBooking(quote._id, quote.name, quote.logo, quote.finalQuote, quote.type)}
+                              onClick={() => handleBooking(quote._id, quote.companyName, quote.dp, quote.finalQuote, quote.serviceType)}
                             />
                           </div>
 
@@ -848,7 +848,7 @@ useEffect(() => {
           <div class="modal-content custom-modal">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="vendorDetailModalLabel">
-                {selectedVendor?.name}
+                {selectedVendor?.companyName}
               </h1>
               <button
                 type="button"
@@ -1087,7 +1087,7 @@ useEffect(() => {
                           operator will not be liable in case you receive a
                           penalty for not paying the ULEZ charge.
                         </p> */}
-                        {selectedVendor?.overView}
+                        <div dangerouslySetInnerHTML={{ __html: selectedVendor?.overView }} />
                       </div>
                     </div>
                     {/*  */}
@@ -1308,7 +1308,7 @@ useEffect(() => {
                             jackets and be expecting you.
                           </li>
                         </ul> */}
-                        {selectedVendor?.dropOffProcedure}
+                        <div dangerouslySetInnerHTML={{ __html: selectedVendor?.dropOffProcedure }} />
                       </div>
                     </div>
                     {/*  */}
@@ -1386,7 +1386,7 @@ useEffect(() => {
                           be ready and waiting for you in Row R or S Off
                           Airport Parking Meet & Greet bays.
                         </p> */}
-                        {selectedVendor?.pickUpProcedure}
+                        <div dangerouslySetInnerHTML={{ __html: selectedVendor?.pickUpProcedure }} />
                       </div>
                     </div>
                     {/*  */}
@@ -1588,10 +1588,10 @@ useEffect(() => {
                 <div className="col-12 col-xl-4 ps-xl-2">
                   <article className="detail-card mt-3 card-sticky">
                     <div className="detail-card-logo-area">
-                      <img src={selectedVendor?.logo} alt="" />
+                      <img src={selectedVendor?.dp} alt="" />
                     </div>
                     <div className="detail-card-label-area">
-                      <h5>{selectedVendor?.type}</h5>
+                      <h5>{selectedVendor?.serviceType}</h5>
                     </div>
                     <div className="detail-card-info-area mb-1">
                       <div className="detail-card-info-icon-area">
@@ -1599,7 +1599,7 @@ useEffect(() => {
                       </div>
                       <div className="detail-card-info-body">
                         <p>Company :</p>
-                        <h6>{selectedVendor?.name}</h6>
+                        <h6>{selectedVendor?.companyName}</h6>
                       </div>
                     </div>
 
@@ -1641,7 +1641,7 @@ useEffect(() => {
                       // class="btn-close"
                       data-bs-dismiss="modal"
                       // aria-label="Close"
-                      onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.name, selectedVendor?.logo, selectedVendor?.finalQuote, selectedVendor?.type)}
+                      onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.companyName, selectedVendor?.dp, selectedVendor?.finalQuote, selectedVendor?.serviceType)}
                     />
                   </article>
                 </div>

@@ -21,12 +21,12 @@ const userSchema = new Schema(
     },
     lastname: {
       type: String,
-      // set: function(value) {
-      //   if (["Admin", "User"].includes(this.role)) {
-      //     return value || "";
-      //   }
-      //   return undefined;
-      // }
+      set: function(value) {
+        if (["Admin", "User"].includes(this.role)) {
+          return value || "";
+        }
+        return undefined;
+      }
     },    
     companyName : {
       type: String,
@@ -94,13 +94,55 @@ const userSchema = new Schema(
     // },
     dp: {
       type: String,
-      set: function(value) {
-        if (!this.role === "User") {
-          return undefined;
+    },
+    rating : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
         }
-        return value || "";
-      }
-    }
+      },
+    overView : {
+        type: String,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    finalQuote : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    quote : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    cancellationCover : {
+        type: Boolean,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    facilities : {
+        type: [String],
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    dropOffProcedure : {
+        type: String,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    pickUpProcedure : {
+        type: String,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
   },
   { timestamps: true }
 );

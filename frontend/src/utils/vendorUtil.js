@@ -5,18 +5,16 @@ const airports = [
     { name: 'Luton' }
 ];
 
-const quoteForDayForLuton247 = (day) => {
-    const initialAmount = 130;
+const quoteForDay = (quote, day) => {
     const incrementPerDay = 5;
     const extraIncrementPerDay = 10;
     const thresholdDay = 30;
-    console.log(day);
     if (day === 0) {
         day = 1;
     }
 
     if (day === 1) {
-        return initialAmount;
+        return quote;
     }
 
     let totalIncrement;
@@ -27,33 +25,9 @@ const quoteForDayForLuton247 = (day) => {
         totalIncrement = (thresholdDay - 1) * incrementPerDay + (day - thresholdDay) * extraIncrementPerDay;
     }
 
-    return initialAmount + totalIncrement;
+    return quote + totalIncrement;
 };
 
-const quoteForDayForAirportParkingBay = (day) => {
-    const initialAmount = 125;
-    const incrementPerDay = 5;
-    const extraIncrementPerDay = 10;
-    const thresholdDay = 30;
-
-    if (day === 0) {
-        day = 1;
-    }
-
-    if (day === 1) {
-        return initialAmount;
-    }
-
-    let totalIncrement;
-
-    if (day <= thresholdDay) {
-        totalIncrement = (day - 1) * incrementPerDay;
-    } else {
-        totalIncrement = (thresholdDay - 1) * incrementPerDay + (day - thresholdDay) * extraIncrementPerDay;
-    }
-
-    return initialAmount + totalIncrement;
-};
 
 const settingQuotes = (day) => {
     return [
@@ -61,7 +35,7 @@ const settingQuotes = (day) => {
             _id: "6695cc3066ed88bb45742d72",
             name: "Luton 247 Meet & Greet",
             logo:"https://parkingdealsuk.com/storage/images/2d8140f4b6d3175fd7e2e3bd7b6eb433.png",
-            finalQuote: Math.floor(quoteForDayForLuton247(day)*100)/100,
+            // finalQuote: Math.floor(quoteForDayForLuton247(day)*100)/100,
             type: "Meet and Greet",
             rating: 4.6,
             quote:0,
@@ -184,7 +158,7 @@ const settingQuotes = (day) => {
             _id: "6697cfb1a1b01f7e75778761",
             name: "Airport Parking Bay Meet & Greet Luton",
             logo:"https://parkingdealsuk.com/storage/images/faf39cd77da85eb710e37b218ec2ddab.jpeg",
-            finalQuote: Math.floor(quoteForDayForAirportParkingBay(day)*100)/100,
+            // finalQuote: Math.floor(quoteForDayForAirportParkingBay(day)*100)/100,
             type: "Meet and Greet",
             rating: 5.0,
             quote:0,
@@ -320,11 +294,18 @@ export const fetchAllAirports = async (dispatch) => {
 
 export const getAvailableQuotes = async (queryParams, dispatch, toast, setLoading, setPageLoading, day) => {
     console.log(day);
-    dispatch(setQuotes(settingQuotes(day)));
+    // dispatch(setQuotes(settingQuotes(day)));
     try {
-        const response = await api.get(`/api/user/find-vendor-detail?${queryParams.toString()}`);
+        // const response = await api.get(`/api/user/find-vendor-detail?${queryParams.toString()}`);
+        const response = await api.get(`/api/common-role/find-all-vendors`);
         console.log(response.data);
-        // dispatch(setQuotes(response.data));
+        dispatch(setQuotes(response.data?.data?.map(q=>{
+            return {
+                ...q,
+                quote: quoteForDay(q.quote, q.quote, day),
+                finalQuote: quoteForDay(q.finalQuote, day)
+            }
+        })));
     }catch (err) {
         console.log(err);
         toast?.current.show({

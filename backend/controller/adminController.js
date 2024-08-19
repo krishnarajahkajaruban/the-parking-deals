@@ -6,6 +6,8 @@ const AirportParkingAvailability = require("../models/airportParkingAvailability
 const ContactForm = require("../models/contact");
 const sendEmail = require("../common/mailService");
 const SubscribedEmail = require("../models/subcribedEmail");
+const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
+const { default: mongoose } = require("mongoose");
 
 /* creating coupon code and corresponding discount */
 const createCouponCodeDiscount = async (req, res) => {
@@ -92,32 +94,32 @@ const getAllUsersByType = async (req, res) => {
         }
 
         // Parse page and limit as integers
-        const parsedPage = parseInt(page, 10);
-        const parsedLimit = parseInt(limit, 10);
+        // const parsedPage = parseInt(page, 10);
+        // const parsedLimit = parseInt(limit, 10);
 
         // Validate page and limit values
-        if (isNaN(parsedPage) || parsedPage <= 0 || isNaN(parsedLimit) || parsedLimit <= 0) {
-            return res.status(400).json({ error: "Page and limit must be positive integers" });
-        }
+        // if (isNaN(parsedPage) || parsedPage <= 0 || isNaN(parsedLimit) || parsedLimit <= 0) {
+        //     return res.status(400).json({ error: "Page and limit must be positive integers" });
+        // }
 
         // Count total documents matching the query
         const totalCount = await User.countDocuments({ role: type });
 
         // Calculate the number of documents to skip based on the current page
-        const skip = (parsedPage - 1) * parsedLimit;
+        // const skip = (parsedPage - 1) * parsedLimit;
 
         // Fetch the users matching the query with pagination
         const allUsers = await User.find({ role: type })
             .sort({ updatedAt: -1 })
-            .skip(skip)
-            .limit(parsedLimit)
+            // .skip(skip)
+            // .limit(parsedLimit)
             .lean()
             .exec();
 
         // Return the fetched users along with pagination details
         return res.status(200).json({
-            currentPage: parsedPage,
-            totalPages: Math.ceil(totalCount / parsedLimit),
+            // currentPage: parsedPage,
+            // totalPages: Math.ceil(totalCount / parsedLimit),
             data: allUsers,
             totalCount
         });
@@ -429,6 +431,147 @@ const getAllSubscribedEmails = async (req, res) => {
     }
 };
 
+/* creating vendor */
+const creatingVendor = async(req, res) => {
+    try{
+
+        const { role } = req.user;
+        if(role !== "Admin"){
+            return res.status(403).json({ error: "You are not authorized" });
+        };
+
+        if (!req.file) {
+            return res.status(400).json({ error: "Logo must be required" });
+        };
+
+        const { email, companyName, serviceType, password, mobileNumber, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure } = req.body;
+
+        const b64 = Buffer.from(req.file.buffer).toString('base64');
+        const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+        const cldRes = await handleUpload(dataURI);
+
+        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure);
+
+        if (result.status !== 201) {
+            return res.status(result.status).json({ error: result.error });
+        };
+
+        return res.status(result.status).json({ 
+            user: result.user,
+            message: result.message
+         });
+
+    }catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+/* update vendor info */
+const updateVendorInfo = async (req, res) => {
+    try {
+        const {
+            email, companyName, serviceType, mobileNumber, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure
+        } = req.body;
+  
+        const { role } = req.user;
+        const { id } = req.params;
+
+        if(role !== "Admin"){
+            return res.status(403).json({ error: "You are not authorized" });
+        };
+  
+        const vendorDetailTobeUpdated = await User.findById(id);
+  
+        if(!vendorDetailTobeUpdated){
+          res.status(404).json({ error:"Vendor not found" });
+        };
+  
+        let dp = vendorDetailTobeUpdated.dp;
+        let oldDp;
+  
+        if (req.file) {
+  
+          if (dp) {
+            const urlParts = dp.split('/');
+            const fileName = urlParts[urlParts.length - 1];
+            oldDp = fileName.split('.')[0];
+          }
+  
+            const b64 = Buffer.from(req.file.buffer).toString('base64');
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+            const cldRes = await handleUpload(dataURI);
+            dp = cldRes.secure_url;
+  
+            if(oldDp){
+              await deleteOldImage(oldDp);
+            };
+  
+        };
+
+        const newFinalQuote = parseInt(JSON.parse(finalQuote)) || vendorDetailTobeUpdated.finalQuote;
+        const newQuote = parseInt(JSON.parse(quote)) || vendorDetailTobeUpdated.quote;
+        if (newQuote < newFinalQuote) {
+            return res.status(400).json({ error: 'Discounted quote must be less than or equal to quote' });
+        };
+  
+        const updateFields = {
+            email: email || vendorDetailTobeUpdated.email, companyName: companyName || vendorDetailTobeUpdated.companyName, serviceType: serviceType || vendorDetailTobeUpdated.serviceType, mobileNumber: mobileNumber || vendorDetailTobeUpdated.mobileNumber, rating: parseInt(JSON.parse(rating)) || vendorDetailTobeUpdated.rating, overView: overView || vendorDetailTobeUpdated.overView, quote: newFinalQuote === newQuote ? 0 : newQuote, finalQuote: newFinalQuote, cancellationCover: JSON.parse(cancellationCover) || vendorDetailTobeUpdated.cancellationCover, facilities: JSON.parse(facilities) || vendorDetailTobeUpdated.facilities, dropOffProcedure: dropOffProcedure || vendorDetailTobeUpdated.dropOffProcedure, pickUpProcedure: pickUpProcedure ||vendorDetailTobeUpdated.pickUpProcedure
+        };
+  
+        // Only set 'dp' field if a new file was uploaded
+        if (dp) {
+            updateFields.dp = dp;
+        };
+  
+        const updatedVendorInfo = await User.findByIdAndUpdate(
+            id,
+            { $set: updateFields },
+            { new: true }
+        );
+  
+        if (!updatedVendorInfo) {
+            return res.status(404).json({ error: 'Error in updating!' });
+        }
+  
+        res.status(200).json({
+            message: 'Vendor info updated successfully!',
+            user:updatedVendorInfo.toObject(),
+        });
+  
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+  };
+
+//delete a vendor
+const deleteVendor = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { role } = req.user;
+  
+      // Check if the provided ID is valid
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid vendor ID' });
+      }
+  
+      // Check if the user has the required role
+      if (role !== 'Admin') {
+        return res.status(403).json({ error: 'You are not authorized' });
+      }
+  
+      const deletionResult = await User.deleteOne({ _id: id });
+  
+      if (deletionResult.deletedCount === 0) {
+        return res.status(404).json({ error: 'Vendor not found' });
+      }
+  
+      res.status(200).json({ message: 'Vendor deleted successfully' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+
 module.exports = {
     createCouponCodeDiscount,
     updatingBookingFare,
@@ -436,5 +579,8 @@ module.exports = {
     addingCardParkingAvailability,
     getAllContactOrFaqForms,
     respondToTheContactOrFaqForm,
-    getAllSubscribedEmails
+    getAllSubscribedEmails,
+    creatingVendor,
+    updateVendorInfo,
+    deleteVendor
 }

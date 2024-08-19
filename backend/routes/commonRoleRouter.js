@@ -2,7 +2,8 @@ const router = require("express").Router();
 const authMiddleware = require("../middleware/authMiddleware");
 const { 
     getAllBookings,
-    getBookingChargesWithCouponCodeAndCorrespondingDiscount
+    getBookingChargesWithCouponCodeAndCorrespondingDiscount,
+    findAllVendors
  } = require("../controller/commonRoleController");
  
 //endpoint to get all bookings
@@ -10,5 +11,8 @@ const {
 
 //endpoint to get all booking charges with coupon code and discount
 router.get("/find-all-booking-charges-couponcode-discount", getBookingChargesWithCouponCodeAndCorrespondingDiscount);
+
+//endpoint to find all vendors
+ router.get("/find-all-vendors", findAllVendors);
 
  module.exports = router;

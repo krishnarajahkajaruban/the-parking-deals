@@ -332,7 +332,7 @@ const carParkingBookingDetail = async (req, res) => {
             user = result.user;
             token = result.token;
         } else {
-            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User");
+            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null);
 
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
