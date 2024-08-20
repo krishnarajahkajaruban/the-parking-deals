@@ -85,13 +85,15 @@ const getAllUsersByType = async (req, res) => {
         const { page = 1, limit = 10, type } = req.query;
         const { role } = req.user;
 
-        if (role !== "Admin") {
+        if (!(["Moderator", "Admin-User", "Admin"].includes(role))) {
             return res.status(403).json({ error: "You are not authorized" });
         }
 
-        if( !(["User", "Vendor"].includes(type)) ) {
+        if( !(["User", "Vendor", "Moderator", "Admin-User", "Admin", "all"].includes(type)) ) {
             return res.status(403).json({ error: "Invalid user role" });
-        }
+        };
+
+        const roles = type === "all" ? ["Moderator", "Admin-User", "Admin"] : [type];
 
         // Parse page and limit as integers
         // const parsedPage = parseInt(page, 10);
@@ -103,13 +105,13 @@ const getAllUsersByType = async (req, res) => {
         // }
 
         // Count total documents matching the query
-        const totalCount = await User.countDocuments({ role: type });
+        const totalCount = await User.countDocuments({ role: { $in: roles } });
 
         // Calculate the number of documents to skip based on the current page
         // const skip = (parsedPage - 1) * parsedLimit;
 
         // Fetch the users matching the query with pagination
-        const allUsers = await User.find({ role: type })
+        const allUsers = await User.find({ role: { $in: roles } })
             .sort({ updatedAt: -1 })
             // .skip(skip)
             // .limit(parsedLimit)
@@ -572,6 +574,147 @@ const deleteVendor = async (req, res) => {
     }
   };
 
+/* block and unblock the user */
+const changingActiveStatusOfUser = async(req, res) => {
+    try{
+        const { role } = req.user;
+        const { id } = req.params;
+
+        if(role !== "Admin"){
+            return res.status(403).json({ error: 'You are not authorized' });
+        };
+
+        // Check if the provided ID is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'Invalid User ID' });
+        };
+
+        const userToChangeStatus = await User.findOne({_id: id, role: "User"});
+
+        if(!userToChangeStatus){
+            return res.status(404).json({ error: 'User not found' });
+        };
+        
+        const changeStatus = await User.findByIdAndUpdate(
+            id,
+            { $set: { active: !userToChangeStatus.active } },
+            { new: true }
+        );
+
+        if(!changeStatus){
+            return res.status(404).json({ error: 'Error in changing user status' });
+        };
+
+        res.status(200).json({ message: `User has been ${changeStatus.active ? "Unblock" : "Block"} successfully!`});
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+/*creating role for admin */
+const createRoleForAdmin = async(req, res) => {
+    try{
+        const { role } = req.user;
+        if(role!== "Admin"){
+            return res.status(403).json({ error: 'You are not authorized' });
+        };
+
+        const { Role, firstName, lastname, email, mobileNo, password} = req.body;
+        
+        const user = await register(email, null, firstName, lastname, null, password, mobileNo, Role, null, null, null, null, null, null, null, null, null, null);
+
+        if(user.status!== 201){
+            return res.status(user.status).json({ error: user.error });
+        };
+
+        res.status(200).json({ message: 'Admin role created successfully!', user: user.user });
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    };
+};
+
+/* update admin user info */
+const updateAdminUserInfo = async (req, res) => {
+    try {
+        const {
+            Role, firstName, lastname, email, mobileNo
+        } = req.body;
+  
+        const { role } = req.user;
+        const { id } = req.params;
+
+        if(role !== "Admin"){
+            return res.status(403).json({ error: "You are not authorized" });
+        };
+  
+        const adminUserDetailTobeUpdated = await User.findById(id);
+  
+        if(!adminUserDetailTobeUpdated){
+          res.status(404).json({ error:"User not found" });
+        };
+  
+        const updateFields = {
+            role: Role || adminUserDetailTobeUpdated.role,
+            firstName: firstName || adminUserDetailTobeUpdated.firstName,
+            lastname: lastname || adminUserDetailTobeUpdated.lastname,
+            email: email || adminUserDetailTobeUpdated.email,
+            mobileNumber: mobileNo || adminUserDetailTobeUpdated.mobileNumber
+        };
+  
+        const updatedAdminUserInfo = await User.findByIdAndUpdate(
+            id,
+            { $set: updateFields },
+            { new: true }
+        );
+  
+        if (!updatedAdminUserInfo) {
+            return res.status(404).json({ error: 'Error in updating!' });
+        }
+  
+        res.status(200).json({
+            message: 'Admin user info updated successfully!',
+            user:updatedAdminUserInfo.toObject(),
+        });
+  
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+  };
+
+//delete a vendor
+const deleteAdminUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { role } = req.user;
+  
+      // Check if the provided ID is valid
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid admin user ID' });
+      }
+  
+      // Check if the user has the required role to perform deletion
+      if (role !== 'Admin') {
+        return res.status(403).json({ error: 'You are not authorized' });
+      }
+  
+      const rolesCanBeDeleted = ["Admin", "Moderator", "Admin-User"];
+  
+      // Attempt to delete the user
+      const deletionResult = await User.deleteOne({ _id: id, role: { $in: rolesCanBeDeleted } });
+  
+      if (deletionResult.deletedCount === 0) {
+        return res.status(404).json({ error: 'Admin user not found or cannot be deleted' });
+      }
+  
+      res.status(200).json({ message: 'Admin user deleted successfully' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+  
+
 module.exports = {
     createCouponCodeDiscount,
     updatingBookingFare,
@@ -582,5 +725,9 @@ module.exports = {
     getAllSubscribedEmails,
     creatingVendor,
     updateVendorInfo,
-    deleteVendor
+    deleteVendor,
+    changingActiveStatusOfUser,
+    createRoleForAdmin,
+    updateAdminUserInfo,
+    deleteAdminUser
 }

@@ -13,11 +13,12 @@ export const SampleData = {
         }).then(res => {
             // Transform the response data to match the structure required by the DataTable
             const users = res.data.data.map(user => ({
-                title: user.title,
+                title: user.title ,
                 firstName: user.firstName,
-                lastName: user.lastname,
+                lastName: user.lastname || "-",
                 email: user.email,
-                mobileNumber: user.mobileNumber,
+                mobileNumber: user.mobileNumber || "-",
+                role: user.role,
                 details: user
             }));
             return { users, totalRecords: res.data.totalCount };

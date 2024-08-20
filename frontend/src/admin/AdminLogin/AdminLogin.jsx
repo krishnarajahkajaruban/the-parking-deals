@@ -8,6 +8,7 @@ import { Password } from 'primereact/password';
 import { Checkbox } from "primereact/checkbox";
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { RadioButton } from 'primereact/radiobutton';
 
 import Preloader from "../../Preloader";
 import api from "../../api";
@@ -26,7 +27,7 @@ const AdminLogin = () => {
     const initialSigInInfo = {
         email: '',
         password: '',
-        role: "Admin"
+        role: ""
     }
     const [signInInfo, setSignInInfo] = useState(initialSigInInfo);
 
@@ -72,7 +73,7 @@ const AdminLogin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!signInInfo.email || !signInInfo.password) {
+        if (!signInInfo.email || !signInInfo.password || !signInInfo.role) {
             setRequire(true);
             toast.current.show({
                 severity: 'error',
@@ -138,6 +139,34 @@ const AdminLogin = () => {
                                         This field is required
                                     </small>
                                 )}
+                            </div>
+
+                            <div className="custom-form-group contains-float-input">
+                                <div className="custom-role-group">
+                                    <label className="custom-role-label">Role</label>
+                                    <div className="custom-role-options">
+                                        <div className="custom-role-option">
+                                            <RadioButton inputId="roleAdmin" name="role" value="Admin"
+                                                onChange={handleInputChange} checked={signInInfo.role === 'Admin'} />
+                                            <label htmlFor="roleAdmin" className="custom-role-label">Admin</label>
+                                        </div>
+                                        <div className="custom-role-option">
+                                            <RadioButton inputId="roleModerator" name="role" value="Moderator"
+                                                onChange={handleInputChange} checked={signInInfo.role === 'Moderator'} />
+                                            <label htmlFor="roleModerator" className="custom-role-label">Moderator</label>
+                                        </div>
+                                        <div className="custom-role-option">
+                                            <RadioButton inputId="roleUser" name="role" value="User"
+                                                onChange={handleInputChange} checked={signInInfo.role === 'Admin-User'} />
+                                            <label htmlFor="roleUser" className="custom-role-label">User</label>
+                                        </div>
+                                    </div>
+                                    {(require && !signInInfo.role) && (
+                                        <small className="text-danger form-error-msg">
+                                            Please select a role
+                                        </small>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="custom-form-group contains-float-input">

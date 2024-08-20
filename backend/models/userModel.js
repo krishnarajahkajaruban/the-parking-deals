@@ -16,13 +16,13 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: function() {
-        return ["Admin", "User"].includes(this.role);
+        return ["Admin", "User", "Moderator", "Admin-User"].includes(this.role);
       },
     },
     lastname: {
       type: String,
       set: function(value) {
-        if (["Admin", "User"].includes(this.role)) {
+        if (["Admin", "User", "Moderator", "Admin-User"].includes(this.role)) {
           return value || "";
         }
         return undefined;
@@ -48,14 +48,28 @@ const userSchema = new Schema(
     },
     mobileNumber: {
       type: Number,
+      set: function(value) {
+        // For roles "Admin", "Moderator", "Admin-User", return the value or an empty string if no value is provided.
+        if (["Admin", "Moderator", "Admin-User"].includes(this.role)) {
+          return value || "";
+        }
+        return value; // If role doesn't match, just return the provided value
+      },
       required: function() {
+        // Mobile number is required only for "Vendor" and "User" roles.
         return ["Vendor", "User"].includes(this.role);
       },
-    },
+    },    
     role: {
       type: String,
-      enum: ["Admin", "User", "Vendor"],
+      enum: ["Admin", "User", "Vendor", "Moderator", "Admin-User"],
       required: [true, "Role must be provided"]
+    },
+    active : {
+      type: Boolean,
+      required: function() {
+        return this.role === 'User';
+      }
     },
     // addressL1: {
     //   type: String,

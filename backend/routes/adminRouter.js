@@ -14,7 +14,11 @@ const {
     getAllSubscribedEmails,
     creatingVendor,
     updateVendorInfo,
-    deleteVendor
+    deleteVendor,
+    changingActiveStatusOfUser,
+    createRoleForAdmin,
+    updateAdminUserInfo,
+    deleteAdminUser
 } = require("../controller/adminController");
 
 // Define the maximum file size (in bytes) for each image. For example, 5MB:
@@ -74,5 +78,17 @@ router.put("/update-vendor-info/:id", authMiddleware, upload.single("logo"), upd
 
 //delete vendor
 router.delete("/delete-vendor/:id", authMiddleware, deleteVendor);
+
+//change the user active status
+router.patch("/change-user-active-status/:id", authMiddleware, changingActiveStatusOfUser);
+
+//create a admin role
+router.post("/create-admin-role", authMiddleware, createRoleForAdmin);
+
+//update admin user info
+router.put("/update-admin-user/:id", authMiddleware, updateAdminUserInfo);
+
+//delete admin user
+router.delete("/delete-admin-user/:id", authMiddleware, deleteAdminUser);
 
 module.exports = router;

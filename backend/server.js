@@ -1042,6 +1042,24 @@ app.use((err, req, res, next) => {
     }
 });
 
+// app.patch('/update-active-field', async (req, res) => {
+//   try {
+//     const result = await User.updateMany(
+//       { role: 'User' }, // Query to find users with the role 'User'
+//       { $set: { active: true } } // Update operation to set 'active' to true
+//     );
+
+//     res.status(200).json({
+//       message: 'Update successful',
+//       matchedCount: result.matchedCount,
+//       modifiedCount: result.modifiedCount,
+//     });
+//   } catch (error) {
+//     console.error('Error updating users:', error);
+//     res.status(500).json({ message: 'Internal Server Error', error: error.message });
+//   }
+// });
+
 
 // Start the server
 server.listen(PORT, async () => {

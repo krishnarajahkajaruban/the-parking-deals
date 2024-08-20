@@ -46,7 +46,7 @@ const register = async (email, title, firstName, lastName, companyName, password
     // Check for required fields
     if (!email || 
       (role === "User" && !title) || 
-      (["Admin", "User"].includes(role) && !firstName) || 
+      (["Admin", "User", "Moderator", "Admin-User"].includes(role) && !firstName) || 
       (role === 'Vendor' && !companyName) || 
       !password || 
       (["Vendor", "User"].includes(role) && !mobileNumber) || 
@@ -120,10 +120,10 @@ const register = async (email, title, firstName, lastName, companyName, password
     const user = new User({
         email: email.toLowerCase(),
         ...(role === "User" && { title }),
-        ...(["Admin", "User"].includes(role) && { firstName }),
-        ...(["Admin", "User"].includes(role) && { lastname: lastName || "" }),
+        ...(["Admin", "User", "Moderator", "Admin-User"].includes(role) && { firstName }),
+        ...(["Admin", "User", "Moderator", "Admin-User"].includes(role) && { lastname: lastName || "" }),
         ...(role === "Vendor" && { companyName }),
-        ...(["Vendor", "User"].includes(role) && { mobileNumber }),
+        mobileNumber,
         // ...(role === "User" && { addressL1 }),
         // ...(role === "User" && { addressL2: addressL2 || "" }),
         role,
@@ -201,7 +201,7 @@ const login = async (email, password, role) => {
           error: "Please provide role of login",
           status: 403
         };
-      }
+      };
   
       const user = await User.findOne({ email: email.toLowerCase(), role }).select('+password').lean();
       if (!user) {
@@ -210,6 +210,13 @@ const login = async (email, password, role) => {
           status: 400
         };
       }
+
+      if (role === 'User' && !user.active) {
+        return {
+            error: "User has been blocked. Contact support for further details.",
+            status: 403
+        };
+    };
   
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {

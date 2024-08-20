@@ -15,6 +15,8 @@ import { Divider } from "primereact/divider";
 import { SampleData } from "../../UserData";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import api from "../../api";
+import { Tag } from "primereact/tag";
 
 const Customers = () => {
     const toast = useRef(null);
@@ -42,10 +44,10 @@ const Customers = () => {
         fetchCustomers();
     }, []);
 
-    const handleDeleteCustomer = (customerId) => {
+    const handleDeleteCustomer = (customerId, status) => {
         confirmDialog({
-            message: 'Are you sure you want to delete the customer data?',
-            header: 'Customer Delete Confirmation',
+            message: `Are you sure you want to ${status ? "BLOCK" : "UNBLOCK"} the customer account?`,
+            header: 'Customer Account Status Confirmation',
             icon: 'bi bi-info-circle',
             defaultFocus: 'reject',
             acceptClassName: 'p-button-danger',
@@ -57,38 +59,47 @@ const Customers = () => {
 
     const deleteCustomer = async (customerId) => {
         try {
-            if (toast.current) {
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'User Deleted.',
-                    detail: "You have successfully deleted the user.",
-                    life: 3000
-                });
-            }
-        } catch (err) {
-            if (toast.current) {
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Error deleting user.',
-                    detail: err,
-                    life: 3000
-                });
-            }
-        }
+            const response = await api.patch(`/api/admin/change-user-active-status/${customerId}`, {}, {
+              headers: { 
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              }
+            });
+            toast.current?.show({
+                severity: 'success',
+                summary: 'Customer Active Status Changed!',
+                detail: response.data.message,
+                life: 3000
+            });
+            fetchCustomers();
+          } catch (err) {
+            console.log(err);
+              toast.current?.show({
+                  severity: 'error',
+                  summary: 'Error!',
+                  detail: err.response.data.error,
+                  life: 3000
+              });
+          }
     }
 
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="action_btn_area">
-                <Button
-                    icon="bi bi-trash3"
-                    className="data-delete-button"
-                    onClick={() => handleDeleteCustomer(rowData.id)}
+                <Tag
+                    style={{ cursor: 'pointer' }}
+                    value={rowData?.details?.active ? "BLOCK" : "UNBLOCK"}
+                    severity={getSeverity(rowData?.details?.active)}
+                    onClick={() => handleDeleteCustomer(rowData?.details?._id, rowData?.details?.active)}
                 />
             </div>
         );
     };
-
+    
+    const getSeverity = (status) => {
+        return status ? 'warning' : 'success';
+    };
+    
     const mobileNumberBody = (rowData) => {
         return (
             <Link to={`tel:${rowData.mobileNumber}`}>{rowData.mobileNumber}</Link>

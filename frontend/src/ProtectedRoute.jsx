@@ -55,20 +55,26 @@ const ProtectedRoute = ({ children }) => {
 
     const isUser = isAuth?.role === 'User';
     const isAdmin = isAuth?.role === 'Admin';
+    const isModerator = isAuth?.role === 'Moderator';
+    const isAdminUser = isAuth?.role === 'Admin-User';
     const adminRoutes = ['/admin-login', '/admin-dashboard', '/reservation', '/bookings', '/users', '/customers', '/vendors'];
     const userRoutes = ['/', '/about-us', '/sign-in', '/sign-up', '/forgot-password', '/privacy-policy', '/terms-and-conditions', '/faq', '/contact-us', '/services', '/results', '/booking', '/dashboard', '/change-password'];
 
+    if ((isAdminUser || isModerator) && ['/vendors', '/users'].includes(pathname)) {
+        return <Navigate to="/admin-dashboard" />;
+    };
+    
     if (isUser && adminRoutes.includes(pathname)) {
         return <Navigate to="/" />;
-    }
+    };
 
-    if (isAdmin && userRoutes.includes(pathname)) {
+    if ((isAdmin || isModerator || isAdminUser) && userRoutes.includes(pathname)) {
         return <Navigate to="/admin-dashboard" />;
-    }
+    };
 
     if (childType === 'VendorList') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    };
 
     return children;
 };
