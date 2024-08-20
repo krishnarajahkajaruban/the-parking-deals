@@ -1222,6 +1222,11 @@ code {
   padding-left: 0 !important;
 }
 
+.custom-form-group.custom .custom-form-dropdown .p-dropdown-label {
+  padding-left: 0 !important;
+}
+
+
 /* .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
   background-color: #e7e7f5;
 } */
@@ -1404,7 +1409,7 @@ code {
   border-color: var(--color-primary);
 }
 
-.submit-button.plain{
+.submit-button.plain {
   letter-spacing: normal;
   font-weight: 400;
 }
