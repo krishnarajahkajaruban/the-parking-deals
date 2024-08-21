@@ -16,10 +16,10 @@ router.post("/register", async (req, res) => {
     let result;
 
     if(role === 'User'){
-        result = await register(email, title, firstName, lastName, null, password, mobileNumber, role);
+        result = await register(email, title, firstName, lastName, companyName, password, mobileNumber, role, null, null, null, null, null, null, null, null, null, null, null);
     }else{
-        result = await register(email, null, null, null, companyName, password, null, null, null, null, null, null, role);
-    }
+        return res.status(400).json({ error:"Invalid role!"})
+    };
 
     if (result.status !== 201) {
         return res.status(result.status).json({ error: result.error });

@@ -1,13 +1,11 @@
 import api from "./api";
 
 export const SampleData = {
-    getData(page = 1, limit = 10, status = '', date = '', token) {
+    getData(token, bookingId, date) {
         return api.get(`/api/common-role/get-all-bookings`, {
             params: {
-                page,
-                limit,
-                status,
-                date,
+                ...(bookingId && {bookingId}),
+                ...(date && {date}),
             },
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -17,12 +15,25 @@ export const SampleData = {
             // Transform the response data to match the structure required by the DataTable
             const bookings = res.data.data.map(booking => ({
                 id: booking.bookingId,
-                date: new Date(booking.createdAt).toLocaleDateString(),
+                date: new Date(booking.createdAt).toLocaleDateString('en-GB'),
                 time: new Date(booking.createdAt).toLocaleTimeString(),
                 status: booking.status,
                 details: booking,
             }));
-            return { bookings, totalRecords: res.data.totalCount };
+    
+            // Add empty dummy objects based on remainingDataCount
+            // const dummyBookings = Array(res.data.remainingDataCount).fill({
+            //     id: null,
+            //     date: '',
+            //     time: '',
+            //     status: '',
+            //     details: {},
+            // });
+    
+            // Combine the real bookings with the dummy ones
+            // const allBookings = [...bookings, ...dummyBookings];
+    
+            return { bookings: bookings, totalRecords: res.data.totalCount };
         }).catch(err => {
             console.error(err);
             return { bookings: [], totalRecords: 0 };

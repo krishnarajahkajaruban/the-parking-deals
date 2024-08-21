@@ -71,9 +71,9 @@ router.post("/reset-password", resettingPassword);
 
 //endpoint to calculate the total booking charge
 router.post("/calculate-total-booking-charge", async (req, res) => {
-    const { bookingQuote, couponCode, smsConfirmation, cancellationCover } = req.body;
+    const { bookingQuote, couponCode, smsConfirmation, cancellationCover, numOfVehicle } = req.body;
 
-    const result = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
+    const result = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover, numOfVehicle);
 
     if (result.status !== 200) {
         return res.status(result.status).json({ error: result.error });

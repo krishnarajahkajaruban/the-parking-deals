@@ -153,24 +153,24 @@ const Layout = () => {
                         </Link>
                     </li>
 
-                    <li className={`${pathname === '/vendors' ? 'active' : ''}`}>
+                    {!(["Moderator", "Admin-User"].includes(user?.role)) && <li className={`${pathname === '/vendors' ? 'active' : ''}`}>
                         <Link to={'/vendors'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-building"></i>
                             </span>
                             <span className="title">Vendor</span>
                         </Link>
-                    </li>
+                    </li>}
 
 
-                    <li className={`${pathname === '/users' ? 'active' : ''}`}>
+                    {!(["Moderator", "Admin-User"].includes(user?.role)) &&<li className={`${pathname === '/users' ? 'active' : ''}`}>
                         <Link to={'/users'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-person"></i>
                             </span>
                             <span className="title">Users</span>
                         </Link>
-                    </li>
+                    </li>}
 
                     <li>
                         <Link onClick={handleLogOut}>

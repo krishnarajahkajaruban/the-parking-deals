@@ -64,6 +64,8 @@ const Dashboard = () => {
     const [rows, setRows] = useState(10);
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [rowPerPage, setRowsPerPage] = useState([5]);
+    const [bookingDate, setBookingDate] = useState(null);
+    const [searchKey, setSearchKey] = useState(null);
 
     const initialUserInfo = {
         title: user?.title || titles[0].name,
@@ -199,21 +201,29 @@ const Dashboard = () => {
         }
     };
 
-    const fetchBookings = async (page, rows) => {
-        setLoading(true);
-        const data = await SampleData.getData(page, rows, '', '', token);
-        setBookings(data.bookings);
-        setTotalRecords(data.totalRecords);
-        const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
-        setRowsPerPage([...newRowPerPage, Number(data.totalRecords)])
-        setLoading(false);
-    };
+    const handleFilterByDate = (e) => {
+      const date = e.value ? e.value.toLocaleDateString('en-GB') : null;
+      fetchBookings(null, date);
+  };
+
+    const fetchBookings = async (bookingId, date) => {
+      console.log(bookingId);   
+      console.log(date);
+      setLoading(true);
+      const data = await SampleData.getData(token, bookingId, date);
+      console.log(data.bookings);
+      setBookings(data.bookings);
+      setTotalRecords(data.totalRecords);
+      const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
+      setRowsPerPage([...newRowPerPage, Number(data.totalRecords)])
+      setLoading(false);
+  };
 
     // console.log(rowPerPage);
 
     useEffect(() => {
-        fetchBookings(page, rows);
-    }, [page, rows, token]);
+      fetchBookings(null, null);
+  }, []);
 
     const onPageChange = (event) => {
         setPage(event.page + 1);
@@ -787,41 +797,59 @@ const Dashboard = () => {
                       <div className="dashboard-profile-head">
                         <h5>Bookings</h5>
                       </div>
-                      {/* <div className="data-filter-area">
+                      <div className="filter_area">
                         <div className="row">
-                          <div className="col-12 col-lg-6 col-xl-4">
-                            <div className="custom-form-group mb-0 input-with-icon">
-                              <label
-                                htmlFor="filterDate"
-                                className="custom-form-label"
-                              >
-                                Filter by Date
-                              </label>
-                              <div className="form-icon-group">
-                                <i class="bi bi-calendar-check-fill input-grp-icon"></i>
-                                <Calendar
-                                  id="filterDate"
-                                  value={filterDate}
-                                  placeholder="dd/mm/yyyy"
-                                  maxDate={today}
-                                  className="w-100"
-                                  onChange={(e) => setFilterDate(e.value)}
-                                />
-                              </div>
+                            <div className="col-12 col-xl-4 col-sm-6">
+                                <div className="custom-form-group mb-sm-0 mb-3">
+                                    <label htmlFor="bookingDate" className="custom-form-label">Filter by booking date : </label>
+                                    <div className="form-icon-group">
+                                        <i className="bi bi-calendar2-fill input-grp-icon"></i>
+                                        <Calendar id="bookingDate" value={bookingDate} onChange={(e)=>
+                                            {
+                                                setBookingDate(e.value); 
+                                                handleFilterByDate(e); 
+                                            }
+                                        } placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" 
+                                        maxDate={today} 
+                                        className='w-100' />
+                                    </div>
+                                </div>
                             </div>
-                          </div>
+
+                            <div className="col-12 col-xl-4 col-sm-6">
+                                <div className="custom-form-group mb-sm-0 mb-3">
+                                    <label htmlFor="dropOffDate" className="custom-form-label">Search by booking id : </label>
+                                    <div className="form-icon-group">
+                                        <i className="bi bi-search input-grp-icon"></i>
+                                        <InputText
+                                            id="searchKey"
+                                            className="custom-form-input"
+                                            name="searchKey"
+                                            placeholder="Search here.."
+                                            value={searchKey}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setSearchKey(value); 
+                                                const bookingId = value ? value : null;         
+                                                fetchBookings(bookingId, null); 
+                                            }}
+                                        />
+                                        {/* <Calendar id="dropOffDate" value={bookingDate} onChange={handleFilterByDate} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={today} className='w-100' /> */}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div> */}
+                      </div>  
                       <div className="row">
                         <div className="col-12">
-                          <div className="dash-table-area">
+                          {bookings && bookings?.length > 0 && <div className="dash-table-area">
                             <DataTable
                               value={bookings}
                               paginator
                               size="small"
                               rows={rows}
                               totalRecords={totalRecords}
-                              onPage={onPageChange}
+                              // onPage={onPageChange}
                               loading={loading}
                               rowsPerPageOptions={rowPerPage}
                               tableStyle={{ minWidth: "50rem" }}
@@ -854,7 +882,19 @@ const Dashboard = () => {
                                 style={{ width: "15%" }}
                               ></Column>
                             </DataTable>
-                          </div>
+                          </div>}
+                          {loading &&  (
+                        <div className="no_data_found_area">
+                            {/* <img src="/assets/images/no_data_2.svg" alt="No booking data!" /> */}
+                            <h6>Loading...</h6>
+                        </div>
+                    )}
+                    {!loading && bookings && bookings?.length === 0 && (
+                        <div className="no_data_found_area">
+                            <img src="/assets/images/no_data_2.svg" alt="No booking data!" />
+                            <h6>No booking data!</h6>
+                        </div>
+                    )}
                         </div>
                       </div>
                     </article>
@@ -1240,6 +1280,38 @@ const Dashboard = () => {
                         </div>
                       </div>
                     ))}
+                    <Divider className="mt-4 mb-4" />
+                        <h5 className="data-view-head">Vendor Details</h5>
+                        <div className="row mt-4">
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-3">
+                                    <h6 className="data-view-title">Vendor :</h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.company.companyName}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-3">
+                                    <h6 className="data-view-title">
+                                        Email :
+                                    </h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.company.email}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div className="col-12 col-lg-6">
+                                <div className="data-view mb-0">
+                                    <h6 className="data-view-title">
+                                        Mobile Number :
+                                    </h6>
+                                    <h6 className="data-view-data">
+                                        {selectedBooking.company.mobileNumber}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
                   </div>
                 </div>
               </div>

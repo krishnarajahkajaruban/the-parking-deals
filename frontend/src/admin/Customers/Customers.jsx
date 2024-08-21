@@ -15,6 +15,8 @@ import { Divider } from "primereact/divider";
 import { SampleData } from "../../UserData";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import api from "../../api";
+import { Tag } from "primereact/tag";
 
 const Customers = () => {
     const toast = useRef(null);
@@ -28,9 +30,9 @@ const Customers = () => {
     const [rowPerPage, setRowsPerPage] = useState([5]);
     const token = useSelector((state) => state.auth.token);
 
-    const fetchCustomers = async (page, rows) => {
+    const fetchCustomers = async () => {
         setLoading(true);
-        const data = await SampleData.getData(page, rows, 'User', token);
+        const data = await SampleData.getData('User', token);
         setCustomerData(data.users);
         setTotalRecords(data.totalRecords);
         const newRowPerPage = ([5,10,25,50].filter(x => x<Number(data.totalRecords)));
@@ -39,13 +41,13 @@ const Customers = () => {
     };
 
     useEffect(() => {
-        fetchCustomers(page, rows);
-    }, [page, rows, token]);
+        fetchCustomers();
+    }, []);
 
-    const handleDeleteCustomer = (customerId) => {
+    const handleDeleteCustomer = (customerId, status) => {
         confirmDialog({
-            message: 'Are you sure you want to delete the customer data?',
-            header: 'Customer Delete Confirmation',
+            message: `Are you sure you want to ${status ? "BLOCK" : "UNBLOCK"} the customer account?`,
+            header: 'Customer Account Status Confirmation',
             icon: 'bi bi-info-circle',
             defaultFocus: 'reject',
             acceptClassName: 'p-button-danger',
@@ -57,38 +59,47 @@ const Customers = () => {
 
     const deleteCustomer = async (customerId) => {
         try {
-            if (toast.current) {
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'User Deleted.',
-                    detail: "You have successfully deleted the user.",
-                    life: 3000
-                });
-            }
-        } catch (err) {
-            if (toast.current) {
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Error deleting user.',
-                    detail: err,
-                    life: 3000
-                });
-            }
-        }
+            const response = await api.patch(`/api/admin/change-user-active-status/${customerId}`, {}, {
+              headers: { 
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              }
+            });
+            toast.current?.show({
+                severity: 'success',
+                summary: 'Customer Active Status Changed!',
+                detail: response.data.message,
+                life: 3000
+            });
+            fetchCustomers();
+          } catch (err) {
+            console.log(err);
+              toast.current?.show({
+                  severity: 'error',
+                  summary: 'Error!',
+                  detail: err.response.data.error,
+                  life: 3000
+              });
+          }
     }
 
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="action_btn_area">
-                <Button
-                    icon="bi bi-trash3"
-                    className="data-delete-button"
-                    onClick={() => handleDeleteCustomer(rowData.id)}
+                <Tag
+                    style={{ cursor: 'pointer' }}
+                    value={rowData?.details?.active ? "BLOCK" : "UNBLOCK"}
+                    severity={getSeverity(rowData?.details?.active)}
+                    onClick={() => handleDeleteCustomer(rowData?.details?._id, rowData?.details?.active)}
                 />
             </div>
         );
     };
-
+    
+    const getSeverity = (status) => {
+        return status ? 'warning' : 'success';
+    };
+    
     const mobileNumberBody = (rowData) => {
         return (
             <Link to={`tel:${rowData.mobileNumber}`}>{rowData.mobileNumber}</Link>
@@ -118,7 +129,7 @@ const Customers = () => {
                 </div>
 
                 <div className="page_content">
-                    {customerData?.length > 0 ? (
+                    {customerData?.length > 0 && (
                         <div className="dash-table-area">
                             <DataTable
                                 loading={loading}
@@ -127,7 +138,7 @@ const Customers = () => {
                                 size="small"
                                 rows={rows}
                                 totalRecords={totalRecords}
-                                onPage={onPageChange}
+                                // onPage={onPageChange}
                                 rowsPerPageOptions={rowPerPage}
                                 tableStyle={{ minWidth: "50rem" }}
                                 rowHover
@@ -146,12 +157,20 @@ const Customers = () => {
                                 <Column body={actionBodyTemplate} alignHeader={'center'} className="" header="Action" style={{ width: "15%" }}></Column>
                             </DataTable>
                         </div>
-                    ) : !loading ? (
+                    ) } 
+
+                    {loading &&  (
+                        <div className="no_data_found_area">
+                            <h6>Loading...</h6>
+                        </div>
+                    )}
+
+                    {!loading && customerData && customerData?.length === 0 && (
                         <div className="no_data_found_area">
                             <img src="/assets/images/no_data_2.svg" alt="No customer data!" />
                             <h6>No customer data!</h6>
                         </div>
-                    ) : null}
+                    )}
 
                 </div>
             </div>
