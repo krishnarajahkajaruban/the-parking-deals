@@ -48,7 +48,7 @@ const ProtectedRoute = ({ children }) => {
     if (!isAuth && !isAuthPage) {
         if (['/change-password', '/dashboard'].includes(pathname)) {
             return <Navigate to="/sign-in" />;
-        }else if (['/admin-dashboard', '/reservation', '/bookings', '/users', '/customers', '/vendors'].includes(pathname)) {
+        } else if (pathname.startsWith('/admin-dashboard') || pathname.startsWith('/reservation') || pathname.startsWith('/bookings') || pathname.startsWith('/users') || pathname.startsWith('/customers') || pathname.startsWith('/vendors') || pathname.startsWith('/vendors/bookings/')) {
             return <Navigate to="/admin-login" />;
         }
     }
@@ -57,14 +57,14 @@ const ProtectedRoute = ({ children }) => {
     const isAdmin = isAuth?.role === 'Admin';
     const isModerator = isAuth?.role === 'Moderator';
     const isAdminUser = isAuth?.role === 'Admin-User';
-    const adminRoutes = ['/admin-login', '/admin-dashboard', '/reservation', '/bookings', '/users', '/customers', '/vendors'];
+    const adminRoutes = ['/admin-login', '/admin-dashboard', '/reservation', '/bookings', '/users', '/customers', '/vendors', '/vendors/bookings/:id'];
     const userRoutes = ['/', '/about-us', '/sign-in', '/sign-up', '/forgot-password', '/privacy-policy', '/terms-and-conditions', '/faq', '/contact-us', '/services', '/results', '/booking', '/dashboard', '/change-password'];
 
     if ((isAdminUser || isModerator) && ['/vendors', '/users'].includes(pathname)) {
         return <Navigate to="/admin-dashboard" />;
     };
     
-    if (isUser && adminRoutes.includes(pathname)) {
+    if (isUser && (adminRoutes.includes(pathname) || pathname.startsWith('/vendors/bookings/'))) {
         return <Navigate to="/" />;
     };
 

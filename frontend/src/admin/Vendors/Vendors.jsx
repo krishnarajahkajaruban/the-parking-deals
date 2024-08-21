@@ -69,7 +69,8 @@ const Vendors = () => {
         facilities:[''], 
         dropOffProcedure:null, 
         pickUpProcedure:null,
-        logo:null
+        logo:null,
+        dealPercentage:0
     };
 
     const [vendorData, setVendorData] = useState(intialVendorData);
@@ -120,7 +121,6 @@ const Vendors = () => {
             reader.readAsDataURL(e.target.files[0]);
         }
     };
-
 
     // For clear image
     const clearImage = () => {
@@ -208,7 +208,7 @@ const Vendors = () => {
 
     const handleCreateVendor = async(e) => {
         e.preventDefault();
-        if (!vendorData.logo || !vendorData.companyName || !vendorData.email || !vendorData.mobileNumber || !vendorData.password || !vendorData.confirmPassword || vendorData.quote === 0 || vendorData.finalQuote === 0 || !vendorData.serviceType || vendorData.rating === 0 || vendorData.facilities.length === 0 || !vendorData.overView || !vendorData.dropOffProcedure || !vendorData.pickUpProcedure) {
+        if (!vendorData.logo || !vendorData.companyName || !vendorData.email || !vendorData.mobileNumber || !vendorData.password || !vendorData.confirmPassword || vendorData.quote === 0 || vendorData.finalQuote === 0 || !vendorData.serviceType || vendorData.rating === 0 || vendorData.facilities.length === 0 || !vendorData.overView || !vendorData.dropOffProcedure || !vendorData.pickUpProcedure || vendorData.dealPercentage === 0) {
             setShowError(true);
             toast.current.show({
               severity: 'error',
@@ -245,6 +245,7 @@ const Vendors = () => {
           formData.append('password', vendorData.password);
           formData.append('mobileNumber', vendorData.mobileNumber);
           formData.append('rating', vendorData.rating);
+          formData.append('dealPercentage', vendorData.dealPercentage);
           formData.append('overView', vendorData.overView);
           formData.append('quote', vendorData.quote);
           formData.append('finalQuote', vendorData.finalQuote);
@@ -260,7 +261,7 @@ const Vendors = () => {
     const handleUpdateVendor = async(e) => {
         e.preventDefault();
         console.log(vendorData);
-        if (!vendorData.companyName || !vendorData.email || !vendorData.mobileNumber || vendorData.quote === 0 || vendorData.finalQuote === 0 || !vendorData.serviceType || vendorData.rating === 0 || vendorData.facilities.length === 0 || !vendorData.overView || !vendorData.dropOffProcedure || !vendorData.pickUpProcedure) {
+        if (!vendorData.companyName || !vendorData.email || !vendorData.mobileNumber || vendorData.quote === 0 || vendorData.finalQuote === 0 || !vendorData.serviceType || vendorData.rating === 0 || vendorData.dealPercentage === 0 || vendorData.facilities.length === 0 || !vendorData.overView || !vendorData.dropOffProcedure || !vendorData.pickUpProcedure) {
             setShowError(true);
             toast.current.show({
               severity: 'error',
@@ -278,6 +279,7 @@ const Vendors = () => {
           formData.append('serviceType', vendorData.serviceType);
           formData.append('mobileNumber', vendorData.mobileNumber);
           formData.append('rating', vendorData.rating);
+          formData.append('dealPercentage', vendorData.dealPercentage);
           formData.append('overView', vendorData.overView);
           formData.append('quote', vendorData.quote);
           formData.append('finalQuote', vendorData.finalQuote);
@@ -342,6 +344,7 @@ const Vendors = () => {
                             serviceType:rowData?.serviceType,  
                             mobileNumber:rowData?.mobileNumber, 
                             rating:rowData?.rating, 
+                            dealPercentage:rowData?.dealPercentage,
                             overView:rowData?.overView, 
                             quote:rowData?.quote === 0 ? rowData?.finalQuote : rowData?.quote , 
                             finalQuote:rowData?.finalQuote, 
@@ -364,6 +367,12 @@ const Vendors = () => {
                     icon="bi bi-trash3"
                     className="data-delete-button"
                     onClick={() => handleDeleteVendor(rowData._id)}
+                />
+                <Button
+                    icon="bi bi-calendar3"
+                    className="data-view-button"
+                    tooltip="Bookings" tooltipOptions={{ position: 'top' }}
+                    onClick={() => navigate(`/vendors/bookings/${rowData._id}`)}
                 />
             </div>
         );
@@ -766,6 +775,35 @@ const Vendors = () => {
 
                             <div className="col-12 col-sm-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label htmlFor="dealPercentage" className="custom-form-label form-required">
+                                        Deal percentage
+                                    </label>
+                                    <InputNumber
+                                        id="dealPercentage"
+                                        className="custom-form-input"
+                                        placeholder="Percentage"
+                                        name="dealPercentage"
+                                        value={parseInt(vendorData.dealPercentage)}
+                                        onValueChange={handleChange}
+                                        maxFractionDigits={2}
+                                        useGrouping={false}
+                                        mode="decimal"
+                                        min={0}
+                                        max={100}
+                                        step={0.1}
+                                        suffix="%"
+                                    />
+
+                                    {(showError && vendorData.dealPercentage === 0) &&
+                                        <small className="text-danger form-error-msg">
+                                            This field is required
+                                        </small>
+                                    }
+                                </div>
+                            </div>
+
+                            <div className="col-12 col-sm-6">
+                                <div className="custom-form-group mb-3 mb-sm-4">
                                     {/* <label htmlFor="quote" className="custom-form-label">
                                         Cancellation cover 
                                     </label>
@@ -787,39 +825,10 @@ const Vendors = () => {
                                         </small>
                                     } */}
 
-                                    <div className="d-flex align-content-center mt-5">
+                                    <div className="d-flex align-content-center mt-2">
                                         <Checkbox inputId="cancellationCover" onChange={(e)=>setVendorData({...vendorData, cancellationCover: e.checked})} checked={vendorData.cancellationCover}></Checkbox>
                                         <label htmlFor="cancellationCover" className="ms-2 custom-form-label cursor-pointer">Cancellation cover</label>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div className="col-12 col-sm-6">
-                                <div className="custom-form-group mb-3 mb-sm-4">
-                                    <label htmlFor="dealPercentage" className="custom-form-label form-required">
-                                        Deal percentage
-                                    </label>
-                                    <InputNumber
-                                        id="dealPercentage"
-                                        className="custom-form-input"
-                                        placeholder="Percentage"
-                                        name="dealPercentage"
-                                        value={dealPercentage}
-                                        onChange={(e) => setDealPercentage(e.value)}
-                                        maxFractionDigits={2}
-                                        useGrouping={false}
-                                        mode="decimal"
-                                        min={0}
-                                        max={100}
-                                        step={0.1}
-                                        suffix="%"
-                                    />
-
-                                    {showError &&
-                                        <small className="text-danger form-error-msg">
-                                            This field is required
-                                        </small>
-                                    }
                                 </div>
                             </div>
 

@@ -18,8 +18,11 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 import { SampleVendorData } from "./SampleVendorData";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const VendorBookings = () => {
+    const {id} = useParams();
     const today = new Date();
     const [loading, setLoading] = useState(false);
 
@@ -31,59 +34,121 @@ const VendorBookings = () => {
 
     const [bookingData, setBookingData] = useState([]);
     const [totalInitialQuote, setTotalInitialQuote] = useState(0);
-    const [totalDealPercentage, setTotalDealPercentage] = useState(0);
+    const [dealPercentage, setDealPercentage] = useState(0);
+    const [vendorName, setVendorName] = useState("");
     const [totalBalance, setTotalBalance] = useState(0);
     const dt = useRef(null);
+    const token = useSelector((state) => state.auth.token);
+    const [period, setPeriod] = useState("");
+
+    const fetchData = async () => {
+        if(id && token) {
+            try {
+                setLoading(true);
+                const data = await SampleVendorData.getVendorBookingsData(token, id, period);
+                setBookingData(data.bookings);
+                setDealPercentage(data.dealPercentage);
+                setVendorName(data.companyName);
+                setTotalInitialQuote(data.totalBookingQuote);
+                setTotalBalance(data.totalBalance);
+            } catch (error) {
+                console.error("Failed to fetch vendor bookings data:", error);
+            }finally{
+                setLoading(false);
+            }
+        }
+    };
+    useEffect(() => {
+        fetchData();
+    }, [id, token, period]);
 
     useEffect(() => {
-        const data = SampleVendorData.getVendorBookingsData();
+        if (filterOption) {
+            if (filterOption?.name === 'Custom' && startDate && endDate) {
+                setPeriod(`${startDate?.toLocaleDateString('en-GB')}-${endDate?.toLocaleDateString('en-GB')}`);
+            } else if(filterOption?.name !== 'Custom'){
+                setPeriod(filterOption?.name);
+            }else{
+                setPeriod("");
+            };
+        }else{
+            setPeriod("");
+        };
+    }, [filterOption, startDate, endDate]);
 
-        if (Array.isArray(data)) {
-            setBookingData(data);
 
-            const initialQuoteTotal = data.reduce((sum, item) => sum + parseFloat(item.initialQuote || 0), 0);
-            const dealPercentageTotal = data.reduce((sum, item) => sum + parseFloat(item.dealPercentage || 0), 0);
-            const balanceTotal = data.reduce((sum, item) => sum + (parseFloat(item.initialQuote || 0) - parseFloat(item.dealPercentage || 0)), 0);
 
-            setTotalInitialQuote(initialQuoteTotal);
-            setTotalDealPercentage(dealPercentageTotal);
-            setTotalBalance(balanceTotal);
-        } else {
-            console.error("Error", data);
-            setBookingData([]);
-        }
-    }, []);
+    // const exportToPDF = () => {
+    //     const doc = new jsPDF();
+
+    //     const columns = [
+    //         { title: "Booking ID", dataKey: "bookingId" },
+    //         { title: "Booking Quote", dataKey: "bookingQuote" },
+    //         { title: "Deal Percentage", dataKey: "dealPercentage" },
+    //         { title: "Balance", dataKey: "balance" }
+    //     ];
+
+    //     const data = bookingData.map(item => ({
+    //         bookingId: item.bookingId,
+    //         bookingQuote: parseFloat(item.bookingQuote || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+    //         dealPercentage: parseFloat(dealPercentage || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+    //         balance: parseFloat(item.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    //     }));
+
+    //     doc.autoTable({
+    //         head: [columns.map(col => col.title)],
+    //         body: data.map(row => columns.map(col => row[col.dataKey])),
+    //         margin: { top: 10 },
+    //         foot: [
+    //             ["", "", "Total Booking Quote", totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })],
+    //             ["", "", "Total Balance", totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })]
+    //         ]
+    //     });
+
+    //     doc.save('VendorBookings.pdf');
+    // };
+
 
     const exportToPDF = () => {
         const doc = new jsPDF();
-
+    
         const columns = [
             { title: "Booking ID", dataKey: "bookingId" },
-            { title: "Initial Quote", dataKey: "initialQuote" },
+            { title: "Booking Quote", dataKey: "bookingQuote" },
             { title: "Deal Percentage", dataKey: "dealPercentage" },
             { title: "Balance", dataKey: "balance" }
         ];
-
+    
         const data = bookingData.map(item => ({
             bookingId: item.bookingId,
-            initialQuote: parseFloat(item.initialQuote || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            bookingQuote: parseFloat(item.bookingQuote || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             dealPercentage: parseFloat(item.dealPercentage || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-            balance: (parseFloat(item.initialQuote || 0) - parseFloat(item.dealPercentage || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            balance: parseFloat(item.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         }));
-
+    
+        // Generate the table without the footer
         doc.autoTable({
             head: [columns.map(col => col.title)],
             body: data.map(row => columns.map(col => row[col.dataKey])),
             margin: { top: 10 },
-            foot: [
-                ["", "", "Total Initial Quote", totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })],
-                ["", "", "Total Deal Percentage", totalDealPercentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })],
-                ["", "", "Total Balance", totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })]
-            ]
         });
-
+    
+        // Get the total number of pages
+        const pageCount = doc.internal.getNumberOfPages();
+    
+        // Add the footer only on the last page
+        doc.setPage(pageCount);
+        const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+    
+        doc.text("Total Booking Quote", 14, pageHeight - 30);
+        doc.text(totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 150, pageHeight - 30);
+        doc.text("Total Balance", 14, pageHeight - 15);
+        doc.text(totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 150, pageHeight - 15);
+    
         doc.save('VendorBookings.pdf');
     };
+    
+    
 
     const filterOptions = [
         { name: 'This week' },
@@ -101,7 +166,7 @@ const VendorBookings = () => {
             <div>
                 <div className="page_header_area">
                     <h4 className="page_heading">Bookings</h4>
-                    <h6 className="text-pink">Luton 247 Meet & Greet</h6>
+                    <h6 className="text-pink">{vendorName}</h6>
                 </div>
 
                 <div className="filter_area">
@@ -148,6 +213,7 @@ const VendorBookings = () => {
                                 label="Export as PDF"
                                 icon="bi bi-filetype-pdf"
                                 className="btn_primary"
+                                disabled={bookingData.length === 0}
                                 onClick={exportToPDF}
                             />
                         </div>
@@ -155,7 +221,7 @@ const VendorBookings = () => {
                 </div>
 
                 <div className="page_content">
-                    {bookingData?.length > 0 ? (
+                    {bookingData && bookingData?.length > 0 && (
                         <div className="dash-table-area">
                             <DataTable
                                 ref={dt}
@@ -184,12 +250,18 @@ const VendorBookings = () => {
                                 ></Column>
 
                                 <Column
-                                    header="Initial quote"
+                                    header="Booking Date"
+                                    field="date"
+                                    style={{ width: "20%" }}
+                                ></Column>
+
+                                <Column
+                                    header="Booking quote"
                                     alignHeader="right"
                                     body={(rowData) =>
-                                        rowData.initialQuote
+                                        rowData.bookingQuote
                                             ? <span className="text_no_wrap flex_end">
-                                                {parseFloat(rowData.initialQuote).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                {parseFloat(rowData.bookingQuote).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </span>
                                             : 0}
                                     style={{ width: "25%" }}
@@ -200,22 +272,22 @@ const VendorBookings = () => {
                                     header="Deal Percentage"
                                     alignHeader="right"
                                     body={(rowData) =>
-                                        rowData.dealPercentage
+                                        dealPercentage
                                             ? <span className="text_no_wrap flex_end">
-                                                {parseFloat(rowData.dealPercentage).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                {parseFloat(dealPercentage).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </span>
                                             : 0}
                                     style={{ width: "25%" }}
-                                    footer={<span className="text_no_wrap flex_end">{totalDealPercentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>}
+                                    // footer={<span className="text_no_wrap flex_end">{totalDealPercentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>}
                                 ></Column>
 
                                 <Column
                                     header="Balance"
                                     alignHeader="right"
                                     body={(rowData) =>
-                                        rowData.initialQuote
+                                        rowData?.balance
                                             ? <span className="text_no_wrap flex_end">
-                                                {parseFloat(rowData.initialQuote - rowData.dealPercentage).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                {parseFloat(rowData?.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </span>
                                             : 0}
                                     style={{ width: "25%" }}
@@ -223,10 +295,17 @@ const VendorBookings = () => {
                                 ></Column>
                             </DataTable>
                         </div>
-                    ) : (
+                    )} 
+                    {loading &&  (
                         <div className="no_data_found_area">
-                            <img src="/assets/images/no_data_2.svg" alt="No booking data!" />
-                            <h6>No booking data!</h6>
+                            <h6>Loading...</h6>
+                        </div>
+                    )}
+
+                    {!loading && bookingData && bookingData?.length === 0 && (
+                        <div className="no_data_found_area">
+                            <img src="/assets/images/no_data_2.svg" alt="No customer data!" />
+                            <h6>No Booking data!</h6>
                         </div>
                     )}
                 </div>

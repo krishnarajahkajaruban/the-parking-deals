@@ -332,7 +332,7 @@ const carParkingBookingDetail = async (req, res) => {
             user = result.user;
             token = result.token;
         } else {
-            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null);
+            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null, null);
 
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
@@ -357,7 +357,7 @@ const carParkingBookingDetail = async (req, res) => {
         //   return res.status(400).json({ error: "dropOffDate must be less than or equal to pickUpDate." });
         // }
 
-        const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover);
+        const bookingResult = await calculatingTotalBookingCharge(bookingQuote, couponCode, smsConfirmation, cancellationCover, vehicleDetail?.length);
 
         if (bookingResult.status !== 200) {
             return res.status(bookingResult.status).json({ error: bookingResult.error });
@@ -429,7 +429,8 @@ const carParkingBookingDetail = async (req, res) => {
 };
 
 /* calculating total booking charge */
-const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfirmation, cancellationCover) => {
+const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfirmation, cancellationCover, numOfVehicle = 1) => {
+  console.log(numOfVehicle);
     try {
 
         // Check if bookingQuote is provided and is a number
@@ -466,13 +467,13 @@ const calculatingTotalBookingCharge = async (bookingQuote, couponCode, smsConfir
         const cancellationCoverCharge = cancellationCover ? cancellationCoverFee : 0;
 
         // Calculate total amounts
-        const totalBeforeDiscount = Math.floor((Number(bookingQuote) + bookingFee + smsConfirmationCharge + cancellationCoverCharge)*100)/100;
+        const totalBeforeDiscount = Math.floor((Number(bookingQuote)*Number(numOfVehicle) + bookingFee + smsConfirmationCharge + cancellationCoverCharge)*100)/100;
         const discountAmount = totalBeforeDiscount * (couponDiscount / 100);
         const totalPayable = Math.floor((totalBeforeDiscount - discountAmount)*100)/100;
 
         // Respond with calculated values
         return {
-            bookingQuote: Number(bookingQuote),
+            bookingQuote: Number(bookingQuote)*Number(numOfVehicle),
             bookingFee,
             smsConfirmation: smsConfirmationCharge,
             cancellationCover: cancellationCoverCharge,

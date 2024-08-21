@@ -100,7 +100,7 @@ function App() {
           <Route path='users' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Users /></ProtectedRoute></Suspense>} />
           <Route path='customers' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Customers /></ProtectedRoute></Suspense>} />
           <Route path='vendors' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Vendors /></ProtectedRoute></Suspense>} />
-          <Route path='vendors/bookings' element={<Suspense fallback={<Preloader />}><ProtectedRoute><VendorsBookings /></ProtectedRoute></Suspense>} />
+          <Route path='vendors/bookings/:id' element={<Suspense fallback={<Preloader />}><ProtectedRoute><VendorsBookings /></ProtectedRoute></Suspense>} />
         </Route>
         {/*  */}
       </Routes>

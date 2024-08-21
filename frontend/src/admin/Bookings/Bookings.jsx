@@ -132,7 +132,7 @@ const Bookings = () => {
                                             handleFilterByDate(e); 
                                         }
                                     } placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" 
-                                    // minDate={today} 
+                                    maxDate={today} 
                                     className='w-100' />
                                 </div>
                             </div>

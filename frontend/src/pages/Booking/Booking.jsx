@@ -213,7 +213,8 @@ const Booking = () => {
           bookingQuote: bookingDetails?.bookingQuote,
           couponCode,
           smsConfirmation: checkedSmsConfirmation,
-          cancellationCover: checkedCancellationCover
+          cancellationCover: checkedCancellationCover,
+          numOfVehicle: vehiclesDetails.length
         }
       );
       console.log(response.data);
@@ -234,7 +235,7 @@ const Booking = () => {
 
       calculatingBookingCharge();
     }
-  }, [bookingDetails, checkedCancellationCover, checkedSmsConfirmation]);
+  }, [bookingDetails, checkedCancellationCover, checkedSmsConfirmation, vehiclesDetails]);
 
   const checkingCouponCodeValidity = async () => {
     try {
@@ -1696,7 +1697,7 @@ const Booking = () => {
                 <div className="total-detail-area">
                   <div className="total-detail">
                     <h5 className="total-detail-head">Booking Quote</h5>
-                    <h5 className="total-detail-price">£ {bookingDetails?.bookingQuote}</h5>
+                    <h5 className="total-detail-price">£ {bookingCharge?.bookingQuote || bookingCharge?.bookingQuote}</h5>
                   </div>
 
                   <Divider className="divider-primary" />

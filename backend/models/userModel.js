@@ -115,6 +115,12 @@ const userSchema = new Schema(
           return this.role === 'Vendor';
         }
       },
+    dealPercentage : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
     overView : {
         type: String,
         required: function() {

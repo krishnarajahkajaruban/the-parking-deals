@@ -18,7 +18,8 @@ const {
     changingActiveStatusOfUser,
     createRoleForAdmin,
     updateAdminUserInfo,
-    deleteAdminUser
+    deleteAdminUser,
+    findBookingsOfVendor
 } = require("../controller/adminController");
 
 // Define the maximum file size (in bytes) for each image. For example, 5MB:
@@ -90,5 +91,8 @@ router.put("/update-admin-user/:id", authMiddleware, updateAdminUserInfo);
 
 //delete admin user
 router.delete("/delete-admin-user/:id", authMiddleware, deleteAdminUser);
+
+//find bookings of vendor
+router.get("/find-bookings/:id", authMiddleware, findBookingsOfVendor);
 
 module.exports = router;

@@ -8,6 +8,7 @@ const sendEmail = require("../common/mailService");
 const SubscribedEmail = require("../models/subcribedEmail");
 const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
 const { default: mongoose } = require("mongoose");
+const BookingDetail = require("../models/bookingDetailModel");
 
 /* creating coupon code and corresponding discount */
 const createCouponCodeDiscount = async (req, res) => {
@@ -446,13 +447,13 @@ const creatingVendor = async(req, res) => {
             return res.status(400).json({ error: "Logo must be required" });
         };
 
-        const { email, companyName, serviceType, password, mobileNumber, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure } = req.body;
+        const { email, companyName, serviceType, password, mobileNumber, rating, dealPercentage, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure } = req.body;
 
         const b64 = Buffer.from(req.file.buffer).toString('base64');
         const dataURI = `data:${req.file.mimetype};base64,${b64}`;
         const cldRes = await handleUpload(dataURI);
 
-        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure);
+        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
 
         if (result.status !== 201) {
             return res.status(result.status).json({ error: result.error });
@@ -473,7 +474,7 @@ const creatingVendor = async(req, res) => {
 const updateVendorInfo = async (req, res) => {
     try {
         const {
-            email, companyName, serviceType, mobileNumber, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure
+            email, companyName, serviceType, mobileNumber, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage
         } = req.body;
   
         const { role } = req.user;
@@ -518,7 +519,7 @@ const updateVendorInfo = async (req, res) => {
         };
   
         const updateFields = {
-            email: email || vendorDetailTobeUpdated.email, companyName: companyName || vendorDetailTobeUpdated.companyName, serviceType: serviceType || vendorDetailTobeUpdated.serviceType, mobileNumber: mobileNumber || vendorDetailTobeUpdated.mobileNumber, rating: parseInt(JSON.parse(rating)) || vendorDetailTobeUpdated.rating, overView: overView || vendorDetailTobeUpdated.overView, quote: newFinalQuote === newQuote ? 0 : newQuote, finalQuote: newFinalQuote, cancellationCover: JSON.parse(cancellationCover) || vendorDetailTobeUpdated.cancellationCover, facilities: JSON.parse(facilities) || vendorDetailTobeUpdated.facilities, dropOffProcedure: dropOffProcedure || vendorDetailTobeUpdated.dropOffProcedure, pickUpProcedure: pickUpProcedure ||vendorDetailTobeUpdated.pickUpProcedure
+            email: email || vendorDetailTobeUpdated.email, companyName: companyName || vendorDetailTobeUpdated.companyName, serviceType: serviceType || vendorDetailTobeUpdated.serviceType, mobileNumber: mobileNumber || vendorDetailTobeUpdated.mobileNumber, rating: parseInt(JSON.parse(rating)) || vendorDetailTobeUpdated.rating, dealPercentage: parseInt(JSON.parse(dealPercentage)) || vendorDetailTobeUpdated.dealPercentage, overView: overView || vendorDetailTobeUpdated.overView, quote: newFinalQuote === newQuote ? 0 : newQuote, finalQuote: newFinalQuote, cancellationCover: JSON.parse(cancellationCover) || vendorDetailTobeUpdated.cancellationCover, facilities: JSON.parse(facilities) || vendorDetailTobeUpdated.facilities, dropOffProcedure: dropOffProcedure || vendorDetailTobeUpdated.dropOffProcedure, pickUpProcedure: pickUpProcedure ||vendorDetailTobeUpdated.pickUpProcedure
         };
   
         // Only set 'dp' field if a new file was uploaded
@@ -622,7 +623,7 @@ const createRoleForAdmin = async(req, res) => {
 
         const { Role, firstName, lastname, email, mobileNo, password} = req.body;
         
-        const user = await register(email, null, firstName, lastname, null, password, mobileNo, Role, null, null, null, null, null, null, null, null, null, null);
+        const user = await register(email, null, firstName, lastname, null, password, mobileNo, Role, null, null, null, null, null, null, null, null, null, null, null);
 
         if(user.status!== 201){
             return res.status(user.status).json({ error: user.error });
@@ -713,7 +714,117 @@ const deleteAdminUser = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
-  
+
+/* find bookings of particular vendor */
+const findBookingsOfVendor = async(req, res) => {
+    try {
+        const { role } = req.user;
+        if (role !== "Admin") {
+            return res.status(403).json({ error: 'You are not authorized' });
+        }
+
+        const { id } = req.params;
+        const { period } = req.query;
+
+        // Check if the provided ID is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'Invalid Vendor Id' });
+        }
+
+        // Initialize the date range filter
+        let dateFilter = {};
+
+        // Handle different period formats
+        if (period) {
+            const today = new Date();
+            switch (period) {
+                case 'This week':
+                    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+                    const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+                    dateFilter = { createdAt: { $gte: startOfWeek, $lt: endOfWeek } };
+                    break;
+                case 'This month':
+                    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    dateFilter = { createdAt: { $gte: startOfMonth, $lt: endOfMonth } };
+                    break;
+                case 'This year':
+                    const startOfYear = new Date(today.getFullYear(), 0, 1);
+                    const endOfYear = new Date(today.getFullYear(), 11, 31);
+                    dateFilter = { createdAt: { $gte: startOfYear, $lt: endOfYear } };
+                    break;
+                case 'Last week':
+                    const lastWeekStart = new Date(today.setDate(today.getDate() - today.getDay() - 7));
+                    const lastWeekEnd = new Date(today.setDate(today.getDate() - today.getDay() - 1));
+                    dateFilter = { createdAt: { $gte: lastWeekStart, $lt: lastWeekEnd } };
+                    break;
+                case 'Last month':
+                    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+                    dateFilter = { createdAt: { $gte: lastMonth, $lt: lastMonthEnd } };
+                    break;
+                case 'Last year':
+                    const lastYearStart = new Date(today.getFullYear() - 1, 0, 1);
+                    const lastYearEnd = new Date(today.getFullYear() - 1, 11, 31);
+                    dateFilter = { createdAt: { $gte: lastYearStart, $lt: lastYearEnd } };
+                    break;
+                default:
+                    if (period.includes('-')) {
+                        const [fromDate, toDate] = period.split('-').map(date => {
+                            const [day, month, year] = date.split('/');
+                            return new Date(year, month - 1, day);
+                        });
+                        dateFilter = { createdAt: { $gte: fromDate, $lt: new Date(toDate.setDate(toDate.getDate() + 1)) } };
+                    } else {
+                        return res.status(400).json({ error: 'Invalid period format' });
+                    }
+            }
+        }
+
+        // Find the bookings for the vendor with only selected fields
+        const vendorBookings = await BookingDetail.find({ companyId: id, ...dateFilter }, 'bookingId bookingQuote createdAt').sort({ updatedAt: -1 });
+
+        if (!vendorBookings.length) {
+            return res.status(404).json({ error: 'No bookings found for this vendor' });
+        }
+
+        // Retrieve the dealPercentage for the vendor
+        const vendor = await User.findById(id, 'dealPercentage companyName');
+        if (!vendor) {
+            return res.status(404).json({ error: 'Vendor not found' });
+        }
+        const { dealPercentage, companyName } = vendor;
+
+        // Modify the booking objects to include dealPercentage and balance
+        const modifiedBookings = vendorBookings.map(booking => {
+            const balance = Math.floor(booking.bookingQuote - (booking.bookingQuote * dealPercentage / 100));
+            return {
+                bookingId: booking.bookingId,
+                bookingQuote: booking.bookingQuote,
+                balance: balance,
+                date: new Date(booking.createdAt).toLocaleDateString('en-GB')
+            };
+        });
+
+        // Calculate totals
+        const totalBookingQuote = Math.floor(modifiedBookings.reduce((acc, booking) => acc + booking.bookingQuote, 0));
+        const totalBalance = Math.floor(modifiedBookings.reduce((acc, booking) => acc + booking.balance, 0));
+
+        // Return the data object with modified bookings and totals
+        return res.status(200).json({
+            data: modifiedBookings,
+            dealPercentage: dealPercentage,
+            companyName: companyName,
+            totalBookingQuote: totalBookingQuote,
+            totalBalance: totalBalance
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+
 
 module.exports = {
     createCouponCodeDiscount,
@@ -729,5 +840,6 @@ module.exports = {
     changingActiveStatusOfUser,
     createRoleForAdmin,
     updateAdminUserInfo,
-    deleteAdminUser
+    deleteAdminUser,
+    findBookingsOfVendor
 }
