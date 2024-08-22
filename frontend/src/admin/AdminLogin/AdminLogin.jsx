@@ -86,6 +86,7 @@ const AdminLogin = () => {
 
         await login(signInInfo);
         setSignInInfo(initialSigInInfo);
+        setRequire(false);
     };
 
     return (
@@ -103,6 +104,89 @@ const AdminLogin = () => {
                         <form action="" className="custom-card-form"
                             onSubmit={handleSubmit}
                         >
+                            <div className="custom-form-group contains-float-input">
+                                <div 
+                                    className="custom-role-group" 
+                                    style={{ textAlign: 'center', marginBottom: '20px' }}
+                                >
+                                    <label className="custom-role-label"
+                                        style={{
+                                            fontSize: '16px',  
+                                            fontWeight: 'normal', 
+                                            lineHeight: '1.5',   
+                                            color: '#333',       
+                                        }}
+                                    >Role</label>
+                                    <div 
+                                        className="custom-role-options" 
+                                        style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}
+                                    >
+                                        <div 
+                                            className="custom-role-option" 
+                                            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                        >
+                                            <RadioButton 
+                                                inputId="roleAdmin" 
+                                                name="role" 
+                                                value="Admin"
+                                                onChange={handleInputChange} 
+                                                checked={signInInfo.role === 'Admin'} 
+                                            />
+                                            <label htmlFor="roleAdmin" className="custom-role-label"
+                                            style={{
+                                                fontSize: '14px',  
+                                                fontWeight: 'normal', 
+                                                lineHeight: '1.5',   
+                                                color: '#333',       
+                                            }}>Admin</label>
+                                        </div>
+                                        <div 
+                                            className="custom-role-option" 
+                                            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                        >
+                                            <RadioButton 
+                                                inputId="roleModerator" 
+                                                name="role" 
+                                                value="Moderator"
+                                                onChange={handleInputChange} 
+                                                checked={signInInfo.role === 'Moderator'} 
+                                            />
+                                            <label htmlFor="roleModerator" className="custom-role-label"
+                                            style={{
+                                                fontSize: '14px',  
+                                                fontWeight: 'normal', 
+                                                lineHeight: '1.5',   
+                                                color: '#333',       
+                                            }}>Moderator</label>
+                                        </div>
+                                        <div 
+                                            className="custom-role-option" 
+                                            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                        >
+                                            <RadioButton 
+                                                inputId="roleUser" 
+                                                name="role" 
+                                                value="Admin-User"
+                                                onChange={handleInputChange} 
+                                                checked={signInInfo.role === 'Admin-User'} 
+                                            />
+                                            <label htmlFor="roleUser" className="custom-role-label"
+                                            style={{
+                                                fontSize: '14px',  
+                                                fontWeight: 'normal', 
+                                                lineHeight: '1.5',   
+                                                color: '#333',       
+                                            }}>User</label>
+                                        </div>
+                                    </div>
+                                    {(require && !signInInfo.role) && (
+                                        <small className="text-danger form-error-msg">
+                                            Please select a role
+                                        </small>
+                                    )}
+                                </div>
+                            </div>
+
                             <div className="custom-form-group contains-float-input">
                                 <FloatLabel>
                                     <InputText id="email" keyfilter="email" className="custom-form-input" name="email"
@@ -139,34 +223,6 @@ const AdminLogin = () => {
                                         This field is required
                                     </small>
                                 )}
-                            </div>
-
-                            <div className="custom-form-group contains-float-input">
-                                <div className="custom-role-group">
-                                    <label className="custom-role-label">Role</label>
-                                    <div className="custom-role-options">
-                                        <div className="custom-role-option">
-                                            <RadioButton inputId="roleAdmin" name="role" value="Admin"
-                                                onChange={handleInputChange} checked={signInInfo.role === 'Admin'} />
-                                            <label htmlFor="roleAdmin" className="custom-role-label">Admin</label>
-                                        </div>
-                                        <div className="custom-role-option">
-                                            <RadioButton inputId="roleModerator" name="role" value="Moderator"
-                                                onChange={handleInputChange} checked={signInInfo.role === 'Moderator'} />
-                                            <label htmlFor="roleModerator" className="custom-role-label">Moderator</label>
-                                        </div>
-                                        <div className="custom-role-option">
-                                            <RadioButton inputId="roleUser" name="role" value="User"
-                                                onChange={handleInputChange} checked={signInInfo.role === 'Admin-User'} />
-                                            <label htmlFor="roleUser" className="custom-role-label">User</label>
-                                        </div>
-                                    </div>
-                                    {(require && !signInInfo.role) && (
-                                        <small className="text-danger form-error-msg">
-                                            Please select a role
-                                        </small>
-                                    )}
-                                </div>
                             </div>
 
                             <div className="custom-form-group contains-float-input">
