@@ -21,12 +21,12 @@ const userSchema = new Schema(
     },
     lastname: {
       type: String,
-      set: function(value) {
-        if (["Admin", "User", "Moderator", "Admin-User"].includes(this.role)) {
-          return value || "";
-        }
-        return undefined;
-      }
+      // set: function(value) {
+      //   if (["Admin", "User", "Moderator", "Admin-User"].includes(this.role || this.Role)) {
+      //     return value || "";
+      //   }
+      //   return undefined;
+      // }
     },    
     companyName : {
       type: String,
@@ -148,7 +148,7 @@ const userSchema = new Schema(
     facilities : {
         type: [String],
         required: function() {
-          return this.role === 'Vendor';
+          return (this.role || this.Role) === 'Vendor';
         }
       },
     dropOffProcedure : {

@@ -93,7 +93,7 @@ const getAllBookings = async (req, res) => {
             allBookings.map(async ({ userId, companyId, ...bookingDetail }) => {
                 const user = await User.findById(userId).lean();
                 const company = await User.findById(companyId).lean();
-                if (role === "Admin") {
+                if (["Admin", "User", "Moderator", "Admin-User"].includes(role)) {
                     bookingDetail.user = user;
                     bookingDetail.company = company;
                 } else if (role === "Vendor") {

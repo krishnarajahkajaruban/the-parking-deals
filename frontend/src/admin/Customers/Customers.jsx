@@ -121,7 +121,7 @@ const Customers = () => {
     return (
         <>
             <Preloader />
-
+            <Toast ref={toast} />
             <div>
 
                 <div className="page_header_area">
