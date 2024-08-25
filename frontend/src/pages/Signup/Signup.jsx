@@ -142,6 +142,7 @@ const Signup = () => {
 
   const register = async (signUpInfo) => {
     try {
+      setLoading(true);
       console.log(signUpInfo);
       const response = await api.post("/api/auth/register", signUpInfo);
       console.log(response.data);
@@ -163,7 +164,9 @@ const Signup = () => {
         detail: err.response.data.error,
         life: 3000
       });
-    }
+    }finally{
+      setLoading(false);
+    };
   };
 
   const handleSubmit = async (e) => {

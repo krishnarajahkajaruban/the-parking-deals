@@ -782,7 +782,7 @@ const findBookingsOfVendor = async(req, res) => {
         }
 
         // Find the bookings for the vendor with only selected fields
-        const vendorBookings = await BookingDetail.find({ companyId: id, ...dateFilter }, 'bookingId bookingQuote createdAt').sort({ updatedAt: -1 });
+        const vendorBookings = await BookingDetail.find({ companyId: id, status:"Paid", ...dateFilter }, 'bookingId bookingQuote createdAt').sort({ updatedAt: -1 });
 
         if (!vendorBookings.length) {
             return res.status(404).json({ error: 'No bookings found for this vendor' });
