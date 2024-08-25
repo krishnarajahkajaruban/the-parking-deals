@@ -141,7 +141,8 @@ const register = async (email, title, firstName, lastName, companyName, password
         ...(role === "Vendor" && { finalQuote: parseInt(JSON.parse(finalQuote)) }),
         ...(role === "Vendor" && { facilities: JSON.parse(facilities) }),
         ...(role === "Vendor" && { dropOffProcedure }),
-        ...(role === "Vendor" && { pickUpProcedure })
+        ...(role === "Vendor" && { pickUpProcedure }),
+        ...(role === "User" && { active: true }),
     });
 
     // Save the user to the database
@@ -149,8 +150,9 @@ const register = async (email, title, firstName, lastName, companyName, password
     const userObject = user.toObject({ getters: true });
     delete userObject.password;
 
+    let emailResponse=null;
     if(role === "User"){
-      const emailResponse = await sendEmail(
+      emailResponse = await sendEmail(
         user.email,
         'Welcome to The Parking Deals!',
         `

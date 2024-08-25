@@ -379,7 +379,7 @@ const Bookings = () => {
                         ))}
                         <Divider className="mt-4 mb-4" />
                         <h5 className="data-view-head">Customer Details</h5>
-                        <div className="row mt-4">
+                        {selectedBooking.user ? <div className="row mt-4">
                             <div className="col-12 col-lg-6">
                                 <div className="data-view mb-3">
                                     <h6 className="data-view-title">Name :</h6>
@@ -408,7 +408,7 @@ const Bookings = () => {
                                     </h6>
                                 </div>
                             </div>
-                        </div>
+                        </div> : "Not Found!"}
                         <Divider className="mt-4 mb-4" />
                         <h5 className="data-view-head">Vendor Details</h5>
                         <div className="row mt-4">

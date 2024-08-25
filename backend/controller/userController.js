@@ -319,7 +319,7 @@ const carParkingBookingDetail = async (req, res) => {
                 return res.status(401).json({ error: error.message || "Invalid token" });
             }
         } else if (registeredStatus) {
-            const result = await login(email, password);
+            const result = await login(email, password, "User");
 
             if (result.status !== 200) {
                 return res.status(result.status).json({ error: result.error });
@@ -333,7 +333,7 @@ const carParkingBookingDetail = async (req, res) => {
             token = result.token;
         } else {
             const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null, null);
-
+          
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
             }
