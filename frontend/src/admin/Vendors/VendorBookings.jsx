@@ -114,16 +114,16 @@ const VendorBookings = () => {
     
         const columns = [
             { title: "Booking ID", dataKey: "bookingId" },
-            { title: "Booking Quote", dataKey: "bookingQuote" },
-            { title: "Deal Percentage", dataKey: "dealPercentage" },
-            { title: "Balance", dataKey: "balance" }
+            { title: "Booking amount", dataKey: "bookingQuote" },
+            // { title: "Deal Percentage", dataKey: "dealPercentage" },
+            { title: "Final payable for Vendor", dataKey: "balance" }
         ];
     
         const data = bookingData.map(item => ({
             bookingId: item.bookingId,
-            bookingQuote: parseFloat(item.bookingQuote || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            bookingQuote: `£ ${parseFloat(item.bookingQuote || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
             dealPercentage: parseFloat(item.dealPercentage || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-            balance: parseFloat(item.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            balance: `£ ${parseFloat(item.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         }));
     
         // Generate the table without the footer
@@ -140,11 +140,11 @@ const VendorBookings = () => {
         doc.setPage(pageCount);
         const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
     
-        doc.text("Total Booking Quote", 14, pageHeight - 30);
-        doc.text(totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 150, pageHeight - 30);
-        doc.text("Total Balance", 14, pageHeight - 15);
-        doc.text(totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 150, pageHeight - 15);
-    
+        doc.text("Total Booking amount from Customer", 14, pageHeight - 30);
+        doc.text(`£ ${totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 150, pageHeight - 30);
+        
+        doc.text("Total Payable for Vendor", 14, pageHeight - 15);
+        doc.text(`£ ${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 150, pageHeight - 15);
         doc.save('VendorBookings.pdf');
     };
     
@@ -256,17 +256,21 @@ const VendorBookings = () => {
                                 ></Column>
 
                                 <Column
-                                    header="Booking quote"
+                                    header="Booking amount"
                                     alignHeader="right"
                                     body={(rowData) =>
                                         rowData.bookingQuote
                                             ? <span className="text_no_wrap flex_end">
-                                                {parseFloat(rowData.bookingQuote).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                            </span>
-                                            : 0}
+                                                £ {parseFloat(rowData.bookingQuote).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                              </span>
+                                            : '£ 0'
+                                    }
                                     style={{ width: "25%" }}
-                                    footer={<span className="text_no_wrap flex_end">{totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>}
-                                ></Column>
+                                    footer={
+                                        <span className="text_no_wrap flex_end">
+                                            £ {totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </span>
+                                    }                                ></Column>
 
                                 <Column
                                     header="Deal Percentage"
@@ -282,17 +286,21 @@ const VendorBookings = () => {
                                 ></Column>
 
                                 <Column
-                                    header="Balance"
+                                    header="Final payable for Vendor"
                                     alignHeader="right"
                                     body={(rowData) =>
                                         rowData?.balance
                                             ? <span className="text_no_wrap flex_end">
-                                                {parseFloat(rowData?.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                            </span>
-                                            : 0}
+                                                £ {parseFloat(rowData.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                              </span>
+                                            : '£ 0'
+                                    }
                                     style={{ width: "25%" }}
-                                    footer={<span className="text_no_wrap flex_end">{totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>}
-                                ></Column>
+                                    footer={
+                                        <span className="text_no_wrap flex_end">
+                                            £ {totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </span>
+                                    }                                ></Column>
                             </DataTable>
                         </div>
                     )} 
