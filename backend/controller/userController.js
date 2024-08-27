@@ -728,13 +728,13 @@ const updateUserInfo = async (req, res) => {
         res.status(404).json({ error:"User not found" });
       };
 
-      if(parsedEmail){
-        const isEmailVerified = await EmailVerify.findOne({ email: email.toLowerCase(), verifyStatus: true});
+      // if(parsedEmail){
+      //   const isEmailVerified = await EmailVerify.findOne({ email: email.toLowerCase(), verifyStatus: true});
 
-        if(!isEmailVerified){
-          return res.status(400).json({ error: "Please verify your email first!"});
-        };
-      };
+      //   if(!isEmailVerified){
+      //     return res.status(400).json({ error: "Please verify your email first!"});
+      //   };
+      // };
 
       let dp = userDetailTobeUpdated.dp;
       let oldDp;

@@ -21,7 +21,7 @@ import Preloader from "../../Preloader";
 const Signup = () => {
   const navigate = useNavigate();
   const toast = useRef(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(3);
   const [loading, setLoading] = useState(false);
   const [reSendLoading, setReSendLoading] = useState(false);
 
@@ -471,13 +471,13 @@ const Signup = () => {
               </div> */}
 
               <div className="col-12 col-xl-9 col-xxl-8 col-lg-11 col-sm-11 col-md-11 mx-auto">
-                <button
+                {/* <button
                   className="back-page-btn"
                   onClick={goBack}
                   data-aos="fade-left"
                 >
                   <i className="ri ri-arrow-left-line me-2"></i>Back
-                </button>
+                </button> */}
                 <article className="custom-card" data-aos="fade-up">
                   <div className="custom-card-logo-area">
                     <img
@@ -571,13 +571,37 @@ const Signup = () => {
                           >
                             Email
                           </label>
-                          <InputText
+                          {/* <InputText
                             id="email"
                             keyfilter="email"
                             className="custom-form-input"
                             value={signUpInfo.email}
                             readOnly
+                          /> */}
+                          <InputText
+                            id="verify_email"
+                            keyfilter="email"
+                            className="custom-form-input"
+                            placeholder="Enter your email address"
+                            name="email"
+                            value={signUpInfo.email}
+                            onChange={handleInputChange}
                           />
+                          {(showError && !signUpInfo.email) && (
+                            <small className="text-danger form-error-msg">
+                              This field is required
+                            </small>
+                          )}
+                          <small className="text-danger form-error-msg">
+                            {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                              signUpInfo.email
+                            ) && signUpInfo.email
+                              ? "Enter valid email"
+                              : ""}
+                          </small>
+                          <small className="text-danger form-error-msg">
+                            {emailExists ? "Email already exists" : ""}
+                          </small>
                         </div>
                       </div>
 

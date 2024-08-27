@@ -447,13 +447,13 @@ const creatingVendor = async(req, res) => {
             return res.status(400).json({ error: "Logo must be required" });
         };
 
-        const { email, companyName, serviceType, password, mobileNumber, rating, dealPercentage, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure } = req.body;
+        const { email, companyName, serviceType, password, mobileNumber, rating, dealPercentage, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure } = req.body;
 
         const b64 = Buffer.from(req.file.buffer).toString('base64');
         const dataURI = `data:${req.file.mimetype};base64,${b64}`;
         const cldRes = await handleUpload(dataURI);
 
-        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
+        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
 
         if (result.status !== 201) {
             return res.status(result.status).json({ error: result.error });
@@ -474,7 +474,7 @@ const creatingVendor = async(req, res) => {
 const updateVendorInfo = async (req, res) => {
     try {
         const {
-            email, companyName, serviceType, mobileNumber, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage
+            email, companyName, serviceType, mobileNumber, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage
         } = req.body;
   
         const { role } = req.user;
@@ -519,7 +519,7 @@ const updateVendorInfo = async (req, res) => {
         };
   
         const updateFields = {
-            email: email || vendorDetailTobeUpdated.email, companyName: companyName || vendorDetailTobeUpdated.companyName, serviceType: serviceType || vendorDetailTobeUpdated.serviceType, mobileNumber: mobileNumber || vendorDetailTobeUpdated.mobileNumber, rating: parseInt(JSON.parse(rating)) || vendorDetailTobeUpdated.rating, dealPercentage: parseInt(JSON.parse(dealPercentage)) || vendorDetailTobeUpdated.dealPercentage, overView: overView || vendorDetailTobeUpdated.overView, quote: newFinalQuote === newQuote ? 0 : newQuote, finalQuote: newFinalQuote, cancellationCover: JSON.parse(cancellationCover) || vendorDetailTobeUpdated.cancellationCover, facilities: JSON.parse(facilities) || vendorDetailTobeUpdated.facilities, dropOffProcedure: dropOffProcedure || vendorDetailTobeUpdated.dropOffProcedure, pickUpProcedure: pickUpProcedure ||vendorDetailTobeUpdated.pickUpProcedure
+            email: email || vendorDetailTobeUpdated.email, companyName: companyName || vendorDetailTobeUpdated.companyName, serviceType: serviceType || vendorDetailTobeUpdated.serviceType, mobileNumber: mobileNumber || vendorDetailTobeUpdated.mobileNumber, rating: parseInt(JSON.parse(rating)) || vendorDetailTobeUpdated.rating, dealPercentage: parseInt(JSON.parse(dealPercentage)) || vendorDetailTobeUpdated.dealPercentage, overView: overView || vendorDetailTobeUpdated.overView, quote: newFinalQuote === newQuote ? 0 : newQuote, finalQuote: newFinalQuote, facilities: JSON.parse(facilities) || vendorDetailTobeUpdated.facilities, dropOffProcedure: dropOffProcedure || vendorDetailTobeUpdated.dropOffProcedure, pickUpProcedure: pickUpProcedure ||vendorDetailTobeUpdated.pickUpProcedure
         };
   
         // Only set 'dp' field if a new file was uploaded

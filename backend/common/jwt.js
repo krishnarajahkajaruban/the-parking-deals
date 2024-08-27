@@ -12,7 +12,7 @@ const generateToken = (user, secret, expiresIn = '1d') => {
     ...(user.role === "Vendor" && { rating: user.rating }),
     ...(user.role === "Vendor" && { dealPercentage: user.dealPercentage }),
     ...(user.role === "Vendor" && { overView: user.overView }),
-    ...(user.role === "Vendor" && { cancellationCover: user.cancellationCover }),
+    // ...(user.role === "Vendor" && { cancellationCover: user.cancellationCover }),
     ...(user.role === "Vendor" && { quote: user.quote }),
     ...(user.role === "Vendor" && { finalQuote: user.finalQuote }),
     ...(user.role === "Vendor" && { facilities: user.facilities }),
