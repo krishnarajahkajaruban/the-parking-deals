@@ -42,9 +42,20 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      min: 8,
-      required: [true, "Password must be provided"],
-      select: false // Exclude this field when querying
+      minLength: 8,
+      required: function() {
+        return this.role !== 'Vendor';
+      },
+      select: false,
+      validate: {
+        validator: function(value) {
+          if (this.role !== 'Vendor' && (!value || value.length < 8)) {
+            return false;
+          }
+          return true;
+        },
+        message: "Password must be at least 8 characters long"
+      }
     },
     mobileNumber: {
       type: Number,
