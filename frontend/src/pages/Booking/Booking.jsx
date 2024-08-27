@@ -35,7 +35,7 @@ const Booking = () => {
   const [showAlert, setShowAlert] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const toast = useRef(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(3);
   const [loading, setLoading] = useState(false);
   const [verified, setVerified] = useState(false);
 
@@ -75,7 +75,6 @@ const Booking = () => {
   const [checkedCancellationCover, setCheckedCancellationCover] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
 
-  console.log(bookingDetails);
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
 
@@ -813,9 +812,13 @@ const Booking = () => {
                                 </div>
                               </div>
                             </div>
-                          ) : page === 3 ? (
+                          ) : (page === 3 && !emailExist &&
+                            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                              userDetails.email
+                            ) &&
+                            userDetails.email) ? (
                             <div className="row mt-4">
-                              <div className="col-12">
+                              {/* <div className="col-12">
                                 <button
                                   className="back-page-btn text-sm p-0 mb-3"
                                   onClick={goBack}
@@ -824,7 +827,7 @@ const Booking = () => {
                                   <i className="ri ri-arrow-left-line me-2"></i>
                                   Back
                                 </button>
-                              </div>
+                              </div> */}
                               <div className="col-12 col-sm-6 col-lg-10 col-xl-6 mx-auto">
                                 <div className="custom-form-group mb-3 mb-sm-4">
                                   <label
@@ -900,7 +903,7 @@ const Booking = () => {
                           /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
                             userDetails.email
                           ) &&
-                          userDetails.email && verified) && <>
+                          userDetails.email && !verified) && <>
                             {/* Your Details */}
                             <h4 className="booking-card-head">Your Details</h4>
 

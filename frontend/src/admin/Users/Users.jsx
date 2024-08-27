@@ -31,7 +31,7 @@ const Users = () => {
 
     const roles = [
         { name: 'Moderator' },
-        { name: 'User' },
+        // { name: 'User' },
         { name: 'Admin' },
     ];
 

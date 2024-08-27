@@ -114,15 +114,17 @@ const VendorBookings = () => {
     
         const columns = [
             { title: "Booking ID", dataKey: "bookingId" },
+            { title: "Booking Date", dataKey: "bookingDate" },
             { title: "Booking amount", dataKey: "bookingQuote" },
-            // { title: "Deal Percentage", dataKey: "dealPercentage" },
+            { title: "Deal Percentage", dataKey: "dealPercentage" },
             { title: "Final payable for Vendor", dataKey: "balance" }
         ];
     
         const data = bookingData.map(item => ({
             bookingId: item.bookingId,
+            bookingDate: item.date,
             bookingQuote: `£ ${parseFloat(item.bookingQuote || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-            dealPercentage: parseFloat(item.dealPercentage || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            dealPercentage: parseFloat(dealPercentage || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             balance: `£ ${parseFloat(item.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         }));
     

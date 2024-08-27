@@ -62,7 +62,7 @@ const Vendors = () => {
     overView: null,
     quote: 0,
     finalQuote: 0,
-    cancellationCover: false,
+    // cancellationCover: false,
     facilities: [""],
     dropOffProcedure: null,
     pickUpProcedure: null,
@@ -275,7 +275,7 @@ const Vendors = () => {
     formData.append("overView", vendorData.overView);
     formData.append("quote", vendorData.quote);
     formData.append("finalQuote", vendorData.finalQuote);
-    formData.append("cancellationCover", vendorData.cancellationCover);
+    // formData.append("cancellationCover", vendorData.cancellationCover);
     formData.append("facilities", JSON.stringify(vendorData.facilities));
     formData.append("dropOffProcedure", vendorData.dropOffProcedure);
     formData.append("pickUpProcedure", vendorData.pickUpProcedure);
@@ -321,7 +321,7 @@ const Vendors = () => {
     formData.append("overView", vendorData.overView);
     formData.append("quote", vendorData.quote);
     formData.append("finalQuote", vendorData.finalQuote);
-    formData.append("cancellationCover", vendorData.cancellationCover);
+    // formData.append("cancellationCover", vendorData.cancellationCover);
     formData.append("facilities", JSON.stringify(vendorData.facilities));
     formData.append("dropOffProcedure", vendorData.dropOffProcedure);
     formData.append("pickUpProcedure", vendorData.pickUpProcedure);
@@ -388,7 +388,7 @@ const Vendors = () => {
               quote:
                 rowData?.quote === 0 ? rowData?.finalQuote : rowData?.quote,
               finalQuote: rowData?.finalQuote,
-              cancellationCover: rowData?.cancellationCover,
+              // cancellationCover: rowData?.cancellationCover,
               facilities:
                 rowData?.facilities?.length > 0 ? rowData?.facilities : [""],
               dropOffProcedure: rowData?.dropOffProcedure,
@@ -974,7 +974,7 @@ const Vendors = () => {
                                         </small>
                                     } */}
 
-                  <div className="d-flex align-content-center mt-2">
+                  {/* <div className="d-flex align-content-center mt-2">
                     <Checkbox
                       inputId="cancellationCover"
                       onChange={(e) =>
@@ -991,7 +991,7 @@ const Vendors = () => {
                     >
                       Cancellation cover
                     </label>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 

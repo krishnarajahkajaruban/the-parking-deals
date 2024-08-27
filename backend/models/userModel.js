@@ -139,12 +139,12 @@ const userSchema = new Schema(
           return this.role === 'Vendor';
         }
       },
-    cancellationCover : {
-        type: Boolean,
-        required: function() {
-          return this.role === 'Vendor';
-        }
-      },
+    // cancellationCover : {
+    //     type: Boolean,
+    //     required: function() {
+    //       return this.role === 'Vendor';
+    //     }
+    //   },
     facilities : {
         type: [String],
         required: function() {

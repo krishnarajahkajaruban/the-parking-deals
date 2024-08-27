@@ -476,10 +476,10 @@ useEffect(() => {
                                 Save <span>£ {quote.quote - quote.finalQuote}</span> Today
                               </p>}
 
-                              {quote.cancellationCover && <p>
+                              <p>
                                 <i class="bi bi-lightning-fill me-2"></i>
                                 Cancellation Cover Available
-                              </p>}
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -1627,10 +1627,10 @@ useEffect(() => {
                         Save <span>£ {selectedVendor.quote - selectedVendor.finalQuote}</span> Today
                       </p>}
 
-                      {selectedVendor?.cancellationCover && <p>
+                      <p>
                         <i class="bi bi-lightning-fill me-2"></i>
                         Cancellation Cover Available
-                      </p>}
+                      </p>
                     </div>
 
                     <Divider className="mt-2 mb-2" />

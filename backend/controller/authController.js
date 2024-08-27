@@ -38,9 +38,9 @@ const checkUserAlreadyRegistered = async (req, res) => {
   
 
 /* register */
-const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage) => {
+const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage) => {
 
-  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
+  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
   
   try{
     // Check for required fields
@@ -54,23 +54,23 @@ const register = async (email, title, firstName, lastName, companyName, password
       // (role === "User" && !city) ||
       // (role === "User" && !country) ||
       // (role === "User" && !postCode) ||
-      !role || (role === 'Vendor' && !serviceType) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !rating) || (role === 'Vendor' && !dealPercentage) || (role === 'Vendor' && !overView) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !finalQuote) || (role === 'Vendor' && !quote) || (role === 'Vendor' && !cancellationCover) || (role === 'Vendor' && !facilities) || (role === 'Vendor' && !dropOffProcedure) || (role === 'Vendor' && !pickUpProcedure)) {
+      !role || (role === 'Vendor' && !serviceType) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !rating) || (role === 'Vendor' && !dealPercentage) || (role === 'Vendor' && !overView) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !finalQuote) || (role === 'Vendor' && !quote) || (role === 'Vendor' && !facilities) || (role === 'Vendor' && !dropOffProcedure) || (role === 'Vendor' && !pickUpProcedure)) {
       return {
           error: "Please fill all required fields!",
           status: 400
       };
   };
 
-  if(role === "User"){
-    const isEmailVerified = await EmailVerify.findOne({ email: email.toLowerCase(), verifyStatus: true});
+  // if(role === "User"){
+  //   const isEmailVerified = await EmailVerify.findOne({ email: email.toLowerCase(), verifyStatus: true});
 
-    if(!isEmailVerified){
-      return {
-        error: "Please verify your email first!",
-        status: 400
-      };
-    };
-  };
+  //   if(!isEmailVerified){
+  //     return {
+  //       error: "Please verify your email first!",
+  //       status: 400
+  //     };
+  //   };
+  // };
 
     // Validate email and phone number
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -136,7 +136,7 @@ const register = async (email, title, firstName, lastName, companyName, password
         ...(role === "Vendor" && { rating: parseInt(JSON.parse(rating)) }),
         ...(role === "Vendor" && { dealPercentage: parseInt(JSON.parse(dealPercentage)) }),
         ...(role === "Vendor" && { overView }),
-        ...(role === "Vendor" && { cancellationCover: JSON.parse(cancellationCover) }),
+        // ...(role === "Vendor" && { cancellationCover: JSON.parse(cancellationCover) }),
         ...(role === "Vendor" && { quote: parseInt(JSON.parse(finalQuote)) === parseInt(JSON.parse(quote)) ? 0 : parseInt(JSON.parse(quote)) }),
         ...(role === "Vendor" && { finalQuote: parseInt(JSON.parse(finalQuote)) }),
         ...(role === "Vendor" && { facilities: JSON.parse(facilities) }),

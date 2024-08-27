@@ -159,7 +159,7 @@ const AdminLogin = () => {
                                                 color: '#333',       
                                             }}>Moderator</label>
                                         </div>
-                                        <div 
+                                        {/* <div 
                                             className="custom-role-option" 
                                             style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
                                         >
@@ -177,7 +177,7 @@ const AdminLogin = () => {
                                                 lineHeight: '1.5',   
                                                 color: '#333',       
                                             }}>User</label>
-                                        </div>
+                                        </div> */}
                                     </div>
                                     {(require && !signInInfo.role) && (
                                         <small className="text-danger form-error-msg">
