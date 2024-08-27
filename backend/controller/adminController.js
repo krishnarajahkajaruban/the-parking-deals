@@ -447,13 +447,13 @@ const creatingVendor = async(req, res) => {
             return res.status(400).json({ error: "Logo must be required" });
         };
 
-        const { email, companyName, serviceType, password, mobileNumber, rating, dealPercentage, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure } = req.body;
+        const { email, companyName, serviceType, mobileNumber, rating, dealPercentage, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure } = req.body;
 
         const b64 = Buffer.from(req.file.buffer).toString('base64');
         const dataURI = `data:${req.file.mimetype};base64,${b64}`;
         const cldRes = await handleUpload(dataURI);
 
-        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
+        const result = await register(email, null, null, null, companyName, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
 
         if (result.status !== 201) {
             return res.status(result.status).json({ error: result.error });
