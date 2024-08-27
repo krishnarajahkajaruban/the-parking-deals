@@ -196,7 +196,7 @@ const Bookings = () => {
                             ></Column>
                             <Column
                                 body={infoBodyTemplate}
-                                header="Info"
+                                header="Full details"
                                 style={{ width: "10%" }}
                             ></Column>
                         </DataTable>

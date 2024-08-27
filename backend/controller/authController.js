@@ -38,9 +38,9 @@ const checkUserAlreadyRegistered = async (req, res) => {
   
 
 /* register */
-const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage) => {
+const register = async (email, title, firstName, lastName, companyName, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage) => {
 
-  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
+  console.log(email, title, firstName, lastName, companyName, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, cancellationCover, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
   
   try{
     // Check for required fields
@@ -48,7 +48,6 @@ const register = async (email, title, firstName, lastName, companyName, password
       (role === "User" && !title) || 
       (["Admin", "User", "Moderator", "Admin-User"].includes(role) && !firstName) || 
       (role === 'Vendor' && !companyName) || 
-      !password || 
       (["Vendor", "User"].includes(role) && !mobileNumber) || 
       // (role === "User" && !addressL1) ||
       // (role === "User" && !city) ||

@@ -208,7 +208,7 @@ const Vendors = () => {
 
     const handleCreateVendor = async(e) => {
         e.preventDefault();
-        if (!vendorData.logo || !vendorData.companyName || !vendorData.email || !vendorData.mobileNumber || !vendorData.password || !vendorData.confirmPassword || vendorData.quote === 0 || vendorData.finalQuote === 0 || !vendorData.serviceType || vendorData.rating === 0 || vendorData.facilities.length === 0 || !vendorData.overView || !vendorData.dropOffProcedure || !vendorData.pickUpProcedure || vendorData.dealPercentage === 0) {
+        if (!vendorData.logo || !vendorData.companyName || !vendorData.email || !vendorData.mobileNumber || vendorData.quote === 0 || vendorData.finalQuote === 0 || !vendorData.serviceType || vendorData.rating === 0 || vendorData.facilities.length === 0 || !vendorData.overView || !vendorData.dropOffProcedure || !vendorData.pickUpProcedure || vendorData.dealPercentage === 0) {
             setShowError(true);
             toast.current.show({
               severity: 'error',
@@ -218,24 +218,24 @@ const Vendors = () => {
             });
             return;
           }
-          if (vendorData.password !== vendorData.confirmPassword) {
-            toast.current.show({
-              severity: 'error',
-              summary: 'Error in Submission',
-              detail: "Password & Confirm Password do not match!",
-              life: 3000
-            });
-            return;
-          }
-          if (vendorData.password.length < 8) {
-            toast.current.show({
-              severity: 'error',
-              summary: 'Error in Submission',
-              detail: "Password must be atleast 8 characters long!",
-              life: 3000
-            });
-            return;
-          }
+        //   if (vendorData.password !== vendorData.confirmPassword) {
+        //     toast.current.show({
+        //       severity: 'error',
+        //       summary: 'Error in Submission',
+        //       detail: "Password & Confirm Password do not match!",
+        //       life: 3000
+        //     });
+        //     return;
+        //   }
+        //   if (vendorData.password.length < 8) {
+        //     toast.current.show({
+        //       severity: 'error',
+        //       summary: 'Error in Submission',
+        //       detail: "Password must be atleast 8 characters long!",
+        //       life: 3000
+        //     });
+        //     return;
+        //   }
 
           const formData = new FormData();
           formData.append('logo', vendorData.logo);
@@ -629,7 +629,7 @@ const Vendors = () => {
                                 </div>
                             </div>
 
-                            {dataState === 'Add' && (
+                            {/* {dataState === 'Add' && (
                                 <>
                                     <div className="col-12 col-sm-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">
@@ -681,7 +681,7 @@ const Vendors = () => {
                                         </div>
                                     </div>
                                 </> )
-                            }
+                            } */}
 
                             <div className="col-12 col-sm-6">
                                 <div className="custom-form-group mb-3 mb-sm-4">

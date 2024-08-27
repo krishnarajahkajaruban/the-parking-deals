@@ -41,7 +41,7 @@ const ProtectedRoute = ({ children }) => {
     const isAuthPage = ['Signin', 'Signup', 'ForgotPassword', 'AdminLogin'].includes(childType);
 
     if (isAuthPage && isAuth) {
-        const redirectPath = isAuth.role === 'Admin' ? '/admin-dashboard' : '/';
+        const redirectPath = isAuth.role === 'Admin' ? '/bookings' : '/';
         return <Navigate to={redirectPath} />;
     }
 
@@ -61,7 +61,7 @@ const ProtectedRoute = ({ children }) => {
     const userRoutes = ['/', '/about-us', '/sign-in', '/sign-up', '/forgot-password', '/privacy-policy', '/terms-and-conditions', '/faq', '/contact-us', '/services', '/results', '/booking', '/dashboard', '/change-password'];
 
     if ((isAdminUser || isModerator) && ['/vendors', '/users'].includes(pathname)) {
-        return <Navigate to="/admin-dashboard" />;
+        return <Navigate to="/bookings" />;
     };
     
     if (isUser && (adminRoutes.includes(pathname) || pathname.startsWith('/vendors/bookings/'))) {
@@ -69,7 +69,7 @@ const ProtectedRoute = ({ children }) => {
     };
 
     if ((isAdmin || isModerator || isAdminUser) && userRoutes.includes(pathname)) {
-        return <Navigate to="/admin-dashboard" />;
+        return <Navigate to="/bookings" />;
     };
 
     if (childType === 'VendorList') {
