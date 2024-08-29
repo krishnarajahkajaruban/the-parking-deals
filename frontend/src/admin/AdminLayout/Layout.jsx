@@ -126,14 +126,14 @@ const Layout = () => {
                         </Link>
                     </li> */}
 
-                    {/* <li className={`${pathname === '/reservation' ? 'active' : ''}`}>
+                    <li className={`${pathname === '/reservation' ? 'active' : ''}`}>
                         <Link to={'/reservation'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-calendar2-event"></i>
                             </span>
                             <span className="title">Reservation</span>
                         </Link>
-                    </li> */}
+                    </li>
 
                     <li className={`${pathname === '/bookings' ? 'active' : ''}`}>
                         <Link to={'/bookings'} onClick={() => setMenuOpen(false)}>

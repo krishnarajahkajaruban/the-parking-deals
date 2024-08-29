@@ -1,0 +1,94 @@
+:root {
+    --color-primary: #37348b;
+    --color-primary-dark: #222057;
+    --color-secondary: #d12788;
+    --color-secondary-dark: #b10867;
+    --color-danger: #f60000;
+    --text-color: #000;
+
+    --white: #fff;
+    --gray: #f5f5f5;
+    --black1: #222;
+    --black2: #999;
+}
+
+.section_part_heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-secondary);
+    border-radius: 10px;
+    background-color: #eeeefb;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.aply-btn {
+    background-color: #37348b;
+    border-color: #37348b !important;
+    justify-content: center;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.aply-btn:hover {
+    background-color: #222057;
+}
+
+.aply-btn:focus {
+    box-shadow: 0px 0px 0px 4px #37348b2c !important;
+    border-color: #222057 !important;
+}
+
+.form-checkbox-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-checkbox-area label {
+    color: #000;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+.p-checkbox.p-highlight .p-checkbox-box {
+    border-color: #37348b;
+    background: #37348b;
+}
+
+.form-checkbox-area .p-checkbox .p-checkbox-input:focus {
+    box-shadow: 0px 0px 0px 4px #37348b2c !important;
+}
+
+.total-price-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 12px;
+    padding: 15px;
+    background-color: #eeeefb ;
+    position: relative;
+    gap: 20px;
+    box-shadow: 0px 0px 15px #37348b11;
+    margin-top: 20px;
+}
+
+.total-price-area .total-price-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #000;
+    display: block;
+}
+
+.total-price-area .total-price {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #d12788;
+    display: block;
+}

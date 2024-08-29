@@ -13,11 +13,17 @@
     .no_data_found_area {
         width: 45%;
     }
+
+    .p-dialog.modal_dialog_lg {
+        width: 800px !important;
+    }
 }
 
 /* For MD (Medium) Screen (ipad) */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .p-dialog.modal_dialog_md {
+
+    .p-dialog.modal_dialog_md,
+    .p-dialog.modal_dialog_lg {
         width: 600px !important;
     }
 
@@ -28,7 +34,9 @@
 
 /* For SM (Small) Screen (Tab) */
 @media (min-width: 576px) and (max-width: 767px) {
-    .p-dialog.modal_dialog_md {
+
+    .p-dialog.modal_dialog_md,
+    .p-dialog.modal_dialog_lg {
         width: 600px !important;
     }
 
@@ -47,7 +55,8 @@
         width: 100% !important;
     }
 
-    .p-dialog.modal_dialog_md {
+    .p-dialog.modal_dialog_md,
+    .p-dialog.modal_dialog_lg {
         width: 96vw !important;
     }
 
@@ -117,8 +126,12 @@
         font-size: 1.2rem !important;
     }
 
-    .navigation_area ul li:nth-child(1){
+    .navigation_area ul li:nth-child(1) {
         margin-bottom: 30px;
+    }
+
+    .section_part_heading{
+        font-size: 15px !important;
     }
 }
 

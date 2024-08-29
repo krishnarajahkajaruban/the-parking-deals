@@ -36,8 +36,8 @@ const VendorList = () => {
   const [showError, setShowError] = useState(false);
   const [selectedAirport, setSelectedAirport] = useState(quoteInfo?.selectedAirport || null);
   const today = new Date();
-  const [dropOffTime, setDropOffTime] = useState({time:quoteInfo?.dropOffTime} || null);
-  const [pickupTime, setPickupTime] = useState({time:quoteInfo?.pickupTime} || null);
+  const [dropOffTime, setDropOffTime] = useState({ time: quoteInfo?.dropOffTime } || null);
+  const [pickupTime, setPickupTime] = useState({ time: quoteInfo?.pickupTime } || null);
   const [couponCode, setCouponCode] = useState(quoteInfo?.couponCode || "");
 
   const airports = useSelector((state) => state.vendor.airport);
@@ -123,12 +123,12 @@ const VendorList = () => {
     const date = new Date(dateString);
     date.setHours(0, 0, 0, 0);
     return date;
-}
+  }
 
-console.log(dropOffDate);
-console.log(pickupDate);
+  console.log(dropOffDate);
+  console.log(pickupDate);
 
-useEffect(() => {
+  useEffect(() => {
 
     const normalizedPickupDate = normalizeDate(pickupDate);
     const normalizedDropOffDate = normalizeDate(dropOffDate);
@@ -139,7 +139,7 @@ useEffect(() => {
     console.log(dayDifference);
 
     setDayDifference(dayDifference);
-}, [dropOffDate, pickupDate]);
+  }, [dropOffDate, pickupDate]);
   useEffect(() => {
     fetchAllAirports(dispatch);
   }, [dispatch]);
@@ -164,7 +164,7 @@ useEffect(() => {
     });
     setLoading(true);
     setPageLoading(true);
-    getAvailableQuotes(queryParams, dispatch, toast, setLoading, setPageLoading, dayDifference);
+    getAvailableQuotes(queryParams, dispatch, toast, setLoading, setPageLoading, setShowEditModal, dayDifference);
   };
 
   const selectedAirportTemplate = (option, props) => {
@@ -251,7 +251,7 @@ useEffect(() => {
       dropOffTime: dropOffTime?.time || quoteInfo?.dropOffTime,
       // dropOffTime: new Date(dropOffTime || quoteInfo?.dropOffTime).toTimeString().split(' ')[0],
       // pickUpDate: new Date(pickupDate || quoteInfo?.pickupDate).toISOString(),
-      pickUpDate:pickupDateStr || quoteInfo?.pickupDateStr,
+      pickUpDate: pickupDateStr || quoteInfo?.pickupDateStr,
       pickupTime: pickupTime?.time || quoteInfo?.pickupTime,
       // pickUpTime: new Date(pickupTime || quoteInfo?.pickupTime).toTimeString().split(' ')[0],
       couponCode,
@@ -269,6 +269,39 @@ useEffect(() => {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map((tooltipTriggerEl) => new Tooltip(tooltipTriggerEl));
   }, []);
+
+
+  const editModalHeader = () => {
+    return (
+      <div className="modal-header p-2">
+        <h1 className="modal-title fs-5" id="editModalLabel">
+          Edit your search
+        </h1>
+        <button
+          type="button"
+          className="btn-close"
+          onClick={() => setShowEditModal(false)}
+        ></button>
+      </div>
+    );
+  };
+
+
+  const viewModalHeader = () => {
+    return (
+      <div className="modal-header p-2">
+        <h1 className="modal-title fs-5" id="editModalLabel">
+          {selectedVendor?.companyName}
+        </h1>
+        <button
+          type="button"
+          className="btn-close"
+          onClick={() => setShowViewModal(false)}
+        ></button>
+      </div>
+    );
+  };
+
   return (
     <>
       {!quoteInfo && <Navigate to="/" />}
@@ -295,8 +328,7 @@ useEffect(() => {
                   <Button
                     icon="bi bi-pencil-square"
                     className="edit-float-btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#editSearchModal"
+                    onClick={() => setShowEditModal(true)}
                   />
                   <div className="row">
                     <div className="col-12 col-xl-6 col-lg-6 col-md-8 col-sm-8 mx-auto">
@@ -308,8 +340,7 @@ useEffect(() => {
                           Airport
                         </label>
                         <h6
-                          data-bs-toggle="modal"
-                          data-bs-target="#editSearchModal"
+                          onClick={() => setShowEditModal(true)}
                           className='show-data-head'
                         >
                           <i class="bi bi-airplane-fill input-grp-icon"></i>
@@ -344,8 +375,7 @@ useEffect(() => {
                             <div className="row">
                               <div className="col-12 col-md-6 mb-2 mb-md-0">
                                 <h6
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#editSearchModal"
+                                  onClick={() => setShowEditModal(true)}
                                 >
                                   <i class="bi bi-calendar-check-fill me-2"></i>
                                   {dropOffDate?.toLocaleDateString('en-GB') || quoteInfo?.dropOffDate.toLocaleDateString('en-GB')}
@@ -353,8 +383,7 @@ useEffect(() => {
                               </div>
                               <div className="col-12 col-md-6">
                                 <h6
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#editSearchModal"
+                                  onClick={() => setShowEditModal(true)}
                                 >
                                   <i class="bi bi-clock-fill me-2"></i>
                                   {/* {dropOffTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.dropOffTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} */}
@@ -371,8 +400,7 @@ useEffect(() => {
                             <div className="row">
                               <div className="col-12 col-md-6 mb-2 mb-md-0">
                                 <h6
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#editSearchModal"
+                                  onClick={() => setShowEditModal(true)}
                                 >
                                   <i class="bi bi-calendar-check-fill me-2"></i>
                                   {pickupDate?.toLocaleDateString('en-GB') || quoteInfo?.pickupDate.toLocaleDateString('en-GB')}
@@ -380,8 +408,7 @@ useEffect(() => {
                               </div>
                               <div className="col-12 col-md-6">
                                 <h6
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#editSearchModal"
+                                  onClick={() => setShowEditModal(true)}
                                 >
                                   <i class="bi bi-clock-fill me-2"></i>
                                   {/* {pickupTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.pickupTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} */}
@@ -550,9 +577,10 @@ useEffect(() => {
                               label="VIEW"
                               severity="secondary"
                               className="result-card-btn"
-                              data-bs-toggle="modal"
-                              data-bs-target="#vendorDetailModal"
-                              onClick={() => setSelectedVendor(quote)}
+                              onClick={() => {
+                                setSelectedVendor(quote);
+                                setShowViewModal(true);
+                              }}
                             />
                             <Button
                               label="BOOK"
@@ -579,115 +607,103 @@ useEffect(() => {
       </section>
 
       <Toast ref={toast} />
-      {/* quote form modal */}
-      <div
-        class="modal fade"
-        id="editSearchModal"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="editSearchModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content custom-modal">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="editSearchModalLabel">
-                Edit your search
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form
-                action=""
-                className="custom-card-form form-2 get-quote-form p-3 mt-0"
-                onSubmit={handleEditSearch}
-              >
-                <div className="form-head-input-area">
-                  <div className="row">
-                    <div className="col-12 col-xl-8 col-lg-6 mx-auto">
-                      <div className="custom-form-group mb-0 input-with-icon">
-                        <label
-                          htmlFor="airport"
-                          className="custom-form-label form-required text-sm-center"
-                        >
-                          Select airport
-                        </label>
-                        <div className="form-icon-group">
-                          <i class="bi bi-airplane-fill input-grp-icon"></i>
-                          <Dropdown
-                            id="airport"
-                            value={selectedAirport}
-                            onChange={(e) => setSelectedAirport(e.value)}
-                            options={airports}
-                            optionLabel="name"
-                            placeholder="Select a Airport"
 
-                            valueTemplate={selectedAirportTemplate}
-                            itemTemplate={airportOptionTemplate}
-                            className="w-full w-100 custom-form-dropdown"
-                            invalid={showError}
-                          />
-                        </div>
-                        {(showError && !selectedAirport) && (
-                          <small className="text-danger form-error-msg text-sm-center">
-                            This field is required
-                          </small>
-                        )}
-                      </div>
+      {/* quote form modal */}
+      <Dialog
+        header={editModalHeader}
+        visible={showEditModal}
+        onHide={() => {
+          if (!showEditModal) return;
+          setShowEditModal(false);
+        }}
+        className="custom-modal modal_dialog modal_dialog_md"
+      >
+        <div className="modal-body p-2">
+          <form
+            action=""
+            className="custom-card-form form-2 get-quote-form p-3 mt-0"
+            onSubmit={handleEditSearch}
+          >
+            <div className="form-head-input-area">
+              <div className="row">
+                <div className="col-12 col-xl-8 col-lg-6 mx-auto">
+                  <div className="custom-form-group mb-0 input-with-icon">
+                    <label
+                      htmlFor="airport"
+                      className="custom-form-label form-required text-sm-center"
+                    >
+                      Select airport
+                    </label>
+                    <div className="form-icon-group">
+                      <i class="bi bi-airplane-fill input-grp-icon"></i>
+                      <Dropdown
+                        id="airport"
+                        value={selectedAirport}
+                        onChange={(e) => setSelectedAirport(e.value)}
+                        options={airports}
+                        optionLabel="name"
+                        placeholder="Select a Airport"
+
+                        valueTemplate={selectedAirportTemplate}
+                        itemTemplate={airportOptionTemplate}
+                        className="w-full w-100 custom-form-dropdown"
+                        invalid={showError}
+                      />
                     </div>
+                    {(showError && !selectedAirport) && (
+                      <small className="text-danger form-error-msg text-sm-center">
+                        This field is required
+                      </small>
+                    )}
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-12">
-                    <Divider className="mt-4 mb-4" />
-                  </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <Divider className="mt-4 mb-4" />
+              </div>
 
-                  <div className="col-12 col-sm-11 col-lg-6 mx-auto">
-                    <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
-                      <label
-                        htmlFor="dropOffDate"
-                        className="custom-form-label form-required"
-                      >
-                        Drop off date
-                      </label>
-                      <div className="form-icon-group">
-                        <i class="bi bi-calendar-check-fill input-grp-icon"></i>
-                        <Calendar
-                          id="dropOffDate"
-                          value={dropOffDate}
-                          onChange={handleDropOffDateChange}
-                          placeholder="dd/mm/yyyy"
-                          dateFormat="dd/mm/yy"
-                          minDate={today}
-                          className="w-100"
-                          invalid={showError}
-                        />
-                      </div>
-                      {(showError && !dropOffDate) && (
-                        <small className="text-danger form-error-msg">
-                          This field is required
-                        </small>
-                      )}
-                    </div>
+              <div className="col-12 col-sm-11 col-lg-6 mx-auto">
+                <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
+                  <label
+                    htmlFor="dropOffDate"
+                    className="custom-form-label form-required"
+                  >
+                    Drop off date
+                  </label>
+                  <div className="form-icon-group">
+                    <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                    <Calendar
+                      id="dropOffDate"
+                      value={dropOffDate}
+                      onChange={handleDropOffDateChange}
+                      placeholder="dd/mm/yyyy"
+                      dateFormat="dd/mm/yy"
+                      minDate={today}
+                      className="w-100"
+                      invalid={showError}
+                    />
                   </div>
+                  {(showError && !dropOffDate) && (
+                    <small className="text-danger form-error-msg">
+                      This field is required
+                    </small>
+                  )}
+                </div>
+              </div>
 
-                  <div className="col-12 col-sm-11 col-lg-6 mx-auto">
-                    <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
-                      <label
-                        htmlFor="dropOffTime"
-                        className="custom-form-label form-required"
-                      >
-                        Drop off time
-                      </label>
-                      <div className="form-icon-group">
-                        <i class="bi bi-clock-fill input-grp-icon"></i>
-                        {/* <Calendar
+              <div className="col-12 col-sm-11 col-lg-6 mx-auto">
+                <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
+                  <label
+                    htmlFor="dropOffTime"
+                    className="custom-form-label form-required"
+                  >
+                    Drop off time
+                  </label>
+                  <div className="form-icon-group">
+                    <i class="bi bi-clock-fill input-grp-icon"></i>
+                    {/* <Calendar
                           id="dropOffTime"
                           className="w-100"
                           value={dropOffTime}
@@ -697,68 +713,68 @@ useEffect(() => {
                           invalid={showError}
                         /> */}
 
-                        <Dropdown
-                          id='dropOffTime'
-                          value={dropOffTime}
-                          onChange={(e) => setDropOffTime(e.value)}
-                          options={times}
-                          optionLabel="time"
-                          placeholder="Select the time"
-                          valueTemplate={selectedTimeTemplate}
-                          itemTemplate={timeTemplate}
-                          className="w-full w-100 custom-form-dropdown"
-                          invalid={showError}
-                        />
-                      </div>
-                      {(showError && !dropOffTime) && (
-                        <small className="text-danger form-error-msg">
-                          This field is required
-                        </small>
-                      )}
-                    </div>
+                    <Dropdown
+                      id='dropOffTime'
+                      value={dropOffTime}
+                      onChange={(e) => setDropOffTime(e.value)}
+                      options={times}
+                      optionLabel="time"
+                      placeholder="Select the time"
+                      valueTemplate={selectedTimeTemplate}
+                      itemTemplate={timeTemplate}
+                      className="w-full w-100 custom-form-dropdown"
+                      invalid={showError}
+                    />
                   </div>
+                  {(showError && !dropOffTime) && (
+                    <small className="text-danger form-error-msg">
+                      This field is required
+                    </small>
+                  )}
+                </div>
+              </div>
 
-                  <div className="col-12 col-sm-11 col-lg-6 mx-auto">
-                    <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
-                      <label
-                        htmlFor="pickupDate"
-                        className="custom-form-label form-required"
-                      >
-                        Pickup date
-                      </label>
-                      <div className="form-icon-group">
-                        <i class="bi bi-calendar-check-fill input-grp-icon"></i>
-                        <Calendar
-                          id="pickupDate"
-                          value={pickupDate}
-                          onChange={(e) => {setPickupDate(e.value); setPickupDateStr(e.value.toLocaleDateString('en-GB'))}}
-                          placeholder="dd/mm/yyyy"
-                          minDate={dropOffDate}
-                          disabled={!dropOffDate}
-                          dateFormat="dd/mm/yy"
-                          className="w-100"
-                          invalid={showError}
-                        />
-                      </div>
-                      {(showError && !pickupDate) && (
-                        <small className="text-danger form-error-msg">
-                          This field is required
-                        </small>
-                      )}
-                    </div>
+              <div className="col-12 col-sm-11 col-lg-6 mx-auto">
+                <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
+                  <label
+                    htmlFor="pickupDate"
+                    className="custom-form-label form-required"
+                  >
+                    Pickup date
+                  </label>
+                  <div className="form-icon-group">
+                    <i class="bi bi-calendar-check-fill input-grp-icon"></i>
+                    <Calendar
+                      id="pickupDate"
+                      value={pickupDate}
+                      onChange={(e) => { setPickupDate(e.value); setPickupDateStr(e.value.toLocaleDateString('en-GB')) }}
+                      placeholder="dd/mm/yyyy"
+                      minDate={dropOffDate}
+                      disabled={!dropOffDate}
+                      dateFormat="dd/mm/yy"
+                      className="w-100"
+                      invalid={showError}
+                    />
                   </div>
+                  {(showError && !pickupDate) && (
+                    <small className="text-danger form-error-msg">
+                      This field is required
+                    </small>
+                  )}
+                </div>
+              </div>
 
-                  <div className="col-12 col-sm-11 col-lg-6 mx-auto">
-                    <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
-                      <label
-                        htmlFor="pickupTime"
-                        className="custom-form-label form-required"
-                      >
-                        Pickup time
-                      </label>
-                      <div className="form-icon-group">
-                        <i class="bi bi-clock-fill input-grp-icon"></i>
-                        {/* <Calendar
+              <div className="col-12 col-sm-11 col-lg-6 mx-auto">
+                <div className="custom-form-group mb-3 mb-sm-4 input-with-icon">
+                  <label
+                    htmlFor="pickupTime"
+                    className="custom-form-label form-required"
+                  >
+                    Pickup time
+                  </label>
+                  <div className="form-icon-group">
+                    <i class="bi bi-clock-fill input-grp-icon"></i>
+                    {/* <Calendar
                           id="pickupTime"
                           className="w-100"
                           value={pickupTime}
@@ -768,146 +784,132 @@ useEffect(() => {
                           invalid={showError}
                         /> */}
 
-                        <Dropdown
-                          id='pickupTime'
-                          value={pickupTime}
-                          onChange={(e) => setPickupTime(e.value)}
-                          options={times}
-                          optionLabel="time"
-                          placeholder="Select the time"
-                          valueTemplate={selectedTimeTemplate}
-                          itemTemplate={timeTemplate}
-                          className="w-full w-100 custom-form-dropdown"
-                          invalid={showError}
-                        />
-                      </div>
-                      {(showError && !pickupTime) && (
-                        <small className="text-danger form-error-msg">
-                          This field is required
-                        </small>
-                      )}
-                    </div>
+                    <Dropdown
+                      id='pickupTime'
+                      value={pickupTime}
+                      onChange={(e) => setPickupTime(e.value)}
+                      options={times}
+                      optionLabel="time"
+                      placeholder="Select the time"
+                      valueTemplate={selectedTimeTemplate}
+                      itemTemplate={timeTemplate}
+                      className="w-full w-100 custom-form-dropdown"
+                      invalid={showError}
+                    />
                   </div>
+                  {(showError && !pickupTime) && (
+                    <small className="text-danger form-error-msg">
+                      This field is required
+                    </small>
+                  )}
+                </div>
+              </div>
 
-                  <div className="col-12 col-sm-11 col-xl-6 col-lg-6 mx-auto">
-                    <div className="custom-form-group mb-2 mb-sm-2 input-with-icon">
-                      <label
-                        htmlFor="couponCode"
-                        className="custom-form-label form-required text-lg-center"
-                      >
-                        Coupon Code
-                      </label>
-                      <div className="form-icon-group">
-                        <i class="bi bi-gift-fill input-grp-icon"></i>
-                        <InputText
-                          id="couponCode"
-                          className="custom-form-input"
-                          placeholder="Enter promo code"
-                          invalid={showError}
-                          value={couponCode}
-                          onChange={(e) => setCouponCode(e.target.value)}
-                        />
-                      </div>
-                      {/* {showError && (
+              <div className="col-12 col-sm-11 col-xl-6 col-lg-6 mx-auto">
+                <div className="custom-form-group mb-2 mb-sm-2 input-with-icon">
+                  <label
+                    htmlFor="couponCode"
+                    className="custom-form-label form-required text-lg-center"
+                  >
+                    Coupon Code
+                  </label>
+                  <div className="form-icon-group">
+                    <i class="bi bi-gift-fill input-grp-icon"></i>
+                    <InputText
+                      id="couponCode"
+                      className="custom-form-input"
+                      placeholder="Enter promo code"
+                      invalid={showError}
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                    />
+                  </div>
+                  {/* {showError && (
                           <small className="text-danger form-error-msg text-sm-center">
                             This field is required
                           </small>
                         )} */}
-                    </div>
-                  </div>
-
-                  <div className="col-12">
-                    <Divider className="mb-4" />
-                  </div>
                 </div>
+              </div>
 
-                <div className="custom-form-group contains-float-input d-flex justify-content-center mb-0">
-                  <Button
-                    label="SUBMIT"
-                    className="submit-button justify-content-center btn-width"
-                    loading={loading}
-                    data-bs-dismiss="modal"
-                  />
-                </div>
-              </form>
+              <div className="col-12">
+                <Divider className="mb-4" />
+              </div>
             </div>
-          </div>
+
+            <div className="custom-form-group contains-float-input d-flex justify-content-center mb-0">
+              <Button
+                label="SUBMIT"
+                className="submit-button justify-content-center btn-width"
+                loading={loading}
+              />
+            </div>
+          </form>
         </div>
-      </div>
+      </Dialog>
       {/*  */}
 
       {/* vendor detail modal */}
-      <div
-        class="modal fade"
-        id="vendorDetailModal"
-        tabindex="-1"
-        aria-labelledby="vendorDetailModalLabel"
-        aria-hidden="true"
+      <Dialog
+        header={viewModalHeader}
+        visible={showViewModal}
+        onHide={() => {
+          if (!showViewModal) return;
+          setShowViewModal(false);
+        }}
+        className="custom-modal modal_dialog modal_dialog_lg"
       >
-        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
-          <div class="modal-content custom-modal">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="vendorDetailModalLabel">
-                {selectedVendor?.companyName}
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body pt-0 p-3">
-              <div className="tab-detail-tabs-area mt-3">
-                <ul
-                  class="nav nav-tabs tab-detail-tabs"
-                  id="companyDetailTab"
-                  role="tablist"
+        <div class="modal-body">
+          <div className="tab-detail-tabs-area mt-0">
+            <ul
+              class="nav nav-tabs tab-detail-tabs"
+              id="companyDetailTab"
+              role="tablist"
+            >
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link tab-detail-btn active"
+                  id="overview-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#overview-tab-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="overview-tab-pane"
+                  aria-selected="true"
                 >
-                  <li class="nav-item" role="presentation">
-                    <button
-                      class="nav-link tab-detail-btn active"
-                      id="overview-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#overview-tab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="overview-tab-pane"
-                      aria-selected="true"
-                    >
-                      Overview
-                    </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button
-                      class="nav-link tab-detail-btn"
-                      id="drop-off-procedure-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#drop-off-procedure-tab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="drop-off-procedure-tab-pane"
-                      aria-selected="false"
-                    >
-                      Drop-Off Procedure
-                    </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button
-                      class="nav-link tab-detail-btn"
-                      id="return-procedure-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#return-procedure-tab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="return-procedure-tab-pane"
-                      aria-selected="false"
-                    >
-                      Return Procedure
-                    </button>
-                  </li>
+                  Overview
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link tab-detail-btn"
+                  id="drop-off-procedure-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#drop-off-procedure-tab-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="drop-off-procedure-tab-pane"
+                  aria-selected="false"
+                >
+                  Drop-Off Procedure
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link tab-detail-btn"
+                  id="return-procedure-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#return-procedure-tab-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="return-procedure-tab-pane"
+                  aria-selected="false"
+                >
+                  Return Procedure
+                </button>
+              </li>
 
-                  {/* <li class="nav-item" role="presentation">
+              {/* <li class="nav-item" role="presentation">
                     <button
                       class="nav-link tab-detail-btn"
                       id="view-map-tab"
@@ -922,7 +924,7 @@ useEffect(() => {
                     </button>
                   </li> */}
 
-                  {/* <li class="nav-item" role="presentation">
+              {/* <li class="nav-item" role="presentation">
                     <button
                       class="nav-link tab-detail-btn"
                       id="photos-tab"
@@ -937,53 +939,53 @@ useEffect(() => {
                     </button>
                   </li> */}
 
-                  <li class="nav-item" role="presentation">
-                    <button
-                      class="nav-link tab-detail-btn"
-                      id="reviews-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#reviews-tab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="reviews-tab-pane"
-                      aria-selected="false"
-                    >
-                      Reviews
-                    </button>
-                  </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link tab-detail-btn"
+                  id="reviews-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#reviews-tab-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="reviews-tab-pane"
+                  aria-selected="false"
+                >
+                  Reviews
+                </button>
+              </li>
 
-                  <li class="nav-item" role="presentation">
-                    <button
-                      class="nav-link tab-detail-btn"
-                      id="terms-conditions-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#terms-conditions-tab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="terms-conditions-tab-pane"
-                      aria-selected="false"
-                    >
-                      Terms & Conditions
-                    </button>
-                  </li>
-                </ul>
-              </div>
-              <div className="row tab-detail-row">
-                <div className="col-12 col-xl-8 pe-xl-2">
-                  <article
-                    class="tab-content tab-detail-area mt-3"
-                    id="companyDetailTabContent"
-                  >
-                    {/* Overview */}
-                    <div
-                      class="tab-pane tab-detail-content fade show active"
-                      id="overview-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="overview-tab"
-                      tabindex="0"
-                    >
-                      <div className="tab-detail-content-area">
-                        {/* <h1>Why Use {selectedVendor?.name}?</h1>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link tab-detail-btn"
+                  id="terms-conditions-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#terms-conditions-tab-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="terms-conditions-tab-pane"
+                  aria-selected="false"
+                >
+                  Terms & Conditions
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div className="row tab-detail-row">
+            <div className="col-12 col-xl-8 pe-xl-2">
+              <article
+                class="tab-content tab-detail-area mt-3"
+                id="companyDetailTabContent"
+              >
+                {/* Overview */}
+                <div
+                  class="tab-pane tab-detail-content fade show active"
+                  id="overview-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="overview-tab"
+                  tabindex="0"
+                >
+                  <div className="tab-detail-content-area">
+                    {/* <h1>Why Use {selectedVendor?.name}?</h1>
                         <ul>
                           <li>
                             {selectedVendor?.name} Meet and Greet airport parking
@@ -1087,21 +1089,21 @@ useEffect(() => {
                           operator will not be liable in case you receive a
                           penalty for not paying the ULEZ charge.
                         </p> */}
-                        <div dangerouslySetInnerHTML={{ __html: selectedVendor?.overView }} />
-                      </div>
-                    </div>
-                    {/*  */}
+                    <div dangerouslySetInnerHTML={{ __html: selectedVendor?.overView }} />
+                  </div>
+                </div>
+                {/*  */}
 
-                    {/* Drop-Off Procedure */}
-                    <div
-                      class="tab-pane tab-detail-content fade"
-                      id="drop-off-procedure-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="drop-off-procedure-tab"
-                      tabindex="0"
-                    >
-                      <div className="tab-detail-content-area">
-                        {/* <p>
+                {/* Drop-Off Procedure */}
+                <div
+                  class="tab-pane tab-detail-content fade"
+                  id="drop-off-procedure-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="drop-off-procedure-tab"
+                  tabindex="0"
+                >
+                  <div className="tab-detail-content-area">
+                    {/* <p>
                           Beginning on August 29, 2023, the Ultra Low Emission
                           Zone (ULEZ) in London has been extended to cover the
                           entire Greater London area, Heathrow Airport
@@ -1308,21 +1310,21 @@ useEffect(() => {
                             jackets and be expecting you.
                           </li>
                         </ul> */}
-                        <div dangerouslySetInnerHTML={{ __html: selectedVendor?.dropOffProcedure }} />
-                      </div>
-                    </div>
-                    {/*  */}
+                    <div dangerouslySetInnerHTML={{ __html: selectedVendor?.dropOffProcedure }} />
+                  </div>
+                </div>
+                {/*  */}
 
-                    {/* Return Procedure */}
-                    <div
-                      class="tab-pane tab-detail-content fade"
-                      id="return-procedure-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="return-procedure-tab"
-                      tabindex="0"
-                    >
-                      <div className="tab-detail-content-area">
-                        {/* <p>
+                {/* Return Procedure */}
+                <div
+                  class="tab-pane tab-detail-content fade"
+                  id="return-procedure-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="return-procedure-tab"
+                  tabindex="0"
+                >
+                  <div className="tab-detail-content-area">
+                    {/* <p>
                           Please do call us on 07479 259 475 once arrived at
                           the airport.
                         </p>
@@ -1386,13 +1388,13 @@ useEffect(() => {
                           be ready and waiting for you in Row R or S Off
                           Airport Parking Meet & Greet bays.
                         </p> */}
-                        <div dangerouslySetInnerHTML={{ __html: selectedVendor?.pickUpProcedure }} />
-                      </div>
-                    </div>
-                    {/*  */}
+                    <div dangerouslySetInnerHTML={{ __html: selectedVendor?.pickUpProcedure }} />
+                  </div>
+                </div>
+                {/*  */}
 
-                    {/* View Map */}
-                    {/* <div
+                {/* View Map */}
+                {/* <div
                       class="tab-pane tab-detail-content fade"
                       id="view-map-tab-pane"
                       role="tabpanel"
@@ -1411,10 +1413,10 @@ useEffect(() => {
                         ></iframe>
                       </div>
                     </div> */}
-                    {/*  */}
+                {/*  */}
 
-                    {/* Photos */}
-                    {/* <div
+                {/* Photos */}
+                {/* <div
                       class="tab-pane tab-detail-content fade"
                       id="photos-tab-pane"
                       role="tabpanel"
@@ -1452,18 +1454,18 @@ useEffect(() => {
                         />
                       </div>
                     </div> */}
-                    {/*  */}
+                {/*  */}
 
-                    {/* Reviews */}
-                    <div
-                      class="tab-pane tab-detail-content fade"
-                      id="reviews-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="reviews-tab"
-                      tabindex="0"
-                    >
-                      <div className="tab-detail-review-area">
-                        {/* <article className="review-data-area">
+                {/* Reviews */}
+                <div
+                  class="tab-pane tab-detail-content fade"
+                  id="reviews-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="reviews-tab"
+                  tabindex="0"
+                >
+                  <div className="tab-detail-review-area">
+                    {/* <article className="review-data-area">
                           <div className="review-data-header-area">
                             <div className="review-avatar-image-area">
                               <img src="assets/images/user.png" alt="" />
@@ -1551,105 +1553,105 @@ useEffect(() => {
                           </div>
                         </article> */}
 
-                        <div className="no-data-area">
-                          <img src="assets/images/no-data/no-data-found.png" className='no-data-img' alt="" />
-                          <h4>No review data!</h4>
-                        </div>
-
-                      </div>
+                    <div className="no-data-area">
+                      <img src="assets/images/no-data/no-data-found.png" className='no-data-img' alt="" />
+                      <h4>No review data!</h4>
                     </div>
-                    {/*  */}
 
-                    {/* Terms & Conditions */}
-                    <div
-                      class="tab-pane tab-detail-content fade"
-                      id="terms-conditions-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="terms-conditions-tab"
-                      tabindex="0"
-                    >
-                      <div className="tab-detail-content-area">
-                        <p>
-                          For <b>The Parking Deals</b> T&Cs, please visit{" "}
-                          <a
-                            href="https://theparkingdeals.co.uk/terms-and-conditions"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            https://theparkingdeals.co.uk/terms-and-conditions
-                          </a>
-                        </p>
-                      </div>
-                    </div>
-                    {/*  */}
-                  </article>
+                  </div>
+                </div>
+                {/*  */}
+
+                {/* Terms & Conditions */}
+                <div
+                  class="tab-pane tab-detail-content fade"
+                  id="terms-conditions-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="terms-conditions-tab"
+                  tabindex="0"
+                >
+                  <div className="tab-detail-content-area">
+                    <p>
+                      For <b>The Parking Deals</b> T&Cs, please visit{" "}
+                      <a
+                        href="https://theparkingdeals.co.uk/terms-and-conditions"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        https://theparkingdeals.co.uk/terms-and-conditions
+                      </a>
+                    </p>
+                  </div>
+                </div>
+                {/*  */}
+              </article>
+            </div>
+
+            <div className="col-12 col-xl-4 ps-xl-2">
+              <article className="detail-card mt-3 card-sticky">
+                <div className="detail-card-logo-area">
+                  <img src={selectedVendor?.dp} alt="" />
+                </div>
+                <div className="detail-card-label-area">
+                  <h5>{selectedVendor?.serviceType}</h5>
+                </div>
+                <div className="detail-card-info-area mb-1">
+                  <div className="detail-card-info-icon-area">
+                    <i class="bi bi-building-fill"></i>
+                  </div>
+                  <div className="detail-card-info-body">
+                    <p>Company :</p>
+                    <h6>{selectedVendor?.companyName}</h6>
+                  </div>
                 </div>
 
-                <div className="col-12 col-xl-4 ps-xl-2">
-                  <article className="detail-card mt-3 card-sticky">
-                    <div className="detail-card-logo-area">
-                      <img src={selectedVendor?.dp} alt="" />
-                    </div>
-                    <div className="detail-card-label-area">
-                      <h5>{selectedVendor?.serviceType}</h5>
-                    </div>
-                    <div className="detail-card-info-area mb-1">
-                      <div className="detail-card-info-icon-area">
-                        <i class="bi bi-building-fill"></i>
-                      </div>
-                      <div className="detail-card-info-body">
-                        <p>Company :</p>
-                        <h6>{selectedVendor?.companyName}</h6>
-                      </div>
-                    </div>
-
-                    <div className="detail-card-info-area">
-                      <div className="detail-card-info-icon-area">
-                        <i class="bi bi-geo-alt-fill"></i>
-                      </div>
-                      <div className="detail-card-info-body">
-                        <p>Location :</p>
-                        <h6>{selectedAirport?.name}</h6>
-                      </div>
-                    </div>
-
-                    <div className="detail-card-price-area">
-                      <p>Price</p>
-                      <h5>
-                        £ {selectedVendor?.finalQuote}
-                        {selectedVendor?.quote > 0 && <span>£ {selectedVendor.quote}</span>}
-                      </h5>
-                    </div>
-
-                    <div className="detail-card-feature-area">
-                      {selectedVendor?.quote > 0 && <p>
-                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>
-                        Save <span>£ {selectedVendor.quote - selectedVendor.finalQuote}</span> Today
-                      </p>}
-
-                      <p>
-                        <i class="bi bi-lightning-fill me-2"></i>
-                        Cancellation Cover Available
-                      </p>
-                    </div>
-
-                    <Divider className="mt-2 mb-2" />
-
-                    <Button
-                      label="BOOK"
-                      className="custom-btn-primary w-100 result-card-btn"
-                      // class="btn-close"
-                      data-bs-dismiss="modal"
-                      // aria-label="Close"
-                      onClick={() => handleBooking(selectedVendor?._id, selectedVendor?.companyName, selectedVendor?.dp, selectedVendor?.finalQuote, selectedVendor?.serviceType)}
-                    />
-                  </article>
+                <div className="detail-card-info-area">
+                  <div className="detail-card-info-icon-area">
+                    <i class="bi bi-geo-alt-fill"></i>
+                  </div>
+                  <div className="detail-card-info-body">
+                    <p>Location :</p>
+                    <h6>{selectedAirport?.name}</h6>
+                  </div>
                 </div>
-              </div>
+
+                <div className="detail-card-price-area">
+                  <p>Price</p>
+                  <h5>
+                    £ {selectedVendor?.finalQuote}
+                    {selectedVendor?.quote > 0 && <span>£ {selectedVendor.quote}</span>}
+                  </h5>
+                </div>
+
+                <div className="detail-card-feature-area">
+                  {selectedVendor?.quote > 0 && <p>
+                    <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                    Save <span>£ {selectedVendor.quote - selectedVendor.finalQuote}</span> Today
+                  </p>}
+
+                  <p>
+                    <i class="bi bi-lightning-fill me-2"></i>
+                    Cancellation Cover Available
+                  </p>
+                </div>
+
+                <Divider className="mt-2 mb-2" />
+
+                <Button
+                  label="BOOK"
+                  className="custom-btn-primary w-100 result-card-btn"
+                  // class="btn-close"
+                  // aria-label="Close"
+                  onClick={() => {
+                    handleBooking(selectedVendor?._id, selectedVendor?.companyName, selectedVendor?.dp, selectedVendor?.finalQuote, selectedVendor?.serviceType);
+                    setShowViewModal(false);
+                  }}
+                />
+              </article>
             </div>
           </div>
         </div>
-      </div>
+      </Dialog>
       {/*  */}
 
       <Footer />

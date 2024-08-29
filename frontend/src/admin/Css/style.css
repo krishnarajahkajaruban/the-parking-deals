@@ -704,7 +704,9 @@ a:focus {
     border-radius: 0 !important;
 }
 
-.p-dialog.modal_dialog_lg {}
+.p-dialog.modal_dialog_lg {
+    width: 1140px !important;
+}
 
 .p-dialog.modal_dialog_md {
     width: 800px !important;
@@ -1063,3 +1065,4 @@ a:focus {
 .p-datatable-tfoot tr td:last-child {
     border-bottom-right-radius: 15px !important;
 }
+
