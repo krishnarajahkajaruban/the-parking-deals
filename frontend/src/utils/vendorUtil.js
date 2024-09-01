@@ -306,7 +306,7 @@ export const getAvailableQuotes = async (queryParams, dispatch, toast, setLoadin
                 finalQuote: quoteForDay(q.finalQuote, day)
             }
         })));
-        setShowEditModal(false);
+        setShowEditModal && setShowEditModal(false);
     } catch (err) {
         console.log(err);
         toast?.current.show({
@@ -317,7 +317,7 @@ export const getAvailableQuotes = async (queryParams, dispatch, toast, setLoadin
             life: 3000
         });
     } finally {
-        setLoading(false);
-        setPageLoading(false);
+        setLoading && setLoading(false);
+        setPageLoading && setPageLoading(false);
     }
 }

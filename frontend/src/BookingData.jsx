@@ -18,6 +18,7 @@ export const SampleData = {
                 date: new Date(booking.createdAt).toLocaleDateString('en-GB'),
                 time: new Date(booking.createdAt).toLocaleTimeString(),
                 status: booking.status,
+                bookedBy: (booking?.user?.createdBy) ? "Admin" : "User",
                 details: booking,
             }));
     

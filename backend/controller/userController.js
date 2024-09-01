@@ -285,7 +285,7 @@ const carParkingBookingDetail = async (req, res) => {
             cancellationCover
         } = req.body;
 
-        const { email, title, firstName, lastName, password, mobileNumber, accessToken, registeredStatus } = userDetail;
+        const { email, title, firstName, lastName, password, mobileNumber, accessToken, registeredStatus, adminBooking } = userDetail;
 
         if (!airportName || !dropOffDate || !dropOffTime || !pickUpDate || !pickUpTime || !companyId || !userDetail || !travelDetail || !vehicleDetail 
           // || !cardDetail 
@@ -302,7 +302,7 @@ const carParkingBookingDetail = async (req, res) => {
         let user;
         let token;
 
-        if (accessToken) {
+        if (accessToken && !adminBooking) {
             try {
                 user = await decodeToken(accessToken, process.env.JWT_SECRET);
 
@@ -310,7 +310,7 @@ const carParkingBookingDetail = async (req, res) => {
                     return res.status(404).json({ error: "User not found" });
                 }
 
-                if (["Admin", "Vendor"].includes(user.role)) {
+                if (["Admin", "Vendor", "Moderator"].includes(user.role)) {
                     return res.status(401).json({ error: "You are not authorized for booking as admin or vendor role" });
                 }
 
@@ -325,14 +325,27 @@ const carParkingBookingDetail = async (req, res) => {
                 return res.status(result.status).json({ error: result.error });
             }
 
-            if (["Admin", "Vendor"].includes(result.user.role)) {
+            if (["Admin", "Vendor", "Moderator"].includes(result.user.role)) {
                 return res.status(401).json({ error: "You are not authorized for booking as admin or vendor role" });
             }
 
             user = result.user;
             token = result.token;
-        } else {
-            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null, null);
+        } else if (adminBooking && accessToken){
+          user = await decodeToken(accessToken, process.env.JWT_SECRET);
+
+          if (!user || (user && !(["Admin", "Moderator"].includes(user.role)))) {
+            return res.status(404).json({ error: "Unauthorized" });
+          }
+          const result = await register(email, title, firstName, lastName, null, null, mobileNumber, "Offline-User", null, null, null, null, null, null, null, null, null, null, user.id);
+
+          if (result.status !== 201) {
+            return res.status(result.status).json({ error: result.error });
+          };
+
+          user = result.user;
+        }else {
+            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null, null, null);
           
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });
@@ -408,8 +421,8 @@ const carParkingBookingDetail = async (req, res) => {
             }
           ],
           mode: "payment",
-          success_url: `${process.env.FRONTEND_URL}/dashboard`,
-          cancel_url: `${process.env.FRONTEND_URL}/booking`,
+          success_url: adminBooking ? `${process.env.FRONTEND_URL}/bookings` : `${process.env.FRONTEND_URL}/dashboard`,
+          cancel_url: adminBooking ? `${process.env.FRONTEND_URL}/reservation` : `${process.env.FRONTEND_URL}/booking`,
           metadata: {
             booking_id: newCarParkingBooking._id.toString()
           }

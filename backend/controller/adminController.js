@@ -453,7 +453,7 @@ const creatingVendor = async(req, res) => {
         const dataURI = `data:${req.file.mimetype};base64,${b64}`;
         const cldRes = await handleUpload(dataURI);
 
-        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
+        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage, null);
 
         if (result.status !== 201) {
             return res.status(result.status).json({ error: result.error });
@@ -623,7 +623,7 @@ const createRoleForAdmin = async(req, res) => {
 
         const { Role, firstName, lastname, email, mobileNo, password} = req.body;
         
-        const user = await register(email, null, firstName, lastname, null, password, mobileNo, Role, null, null, null, null, null, null, null, null, null, null, null);
+        const user = await register(email, null, firstName, lastname, null, password, mobileNo, Role, null, null, null, null, null, null, null, null, null, null, null, null);
 
         if(user.status!== 201){
             return res.status(user.status).json({ error: user.error });

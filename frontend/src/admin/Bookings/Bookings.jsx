@@ -195,6 +195,11 @@ const Bookings = () => {
                                 style={{ width: "25%" }}
                             ></Column>
                             <Column
+                                header="Booked By"
+                                field="bookedBy"
+                                style={{ width: "20%" }}
+                            ></Column>
+                            <Column
                                 body={infoBodyTemplate}
                                 header="Full details"
                                 style={{ width: "10%" }}

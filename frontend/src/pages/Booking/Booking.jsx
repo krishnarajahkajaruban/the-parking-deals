@@ -1341,7 +1341,7 @@ const Booking = () => {
                             </label>
                           </div>
                         </div>
-                      </div> */}
+                      </div> */} 
 
                       <div className="col-12">
                         <div className="custom-form-group mb-0">
@@ -1361,7 +1361,7 @@ const Booking = () => {
                               htmlFor="cancellationCover"
                               className="ml-2"
                             >
-                              Cancellation Cover - £ 5
+                              Cancellation Cover   {(bookingCharge && bookingCharge?.cancellationCover > 0)? "- £"+bookingCharge?.cancellationCover : ""}
                             </label>
                           </div>
                         </div>

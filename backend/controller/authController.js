@@ -38,18 +38,16 @@ const checkUserAlreadyRegistered = async (req, res) => {
   
 
 /* register */
-const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage) => {
-
-  console.log(email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage);
+const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage, createdBy) => {
   
   try{
     // Check for required fields
     if (!email || 
-      (role === "User" && !title) || 
-      (["Admin", "User", "Moderator", "Admin-User"].includes(role) && !firstName) || 
+      (["Offline-User", "User"].includes(role) && !title) || 
+      (["Admin", "User", "Moderator", "Admin-User", "Offline-User"].includes(role) && !firstName) || 
       (role === 'Vendor' && !companyName) || 
-      !password || 
-      (["Vendor", "User"].includes(role) && !mobileNumber) || 
+      (["Admin", "User", "Moderator", "Admin-User", "Vendor"].includes(role) && !password) || 
+      (["Vendor", "User", "Offline-User"].includes(role) && !mobileNumber) || 
       // (role === "User" && !addressL1) ||
       // (role === "User" && !city) ||
       // (role === "User" && !country) ||
@@ -72,6 +70,13 @@ const register = async (email, title, firstName, lastName, companyName, password
   //   };
   // };
 
+  if(role === "Offline-User" && !createdBy){
+      return {
+        error: "Creator is absent!",
+        status: 400
+      };
+  };
+
     // Validate email and phone number
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^\d{9,}$/;
@@ -83,14 +88,14 @@ const register = async (email, title, firstName, lastName, companyName, password
         };
     } 
 
-    if (["Vendor", "User"].includes(role) && !phoneRegex.test(mobileNumber)) {
+    if (["Vendor", "User", "Offline-User"].includes(role) && !phoneRegex.test(mobileNumber)) {
         return {
             error: "Invalid phone number format!",
             status: 400
         };
     }
 
-    if (password.length < 8) {
+    if (["Admin", "User", "Moderator", "Admin-User", "Vendor"].includes(role) && password.length < 8) {
       return {
           error: "Password must be atleast 8 characters long!",
           status: 400
@@ -114,14 +119,17 @@ const register = async (email, title, firstName, lastName, companyName, password
   }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 12);
+    let hashedPassword = null;
+    if(["Admin", "User", "Moderator", "Admin-User", "Vendor"].includes(role)){
+      hashedPassword = await bcrypt.hash(password, 12);
+    };
 
     // Create a new user
     const user = new User({
         email: email.toLowerCase(),
-        ...(role === "User" && { title }),
-        ...(["Admin", "User", "Moderator", "Admin-User"].includes(role) && { firstName }),
-        ...(["Admin", "User", "Moderator", "Admin-User"].includes(role) && { lastname: lastName || "" }),
+        ...(["Offline-User", "User"].includes(role) && { title }),
+        ...(["Admin", "User", "Moderator", "Admin-User", "Offline-User"].includes(role) && { firstName }),
+        ...(["Admin", "User", "Moderator", "Admin-User", "Offline-User"].includes(role) && { lastname: lastName || "" }),
         ...(role === "Vendor" && { companyName }),
         mobileNumber,
         // ...(role === "User" && { addressL1 }),
@@ -130,7 +138,7 @@ const register = async (email, title, firstName, lastName, companyName, password
         // ...(role === "User" && { city }),
         // ...(role === "User" && { country }),
         // ...(role === "User" && { postCode }),
-        password: hashedPassword,
+        ...(["Admin", "User", "Moderator", "Admin-User", "Vendor"].includes(role) && { password: hashedPassword }),
         ...(["Vendor", "User"].includes(role) && { dp: role === "User" ? "" : dp}),
         ...(role === "Vendor" && { serviceType }),
         ...(role === "Vendor" && { rating: parseInt(JSON.parse(rating)) }),
@@ -143,13 +151,16 @@ const register = async (email, title, firstName, lastName, companyName, password
         ...(role === "Vendor" && { dropOffProcedure }),
         ...(role === "Vendor" && { pickUpProcedure }),
         ...(role === "User" && { active: true }),
+        ...(role === "Offline-User" && { createdBy }),
     });
 
     // Save the user to the database
     await user.save();
     const userObject = user.toObject({ getters: true });
-    delete userObject.password;
-
+    if(["Admin", "User", "Moderator", "Admin-User", "Vendor"].includes(role)){
+      delete userObject.password;
+    };
+  
     let emailResponse=null;
     if(role === "User"){
       emailResponse = await sendEmail(

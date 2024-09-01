@@ -9,14 +9,14 @@ const userSchema = new Schema(
     title: {
       type: String,
       required: function() {
-        return this.role === "User";
+        return ["User", "Offline-User"].includes(this.role);
       },
       enum: ["Mr.", "Mrs.", "Ms.", "Miss."]
     },
     firstName: {
       type: String,
       required: function() {
-        return ["Admin", "User", "Moderator", "Admin-User"].includes(this.role);
+        return ["Admin", "User", "Moderator", "Admin-User",  "Offline-User"].includes(this.role);
       },
     },
     lastname: {
@@ -43,14 +43,16 @@ const userSchema = new Schema(
     password: {
       type: String,
       min: 8,
-      required: [true, "Password must be provided"],
+      required: function() {
+        return ["Admin", "User", "Moderator", "Admin-User", "Vendor"].includes(this.role);
+      },
       select: false // Exclude this field when querying
     },
     mobileNumber: {
       type: Number,
       set: function(value) {
         // For roles "Admin", "Moderator", "Admin-User", return the value or an empty string if no value is provided.
-        if (["Admin", "Moderator", "Admin-User"].includes(this.role)) {
+        if (["Admin", "Moderator", "Admin-User", "Offline-User"].includes(this.role)) {
           return value || "";
         }
         return value; // If role doesn't match, just return the provided value
@@ -62,13 +64,19 @@ const userSchema = new Schema(
     },    
     role: {
       type: String,
-      enum: ["Admin", "User", "Vendor", "Moderator", "Admin-User"],
+      enum: ["Admin", "User", "Vendor", "Moderator", "Admin-User", "Offline-User"],
       required: [true, "Role must be provided"]
     },
     active : {
       type: Boolean,
       required: function() {
         return this.role === 'User';
+      }
+    },
+    createdBy : {
+      type: Schema.Types.ObjectId,
+      required: function() {
+        return this.role === 'Offline-User';
       }
     },
     // addressL1: {
