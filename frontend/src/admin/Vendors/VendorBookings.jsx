@@ -229,6 +229,9 @@ const VendorBookings = () => {
 
         doc.text(`Invoice date range: ${bookingStartDate} - ${bookingEndDate}`, 14, logoHeight + 32);
 
+        const vendorNameWidth = doc.getTextWidth(`Vendor: ${vendorName}`);
+        doc.text(`Vendor: ${vendorName}`, pageWidth - vendorNameWidth - 14, logoHeight + 32);
+
         const columns = [
             { title: "Booking ID", dataKey: "bookingId" },
             { title: "Booking Date", dataKey: "bookingDate" },
