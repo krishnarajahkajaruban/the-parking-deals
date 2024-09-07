@@ -70,7 +70,7 @@
     justify-content: space-between;
     border-radius: 12px;
     padding: 15px;
-    background-color: #eeeefb ;
+    background-color: #eeeefb;
     position: relative;
     gap: 20px;
     box-shadow: 0px 0px 15px #37348b11;
@@ -91,4 +91,16 @@
     margin-bottom: 0;
     color: #d12788;
     display: block;
+}
+
+.add_data_btn {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary);
+    overflow: hidden;
 }

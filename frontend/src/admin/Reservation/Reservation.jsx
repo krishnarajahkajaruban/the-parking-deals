@@ -1,24 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import './Reservation.css';
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Preloader from "../../Preloader";
 
 import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import { Ripple } from "primereact/ripple";
 import { Dialog } from "primereact/dialog";
-import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
-import { Password } from "primereact/password";
-import { Divider } from "primereact/divider";
 import { Checkbox } from "primereact/checkbox";
-import { Rating } from "primereact/rating";
-import { Editor } from "primereact/editor";
 import { Calendar } from 'primereact/calendar';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllAirports, getAvailableQuotes } from "../../utils/vendorUtil";
@@ -93,7 +86,7 @@ const Reservation = () => {
     ]
 
     const quotes = useSelector((state) => state.vendor.quotes);
-    
+
     const today = new Date();
 
     /* Quote details */
@@ -152,7 +145,7 @@ const Reservation = () => {
         arrivalTerminal: "",
         // outBoundFlight: "",
         inBoundFlight: ""
-      };
+    };
 
     /* Vechile details */
     const initialVehiclesDetails = [
@@ -171,90 +164,94 @@ const Reservation = () => {
     const [emailExists, setEmailExist] = useState(false);
     const [bookingLoading, setBookingLoading] = useState(false);
 
+    const [showAddDataModal, setShowAddDataModal] = useState(false);
+    const [airportName, setAirportName] = useState('');
+    const [showAddError, setShowAddError] = useState(false);
+
     function validateUserDetails(userDetails) {
-        
-          // Validate all required fields
-          if (!userDetails.email || !userDetails.firstName || !userDetails.mobileNumber || !userDetails.title) {
+
+        // Validate all required fields
+        if (!userDetails.email || !userDetails.firstName || !userDetails.mobileNumber || !userDetails.title) {
             setShowError(true);
             toast.current.show({
-              severity: 'error',
-              summary: 'Error in Your Details Submission',
-              detail: "Please fill all required fields!",
-              life: 3000
+                severity: 'error',
+                summary: 'Error in Your Details Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
             });
             return false;
-          }
+        }
         return true; // All validations passed
-      }
+    }
 
-      const bookTheCarParkingSlot = async (details) => {
+    const bookTheCarParkingSlot = async (details) => {
         setBookingLoading(true);
         try {
-          const response = await api.post("/api/user/car-park-booking", details);
-          console.log(response.data);
-    
-          setLoading(false);
-          const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
-    
-          const result = await stripe.redirectToCheckout({
-            sessionId: response.data.id
-          });
-    
-          console.log(result);
-    
-          toast.current.show({
-            severity: 'success',
-            summary: 'Booking Successful',
-            detail: "You have booked a parking slot for customer successfully",
-            life: 3000
-          });
-    
-    
+            const response = await api.post("/api/user/car-park-booking", details);
+            console.log(response.data);
+
+            setLoading(false);
+            const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
+
+            const result = await stripe.redirectToCheckout({
+                sessionId: response.data.id
+            });
+
+            console.log(result);
+
+            toast.current.show({
+                severity: 'success',
+                summary: 'Booking Successful',
+                detail: "You have booked a parking slot for customer successfully",
+                life: 3000
+            });
+
+
         } catch (err) {
-          console.log(err);
-          toast.current.show({
-            severity: 'error',
-            summary: 'Failed to Book',
-            detail: err.response.data.error,
-            life: 3000
-          });
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed to Book',
+                detail: err.response.data.error,
+                life: 3000
+            });
         } finally {
-          setBookingLoading(false);
+            setBookingLoading(false);
         }
-      };
+    };
 
     const handleBooking = () => {
         setShowError(false);
         if (!validateUserDetails(customerDetails)) {
-          return; // Exit if validation fails
+            return; // Exit if validation fails
         }
-    
+
         // Check if travel details are filled
         if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
-          setShowError(true);
-          toast.current.show({
-            severity: 'error',
-            summary: 'Error in Travel Detail Submission',
-            detail: "Please fill all required fields!",
-            life: 3000
-          });
-          return;
+            setShowError(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Travel Detail Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
         }
-    
+
         // Check if all vehicle details are filled
         const hasError = vehiclesDetails.some(vehicle => !vehicle.regNo || !vehicle.color);
         if (hasError) {
-          setShowError(true);
-          toast.current.show({
-            severity: 'error',
-            summary: 'Error in Vehicle Detail Submission',
-            detail: "Please fill all required fields!",
-            life: 3000
-          });
-          return;
+            setShowError(true);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Vehicle Detail Submission',
+                detail: "Please fill all required fields!",
+                life: 3000
+            });
+            return;
         }
-    
-        const  userDetail = {
+
+        const userDetail = {
             email: customerDetails.email,
             firstName: customerDetails.firstName,
             lastName: customerDetails.lastName,
@@ -262,80 +259,80 @@ const Reservation = () => {
             title: customerDetails.title,
             adminBooking: true,
             accessToken: token
-          };
-    
+        };
+
         // Prepare booking details object
         const carParkingSlotBookingDetails = {
-          airportName: selectedAirport?.name,
-          dropOffDate: dropOffDateStr,
-          dropOffTime: dropOffTime?.time,
-          pickUpDate: pickupDateStr,
-          pickUpTime: pickupTime?.time,
-          companyId: selectedVendor?._id,
-          userDetail: userDetail,
-          travelDetail: travelDetails,
-          vehicleDetail: vehiclesDetails,
-          bookingQuote: selectedVendor?.finalQuote,
-          couponCode,
-          smsConfirmation: false,
-          cancellationCover: checkedCancellationCover
+            airportName: selectedAirport?.name,
+            dropOffDate: dropOffDateStr,
+            dropOffTime: dropOffTime?.time,
+            pickUpDate: pickupDateStr,
+            pickUpTime: pickupTime?.time,
+            companyId: selectedVendor?._id,
+            userDetail: userDetail,
+            travelDetail: travelDetails,
+            vehicleDetail: vehiclesDetails,
+            bookingQuote: selectedVendor?.finalQuote,
+            couponCode,
+            smsConfirmation: false,
+            cancellationCover: checkedCancellationCover
         };
-    
+
         bookTheCarParkingSlot(carParkingSlotBookingDetails);
     };
 
     const handleFunctionForApi = (selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime) => {
         const queryParams = new URLSearchParams({
-          airport: selectedAirport,
-          fromDate: new Date(dropOffDate).toISOString(),
-          fromTime: dropOffTime,
-          toDate: new Date(pickupDate).toISOString(),
-          toTime: pickupTime
+            airport: selectedAirport,
+            fromDate: new Date(dropOffDate).toISOString(),
+            fromTime: dropOffTime,
+            toDate: new Date(pickupDate).toISOString(),
+            toTime: pickupTime
         });
         getAvailableQuotes(queryParams, dispatch, toast, null, null, null, dayDifference);
-      };
+    };
 
-      const calculatingBookingCharge = async () => {
+    const calculatingBookingCharge = async () => {
         setLoading(true);
         try {
-          const response = await api.post("/api/user/calculate-total-booking-charge",
-            {
-              bookingQuote: selectedVendor?.finalQuote,
-              couponCode,
-              smsConfirmation: false,
-              cancellationCover: checkedCancellationCover,
-              numOfVehicle: vehiclesDetails.length
-            }
-          );
-          console.log(response.data);
-          setBookingCharge(response.data);
+            const response = await api.post("/api/user/calculate-total-booking-charge",
+                {
+                    bookingQuote: selectedVendor?.finalQuote,
+                    couponCode,
+                    smsConfirmation: false,
+                    cancellationCover: checkedCancellationCover,
+                    numOfVehicle: vehiclesDetails.length
+                }
+            );
+            console.log(response.data);
+            setBookingCharge(response.data);
         } catch (err) {
-          console.log(err);
-          toast.current.show({
-            severity: 'error',
-            summary: 'Error in Booking charge calculation!',
-            detail: err.response.data.error,
-            life: 3000
-          });
-        }finally{
+            console.log(err);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error in Booking charge calculation!',
+                detail: err.response.data.error,
+                life: 3000
+            });
+        } finally {
             setLoading(false);
         };
-      };
+    };
 
-      const checkingCouponCodeValidity = async () => {
+    const checkingCouponCodeValidity = async () => {
         try {
-          const response = await api.post("/api/user/checking-couponcode-validity",
-            {
-              couponCode
-            }
-          );
-          console.log(response.data);
-          setCouponValid(true);
+            const response = await api.post("/api/user/checking-couponcode-validity",
+                {
+                    couponCode
+                }
+            );
+            console.log(response.data);
+            setCouponValid(true);
         } catch (err) {
-          console.log(err);
-          setCouponValid(false);
+            console.log(err);
+            setCouponValid(false);
         };
-      };
+    };
 
     const handleDropOffDateChange = (e) => {
         const newDropOffDate = e.value;
@@ -397,7 +394,7 @@ const Reservation = () => {
     const handleInputTravelDetailChange = async (e) => {
         const { name, value } = e.target;
         setTravelDetails({ ...travelDetails, [name]: value });
-      };
+    };
 
     const handleCustomerInputChange = async (e) => {
         const { name, value } = e.target;
@@ -406,20 +403,20 @@ const Reservation = () => {
             setShowError(false);
             setEmailExist(false);
             try {
-              const response = await api.post("/api/auth/check-user-registerd", { email: value });
-              console.log(response.data);
-              setEmailExist(response.data?.emailExists);
+                const response = await api.post("/api/auth/check-user-registerd", { email: value });
+                console.log(response.data);
+                setEmailExist(response.data?.emailExists);
             } catch (err) {
-              console.log(err);
+                console.log(err);
             }
-          }
+        }
     };
 
     useEffect(() => {
         fetchAllAirports(dispatch);
     }, [dispatch]);
 
-    useEffect(()=>{if(selectedAirport && dropOffDate && dropOffTime && pickupDate && pickupTime && dispatch && toast && dayDifference)handleFunctionForApi(selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime)},[selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, dispatch, toast, dayDifference]);
+    useEffect(() => { if (selectedAirport && dropOffDate && dropOffTime && pickupDate && pickupTime && dispatch && toast && dayDifference) handleFunctionForApi(selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime) }, [selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime, dispatch, toast, dayDifference]);
 
     useEffect(() => {
 
@@ -434,13 +431,51 @@ const Reservation = () => {
         setDayDifference(dayDifference);
     }, [dropOffDate, pickupDate]);
 
-    useEffect(()=>{if(selectedVendor)calculatingBookingCharge()},[selectedVendor, couponCode, checkedCancellationCover, vehiclesDetails]);
+    useEffect(() => { if (selectedVendor) calculatingBookingCharge() }, [selectedVendor, couponCode, checkedCancellationCover, vehiclesDetails]);
 
     useEffect(() => {
         if (couponCode) {
-          checkingCouponCodeValidity();
+            checkingCouponCodeValidity();
         }
-      }, [couponCode]);
+    }, [couponCode]);
+
+    const handleAddAirport = () => {
+        setShowAddDataModal(false);
+    }
+
+    const addDataModalHeader = () => {
+        return (
+            <div className="modal-header p-2">
+                <h1 className="modal-title fs-5">
+                    Add new airport
+                </h1>
+                <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowAddDataModal(false)}
+                ></button>
+            </div>
+        )
+    }
+
+    const addDataModalFooter = () => {
+        return (
+            <div className="custom_modal_footer p-2">
+                <Button
+                    label="Cancel"
+                    severity="secondary"
+                    className="modal_btn"
+                    onClick={() => setShowAddDataModal(false)}
+                />
+                <Button
+                    label={loading ? 'Processing' : 'Add'}
+                    className="submit-button modal_btn"
+                    loading={loading}
+                    onClick={handleAddAirport}
+                />
+            </div>
+        )
+    }
 
     return (
         <>
@@ -461,6 +496,13 @@ const Reservation = () => {
                                 {showError && !selectedAirport &&
                                     <small className="text-danger form-error-msg">This field is required</small>
                                 }
+
+                                <button className="add_data_btn p-ripple"
+                                onClick={() => setShowAddDataModal(true)}>
+                                    <i className="bi bi-plus-lg me-1"></i>
+                                    Add new airport
+                                    <Ripple />
+                                </button>
                             </div>
                         </div>
 
@@ -536,25 +578,25 @@ const Reservation = () => {
                                     <small className="text-danger form-error-msg">This field is required</small>
                                 } */}
 
-                            {(couponCode && couponValid) ? (
-                            <h6 className="coupon-valid success">
-                              <i className="bi bi-check-circle-fill me-2"></i>
-                              Coupon is valid.
-                            </h6>)
-                            : (couponCode && !couponValid) ? (
-                              <h6 className='coupon-valid error'>
-                                <i className='bi bi-x-circle-fill me-2'></i>
-                                Coupon is invalid.
-                              </h6>
-                            ) : null
-                          }
+                                {(couponCode && couponValid) ? (
+                                    <h6 className="coupon-valid success">
+                                        <i className="bi bi-check-circle-fill me-2"></i>
+                                        Coupon is valid.
+                                    </h6>)
+                                    : (couponCode && !couponValid) ? (
+                                        <h6 className='coupon-valid error'>
+                                            <i className='bi bi-x-circle-fill me-2'></i>
+                                            Coupon is invalid.
+                                        </h6>
+                                    ) : null
+                                }
                             </div>
                         </div>
 
                         <div className="col-12 col-xl-4 col-sm-6">
                             <div className="custom-form-group mb-sm-0 mb-0">
                                 <label htmlFor="vendor" className="custom-form-label form-required">Select vendor: </label>
-                                <Dropdown id='vendor' value={selectedVendor?.companyName} onChange={(e) => setSelectedVendor(quotes?.find(q=>q.companyName === e.value))} options={quotes?.map(q=>q?.companyName)} optionLabel="name" placeholder="Select a Vendor"
+                                <Dropdown id='vendor' value={selectedVendor?.companyName} onChange={(e) => setSelectedVendor(quotes?.find(q => q.companyName === e.value))} options={quotes?.map(q => q?.companyName)} optionLabel="name" placeholder="Select a Vendor"
                                     className="w-full w-100 custom-form-dropdown" invalid={showError} />
                                 {(showError && !selectedVendor) &&
                                     <small className="text-danger form-error-msg">This field is required</small>
@@ -627,10 +669,10 @@ const Reservation = () => {
                                 }
                                 <small className="text-danger form-error-msg">
                                     {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                                    customerDetails.email
+                                        customerDetails.email
                                     ) && customerDetails.email
-                                    ? "Enter valid email"
-                                    : ""}
+                                        ? "Enter valid email"
+                                        : ""}
                                 </small>
                                 <small className="text-danger form-error-msg">
                                     {emailExists ? "Email already exists" : ""}
@@ -648,8 +690,8 @@ const Reservation = () => {
                             <div className="custom-form-group mb-sm-4 mb-xl-0 mb-3">
                                 <label htmlFor="departTerminal" className="custom-form-label form-required">Depart Terminal: </label>
                                 <Dropdown id='departTerminal' value={{ name: travelDetails.departureTerminal }}
-                            onChange={(e) => setTravelDetails({ ...travelDetails, departureTerminal: e.value?.name })}
-                            options={depart_terminals} optionLabel="name" placeholder="Select Terminal"
+                                    onChange={(e) => setTravelDetails({ ...travelDetails, departureTerminal: e.value?.name })}
+                                    options={depart_terminals} optionLabel="name" placeholder="Select Terminal"
                                     className="w-full w-100 custom-form-dropdown" invalid={showError} />
 
                                 {(showError && !travelDetails.departureTerminal) &&
@@ -662,8 +704,8 @@ const Reservation = () => {
                             <div className="custom-form-group mb-sm-0 mb-3">
                                 <label htmlFor="arrivalTerminal" className="custom-form-label form-required">Arrival Terminal: </label>
                                 <Dropdown id='arrivalTerminal' value={{ name: travelDetails.arrivalTerminal }}
-                            onChange={(e) => setTravelDetails({ ...travelDetails, arrivalTerminal: e.value?.name })}
-                            options={arrival_terminals}optionLabel="name" placeholder="Select Terminal"
+                                    onChange={(e) => setTravelDetails({ ...travelDetails, arrivalTerminal: e.value?.name })}
+                                    options={arrival_terminals} optionLabel="name" placeholder="Select Terminal"
                                     className="w-full w-100 custom-form-dropdown" invalid={showError} />
 
                                 {(showError && !travelDetails.arrivalTerminal) &&
@@ -675,9 +717,9 @@ const Reservation = () => {
                         <div className="col-12 col-xl-4 col-sm-6">
                             <div className="custom-form-group mb-sm-0 mb-0">
                                 <label htmlFor="inBoundFlight" className="custom-form-label">Inbound Flight/Vessel: </label>
-                                <InputText id="inBoundFlight" className="custom-form-input" 
-                                name="inBoundFlight"
-                                placeholder='Enter Inbound' invalid={showError}
+                                <InputText id="inBoundFlight" className="custom-form-input"
+                                    name="inBoundFlight"
+                                    placeholder='Enter Inbound' invalid={showError}
                                     value={travelDetails.inBoundFlight}
                                     onChange={handleInputTravelDetailChange} />
 
@@ -781,7 +823,7 @@ const Reservation = () => {
                                         htmlFor="cancellationCover"
                                         className="ml-2"
                                     >
-                                        Cancellation Cover {(bookingCharge && bookingCharge?.cancellationCover > 0)? "- £"+bookingCharge?.cancellationCover : ""}
+                                        Cancellation Cover {(bookingCharge && bookingCharge?.cancellationCover > 0) ? "- £" + bookingCharge?.cancellationCover : ""}
                                     </label>
                                 </div>
                             </div>
@@ -790,7 +832,7 @@ const Reservation = () => {
                         <div className="col-12">
                             <div className="total-price-area">
                                 <h5 className="total-price-text">Total :</h5>
-                                <h5 className="total-price"> {loading ? "calculating..." : bookingCharge ? "£"+bookingCharge?.totalPayable : "£0"}</h5>
+                                <h5 className="total-price"> {loading ? "calculating..." : bookingCharge ? "£" + bookingCharge?.totalPayable : "£0"}</h5>
                             </div>
                         </div>
                     </div>
@@ -805,6 +847,40 @@ const Reservation = () => {
                     />
                 </div>
             </div>
+
+            {/* User create/edit modal */}
+            <Dialog header={addDataModalHeader} footer={addDataModalFooter} visible={showAddDataModal}
+                onHide={() => { if (!showAddDataModal) return; setShowAddDataModal(false); }}
+                className="custom-modal modal_dialog modal_dialog_sm">
+                <div className="modal-body p-2">
+                    <div className="data-view-area">
+                        <div className="row mt-sm-2">
+                            <div className="col-12">
+                                <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label htmlFor="airPortName" className="custom-form-label form-required">
+                                        Air port
+                                    </label>
+                                    <InputText
+                                        id="firstName"
+                                        className="custom-form-input"
+                                        placeholder="Enter airport name"
+                                        name="firstName"
+                                        value={airportName}
+                                        onChange={(e) => setAirportName(e.target.value)}
+                                    />
+
+                                    {(showAddError) &&
+                                        <small className="text-danger form-error-msg">
+                                            This field is required
+                                        </small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
+            {/*  */}
         </>
     )
 }

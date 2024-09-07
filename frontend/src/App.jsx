@@ -57,6 +57,7 @@ const Users = React.lazy(() => import('./admin/Users/Users'));
 const Customers = React.lazy(() => import('./admin/Customers/Customers'));
 const Vendors = React.lazy(() => import('./admin/Vendors/Vendors'));
 const VendorsBookings = React.lazy(() => import('./admin/Vendors/VendorBookings'));
+const Extras = React.lazy(() => import('./admin/Extras/Extras'));
 
 
 function App() {
@@ -101,6 +102,7 @@ function App() {
           <Route path='customers' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Customers /></ProtectedRoute></Suspense>} />
           <Route path='vendors' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Vendors /></ProtectedRoute></Suspense>} />
           <Route path='vendors/bookings/:id' element={<Suspense fallback={<Preloader />}><ProtectedRoute><VendorsBookings /></ProtectedRoute></Suspense>} />
+          <Route path='extras' element={<Suspense fallback={<Preloader />}><ProtectedRoute><Extras /></ProtectedRoute></Suspense>} />
         </Route>
         {/*  */}
       </Routes>

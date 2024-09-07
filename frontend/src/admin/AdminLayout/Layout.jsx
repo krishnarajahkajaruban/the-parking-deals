@@ -21,7 +21,7 @@ const Layout = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const dropdowMenuRef = useRef(null);
-    const user = useSelector((state)=>state.auth.user)
+    const user = useSelector((state) => state.auth.user)
 
     const toggleDropdownMenu = () => {
         setIsOpen(!isOpen);
@@ -163,7 +163,7 @@ const Layout = () => {
                     </li>}
 
 
-                    {!(["Moderator", "Admin-User"].includes(user?.role)) &&<li className={`${pathname === '/users' ? 'active' : ''}`}>
+                    {!(["Moderator", "Admin-User"].includes(user?.role)) && <li className={`${pathname === '/users' ? 'active' : ''}`}>
                         <Link to={'/users'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
                                 <i className="bi bi-person"></i>
@@ -171,6 +171,15 @@ const Layout = () => {
                             <span className="title">Users</span>
                         </Link>
                     </li>}
+
+                    <li className={`${pathname === '/extras' ? 'active' : ''}`}>
+                        <Link to={'/extras'} onClick={() => setMenuOpen(false)}>
+                            <span className="icon">
+                                <i className="bi bi-layers"></i>
+                            </span>
+                            <span className="title">Extras</span>
+                        </Link>
+                    </li>
 
                     <li>
                         <Link onClick={handleLogOut}>

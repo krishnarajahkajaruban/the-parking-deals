@@ -712,7 +712,9 @@ a:focus {
     width: 800px !important;
 }
 
-.p-dialog.modal_dialog_sm {}
+.p-dialog.modal_dialog_sm {
+    width: 450px !important;
+}
 
 .p-dialog.modal_dialog {
     border-radius: 20px !important;

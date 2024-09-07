@@ -22,7 +22,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const VendorBookings = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const today = new Date();
     const [loading, setLoading] = useState(false);
 
@@ -41,8 +41,13 @@ const VendorBookings = () => {
     const token = useSelector((state) => state.auth.token);
     const [period, setPeriod] = useState("");
 
+    const user = useSelector((state) => state.auth.user)
+
+    const [bookingStartDate, setBookingStartDate] = useState("");
+    const [bookingEndDate, setBookingEndDate] = useState("");
+
     const fetchData = async () => {
-        if(id && token) {
+        if (id && token) {
             try {
                 setLoading(true);
                 const data = await SampleVendorData.getVendorBookingsData(token, id, period);
@@ -53,7 +58,7 @@ const VendorBookings = () => {
                 setTotalBalance(data.totalBalance);
             } catch (error) {
                 console.error("Failed to fetch vendor bookings data:", error);
-            }finally{
+            } finally {
                 setLoading(false);
             }
         }
@@ -64,14 +69,20 @@ const VendorBookings = () => {
 
     useEffect(() => {
         if (filterOption) {
+            setBookingDate(filterOption.name);
+        }
+    }, [filterOption]);
+
+    useEffect(() => {
+        if (filterOption) {
             if (filterOption?.name === 'Custom' && startDate && endDate) {
                 setPeriod(`${startDate?.toLocaleDateString('en-GB')}-${endDate?.toLocaleDateString('en-GB')}`);
-            } else if(filterOption?.name !== 'Custom'){
+            } else if (filterOption?.name !== 'Custom') {
                 setPeriod(filterOption?.name);
-            }else{
+            } else {
                 setPeriod("");
             };
-        }else{
+        } else {
             setPeriod("");
         };
     }, [filterOption, startDate, endDate]);
@@ -108,10 +119,116 @@ const VendorBookings = () => {
     //     doc.save('VendorBookings.pdf');
     // };
 
+    const formatDate = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
 
-    const exportToPDF = () => {
+    const getStartOfWeek = (date) => {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+        return new Date(date.setDate(diff));
+    };
+
+    const getStartOfMonth = (date) => {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    };
+
+    const getStartOfYear = (date) => {
+        return new Date(date.getFullYear(), 0, 1);
+    };
+
+    const getEndOfWeek = (date) => {
+        const startOfWeek = getStartOfWeek(new Date(date));
+        return new Date(startOfWeek.setDate(startOfWeek.getDate() + 6));
+    };
+
+    const getEndOfMonth = (date) => {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    };
+
+    const getEndOfYear = (date) => {
+        return new Date(date.getFullYear(), 11, 31);
+    };
+
+    const setBookingDate = async () => {
+        let bookingPeriod = filterOption?.name;
+        console.log(bookingPeriod)
+        let start;
+        let end;
+        const today = new Date();
+
+        if (bookingPeriod === 'This week') {
+            start = getStartOfWeek(today);
+            end = getEndOfWeek(today);
+        } else if (bookingPeriod === 'This month') {
+            start = getStartOfMonth(today);
+            end = getEndOfMonth(today);
+        } else if (bookingPeriod === 'This year') {
+            start = getStartOfYear(today);
+            end = getEndOfYear(today);
+        } else if (bookingPeriod === 'Last week') {
+            const lastWeekStart = getStartOfWeek(today);
+            start = new Date(lastWeekStart.setDate(lastWeekStart.getDate() - 7));
+            end = new Date(lastWeekStart.setDate(start.getDate() + 6));
+        } else if (bookingPeriod === 'Last month') {
+            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            start = getStartOfMonth(lastMonth);
+            end = getEndOfMonth(lastMonth);
+        } else if (bookingPeriod === 'Last year') {
+            const lastYear = new Date(today.getFullYear() - 1, 0, 1);
+            start = getStartOfYear(lastYear);
+            end = getEndOfYear(lastYear);
+        } else if (bookingPeriod === 'Custom') {
+            if (!startDate || !endDate) {
+                setBookingStartDate('');
+                setBookingEndDate('');
+                return;
+            } else if (startDate instanceof Date && !isNaN(startDate) && endDate instanceof Date && !isNaN(endDate)) {
+                start = startDate;
+                end = endDate;
+            } else {
+                console.error("startDate or endDate is invalid for Custom period");
+                return;
+            }
+        } else {
+            console.error("Invalid period selected");
+            return;
+        }
+
+        setBookingStartDate(formatDate(start));
+        setBookingEndDate(formatDate(end));
+    };
+
+
+    const exportToPDF = async () => {
         const doc = new jsPDF();
-    
+
+        // const logoUrl = "https://www.theparkingdeals.co.uk/assets/images/logo.png";
+        const logoUrl = "/assets/images/logo.png";
+        const logoBase64 = await loadImageToBase64(logoUrl);
+
+        const logoWidth = 50;
+        const logoHeight = 20;
+
+        const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+        const logoX = (pageWidth - logoWidth) / 2;
+
+        doc.addImage(logoBase64, 'PNG', logoX, 10, logoWidth, logoHeight);
+
+        const username = user?.firstName + " " + user?.lastname;
+        const printDate = formatDate(new Date());
+
+        doc.setFontSize(10);
+        doc.text(`Generated by: ${username}`, 14, logoHeight + 22);
+
+        const dateWidth = doc.getTextWidth(`Date: ${printDate}`);
+        doc.text(`Date: ${printDate}`, pageWidth - dateWidth - 14, logoHeight + 22);
+
+        doc.text(`Booking Date Range: ${bookingStartDate} - ${bookingEndDate}`, 14, logoHeight + 32);
+
         const columns = [
             { title: "Booking ID", dataKey: "bookingId" },
             { title: "Booking Date", dataKey: "bookingDate" },
@@ -119,38 +236,55 @@ const VendorBookings = () => {
             { title: "Deal Percentage", dataKey: "dealPercentage" },
             { title: "Final payable for Vendor", dataKey: "balance" }
         ];
-    
+
         const data = bookingData.map(item => ({
-            bookingId: item.bookingId,
-            bookingDate: item.date,
+            bookingId: item.bookingId ? item.bookingId : '------',
+            bookingDate: item.date ? item.date : '------',
             bookingQuote: `£ ${parseFloat(item.bookingQuote || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
             dealPercentage: parseFloat(dealPercentage || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             balance: `£ ${parseFloat(item.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         }));
-    
+
         // Generate the table without the footer
         doc.autoTable({
             head: [columns.map(col => col.title)],
             body: data.map(row => columns.map(col => row[col.dataKey])),
-            margin: { top: 10 },
+            margin: { top: 60 },
         });
-    
+
         // Get the total number of pages
         const pageCount = doc.internal.getNumberOfPages();
-    
+
         // Add the footer only on the last page
         doc.setPage(pageCount);
         const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-    
-        doc.text("Total Booking amount from Customer", 14, pageHeight - 30);
-        doc.text(`£ ${totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 150, pageHeight - 30);
-        
-        doc.text("Total Payable for Vendor", 14, pageHeight - 15);
-        doc.text(`£ ${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 150, pageHeight - 15);
+
+        doc.text("Total Booking amount from Customer", 14, pageHeight - 15);
+        doc.text(`£ ${totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 150, pageHeight - 15);
+
+        doc.text("Total Payable for Vendor", 14, pageHeight - 5);
+        doc.text(`£ ${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 150, pageHeight - 5);
         doc.save('VendorBookings.pdf');
     };
-    
-    
+
+    const loadImageToBase64 = (url) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const dataURL = canvas.toDataURL('image/png');
+                resolve(dataURL);
+            };
+            img.onerror = (error) => reject(error);
+            img.src = url;
+        });
+    };
+
 
     const filterOptions = [
         { name: 'This week' },
@@ -159,7 +293,7 @@ const VendorBookings = () => {
         { name: 'Last week' },
         { name: 'Last month' },
         { name: 'Last year' },
-        { name: 'Custom' },
+        { name: 'Custom' }
     ];
 
     return (
@@ -178,7 +312,16 @@ const VendorBookings = () => {
                                 <label htmlFor="filterOption" className="custom-form-label">Filter by: </label>
                                 <div className="form-icon-group">
                                     <i className="bi bi-funnel-fill input-grp-icon"></i>
-                                    <Dropdown id="filterOption" value={filterOption} onChange={(e) => setFilterOption(e.value)} options={filterOptions} optionLabel="name"
+                                    <Dropdown id="filterOption"
+                                        value={filterOption}
+                                        onChange={(e) => {
+                                            const selectedPeriod = e.value;
+                                            console.log("Selected Period:", selectedPeriod);
+                                            setFilterOption(selectedPeriod);
+                                            setBookingDate();
+                                        }}
+                                        options={filterOptions}
+                                        optionLabel="name"
                                         placeholder="Select option" className="w-full w-100 custom-form-dropdown" showClear />
                                 </div>
                             </div>
@@ -191,7 +334,16 @@ const VendorBookings = () => {
                                         <label htmlFor="bookingDate" className="custom-form-label">Select start date: </label>
                                         <div className="form-icon-group">
                                             <i className="bi bi-calendar-range-fill input-grp-icon"></i>
-                                            <Calendar id="bookingDate" value={startDate} onChange={(e) => setStartDate(e.value)} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" maxDate={today} className='w-100' />
+                                            <Calendar id="bookingDate"
+                                                value={startDate}
+                                                onChange={(e) => {
+                                                    setStartDate(e.value);
+                                                    setBookingStartDate(formatDate(e.value));
+                                                }}
+                                                placeholder='dd/mm/yyyy'
+                                                dateFormat="dd/mm/yy"
+                                                maxDate={today} className='w-100'
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +353,19 @@ const VendorBookings = () => {
                                         <label htmlFor="bookingDate" className="custom-form-label">Select end date: </label>
                                         <div className="form-icon-group">
                                             <i className="bi bi-calendar-range-fill input-grp-icon"></i>
-                                            <Calendar id="bookingDate" value={endDate} onChange={(e) => setEndDate(e.value)} disabled={!startDate} placeholder='dd/mm/yyyy' dateFormat="dd/mm/yy" minDate={startDate} className='w-100' />
+                                            <Calendar
+                                                id="bookingDate"
+                                                value={endDate}
+                                                onChange={(e) => {
+                                                    setEndDate(e.value);
+                                                    setBookingEndDate(formatDate(e.value));
+                                                }}
+                                                disabled={!startDate}
+                                                placeholder='dd/mm/yyyy'
+                                                dateFormat="dd/mm/yy"
+                                                minDate={startDate}
+                                                className='w-100'
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -264,15 +428,16 @@ const VendorBookings = () => {
                                         rowData.bookingQuote
                                             ? <span className="text_no_wrap flex_end">
                                                 £ {parseFloat(rowData.bookingQuote).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                              </span>
+                                            </span>
                                             : '£ 0'
                                     }
-                                    style={{ width: "25%" }}
+                                    style={{ width: "15%" }}
                                     footer={
                                         <span className="text_no_wrap flex_end">
                                             £ {totalInitialQuote.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
-                                    }                                ></Column>
+                                    }
+                                ></Column>
 
                                 <Column
                                     header="Deal Percentage"
@@ -283,8 +448,8 @@ const VendorBookings = () => {
                                                 {parseFloat(dealPercentage).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </span>
                                             : 0}
-                                    style={{ width: "25%" }}
-                                    // footer={<span className="text_no_wrap flex_end">{totalDealPercentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>}
+                                    style={{ width: "20%" }}
+                                // footer={<span className="text_no_wrap flex_end">{totalDealPercentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>}
                                 ></Column>
 
                                 <Column
@@ -294,19 +459,20 @@ const VendorBookings = () => {
                                         rowData?.balance
                                             ? <span className="text_no_wrap flex_end">
                                                 £ {parseFloat(rowData.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                              </span>
+                                            </span>
                                             : '£ 0'
                                     }
-                                    style={{ width: "25%" }}
+                                    style={{ width: "20%" }}
                                     footer={
                                         <span className="text_no_wrap flex_end">
                                             £ {totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
-                                    }                                ></Column>
+                                    }
+                                ></Column>
                             </DataTable>
                         </div>
-                    )} 
-                    {loading &&  (
+                    )}
+                    {loading && (
                         <div className="no_data_found_area">
                             <h6>Loading...</h6>
                         </div>
