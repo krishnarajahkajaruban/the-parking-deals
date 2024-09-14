@@ -11,7 +11,7 @@ const { default: mongoose } = require("mongoose");
 const BookingDetail = require("../models/bookingDetailModel");
 
 /* creating coupon code and corresponding discount */
-const createCouponCodeDiscount = async (req, res) => {
+const updateCouponCodeDiscount = async (req, res) => {
     try {
         const { couponCode, discount } = req.body;
 
@@ -24,6 +24,8 @@ const createCouponCodeDiscount = async (req, res) => {
         if (!couponCode || !discount) {
             return res.status(400).json({ error: 'Coupon code and discount are required.' });
         }
+
+        await CouponDiscount.deleteMany({});
         
         const couponCodeDiscount = new CouponDiscount({
             couponCode: couponCode.toLowerCase(),
@@ -827,7 +829,7 @@ const findBookingsOfVendor = async(req, res) => {
 
 
 module.exports = {
-    createCouponCodeDiscount,
+    updateCouponCodeDiscount,
     updatingBookingFare,
     getAllUsersByType,
     addingCardParkingAvailability,

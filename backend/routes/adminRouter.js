@@ -5,7 +5,7 @@ const path = require('path');
 
 
 const {
-    createCouponCodeDiscount,
+    updateCouponCodeDiscount,
     updatingBookingFare,
     getAllUsersByType,
     addingCardParkingAvailability,
@@ -51,7 +51,7 @@ const upload = Multer({
 });
 
 // endpoint to create coupon code discount
-router.post("/create-coupon-code-discount", authMiddleware, createCouponCodeDiscount);
+router.post("/update-coupon-code-discount", authMiddleware, updateCouponCodeDiscount );
 
 // endpoint to update booking fare
 router.post("/update-booking-fare", authMiddleware, updatingBookingFare);

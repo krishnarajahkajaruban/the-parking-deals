@@ -10,6 +10,9 @@ import { Button } from "primereact/button";
 import { InputSwitch } from "primereact/inputswitch";
 import { Divider } from 'primereact/divider';
 import { confirmDialog } from "primereact/confirmdialog";
+import api from "../../api";
+import { useDispatch, useSelector } from "react-redux";
+import { getBookingChargesWithCouponCodeAndCorrespondingDiscount } from "../../utils/chargesAndCouponCode";
 
 const Extras = () => {
     const toast = useRef(null);
@@ -23,6 +26,35 @@ const Extras = () => {
     const [hasPromoCode, setHasPromoCode] = useState(true);
     const [showPromocode, setShowPromocode] = useState(true);
 
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.auth.token);
+    const initialCouponCodeDiscount = {
+        couponCode: "",
+        discount: 0
+    };
+    const [couponCodeDiscountObj, setCouponCodeDiscountObj] = useState(initialCouponCodeDiscount);
+
+    const [couponCodeAndDiscount, setCouponCodeAndDiscount] = useState(null);
+  const reduxCouponCodeDiscountObj = useSelector(
+    (state) => state.bookingChargeCouponCode.couponCode
+  );
+
+  useEffect(() => {
+    if (reduxCouponCodeDiscountObj) setCouponCodeAndDiscount(reduxCouponCodeDiscountObj);
+  }, [reduxCouponCodeDiscountObj]);
+
+  useEffect(() => {
+    getBookingChargesWithCouponCodeAndCorrespondingDiscount(dispatch);
+  }, [dispatch]);
+
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setCouponCodeDiscountObj({...couponCodeDiscountObj,
+            [name]: value
+        });
+    };
+
     const handleCreatePromoCode = () => {
         setHasPromoCode(true);
     }
@@ -31,9 +63,56 @@ const Extras = () => {
         setDataState('Edit');
     }
 
-    const handleUpdatePromoCode = () => {
+    const updateCoupponCodeDiscount = async (data) => {
+        setLoading(true);
+        try {
+          const response = await api.post("/api/admin/update-coupon-code-discount", data, {
+            headers: { 
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+          });
+          console.log(response.data);
+          if (toast.current) {
+            toast.current.show({
+                severity: 'success',
+                summary: 'Promo code detail Updated.',
+                detail: "You have successfully updated your promo code detail.",
+                life: 3000
+            });
+        }
+        setCouponCodeDiscountObj(initialCouponCodeDiscount);
+        getBookingChargesWithCouponCodeAndCorrespondingDiscount(dispatch);
         setHasPromoCode(true);
         setDataState('Add');
+        } catch (err) {
+          console.log(err);
+          toast.current.show({
+            severity: 'error',
+            summary: 'Failed to Update!',
+            detail: err.response.data.error,
+            life: 3000
+          });
+        }finally{
+            setLoading(false);
+        };
+      };
+
+    const handleUpdatePromoCode = async(e) => {
+        e.preventDefault();
+        setShowError(false);
+        if (!couponCodeDiscountObj.couponCode || !couponCodeDiscountObj.discount) {
+            setShowError(true);
+            toast.current.show({
+              severity: 'error',
+              summary: 'Error in Submission',
+              detail: "Please fill all required fields!",
+              life: 3000
+            });
+            return;
+          }
+        await updateCoupponCodeDiscount(couponCodeDiscountObj);
+
     }
 
     const handleDeletePromocode = () => {
@@ -74,10 +153,10 @@ const Extras = () => {
                                 <div className="custom-form-group mb-sm-4 mb-3">
                                     <label htmlFor="promoCode" className="custom-form-label form-required">Promo code: </label>
                                     <InputText id="promoCode" className="custom-form-input" placeholder='Enter promo code' invalid={showError}
-                                        value={promoCode} name="promoCode"
-                                        onChange={(e) => setPromoCode(e.target.value)} />
+                                        value={couponCodeDiscountObj.couponCode} name="couponCode"
+                                        onChange={handleInputChange} />
 
-                                    {(showError) &&
+                                    {(showError && !couponCodeDiscountObj.couponCode) &&
                                         <small className="text-danger form-error-msg">
                                             This field is required
                                         </small>
@@ -93,9 +172,9 @@ const Extras = () => {
                                         id="promoPercentage"
                                         className="custom-form-input"
                                         placeholder="Percentage"
-                                        name="promoPercentage"
-                                        value={promoPercentage}
-                                        onValueChange={(e) => setPromoPercentage(e.value)}
+                                        name="discount"
+                                        value={couponCodeDiscountObj.discount}
+                                        onValueChange={handleInputChange}
                                         maxFractionDigits={2}
                                         useGrouping={false}
                                         mode="decimal"
@@ -105,7 +184,7 @@ const Extras = () => {
                                         suffix="%"
                                     />
 
-                                    {(showError) &&
+                                    {(showError && !couponCodeDiscountObj.discount) &&
                                         <small className="text-danger form-error-msg">
                                             This field is required
                                         </small>
@@ -139,7 +218,7 @@ const Extras = () => {
                                     <h6 className="extras_title">Promo code :</h6>
                                 </div>
                                 <div className="col-6 col-xl-8 col-xxl-9">
-                                    <h6 className="extras_value">OFFR</h6>
+                                    <h6 className="extras_value">{couponCodeAndDiscount ? couponCodeAndDiscount.couponCode : ""}</h6>
                                 </div>
                             </div>
 
@@ -150,7 +229,7 @@ const Extras = () => {
                                     <h6 className="extras_title">Offer percentege :</h6>
                                 </div>
                                 <div className="col-6 col-xl-8 col-xxl-9">
-                                    <h6 className="extras_value">10%</h6>
+                                    <h6 className="extras_value">{couponCodeAndDiscount ? couponCodeAndDiscount.discount : 0}%</h6>
                                 </div>
                             </div>
 
@@ -178,11 +257,11 @@ const Extras = () => {
                                             className="data-view-button"
                                             onClick={handleEditPromoCode}
                                         />
-                                        <Button
+                                        {/* <Button
                                             icon="bi bi-trash3"
                                             className="data-delete-button"
                                             onClick={handleDeletePromocode}
-                                        />
+                                        /> */}
                                     </div>
                                 </div>
                             </div>
