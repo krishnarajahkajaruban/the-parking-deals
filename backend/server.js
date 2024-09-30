@@ -1,20 +1,20 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 const connectDb = require("./config/dbConnection");
-const dotenv = require('dotenv');
-const morgan = require('morgan');
-const http = require('http');
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+const http = require("http");
 // const { Server } = require('socket.io');
-const stripe = require('stripe')(process.env.STRIPE_SECRET);
-const rawBody = require('raw-body');
-const BookingDetail = require('./models/bookingDetailModel');
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+const rawBody = require("raw-body");
+const BookingDetail = require("./models/bookingDetailModel");
 const User = require("./models/userModel");
 
 const authRouter = require("./routes/authRouter");
 const userRouter = require("./routes/userRouter");
 const adminRouter = require("./routes/adminRouter");
 const commonRoleRouter = require("./routes/commonRoleRouter");
-const sendEmail = require('./common/mailService');
+const sendEmail = require("./common/mailService");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -29,12 +29,26 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 5001;
 
 // Middleware setup
-app.use(cors({ // CORS setup
-    origin: ['https://www.theparkingdeals.co.uk', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://the-parking-deals.netlify.app', 'https://the-parking-deals-web.onrender.com'],
+app.use(
+  cors({
+    // CORS setup
+    origin: [
+      "https://www.theparkingdeals.co.uk",
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+      "https://the-parking-deals.netlify.app",
+      "https://the-parking-deals-web.onrender.com",
+    ],
     credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials']
-}));
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Credentials",
+    ],
+  })
+);
 
 // const io = new Server(server, {
 //   cors: {
@@ -47,19 +61,23 @@ app.use(morgan("tiny")); // Logging
 
 // Middleware to handle raw body for Stripe webhook
 app.use((req, res, next) => {
-    if (req.originalUrl === '/webhook') {
-        rawBody(req, {
-            length: req.headers['content-length'],
-            limit: '1mb',
-            type: 'application/json',
-        }, (err, string) => {
-            if (err) return next(err);
-            req.rawBody = string;
-            next();
-        });
-    } else {
-        express.json()(req, res, next);
-    }
+  if (req.originalUrl === "/webhook") {
+    rawBody(
+      req,
+      {
+        length: req.headers["content-length"],
+        limit: "1mb",
+        type: "application/json",
+      },
+      (err, string) => {
+        if (err) return next(err);
+        req.rawBody = string;
+        next();
+      }
+    );
+  } else {
+    express.json()(req, res, next);
+  }
 });
 
 // io.on('connection', (socket) => {
@@ -67,160 +85,180 @@ app.use((req, res, next) => {
 // });
 
 // Webhook endpoint to handle Stripe events
-app.post('/webhook', async (req, res) => {
-    let event;
+app.post("/webhook", async (req, res) => {
+  let event;
 
-    try {
-        const sig = req.headers['stripe-signature'];
-        event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
-    } catch (err) {
-        console.error(`Webhook Error: ${err.message}`);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
+  try {
+    const sig = req.headers["stripe-signature"];
+    event = stripe.webhooks.constructEvent(
+      req.rawBody,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
 
-    // Handle the checkout.session.completed event
-    if (event.type === 'checkout.session.completed') {
-        console.log("checkout session completed")
-        const session = event.data.object;
-        await handleCheckoutSession(session);
-        // io.emit('checkout.session.completed', session);
-    } else if (event.type === 'payment_intent.payment_failed') {
-        console.log("payment intent failed")
-        const paymentIntent = event.data.object;
-        await handlePaymentFailure(paymentIntent);
-        // io.emit('payment_intent.payment_failed', paymentIntent); 
-    }
+  // Handle the checkout.session.completed event
+  if (event.type === "checkout.session.completed") {
+    console.log("checkout session completed");
+    const session = event.data.object;
+    await handleCheckoutSession(session);
+    // io.emit('checkout.session.completed', session);
+  } else if (event.type === "payment_intent.payment_failed") {
+    console.log("payment intent failed");
+    const paymentIntent = event.data.object;
+    await handlePaymentFailure(paymentIntent);
+    // io.emit('payment_intent.payment_failed', paymentIntent);
+  }
 
-    res.json({ received: true });
+  res.json({ received: true });
 });
 
 async function handleCheckoutSession(session) {
-    try {
-        console.log(session);
-        const booking_id = session.metadata.booking_id;
-        const stripePaymentId = session.id;
+  try {
+    console.log(session);
+    const booking_id = session.metadata.booking_id;
+    const stripePaymentId = session.id;
 
-        console.log(`Booking ID: ${booking_id}`);
-        console.log(`Stripe Payment ID: ${stripePaymentId}`);
+    console.log(`Booking ID: ${booking_id}`);
+    console.log(`Stripe Payment ID: ${stripePaymentId}`);
 
-        // Update booking status to failed in your database
-        const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
-            booking_id,
-            {
-                status: 'Paid',
-                stripePaymentId // Save the Stripe payment ID
-            },
-            { new: true }
-        );
+    // Update booking status to failed in your database
+    const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
+      booking_id,
+      {
+        status: "Paid",
+        stripePaymentId, // Save the Stripe payment ID
+      },
+      { new: true }
+    );
 
-        if (!updatedBookingDetail) {
-            throw new Error(`Booking detail not found for ID: ${booking_id}`);
-        }
-
-        console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
-
-        // Check if userId is present in the updated booking detail
-        if (!updatedBookingDetail.userId) {
-            throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
-        }
-
-        console.log(`User ID: ${updatedBookingDetail.userId}`);
-
-        // Retrieve user details
-        const user = await User.findById(updatedBookingDetail.userId)
-            .select("firstName lastname title email mobileNumber")
-            .lean()
-            .exec();
-
-        if (!user) {
-            throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
-        }
-
-        console.log(`User Details: ${JSON.stringify(user)}`);
-
-        // Send emails to user and company
-        await Promise.all([
-            sendEmailToUser(updatedBookingDetail, user, "Confirmed"),
-            sendEmailToCompany(updatedBookingDetail, user, "Confirmed"),
-        ]);
-
-        console.log(`Emails sent successfully for payment success: ${session.id}`);
-
-    } catch (error) {
-        console.error(`Error handling payment success: ${error.message}`);
+    if (!updatedBookingDetail) {
+      throw new Error(`Booking detail not found for ID: ${booking_id}`);
     }
+
+    console.log(
+      `Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`
+    );
+
+    // Check if userId is present in the updated booking detail
+    if (!updatedBookingDetail.userId) {
+      throw new Error(
+        `User ID not found in booking detail for ID: ${booking_id}`
+      );
+    }
+
+    console.log(`User ID: ${updatedBookingDetail.userId}`);
+
+    // Retrieve user details
+    const user = await User.findById(updatedBookingDetail.userId)
+      .select("firstName lastname title email mobileNumber")
+      .lean()
+      .exec();
+
+    if (!user) {
+      throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
+    }
+
+    console.log(`User Details: ${JSON.stringify(user)}`);
+
+    // Send emails to user and company
+    await Promise.all([
+      sendEmailToUser(updatedBookingDetail, user, "Confirmed"),
+      sendEmailToCompany(updatedBookingDetail, user, "Confirmed"),
+    ]);
+
+    console.log(`Emails sent successfully for payment success: ${session.id}`);
+  } catch (error) {
+    console.error(`Error handling payment success: ${error.message}`);
+  }
 }
 
 async function handlePaymentFailure(paymentIntent) {
-    try {
-        // Extract booking ID from payment intent metadata
-        console.log(paymentIntent);
-        const booking_id = paymentIntent.metadata.booking_id;
-        const stripePaymentId = paymentIntent.id;
+  try {
+    // Extract booking ID from payment intent metadata
+    console.log(paymentIntent);
+    const booking_id = paymentIntent.metadata.booking_id;
+    const stripePaymentId = paymentIntent.id;
 
-        console.log(`Booking ID: ${booking_id}`);
-        console.log(`Stripe Payment ID: ${stripePaymentId}`);
+    console.log(`Booking ID: ${booking_id}`);
+    console.log(`Stripe Payment ID: ${stripePaymentId}`);
 
-        // Update booking status to failed in your database
-        const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
-            booking_id,
-            {
-                status: 'Failed',
-                stripePaymentId // Save the Stripe payment ID
-            },
-            { new: true }
-        );
+    // Update booking status to failed in your database
+    const updatedBookingDetail = await BookingDetail.findByIdAndUpdate(
+      booking_id,
+      {
+        status: "Failed",
+        stripePaymentId, // Save the Stripe payment ID
+      },
+      { new: true }
+    );
 
-        if (!updatedBookingDetail) {
-            throw new Error(`Booking detail not found for ID: ${booking_id}`);
-        }
-
-        console.log(`Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`);
-
-        // Check if userId is present in the updated booking detail
-        if (!updatedBookingDetail.userId) {
-            throw new Error(`User ID not found in booking detail for ID: ${booking_id}`);
-        }
-
-        console.log(`User ID: ${updatedBookingDetail.userId}`);
-
-        // Retrieve user details
-        const user = await User.findById(updatedBookingDetail.userId)
-            .select("firstName lastname title email mobileNumber")
-            .lean()
-            .exec();
-
-        if (!user) {
-            throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
-        }
-
-        console.log(`User Details: ${JSON.stringify(user)}`);
-
-        // Send emails to user and company
-        await Promise.all([
-            sendEmailToUser(updatedBookingDetail, user, "Failed"),
-            sendEmailToCompany(updatedBookingDetail, user, "Failed"),
-        ]);
-
-        console.log(`Emails sent successfully for paymentIntent: ${paymentIntent.id}`);
-
-    } catch (error) {
-        console.error(`Error handling payment failure: ${error.message}`);
+    if (!updatedBookingDetail) {
+      throw new Error(`Booking detail not found for ID: ${booking_id}`);
     }
+
+    console.log(
+      `Updated Booking Detail: ${JSON.stringify(updatedBookingDetail)}`
+    );
+
+    // Check if userId is present in the updated booking detail
+    if (!updatedBookingDetail.userId) {
+      throw new Error(
+        `User ID not found in booking detail for ID: ${booking_id}`
+      );
+    }
+
+    console.log(`User ID: ${updatedBookingDetail.userId}`);
+
+    // Retrieve user details
+    const user = await User.findById(updatedBookingDetail.userId)
+      .select("firstName lastname title email mobileNumber")
+      .lean()
+      .exec();
+
+    if (!user) {
+      throw new Error(`User not found for ID: ${updatedBookingDetail.userId}`);
+    }
+
+    console.log(`User Details: ${JSON.stringify(user)}`);
+
+    // Send emails to user and company
+    await Promise.all([
+      sendEmailToUser(updatedBookingDetail, user, "Failed"),
+      sendEmailToCompany(updatedBookingDetail, user, "Failed"),
+    ]);
+
+    console.log(
+      `Emails sent successfully for paymentIntent: ${paymentIntent.id}`
+    );
+  } catch (error) {
+    console.error(`Error handling payment failure: ${error.message}`);
+  }
 }
 
-
 const sendEmailToUser = async (booking, user, type) => {
-    const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
+  const company = await User.findById(booking.companyId)
+    .select("email companyName serviceType")
+    .lean()
+    .exec();
 
-    if (!company) {
-        throw new Error("Company not found");
-    }
+  if (!company) {
+    throw new Error("Company not found");
+  }
 
-    return sendEmail(
-        user.email,
-        `Booking ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"}`,
-        `
+  return sendEmail(
+    user.email,
+    `Booking ${
+      type === "Cancelled"
+        ? "Cancelled!"
+        : type === "Failed"
+        ? "Failed!"
+        : "Confirmed!"
+    }`,
+    `
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -434,7 +472,13 @@ const sendEmailToUser = async (booking, user, type) => {
                 <div class="booking_info_header">
                     <img src="https://www.theparkingdeals.co.uk/assets/images/logo.png" alt="The Parking Deals">
                 </div>
-                <h3 class="booking_info_title">Booking ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"}</h3>
+                <h3 class="booking_info_title">Booking ${
+                  type === "Cancelled"
+                    ? "Cancelled!"
+                    : type === "Failed"
+                    ? "Failed!"
+                    : "Confirmed!"
+                }</h3>
                 <p class="mb-4">Dear ${user.firstName},</p>
 
                 <p class="mb-3">
@@ -446,7 +490,13 @@ const sendEmailToUser = async (booking, user, type) => {
                 </p>
 
                 <h4 class="booking_head">
-                    Booking ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"}:&nbsp;
+                    Booking ${
+                      type === "Cancelled"
+                        ? "Cancelled!"
+                        : type === "Failed"
+                        ? "Failed!"
+                        : "Confirmed!"
+                    }:&nbsp;
                     <span>${booking.bookingId}</span>
                 </h4>
 
@@ -455,7 +505,9 @@ const sendEmailToUser = async (booking, user, type) => {
                         <tbody>
                             <tr>
                                 <th>Booked By</th>
-                                <td>${user.title} ${user.firstName} ${user.lastname}</td>
+                                <td>${user.title} ${user.firstName} ${
+      user.lastname
+    }</td>
                                 <th>Flying From</th>
                                 <td>${booking.airportName}</td>
                             </tr>
@@ -463,29 +515,39 @@ const sendEmailToUser = async (booking, user, type) => {
                                 <th>Service</th>
                                 <td>${company.companyName}</td>
                                 <th>Inbound Flight</th>
-                                <td>${booking.travelDetail.inBoundFlight || "-"}</td>
+                                <td>${
+                                  booking.travelDetail.inBoundFlight || "-"
+                                }</td>
                             </tr>
                             <tr>
                                 <th>Service Type</th>
                                 <td>${company.serviceType}</td>
                                 <th>Extras</th>
-                                <td>Cancellation Cover: ${booking.cancellationCoverFee ? "Yes" : "No"}</td>
+                                <td>Cancellation Cover: ${
+                                  booking.cancellationCoverFee ? "Yes" : "No"
+                                }</td>
                             </tr>
                             <tr>
                                 <th>From</th>
                                 <td>${booking.dropOffDate} ${
-                                    booking.dropOffTime}</td>
+      booking.dropOffTime
+    }</td>
                                 <th>Inbound Terminal</th>
                                 <td>${booking.travelDetail.arrivalTerminal}</td>
                             </tr>
                             <tr>
                                 <th>To</th>
-                                <td>${booking.pickUpDate} ${booking.
-                                    pickUpTime}</td>
+                                <td>${booking.pickUpDate} ${
+      booking.pickUpTime
+    }</td>
                                 <th>Outbound Terminal</th>
-                                <td>${booking.travelDetail.departureTerminal}</td>
+                                <td>${
+                                  booking.travelDetail.departureTerminal
+                                }</td>
                             </tr>
-                            ${booking.vehicleDetail.map(vehicle => `
+                            ${booking.vehicleDetail
+                              .map(
+                                (vehicle) => `
                             <tr>
                                 <th colspan="4" class="text-center">Vehicle Details</th>
                             </tr>
@@ -500,9 +562,13 @@ const sendEmailToUser = async (booking, user, type) => {
                                 <td>${vehicle.make || "-"}</td>
                                 <th>Model</th>
                                 <td>${vehicle.model || "-"}</td>
-                            </tr>`).join('')}
+                            </tr>`
+                              )
+                              .join("")}
                             <tr>
-                                <th colspan="4" class="text-center">Total Amount: £${booking.totalPayable}</th>
+                                <th colspan="4" class="text-center">Total Amount: £${
+                                  booking.totalPayable
+                                }</th>
                             </tr>
                         </tbody>
                     </table>
@@ -521,7 +587,7 @@ const sendEmailToUser = async (booking, user, type) => {
 
                 <p class="mt-2">
                     <b>
-                        Complaint Number: <a href="tel::07399440027">07399440027</a>
+                        Complaint Number: <a href="tel::07777135649">07777135649</a>
                     </b>
                 </p>
                 <p class="mt-2">
@@ -635,7 +701,7 @@ const sendEmailToUser = async (booking, user, type) => {
 
                 <p>
                     If you have any further queries or if you need any help with your booking, please contact us on
-                    <a href="tel:tel:07399440027">tel:07399440027</a>
+                    <a href="tel:tel:07777135649">tel:07777135649</a>
                 </p>
 
                 <h6 class="mt-5 booking_footer_text">
@@ -671,7 +737,7 @@ const sendEmailToUser = async (booking, user, type) => {
                 </p>
 
                 <p class="mt-2">
-                    <b><a href="tel:07399440027">07399440027</a></b>
+                    <b><a href="tel:07777135649">07777135649</a></b>
                 </p>
 
                 <hr class="mt-4">
@@ -688,20 +754,29 @@ const sendEmailToUser = async (booking, user, type) => {
             </div>
         </body>
               `
-    );
+  );
 };
 
 const sendEmailToCompany = async (booking, user, type) => {
-    const company = await User.findById(booking.companyId).select("email companyName serviceType").lean().exec();
+  const company = await User.findById(booking.companyId)
+    .select("email companyName serviceType")
+    .lean()
+    .exec();
 
-    if (!company) {
-        throw new Error("Company not found");
-    }
+  if (!company) {
+    throw new Error("Company not found");
+  }
 
-    return sendEmail(
-        company.email,
-        `${type === "Cancelled" ? "Parking Slot Booking Cancelled!" : type === "Failed" ? "Parking Slot Booking Failed!" : "Parking slot has been Booked!"}`,
-        `
+  return sendEmail(
+    company.email,
+    `${
+      type === "Cancelled"
+        ? "Parking Slot Booking Cancelled!"
+        : type === "Failed"
+        ? "Parking Slot Booking Failed!"
+        : "Parking slot has been Booked!"
+    }`,
+    `
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -918,7 +993,13 @@ const sendEmailToCompany = async (booking, user, type) => {
                 </div>
                 
                 <h4 class="booking_head">
-                    Booking ${type === "Cancelled" ? "Cancelled!" : type === "Failed" ? "Failed!" : "Confirmed!"}:&nbsp;
+                    Booking ${
+                      type === "Cancelled"
+                        ? "Cancelled!"
+                        : type === "Failed"
+                        ? "Failed!"
+                        : "Confirmed!"
+                    }:&nbsp;
                     <span>${booking.bookingId}</span>
                 </h4>
 
@@ -927,7 +1008,9 @@ const sendEmailToCompany = async (booking, user, type) => {
                         <tbody>
                             <tr>
                                 <th>Booked By</th>
-                                <td>${user.title} ${user.firstName} ${user.lastname}</td>
+                                <td>${user.title} ${user.firstName} ${
+      user.lastname
+    }</td>
                                 <th>Flying From</th>
                                 <td>${booking.airportName}</td>
                             </tr>
@@ -935,21 +1018,27 @@ const sendEmailToCompany = async (booking, user, type) => {
                                 <th>Service</th>
                                 <td>${company.companyName}</td>
                                 <th>Inbound Flight</th>
-                                <td>${booking.travelDetail.inBoundFlight || "-"}</td>
+                                <td>${
+                                  booking.travelDetail.inBoundFlight || "-"
+                                }</td>
                             </tr>
                             <tr>
                                 <th>From</th>
                                 <td>${booking.dropOffDate} ${
-                                    booking.dropOffTime}</td>
+      booking.dropOffTime
+    }</td>
                                 <th>Inbound Terminal</th>
                                 <td>${booking.travelDetail.arrivalTerminal}</td>
                             </tr>
                             <tr>
                                 <th>To</th>
-                                <td>${booking.pickUpDate} ${booking.
-                                    pickUpTime}</td>
+                                <td>${booking.pickUpDate} ${
+      booking.pickUpTime
+    }</td>
                                 <th>Outbound Terminal</th>
-                                <td>${booking.travelDetail.departureTerminal}</td>
+                                <td>${
+                                  booking.travelDetail.departureTerminal
+                                }</td>
                             </tr>
                             <tr>
                                 <th>Mobile Number</th>
@@ -957,7 +1046,9 @@ const sendEmailToCompany = async (booking, user, type) => {
                                 <th>Service Type</th>
                                 <td>${company.serviceType}</td>
                             </tr>
-                            ${booking.vehicleDetail.map(vehicle => `
+                            ${booking.vehicleDetail
+                              .map(
+                                (vehicle) => `
                             <tr>
                                 <th colspan="4" class="text-center">Vehicle Details</th>
                             </tr>
@@ -972,9 +1063,13 @@ const sendEmailToCompany = async (booking, user, type) => {
                                 <td>${vehicle.make || "-"}</td>
                                 <th>Model</th>
                                 <td>${vehicle.model || "-"}</td>
-                            </tr>`).join('')}
+                            </tr>`
+                              )
+                              .join("")}
                             <tr>
-                                <th colspan="4" class="text-center">Total Amount: £${booking.bookingQuote}</th>
+                                <th colspan="4" class="text-center">Total Amount: £${
+                                  booking.bookingQuote
+                                }</th>
                             </tr>
                         </tbody>
                     </table>
@@ -1014,14 +1109,14 @@ const sendEmailToCompany = async (booking, user, type) => {
                 </p>
 
                 <p class="mt-2">
-                    <b><a href="tel:07399440027">07399440027</a></b>
+                    <b><a href="tel:07777135649">07777135649</a></b>
                 </p>
 
                 <hr class="mt-4">
             </div>
         </body>
               `
-    );
+  );
 };
 
 // Routes
@@ -1032,14 +1127,14 @@ app.use("/api/common-role", commonRoleRouter);
 
 // Error handling middleware for Multer errors
 app.use((err, req, res, next) => {
-    res.setHeader('Content-Type', 'application/json');
-    if (err instanceof Multer.MulterError) {
-        res.status(400).json({ error: err.message });
-    } else if (err) {
-        res.status(400).json({ error: err.message });
-    } else {
-        next();
-    }
+  res.setHeader("Content-Type", "application/json");
+  if (err instanceof Multer.MulterError) {
+    res.status(400).json({ error: err.message });
+  } else if (err) {
+    res.status(400).json({ error: err.message });
+  } else {
+    next();
+  }
 });
 
 // app.patch('/update-active-field', async (req, res) => {
@@ -1060,21 +1155,20 @@ app.use((err, req, res, next) => {
 //   }
 // });
 
-
 // Start the server
 server.listen(PORT, async () => {
-    await connectDb();
-    console.log(`Server started on port ${PORT}`);
+  await connectDb();
+  console.log(`Server started on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Promise rejection:', err);
-    process.exit(1); // Exit process on unhandled promise rejection
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Promise rejection:", err);
+  process.exit(1); // Exit process on unhandled promise rejection
 });
 
 // Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
-    process.exit(1); // Exit process on uncaught exception
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+  process.exit(1); // Exit process on uncaught exception
 });
