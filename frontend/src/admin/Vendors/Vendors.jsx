@@ -22,6 +22,7 @@ import { Editor } from "primereact/editor";
 import { SampleVendorData } from "./SampleVendorData";
 import api from "../../api";
 import { useSelector } from "react-redux";
+import { Ripple } from "primereact/ripple";
 
 const Vendors = () => {
   const toast = useRef(null);
@@ -641,6 +642,30 @@ const Vendors = () => {
                         </small>
                       )}
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12">
+              <div className="col-12 col-xl-4 col-sm-6">
+                <div className="custom-form-group mb-sm-4 mb-3">
+                                <label htmlFor="airport" className="custom-form-label form-required">Select airport: </label>
+                                <Dropdown id='airport' 
+                                // value={"selectedAirport"}
+                                //  onChange={(e) => "setSelectedAirport"(e.value)} options={airports} 
+                                 optionLabel="name" placeholder="Select a Airport"
+                                    className="w-full w-100 custom-form-dropdown" invalid={showError} />
+                                {showError && 
+                                // !"selectedAirport" &&
+                                    <small className="text-danger form-error-msg">This field is required</small>
+                                }
+
+                                <button className="add_data_btn p-ripple"
+                                // onClick={() => "setShowAddDataModal"(true)}
+                                >
+                                    <i className="bi bi-plus-lg me-1"></i>
+                                    Add new airport
+                                    <Ripple />
+                                </button>
                   </div>
                 </div>
               </div>

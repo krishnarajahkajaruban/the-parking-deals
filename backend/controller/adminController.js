@@ -9,11 +9,12 @@ const SubscribedEmail = require("../models/subcribedEmail");
 const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
 const { default: mongoose } = require("mongoose");
 const BookingDetail = require("../models/bookingDetailModel");
+const Airport = require("../models/airports");
 
 /* creating coupon code and corresponding discount */
 const updateCouponCodeDiscount = async (req, res) => {
     try {
-        const { couponCode, discount } = req.body;
+        const { couponCode, discount, bannerStatus } = req.body;
 
         const { role } = req.user;
 
@@ -21,15 +22,18 @@ const updateCouponCodeDiscount = async (req, res) => {
             return res.status(403).json({ error: 'Only admin can create coupon code and corresponding discount.' });
         }
 
-        if (!couponCode || !discount) {
-            return res.status(400).json({ error: 'Coupon code and discount are required.' });
-        }
+        // if ((!(couponCode && discount) && !bannerStatus)) {
+        //     return res.status(400).json({ error: 'Coupon code and discount are required.' });
+        // }
+
+        const existingCouponDiscount = await CouponDiscount.findOne();
 
         await CouponDiscount.deleteMany({});
         
         const couponCodeDiscount = new CouponDiscount({
-            couponCode: couponCode.toLowerCase(),
-            discount,
+            couponCode: couponCode ? couponCode.toLowerCase() : existingCouponDiscount ? existingCouponDiscount.couponCode : '',
+            discount: discount ? discount : existingCouponDiscount ? existingCouponDiscount.discount : 0,
+            bannerStatus: bannerStatus || false
         });
 
         await couponCodeDiscount.save();
@@ -46,11 +50,11 @@ const updateCouponCodeDiscount = async (req, res) => {
 /* update booking fare */
 const updatingBookingFare = async (req, res) => {
     try {
-        const { bookingFee, smsConfirmationFee, cancellationCoverFee } = req.body;
+        const { bookingFee, cancellationCoverFee } = req.body;
         const { role } = req.user;
 
-        if( !bookingFee || !smsConfirmationFee || !cancellationCoverFee){
-            return res.status(400).json({ error: 'Booking fee, sms confirmation fee and cancellation cover fee are required.' });
+        if( !bookingFee || !cancellationCoverFee){
+            return res.status(400).json({ error: 'Booking fee and cancellation cover fee are required.' });
         }
 
         if (role !== "Admin") {
@@ -63,7 +67,7 @@ const updatingBookingFare = async (req, res) => {
         // Create a new document with the provided fees
         const newBookingFare = new BookingFare({
             bookingFee,
-            smsConfirmationFee,
+            // smsConfirmationFee,
             cancellationCoverFee
         });
 
@@ -449,13 +453,13 @@ const creatingVendor = async(req, res) => {
             return res.status(400).json({ error: "Logo must be required" });
         };
 
-        const { email, companyName, serviceType, password, mobileNumber, rating, dealPercentage, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure } = req.body;
+        const { email, companyName, serviceType, password, mobileNumber, rating, dealPercentage, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, airports } = req.body;
 
         const b64 = Buffer.from(req.file.buffer).toString('base64');
         const dataURI = `data:${req.file.mimetype};base64,${b64}`;
         const cldRes = await handleUpload(dataURI);
 
-        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage, null);
+        const result = await register(email, null, null, null, companyName, password, mobileNumber, "Vendor", serviceType, cldRes.secure_url, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage, null, airports);
 
         if (result.status !== 201) {
             return res.status(result.status).json({ error: result.error });
@@ -476,7 +480,7 @@ const creatingVendor = async(req, res) => {
 const updateVendorInfo = async (req, res) => {
     try {
         const {
-            email, companyName, serviceType, mobileNumber, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage
+            email, companyName, serviceType, mobileNumber, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage, airports
         } = req.body;
   
         const { role } = req.user;
@@ -521,7 +525,7 @@ const updateVendorInfo = async (req, res) => {
         };
   
         const updateFields = {
-            email: email || vendorDetailTobeUpdated.email, companyName: companyName || vendorDetailTobeUpdated.companyName, serviceType: serviceType || vendorDetailTobeUpdated.serviceType, mobileNumber: mobileNumber || vendorDetailTobeUpdated.mobileNumber, rating: parseInt(JSON.parse(rating)) || vendorDetailTobeUpdated.rating, dealPercentage: parseInt(JSON.parse(dealPercentage)) || vendorDetailTobeUpdated.dealPercentage, overView: overView || vendorDetailTobeUpdated.overView, quote: newFinalQuote === newQuote ? 0 : newQuote, finalQuote: newFinalQuote, facilities: JSON.parse(facilities) || vendorDetailTobeUpdated.facilities, dropOffProcedure: dropOffProcedure || vendorDetailTobeUpdated.dropOffProcedure, pickUpProcedure: pickUpProcedure ||vendorDetailTobeUpdated.pickUpProcedure
+            email: email || vendorDetailTobeUpdated.email, companyName: companyName || vendorDetailTobeUpdated.companyName, serviceType: serviceType || vendorDetailTobeUpdated.serviceType, mobileNumber: mobileNumber || vendorDetailTobeUpdated.mobileNumber, rating: parseInt(JSON.parse(rating)) || vendorDetailTobeUpdated.rating, dealPercentage: parseInt(JSON.parse(dealPercentage)) || vendorDetailTobeUpdated.dealPercentage, overView: overView || vendorDetailTobeUpdated.overView, quote: newFinalQuote === newQuote ? 0 : newQuote, finalQuote: newFinalQuote, facilities: JSON.parse(facilities) || vendorDetailTobeUpdated.facilities, dropOffProcedure: dropOffProcedure || vendorDetailTobeUpdated.dropOffProcedure, pickUpProcedure: pickUpProcedure ||vendorDetailTobeUpdated.pickUpProcedure, airports: airports || vendorDetailTobeUpdated.airports, 
         };
   
         // Only set 'dp' field if a new file was uploaded
@@ -577,6 +581,31 @@ const deleteVendor = async (req, res) => {
     }
   };
 
+/* add airport */
+const addAirport = async (req, res) => {
+    try{
+        const { name } = req.body;
+        const { role } = req.user;
+
+        if(role !== "Admin"){
+            return res.status(403).json({ error: "You are not authorized" });
+        };
+
+        const checkAirportAlreadyExist = await Airport.findOne({ name });
+        if(checkAirportAlreadyExist){
+            return res.status(409).json({ error: "Airport already exist" });
+        };
+
+        const newAirport = new Airport({ name });
+        await newAirport.save();
+
+        res.status(201).json({ message: "Airport added successfully", airport: newAirport });
+    }catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    };
+};
+
 /* block and unblock the user */
 const changingActiveStatusOfUser = async(req, res) => {
     try{
@@ -625,7 +654,7 @@ const createRoleForAdmin = async(req, res) => {
 
         const { Role, firstName, lastname, email, mobileNo, password} = req.body;
         
-        const user = await register(email, null, firstName, lastname, null, password, mobileNo, Role, null, null, null, null, null, null, null, null, null, null, null, null);
+        const user = await register(email, null, firstName, lastname, null, password, mobileNo, Role, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
         if(user.status!== 201){
             return res.status(user.status).json({ error: user.error });
@@ -843,5 +872,6 @@ module.exports = {
     createRoleForAdmin,
     updateAdminUserInfo,
     deleteAdminUser,
-    findBookingsOfVendor
+    findBookingsOfVendor,
+    addAirport
 }

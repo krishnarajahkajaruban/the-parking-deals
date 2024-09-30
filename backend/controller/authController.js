@@ -38,7 +38,7 @@ const checkUserAlreadyRegistered = async (req, res) => {
   
 
 /* register */
-const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage, createdBy) => {
+const register = async (email, title, firstName, lastName, companyName, password, mobileNumber, role, serviceType, dp, rating, overView, quote, finalQuote, facilities, dropOffProcedure, pickUpProcedure, dealPercentage, createdBy, airports) => {
   
   try{
     // Check for required fields
@@ -52,7 +52,7 @@ const register = async (email, title, firstName, lastName, companyName, password
       // (role === "User" && !city) ||
       // (role === "User" && !country) ||
       // (role === "User" && !postCode) ||
-      !role || (role === 'Vendor' && !serviceType) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !rating) || (role === 'Vendor' && !dealPercentage) || (role === 'Vendor' && !overView) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !finalQuote) || (role === 'Vendor' && !quote) || (role === 'Vendor' && !facilities) || (role === 'Vendor' && !dropOffProcedure) || (role === 'Vendor' && !pickUpProcedure)) {
+      !role || (role === 'Vendor' && !serviceType) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !rating) || (role === 'Vendor' && !dealPercentage) || (role === 'Vendor' && !overView) || (role === 'Vendor' && !dp) || (role === 'Vendor' && !finalQuote) || (role === 'Vendor' && !quote) || (role === 'Vendor' && !facilities) || (role === 'Vendor' && !dropOffProcedure) || (role === 'Vendor' && !pickUpProcedure) || (role === 'Vendor' && !airports)) {
       return {
           error: "Please fill all required fields!",
           status: 400
@@ -69,6 +69,13 @@ const register = async (email, title, firstName, lastName, companyName, password
   //     };
   //   };
   // };
+
+  if(role === "Vendor" && (airports && airports.length === 0)){
+    return {
+      error: "Need atleast one selected airport for vendor!",
+      status: 400
+    };
+};
 
   if(role === "Offline-User" && !createdBy){
       return {
@@ -103,13 +110,15 @@ const register = async (email, title, firstName, lastName, companyName, password
   }
 
     // Check if user is already registered
-    const userAlreadyRegistered = await User.findOne({ email: email.toLowerCase() }).lean();
-    if (userAlreadyRegistered) {
-        return {
-            error: "User already registered with this email!",
-            status: 400
-        };
-    }
+    if(role !== "Vendor"){
+      const userAlreadyRegistered = await User.findOne({ email: email.toLowerCase() }).lean();
+      if (userAlreadyRegistered) {
+          return {
+              error: "User already registered with this email!",
+              status: 400
+          };
+      }
+    };
 
     if (role === "Vendor" && JSON.parse(quote) < JSON.parse(finalQuote)) {
       return {
@@ -150,6 +159,7 @@ const register = async (email, title, firstName, lastName, companyName, password
         ...(role === "Vendor" && { facilities: JSON.parse(facilities) }),
         ...(role === "Vendor" && { dropOffProcedure }),
         ...(role === "Vendor" && { pickUpProcedure }),
+        ...(role === "Vendor" && { airports }),
         ...(role === "User" && { active: true }),
         ...(role === "Offline-User" && { createdBy }),
     });

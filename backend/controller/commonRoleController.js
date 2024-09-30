@@ -2,6 +2,8 @@ const BookingDetail = require("../models/bookingDetailModel");
 const User = require("../models/userModel");
 const BookingCharges = require("../models/bookingFareModel");
 const CouponCodeDiscount = require("../models/couponCodeDiscountModel");
+const { isValidObjectId } = require("mongoose");
+const Airport = require("../models/airports");
 
 /* view bookings (common for both user, vendor and admin) */
 const getAllBookings = async (req, res) => {
@@ -142,24 +144,50 @@ const getBookingChargesWithCouponCodeAndCorrespondingDiscount = async (req, res)
   };
 
 /* get all vendors */
-const findAllVendors = async(req, res) => {
-    try{
-        const allVendors = await User.find({ role: "Vendor"}).sort({ updatedAt: -1 });
-        if(allVendors.length === 0) {
-            return res.status(404).json({ error: "No vendors found" });
-        };
-        return res.status(200).json({
-            data: allVendors
-        });
-    }catch (err) {
-        return res.status(500).json({
-            error: err.message
-        });
-    };
+const findAllVendors = async (req, res) => {
+  try {
+    const { airportId } = req.query;
+
+    let query = { role: "Vendor" };
+
+    if (airportId) {
+      if (!isValidObjectId(airportId)) {
+        return res.status(400).json({ error: "Invalid airport ID" });
+      }
+      query.airports = { $in: [airportId] };
+    }
+
+    const allVendors = await User.find(query).sort({ updatedAt: -1 });
+
+    if (allVendors.length === 0) {
+      return res.status(404).json({ error: "No vendors found" });
+    }
+
+    return res.status(200).json({
+      data: allVendors,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
 };
+
+/* get all airports */
+const getAllAirports = async(req, res) => {
+    try{
+        const airports = await Airport.find();
+        res.status(200).json(airports);
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    }
+};
+
 
 module.exports = {
     getAllBookings,
     getBookingChargesWithCouponCodeAndCorrespondingDiscount,
-    findAllVendors
+    findAllVendors,
+    getAllAirports
 };

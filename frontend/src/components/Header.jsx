@@ -105,8 +105,7 @@ const Header = () => {
                 <div class="loader"></div>
             </div> */}
       <header>
-        {couponCodeAndDiscount?.couponCode &&
-          couponCodeAndDiscount?.discount && (
+        {(couponCodeAndDiscount && couponCodeAndDiscount?.bannerStatus) && (
             <div className="promotion-label">
               <h6>
                 Use <b>{couponCodeAndDiscount.couponCode}</b> promo code to get{" "}

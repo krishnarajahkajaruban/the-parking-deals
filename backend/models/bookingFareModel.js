@@ -6,10 +6,10 @@ const bookingFareSchema = new Schema(
             type: Number,
             required: [true, "Booking Fee must be provided"]
         },
-        smsConfirmationFee : {
-            type: Number,
-            required: [true, "SMS Confirmation Fee must be provided"]
-        },
+        // smsConfirmationFee : {
+        //     type: Number,
+        //     required: [true, "SMS Confirmation Fee must be provided"]
+        // },
         cancellationCoverFee : {
             type: Number,
             required: [true, "Cancellation Cover Fee must be provided"]
