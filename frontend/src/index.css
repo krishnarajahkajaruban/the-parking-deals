@@ -2433,3 +2433,8 @@ button.custom-form-link:disabled {
   font-size: 13px;
   color: #ffffff;
 }
+
+.capitalize-first-letter::first-letter {
+  text-transform: capitalize;
+}
+

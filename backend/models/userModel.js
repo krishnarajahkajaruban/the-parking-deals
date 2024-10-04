@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
+const Airport = require("../models/airports");
 
 const userSchema = new Schema(
   {
@@ -36,6 +37,7 @@ const userSchema = new Schema(
     },
     serviceType : {
       type: String,
+      enum: ["Meet and Greet", "Park and Ride"],
       required: function() {
         return this.role === 'Vendor';
       }
@@ -145,6 +147,31 @@ const userSchema = new Schema(
         type: Number,
         required: function() {
           return this.role === 'Vendor';
+        }
+      },
+    incrementPerDay : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    extraIncrementPerDay : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    airports: {
+        type: [mongoose.Schema.Types.ObjectId], 
+        ref: Airport, // Assuming you have an Airport model to reference
+        required: function() {
+          return this.role === 'Vendor'; 
+        },
+        validate: {
+          validator: function(value) {
+            return value.every(v => mongoose.Types.ObjectId.isValid(v));
+          },
+          message: 'One or more airport IDs are invalid.'
         }
       },
     // cancellationCover : {

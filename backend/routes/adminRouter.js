@@ -5,7 +5,7 @@ const path = require('path');
 
 
 const {
-    createCouponCodeDiscount,
+    updateCouponCodeDiscount,
     updatingBookingFare,
     getAllUsersByType,
     addingCardParkingAvailability,
@@ -19,7 +19,10 @@ const {
     createRoleForAdmin,
     updateAdminUserInfo,
     deleteAdminUser,
-    findBookingsOfVendor
+    findBookingsOfVendor,
+    addAirport,
+    editAirport,
+    deleteAirport
 } = require("../controller/adminController");
 
 // Define the maximum file size (in bytes) for each image. For example, 5MB:
@@ -51,7 +54,7 @@ const upload = Multer({
 });
 
 // endpoint to create coupon code discount
-router.post("/create-coupon-code-discount", authMiddleware, createCouponCodeDiscount);
+router.post("/update-coupon-code-discount", authMiddleware, updateCouponCodeDiscount );
 
 // endpoint to update booking fare
 router.post("/update-booking-fare", authMiddleware, updatingBookingFare);
@@ -94,5 +97,14 @@ router.delete("/delete-admin-user/:id", authMiddleware, deleteAdminUser);
 
 //find bookings of vendor
 router.get("/find-bookings/:id", authMiddleware, findBookingsOfVendor);
+
+//create airport
+router.post("/create-airport", authMiddleware, addAirport);
+
+//edit airport
+router.put("/edit-airport/:id", authMiddleware, editAirport);
+
+//delete airport
+router.delete("/delete-airport/:id", authMiddleware, deleteAirport);
 
 module.exports = router;

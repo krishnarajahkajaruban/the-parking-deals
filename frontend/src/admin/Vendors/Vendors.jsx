@@ -21,21 +21,38 @@ import { Editor } from "primereact/editor";
 
 import { SampleVendorData } from "./SampleVendorData";
 import api from "../../api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Ripple } from "primereact/ripple";
+import { MultiSelect } from "primereact/multiselect";
+import { fetchAllAirports } from "../../utils/vendorUtil";
 
 const Vendors = () => {
   const toast = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [totalRecords, setTotalRecords] = useState(0);
   const [showVendorModal, setShowVendorModal] = useState(false);
   const [rows, setRows] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [loadingNew, setLoadingNew] = useState(false);
   const [showError, setShowError] = useState(false);
   const [vendorsData, setVendorsData] = useState(null);
   const [dataState, setDataState] = useState("Add");
   const [selectedVendorId, setSelectedVendorId] = useState(null);
 
   const serviceTypes = [{ type: "Meet and Greet" }, { type: "Park and Ride" }];
+  const arrival_terminals = [
+    { name: "Terminal 1" },
+    { name: "Terminal 2" },
+    { name: "Terminal 3" },
+    { name: "Terminal 4" },
+    { name: "Terminal 5" },
+  ];
+
+  const [showAddDataModal, setShowAddDataModal] = useState(false);
+  const initialAirportObj = { name: "", terminals: [] };
+  const [airportObj, setAirportObj] = useState(initialAirportObj);
+  const [showAddError, setShowAddError] = useState(false);
 
   const [logo, setLogo] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
@@ -51,7 +68,12 @@ const Vendors = () => {
   const [dropOffProcedure, setDropOffProcedure] = useState("");
   const [pickUpProcedure, setPickUpProcedure] = useState("");
 
+  const airports = useSelector((state) => state.vendor.airport);
+
   const intialVendorData = {
+    incrementPerDay: 0,
+    extraIncrementPerDay: 0,
+    airports: null,
     email: "",
     companyName: "",
     serviceType: "",
@@ -226,6 +248,9 @@ const Vendors = () => {
       !vendorData.password ||
       !vendorData.confirmPassword ||
       vendorData.quote === 0 ||
+      vendorData.incrementPerDay === 0 ||
+      vendorData.extraIncrementPerDay === 0 ||
+      !vendorData.airports ||
       vendorData.finalQuote === 0 ||
       !vendorData.serviceType ||
       vendorData.rating === 0 ||
@@ -274,9 +299,19 @@ const Vendors = () => {
     formData.append("dealPercentage", vendorData.dealPercentage);
     formData.append("overView", vendorData.overView);
     formData.append("quote", vendorData.quote);
+    formData.append("incrementPerDay", vendorData.incrementPerDay);
+    formData.append("extraIncrementPerDay", vendorData.extraIncrementPerDay);
     formData.append("finalQuote", vendorData.finalQuote);
     // formData.append("cancellationCover", vendorData.cancellationCover);
     formData.append("facilities", JSON.stringify(vendorData.facilities));
+    formData.append(
+      "airports",
+      JSON.stringify(
+        Array.isArray(vendorData.airports)
+          ? vendorData.airports.map((ap) => ap.id)
+          : []
+      )
+    );
     formData.append("dropOffProcedure", vendorData.dropOffProcedure);
     formData.append("pickUpProcedure", vendorData.pickUpProcedure);
 
@@ -286,11 +321,15 @@ const Vendors = () => {
   const handleUpdateVendor = async (e) => {
     e.preventDefault();
     console.log(vendorData);
+    setShowError(false);
     if (
       !vendorData.companyName ||
       !vendorData.email ||
       !vendorData.mobileNumber ||
       vendorData.quote === 0 ||
+      vendorData.incrementPerDay === 0 ||
+      vendorData.extraIncrementPerDay === 0 ||
+      !vendorData.airports ||
       vendorData.finalQuote === 0 ||
       !vendorData.serviceType ||
       vendorData.rating === 0 ||
@@ -320,9 +359,19 @@ const Vendors = () => {
     formData.append("dealPercentage", vendorData.dealPercentage);
     formData.append("overView", vendorData.overView);
     formData.append("quote", vendorData.quote);
+    formData.append("incrementPerDay", vendorData.incrementPerDay);
+    formData.append("extraIncrementPerDay", vendorData.extraIncrementPerDay);
     formData.append("finalQuote", vendorData.finalQuote);
     // formData.append("cancellationCover", vendorData.cancellationCover);
     formData.append("facilities", JSON.stringify(vendorData.facilities));
+    formData.append(
+      "airports",
+      JSON.stringify(
+        Array.isArray(vendorData.airports)
+          ? vendorData.airports.map((ap) => ap.id)
+          : []
+      )
+    );
     formData.append("dropOffProcedure", vendorData.dropOffProcedure);
     formData.append("pickUpProcedure", vendorData.pickUpProcedure);
 
@@ -391,6 +440,9 @@ const Vendors = () => {
               // cancellationCover: rowData?.cancellationCover,
               facilities:
                 rowData?.facilities?.length > 0 ? rowData?.facilities : [""],
+              airports: rowData?.airports?.length > 0 ? rowData?.airports : null,
+              incrementPerDay: rowData?.incrementPerDay,
+              extraIncrementPerDay: rowData?.extraIncrementPerDay,
               dropOffProcedure: rowData?.dropOffProcedure,
               pickUpProcedure: rowData?.pickUpProcedure,
               logo: null,
@@ -493,6 +545,100 @@ const Vendors = () => {
     setVendorData({ ...vendorData, facilities: updatedFacilities });
   };
 
+  const createAirport = async (data) => {
+    setLoadingNew(true);
+    try {
+      const response = await api.post(`/api/admin/create-airport`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response.data);
+      toast.current.show({
+        severity: "success",
+        summary: "Airport Created!.",
+        detail: "You have successfully created an airport.",
+        life: 3000,
+      });
+      setAirportObj(initialAirportObj);
+      setShowAddDataModal(false);
+      fetchAllAirports(dispatch);
+    } catch (err) {
+      console.log(err);
+      toast.current.show({
+        severity: "error",
+        summary: "Error create an airport.",
+        detail: err.response.data.error,
+        life: 3000,
+      });
+    } finally {
+      setLoadingNew(false);
+    }
+  };
+
+  const handleAddAirport = () => {
+    setShowAddError(false);
+    if (
+      !airportObj.name ||
+      !airportObj.terminals.every((selected) =>
+        arrival_terminals.some((arrival) => arrival.name === selected.name)
+      )
+    ) {
+      setShowAddError(true);
+      toast.current.show({
+        severity: "error",
+        summary: "Error in Submission",
+        detail: "Please fill all required fields!",
+        life: 3000,
+      });
+      return;
+    }
+    const payload = {
+      name: airportObj.name,
+      terminals: airportObj.terminals.map((terminal) => terminal.name),
+    };
+    createAirport(payload);
+  };
+
+  const addDataModalHeader = () => {
+    return (
+      <div className="modal-header p-2">
+        <h1 className="modal-title fs-5">Add new airport</h1>
+        <button
+          type="button"
+          className="btn-close"
+          onClick={() => setShowAddDataModal(false)}
+        ></button>
+      </div>
+    );
+  };
+
+  const addDataModalFooter = () => {
+    return (
+      <div className="custom_modal_footer p-2">
+        <Button
+          label="Cancel"
+          severity="secondary"
+          className="modal_btn"
+          onClick={() => setShowAddDataModal(false)}
+        />
+        <Button
+          label={loadingNew ? "Processing" : "Add"}
+          className="submit-button modal_btn"
+          loading={loadingNew}
+          onClick={handleAddAirport}
+        />
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    fetchAllAirports(dispatch);
+  }, [dispatch]);
+
+  const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
   return (
     <>
       <Preloader />
@@ -546,12 +692,12 @@ const Vendors = () => {
                   style={{ width: "20%" }}
                 ></Column>
 
-                <Column
+                {/* <Column
                   header="Cancellation Cover"
                   alignHeader={"center"}
                   body={cancellationCoverBody}
                   style={{ width: "15%" }}
-                ></Column>
+                ></Column> */}
 
                 <Column
                   header="Quote"
@@ -641,6 +787,54 @@ const Vendors = () => {
                         </small>
                       )}
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12">
+                <div className="col-12 col-xl-4 col-sm-6">
+                  <div className="custom-form-group mb-sm-4 mb-3">
+                    <label
+                      htmlFor="airport"
+                      className="custom-form-label form-required"
+                    >
+                      Select airport:{" "}
+                    </label>
+                    <MultiSelect
+                      value={vendorData.airports}
+                      onChange={(e) =>
+                        setVendorData({ ...vendorData, airports: e.value })
+                      }
+                      options={
+                        Array.isArray(airports)
+                          ? airports.map((ap) => {
+                              return {
+                                name: capitalizeFirstLetter(ap.name),
+                                id: ap._id,
+                              };
+                            })
+                          : []
+                      }
+                      optionLabel="name"
+                      filter
+                      placeholder="Select Airports"
+                      className="w-full md:w-20rem"
+                      display="chip"
+                      invalid={showError}
+                    />
+                    {showError && !vendorData.airports && (
+                      <small className="text-danger form-error-msg">
+                        This field is required
+                      </small>
+                    )}
+
+                    <button
+                      className="add_data_btn p-ripple"
+                      onClick={() => setShowAddDataModal(true)}
+                    >
+                      <i className="bi bi-plus-lg me-1"></i>
+                      Add new airport
+                      <Ripple />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -953,6 +1147,58 @@ const Vendors = () => {
 
               <div className="col-12 col-sm-6">
                 <div className="custom-form-group mb-3 mb-sm-4">
+                  <label
+                    htmlFor="incrementPerDay"
+                    className="custom-form-label form-required"
+                  >
+                    Quote increment per day
+                  </label>
+                  <InputNumber
+                    id="incrementPerDay"
+                    className="custom-form-input"
+                    placeholder="Quote increment per day"
+                    name="incrementPerDay"
+                    value={parseInt(vendorData.incrementPerDay)}
+                    onValueChange={handleChange}
+                    minFractionDigits={2}
+                    maxFractionDigits={2}
+                  />
+                  {showError && vendorData.incrementPerDay === 0 && (
+                    <small className="text-danger form-error-msg">
+                      This field is required
+                    </small>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-12 col-sm-6">
+                <div className="custom-form-group mb-3 mb-sm-4">
+                  <label
+                    htmlFor="extraIncrementPerDay"
+                    className="custom-form-label form-required"
+                  >
+                    Quote increment after 30 days
+                  </label>
+                  <InputNumber
+                    id="extraIncrementPerDay"
+                    className="custom-form-input"
+                    placeholder="Quote increment after 30 days"
+                    name="extraIncrementPerDay"
+                    value={parseInt(vendorData.extraIncrementPerDay)}
+                    onValueChange={handleChange}
+                    minFractionDigits={2}
+                    maxFractionDigits={2}
+                  />
+                  {showError && vendorData.extraIncrementPerDay === 0 && (
+                    <small className="text-danger form-error-msg">
+                      This field is required
+                    </small>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-12 col-sm-6">
+                <div className="custom-form-group mb-3 mb-sm-4">
                   {/* <label htmlFor="quote" className="custom-form-label">
                                         Cancellation cover 
                                     </label>
@@ -1131,6 +1377,81 @@ const Vendors = () => {
         </div>
       </Dialog>
       {/*  */}
+      <Dialog
+        header={addDataModalHeader}
+        footer={addDataModalFooter}
+        visible={showAddDataModal}
+        onHide={() => {
+          if (!showAddDataModal) return;
+          setShowAddDataModal(false);
+        }}
+        className="custom-modal modal_dialog modal_dialog_sm"
+      >
+        <div className="modal-body p-2">
+          <div className="data-view-area">
+            <div className="row mt-sm-2">
+              <div className="col-12">
+                <div className="custom-form-group mb-3 mb-sm-4">
+                  <label
+                    htmlFor="airPortName"
+                    className="custom-form-label form-required"
+                  >
+                    Airport
+                  </label>
+                  <InputText
+                    id="name"
+                    className="custom-form-input"
+                    placeholder="Enter airport name"
+                    name="name"
+                    value={airportObj.name}
+                    onChange={(e) =>
+                      setAirportObj({ ...airportObj, name: e.target.value })
+                    }
+                  />
+
+                  {showAddError && !airportObj.name && (
+                    <small className="text-danger form-error-msg">
+                      This field is required
+                    </small>
+                  )}
+                </div>
+                <div className="custom-form-group mb-3 mb-sm-4">
+                  <label
+                    htmlFor="airPortName"
+                    className="custom-form-label form-required"
+                  >
+                    Terminals
+                  </label>
+                  <MultiSelect
+                    value={airportObj.terminals}
+                    onChange={(e) =>
+                      setAirportObj({ ...airportObj, terminals: e.value })
+                    }
+                    options={arrival_terminals}
+                    optionLabel="name"
+                    filter
+                    placeholder="Select Terminals"
+                    className="w-full md:w-20rem"
+                    display="chip"
+                    invalid={showAddError}
+                  />
+
+                  {showAddError &&
+                    !airportObj.terminals.every((selected) =>
+                      arrival_terminals.some(
+                        (arrival) => arrival.name === selected.name
+                      )
+                    ) && (
+                      <small className="text-danger form-error-msg">
+                        This field is required
+                      </small>
+                    )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </>
   );
 };

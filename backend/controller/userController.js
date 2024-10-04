@@ -337,7 +337,7 @@ const carParkingBookingDetail = async (req, res) => {
           if (!user || (user && !(["Admin", "Moderator"].includes(user.role)))) {
             return res.status(404).json({ error: "Unauthorized" });
           }
-          const result = await register(email, title, firstName, lastName, null, null, mobileNumber, "Offline-User", null, null, null, null, null, null, null, null, null, null, user.id);
+          const result = await register(email, title, firstName, lastName, null, null, mobileNumber, "Offline-User", null, null, null, null, null, null, null, null, null, null, user.id, null, null, null);
 
           if (result.status !== 201) {
             return res.status(result.status).json({ error: result.error });
@@ -345,7 +345,7 @@ const carParkingBookingDetail = async (req, res) => {
 
           user = result.user;
         }else {
-            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null, null, null);
+            const result = await register(email, title, firstName, lastName, null, password, mobileNumber, "User", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
           
             if (result.status !== 201) {
                 return res.status(result.status).json({ error: result.error });

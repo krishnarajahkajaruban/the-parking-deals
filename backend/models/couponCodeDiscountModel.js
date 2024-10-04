@@ -4,11 +4,17 @@ const couponCodeDiscount = new Schema(
   {
     couponCode: {
       type: String,
-      required: [true, "Coupon code must be provided"]
+      default: ''
+      // required: [true, "Coupon code must be provided"]
     },
     discount: {
       type: Number,
-      required: [true, "Discount must be provided"]
+      default: 0
+      // required: [true, "Discount must be provided"]
+    },
+    bannerStatus: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

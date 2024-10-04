@@ -144,6 +144,15 @@ const Layout = () => {
                         </Link>
                     </li>
 
+                    <li className={`${pathname === '/airports' ? 'active' : ''}`}>
+                        <Link to={'/airports'} onClick={() => setMenuOpen(false)}>
+                            <span className="icon">
+                                <i className="bi bi-airplane"></i>
+                            </span>
+                            <span className="title">Airports</span>
+                        </Link>
+                    </li>
+
                     <li className={`${pathname === '/customers' ? 'active' : ''}`}>
                         <Link to={'/customers'} onClick={() => setMenuOpen(false)}>
                             <span className="icon">
