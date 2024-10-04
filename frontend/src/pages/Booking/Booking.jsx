@@ -556,7 +556,7 @@ const Booking = () => {
 
     // Prepare booking details object
     const carParkingSlotBookingDetails = {
-      airportName: bookingDetails?.airportName,
+      airportName: bookingDetails?.airportName?.name,
       dropOffDate: bookingDetails?.dropOffDate,
       dropOffTime: bookingDetails?.dropOffTime,
       pickUpDate: bookingDetails?.pickUpDate,
@@ -1132,7 +1132,13 @@ const Booking = () => {
                             id="departTerminal"
                             value={{ name: travelDetails.departureTerminal }}
                             onChange={(e) => setTravelDetails({ ...travelDetails, departureTerminal: e.value?.name })}
-                            options={depart_terminals}
+                            options={
+                              bookingDetails && Array.isArray(bookingDetails?.airportName.terminals)
+                                ? bookingDetails?.airportName.terminals?.map((ter) => {
+                                    return { name: ter };
+                                  })
+                                : []
+                            }
                             optionLabel="name"
                             placeholder="Select Terminal"
                             className="w-full w-100 custom-form-dropdown"
@@ -1157,7 +1163,13 @@ const Booking = () => {
                             id="arrivalTerminal"
                             value={{ name: travelDetails.arrivalTerminal }}
                             onChange={(e) => setTravelDetails({ ...travelDetails, arrivalTerminal: e.value?.name })}
-                            options={arrival_terminals}
+                            options={
+                              bookingDetails && Array.isArray(bookingDetails?.airportName.terminals)
+                                ? bookingDetails?.airportName.terminals?.map((ter) => {
+                                    return { name: ter };
+                                  })
+                                : []
+                            }
                             optionLabel="name"
                             placeholder="Select Terminal"
                             className="w-full w-100 custom-form-dropdown"
@@ -1626,7 +1638,7 @@ const Booking = () => {
                   </div>
                   <div className="detail-card-info-body">
                     <p>Location :</p>
-                    <h6>{bookingDetails?.airportName}</h6>
+                    <h6>{bookingDetails?.airportName?.name}</h6>
                   </div>
                 </div>
 
@@ -1694,7 +1706,7 @@ const Booking = () => {
                   {/* <img src="assets/images/lion-parking.png" alt="" /> */}
                 </div>
                 <div className="detail-card-label-area">
-                  <h5>{bookingDetails?.airportName}</h5>
+                  <h5>{bookingDetails?.airportName?.name}</h5>
                 </div>
 
                 <div className="total-detail-area">

@@ -37,6 +37,7 @@ const userSchema = new Schema(
     },
     serviceType : {
       type: String,
+      enum: ["Meet and Greet", "Park and Ride"],
       required: function() {
         return this.role === 'Vendor';
       }
@@ -143,6 +144,18 @@ const userSchema = new Schema(
         }
       },
     quote : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    incrementPerDay : {
+        type: Number,
+        required: function() {
+          return this.role === 'Vendor';
+        }
+      },
+    extraIncrementPerDay : {
         type: Number,
         required: function() {
           return this.role === 'Vendor';

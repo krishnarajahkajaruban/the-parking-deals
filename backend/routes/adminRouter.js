@@ -20,7 +20,9 @@ const {
     updateAdminUserInfo,
     deleteAdminUser,
     findBookingsOfVendor,
-    addAirport
+    addAirport,
+    editAirport,
+    deleteAirport
 } = require("../controller/adminController");
 
 // Define the maximum file size (in bytes) for each image. For example, 5MB:
@@ -98,5 +100,11 @@ router.get("/find-bookings/:id", authMiddleware, findBookingsOfVendor);
 
 //create airport
 router.post("/create-airport", authMiddleware, addAirport);
+
+//edit airport
+router.put("/edit-airport/:id", authMiddleware, editAirport);
+
+//delete airport
+router.delete("/delete-airport/:id", authMiddleware, deleteAirport);
 
 module.exports = router;

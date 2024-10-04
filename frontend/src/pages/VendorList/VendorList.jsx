@@ -1,24 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate, Navigate } from 'react-router-dom';
-import './VendorList.css';
-import './VendorList-responsive.css';
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
-import { Tooltip } from 'bootstrap';
-import Preloader from '../../Preloader';
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
+import "./VendorList.css";
+import "./VendorList-responsive.css";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import { Tooltip } from "bootstrap";
+import Preloader from "../../Preloader";
 
 import { InputText } from "primereact/inputtext";
-import { Divider } from 'primereact/divider';
-import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
+import { Divider } from "primereact/divider";
+import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
 import { Rating } from "primereact/rating";
-import { Dialog } from 'primereact/dialog';
-import { fetchAllAirports, getAvailableQuotes } from '../../utils/vendorUtil';
-import { useDispatch, useSelector } from 'react-redux';
-import { Toast } from 'primereact/toast';
-import withComponentName from '../../withComponentName';
-
+import { Dialog } from "primereact/dialog";
+import { fetchAllAirports, getAvailableQuotes } from "../../utils/vendorUtil";
+import { useDispatch, useSelector } from "react-redux";
+import { Toast } from "primereact/toast";
+import withComponentName from "../../withComponentName";
 
 const VendorList = () => {
   const navigate = useNavigate();
@@ -28,16 +27,30 @@ const VendorList = () => {
   const { quoteInfo } = location.state || {};
   const [pageLoading, setPageLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [dropOffDate, setDropOffDate] = useState(quoteInfo?.dropOffDate || null);
+  const [dropOffDate, setDropOffDate] = useState(
+    quoteInfo?.dropOffDate || null
+  );
   const [pickupDate, setPickupDate] = useState(quoteInfo?.pickupDate || null);
-  const [dropOffDateStr, setDropOffDateStr] = useState(quoteInfo?.dropOffDateStr || "");
-  const [pickupDateStr, setPickupDateStr] = useState(quoteInfo?.pickupDateStr || "");
-  const [dayDifference, setDayDifference] = useState(quoteInfo?.dayDifference || 0);
+  const [dropOffDateStr, setDropOffDateStr] = useState(
+    quoteInfo?.dropOffDateStr || ""
+  );
+  const [pickupDateStr, setPickupDateStr] = useState(
+    quoteInfo?.pickupDateStr || ""
+  );
+  const [dayDifference, setDayDifference] = useState(
+    quoteInfo?.dayDifference || 0
+  );
   const [showError, setShowError] = useState(false);
-  const [selectedAirport, setSelectedAirport] = useState(quoteInfo?.selectedAirport || null);
+  const [selectedAirport, setSelectedAirport] = useState(
+    quoteInfo?.selectedAirport || null
+  );
   const today = new Date();
-  const [dropOffTime, setDropOffTime] = useState({ time: quoteInfo?.dropOffTime } || null);
-  const [pickupTime, setPickupTime] = useState({ time: quoteInfo?.pickupTime } || null);
+  const [dropOffTime, setDropOffTime] = useState(
+    { time: quoteInfo?.dropOffTime } || null
+  );
+  const [pickupTime, setPickupTime] = useState(
+    { time: quoteInfo?.pickupTime } || null
+  );
   const [couponCode, setCouponCode] = useState(quoteInfo?.couponCode || "");
 
   const airports = useSelector((state) => state.vendor.airport);
@@ -49,58 +62,58 @@ const VendorList = () => {
   const [selectedVendor, setSelectedVendor] = useState(null);
 
   const times = [
-    { time: '00:00' },
-    { time: '00:30' },
-    { time: '01:00' },
-    { time: '01:30' },
-    { time: '02:00' },
-    { time: '02:30' },
-    { time: '03:00' },
-    { time: '03:30' },
-    { time: '04:00' },
-    { time: '04:30' },
-    { time: '05:00' },
-    { time: '05:30' },
-    { time: '06:00' },
-    { time: '06:30' },
-    { time: '07:00' },
-    { time: '07:30' },
-    { time: '08:00' },
-    { time: '08:30' },
-    { time: '09:00' },
-    { time: '09:30' },
-    { time: '10:00' },
-    { time: '10:30' },
-    { time: '11:00' },
-    { time: '11:30' },
-    { time: '12:00' },
-    { time: '12:30' },
-    { time: '13:00' },
-    { time: '13:30' },
-    { time: '14:00' },
-    { time: '14:30' },
-    { time: '15:00' },
-    { time: '15:30' },
-    { time: '16:00' },
-    { time: '16:30' },
-    { time: '17:00' },
-    { time: '17:30' },
-    { time: '18:00' },
-    { time: '18:30' },
-    { time: '19:00' },
-    { time: '19:30' },
-    { time: '20:00' },
-    { time: '20:30' },
-    { time: '21:00' },
-    { time: '21:30' },
-    { time: '22:00' },
-    { time: '22:30' },
-    { time: '23:00' },
-    { time: '23:30' },
+    { time: "00:00" },
+    { time: "00:30" },
+    { time: "01:00" },
+    { time: "01:30" },
+    { time: "02:00" },
+    { time: "02:30" },
+    { time: "03:00" },
+    { time: "03:30" },
+    { time: "04:00" },
+    { time: "04:30" },
+    { time: "05:00" },
+    { time: "05:30" },
+    { time: "06:00" },
+    { time: "06:30" },
+    { time: "07:00" },
+    { time: "07:30" },
+    { time: "08:00" },
+    { time: "08:30" },
+    { time: "09:00" },
+    { time: "09:30" },
+    { time: "10:00" },
+    { time: "10:30" },
+    { time: "11:00" },
+    { time: "11:30" },
+    { time: "12:00" },
+    { time: "12:30" },
+    { time: "13:00" },
+    { time: "13:30" },
+    { time: "14:00" },
+    { time: "14:30" },
+    { time: "15:00" },
+    { time: "15:30" },
+    { time: "16:00" },
+    { time: "16:30" },
+    { time: "17:00" },
+    { time: "17:30" },
+    { time: "18:00" },
+    { time: "18:30" },
+    { time: "19:00" },
+    { time: "19:30" },
+    { time: "20:00" },
+    { time: "20:30" },
+    { time: "21:00" },
+    { time: "21:30" },
+    { time: "22:00" },
+    { time: "22:30" },
+    { time: "23:00" },
+    { time: "23:30" },
   ];
 
   const parseTime = (time) => {
-    const [hours, minutes] = time.split(':').map(Number);
+    const [hours, minutes] = time.split(":").map(Number);
     const date = new Date();
     date.setHours(hours, minutes);
     return date;
@@ -109,14 +122,17 @@ const VendorList = () => {
   const selectedTimeTemplate = (option, props) => {
     if (option) {
       const time = parseTime(option.time);
-      return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return time.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     }
     return props.placeholder;
   };
 
   const timeTemplate = (option) => {
     const time = parseTime(option.time);
-    return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   function normalizeDate(dateString) {
@@ -129,7 +145,6 @@ const VendorList = () => {
   console.log(pickupDate);
 
   useEffect(() => {
-
     const normalizedPickupDate = normalizeDate(pickupDate);
     const normalizedDropOffDate = normalizeDate(dropOffDate);
 
@@ -144,27 +159,41 @@ const VendorList = () => {
     fetchAllAirports(dispatch);
   }, [dispatch]);
 
-  useEffect(() => {
-    if (quoteInfo) {
-      handleFunctionForApi(quoteInfo.selectedAirport?.name, quoteInfo.dropOffDate, quoteInfo.dropOffTime, quoteInfo.pickupDate, quoteInfo.pickupTime)
-    };
-  }, [quoteInfo]);
-
-  const handleFunctionForApi = (selectedAirport, dropOffDate, dropOffTime, pickupDate, pickupTime) => {
+  const handleFunctionForApi = (
+    selectedAirport,
+    dropOffDate,
+    dropOffTime,
+    pickupDate,
+    pickupTime
+  ) => {
     console.log(dropOffDate);
     console.log(pickupDate);
-    const queryParams = new URLSearchParams({
-      airport: selectedAirport,
-      fromDate: new Date(dropOffDate).toISOString(),
-      fromTime: dropOffTime,
-      // fromTime: new Date(dropOffTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
-      toDate: new Date(pickupDate).toISOString(),
-      toTime: pickupTime
-      // toTime: new Date(pickupTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
-    });
+    // const queryParams = new URLSearchParams({
+    //   airport: selectedAirport,
+    //   fromDate: new Date(dropOffDate).toISOString(),
+    //   fromTime: dropOffTime,
+    //   // fromTime: new Date(dropOffTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
+    //   toDate: new Date(pickupDate).toISOString(),
+    //   toTime: pickupTime
+    //   // toTime: new Date(pickupTime).toTimeString().split(' ')[0], // Format time to HH:MM:SS
+    // });
+    const queryParams = {
+      airportId: selectedAirport?._id || "",
+      serviceType: parkingOption.name || "",
+      day: dayDifference,
+      filterOption: filterOption.name,
+    };
     setLoading(true);
     setPageLoading(true);
-    getAvailableQuotes(queryParams, dispatch, toast, setLoading, setPageLoading, setShowEditModal, dayDifference);
+    getAvailableQuotes(
+      queryParams,
+      dispatch,
+      toast,
+      setLoading,
+      setPageLoading,
+      setShowEditModal
+    );
+    setShowEditModal(false);
   };
 
   const selectedAirportTemplate = (option, props) => {
@@ -188,15 +217,15 @@ const VendorList = () => {
   };
 
   const parking_options = [
-    { name: 'All Parking' },
-    { name: 'Meet and Greet' },
-    { name: 'Park and Ride' },
+    { name: "All Parking" },
+    { name: "Meet and Greet" },
+    { name: "Park and Ride" },
   ];
 
   const filter_options = [
-    { name: 'Recommended' },
-    { name: 'Price: Low to High' },
-    { name: 'Price: High to Low' },
+    { name: "Recommended" },
+    { name: "Price: Low to High" },
+    { name: "Price: High to Low" },
   ];
 
   const [parkingOption, setParkingOption] = useState(parking_options[0]);
@@ -205,13 +234,13 @@ const VendorList = () => {
   const handleDropOffDateChange = (e) => {
     const newDropOffDate = e.value;
     setDropOffDate(newDropOffDate);
-    setDropOffDateStr(newDropOffDate.toLocaleDateString('en-GB'))
+    setDropOffDateStr(newDropOffDate.toLocaleDateString("en-GB"));
 
     if (newDropOffDate) {
       const newPickupDate = new Date(newDropOffDate);
       newPickupDate.setDate(newPickupDate.getDate() + 7);
       setPickupDate(newPickupDate);
-      setPickupDateStr(newPickupDate.toLocaleDateString('en-GB'));
+      setPickupDateStr(newPickupDate.toLocaleDateString("en-GB"));
     } else {
       setPickupDate(null);
       setPickupDateStr("");
@@ -221,22 +250,39 @@ const VendorList = () => {
   const handleEditSearch = async (e) => {
     e.preventDefault();
     setShowError(false);
-    if (!selectedAirport || !dropOffDate || !dropOffTime || !pickupDate || !pickupTime) {
+    if (
+      !selectedAirport ||
+      !dropOffDate ||
+      !dropOffTime ||
+      !pickupDate ||
+      !pickupTime
+    ) {
       setShowError(true);
       toast.current.show({
-        severity: 'error',
-        summary: 'Error in Submission',
+        severity: "error",
+        summary: "Error in Submission",
         detail: "Please fill all required fields!",
-        life: 3000
+        life: 3000,
       });
       return;
     }
 
-    handleFunctionForApi(selectedAirport?.name, dropOffDate, dropOffTime?.time, pickupDate, pickupTime?.time);
+    handleFunctionForApi(
+      selectedAirport,
+      dropOffDate,
+      dropOffTime?.time,
+      pickupDate,
+      pickupTime?.time
+    );
+  };
 
-  }
-
-  const handleBooking = (companyId, companyName, companyImg, bookingQuote, serviceType) => {
+  const handleBooking = (
+    companyId,
+    companyName,
+    companyImg,
+    bookingQuote,
+    serviceType
+  ) => {
     // setPageLoading(true);
     // setTimeout(() => {
     //     // navigate('/booking');
@@ -245,7 +291,7 @@ const VendorList = () => {
     //     window.scrollTo({ top: 0, behavior: 'smooth' });
     // }, 800);
     const bookingDetails = {
-      airportName: selectedAirport?.name || quoteInfo?.selectedAirport?.name,
+      airportName: selectedAirport || quoteInfo?.selectedAirport,
       // dropOffDate: new Date(dropOffDate || quoteInfo?.dropOffDate).toISOString(),
       dropOffDate: dropOffDateStr || quoteInfo?.dropOffDateStr,
       dropOffTime: dropOffTime?.time || quoteInfo?.dropOffTime,
@@ -259,17 +305,18 @@ const VendorList = () => {
       companyName,
       companyImg,
       bookingQuote,
-      serviceType
-    }
-    navigate('/booking', { state: { bookingDetails } });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+      serviceType,
+    };
+    navigate("/booking", { state: { bookingDetails } });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipTriggerList = [].slice.call(
+      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
     tooltipTriggerList.map((tooltipTriggerEl) => new Tooltip(tooltipTriggerEl));
   }, []);
-
 
   const editModalHeader = () => {
     return (
@@ -286,7 +333,6 @@ const VendorList = () => {
     );
   };
 
-
   const viewModalHeader = () => {
     return (
       <div className="modal-header p-2">
@@ -302,10 +348,24 @@ const VendorList = () => {
     );
   };
 
+  useEffect(() => {
+    if (quoteInfo) {
+      handleFunctionForApi(
+        selectedAirport || quoteInfo.selectedAirport,
+        quoteInfo.dropOffDate,
+        quoteInfo.dropOffTime,
+        quoteInfo.pickupDate,
+        quoteInfo.pickupTime
+      );
+    }
+  }, [quoteInfo, parkingOption, filterOption]);
+
+  console.log(selectedAirport);
+
   return (
     <>
       {!quoteInfo && <Navigate to="/" />}
-      {/* {pageLoading && <Preloader />} */}
+      {pageLoading && <Preloader />}
       <Header />
 
       {/* Breadcrumb Section Start */}
@@ -316,7 +376,7 @@ const VendorList = () => {
       </section>
       {/* Breadcrumb Section End */}
 
-      <section className='results-option-section' data-aos="fade-up">
+      <section className="results-option-section" data-aos="fade-up">
         <div className="container-md">
           <div className="row">
             <div className="col-12">
@@ -341,10 +401,11 @@ const VendorList = () => {
                         </label>
                         <h6
                           onClick={() => setShowEditModal(true)}
-                          className='show-data-head'
+                          className="show-data-head"
                         >
                           <i class="bi bi-airplane-fill input-grp-icon"></i>
-                          {selectedAirport?.name || quoteInfo?.selectedAirport.name}
+                          {selectedAirport?.name ||
+                            quoteInfo?.selectedAirport.name}
                         </h6>
                         <div className="form-icon-group">
                           {/* <Dropdown
@@ -374,17 +435,16 @@ const VendorList = () => {
                             <h5>Dropoff Detail</h5>
                             <div className="row">
                               <div className="col-12 col-md-6 mb-2 mb-md-0">
-                                <h6
-                                  onClick={() => setShowEditModal(true)}
-                                >
+                                <h6 onClick={() => setShowEditModal(true)}>
                                   <i class="bi bi-calendar-check-fill me-2"></i>
-                                  {dropOffDate?.toLocaleDateString('en-GB') || quoteInfo?.dropOffDate.toLocaleDateString('en-GB')}
+                                  {dropOffDate?.toLocaleDateString("en-GB") ||
+                                    quoteInfo?.dropOffDate.toLocaleDateString(
+                                      "en-GB"
+                                    )}
                                 </h6>
                               </div>
                               <div className="col-12 col-md-6">
-                                <h6
-                                  onClick={() => setShowEditModal(true)}
-                                >
+                                <h6 onClick={() => setShowEditModal(true)}>
                                   <i class="bi bi-clock-fill me-2"></i>
                                   {/* {dropOffTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.dropOffTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} */}
                                   {dropOffTime?.time || quoteInfo?.dropOffTime}
@@ -399,17 +459,16 @@ const VendorList = () => {
                             <h5>Pickup Detail</h5>
                             <div className="row">
                               <div className="col-12 col-md-6 mb-2 mb-md-0">
-                                <h6
-                                  onClick={() => setShowEditModal(true)}
-                                >
+                                <h6 onClick={() => setShowEditModal(true)}>
                                   <i class="bi bi-calendar-check-fill me-2"></i>
-                                  {pickupDate?.toLocaleDateString('en-GB') || quoteInfo?.pickupDate.toLocaleDateString('en-GB')}
+                                  {pickupDate?.toLocaleDateString("en-GB") ||
+                                    quoteInfo?.pickupDate.toLocaleDateString(
+                                      "en-GB"
+                                    )}
                                 </h6>
                               </div>
                               <div className="col-12 col-md-6">
-                                <h6
-                                  onClick={() => setShowEditModal(true)}
-                                >
+                                <h6 onClick={() => setShowEditModal(true)}>
                                   <i class="bi bi-clock-fill me-2"></i>
                                   {/* {pickupTime?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) || quoteInfo?.pickupTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} */}
                                   {pickupTime?.time || quoteInfo?.pickupTime}
@@ -425,7 +484,7 @@ const VendorList = () => {
                       <Divider className="mt-4 mb-4" />
                     </div>
 
-                    {/* <div className="col-12 col-xl-8 col-lg-10 mx-auto">
+                    <div className="col-12 col-xl-8 col-lg-10 mx-auto">
                       <div className="row">
                         <div className="col-12 col-sm-6">
                           <div className="custom-form-group mb-3 mb-md-0 input-with-icon">
@@ -452,14 +511,14 @@ const VendorList = () => {
                                 onChange={(e) => setFilterOption(e.value)}
                                 options={filter_options}
                                 optionLabel="name"
-                                placeholder="Select Parking Option"
+                                placeholder="Select Price Option"
                                 className="w-full w-100 custom-form-dropdown"
                               />
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               </article>
@@ -470,139 +529,164 @@ const VendorList = () => {
 
       <section className="section-padding results-section overflow-hidden">
         <div className="container-md">
-          {(quotes && quotes.length > 0) ?
+          {quotes && quotes.length > 0 ? (
             <div className="row result-card-view-row">
-              {
-                quotes.map((quote) => {
-                  return (
-                    <div
-                      className="col-12 col-lg-6 col-sm-10 mx-auto"
-                      data-aos="fade-up"
-                      key={quote._id}
-                    >
-                      <article className="result-card">
-                        <div className="result-card-label-area">
-                          <h5>{quote.serviceType}</h5>
+              {quotes.map((quote) => {
+                return (
+                  <div
+                    className="col-12 col-lg-6 col-sm-10 mx-auto"
+                    data-aos="fade-up"
+                    key={quote._id}
+                  >
+                    <article className="result-card">
+                      <div className="result-card-label-area">
+                        <h5>{quote.serviceType}</h5>
+                      </div>
+                      <div className="result-card-head-area">
+                        <div className="result-card-logo-area">
+                          <img
+                            src={quote.dp || "assets/images/lion-parking.png"}
+                            alt=""
+                          />
                         </div>
-                        <div className="result-card-head-area">
-                          <div className="result-card-logo-area">
-                            <img src={quote.dp || "assets/images/lion-parking.png"} alt="" />
+                        <div className="result-card-head-detail-area">
+                          <h4 className="result-card-head">
+                            {quote.companyName}
+                          </h4>
+                          <div className="result-card-star-area">
+                            <Rating
+                              value={quote.rating}
+                              readOnly
+                              cancel={false}
+                            />
                           </div>
-                          <div className="result-card-head-detail-area">
-                            <h4 className="result-card-head">{quote.companyName}</h4>
-                            <div className="result-card-star-area">
-                              <Rating value={quote.rating} readOnly cancel={false} />
-                            </div>
-                            <h3 className="result-card-price">
-                              £ {quote.finalQuote}
-                              {quote.quote > 0 && <span className="cut-price ms-3">£ {quote.quote}</span>}
-                            </h3>
-                            <div className="result-card-sub">
-                              {quote.quote > 0 && <p>
-                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
-                                Save <span>£ {quote.quote - quote.finalQuote}</span> Today
-                              </p>}
-
+                          <h3 className="result-card-price">
+                            £ {quote.finalQuote}
+                            {quote.quote > 0 && (
+                              <span className="cut-price ms-3">
+                                £ {quote.quote}
+                              </span>
+                            )}
+                          </h3>
+                          <div className="result-card-sub">
+                            {quote.quote > 0 && (
                               <p>
-                                <i class="bi bi-lightning-fill me-2"></i>
-                                Cancellation Cover Available
+                                <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                                Save{" "}
+                                <span>
+                                  £ {quote.quote - quote.finalQuote}
+                                </span>{" "}
+                                Today
                               </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="result-card-body-area">
-                          <ul>
-                            {quote.facilities.map((facility, index) => {
-                              return (
-                                <li key={index}>{facility}</li>
-                              )
-                            })}
-                          </ul>
-                        </div>
-                        <div className="result-card-footer-area">
-                          <Divider className="mt-3 mb-3" />
-                          <div className="result-card-feature-area">
-                            <div
-                              className="result-card-feature"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Secure Barrier"
-                            >
-                              <img
-                                src="assets/images/features/secure-barrier.png"
-                                alt="Secure Barrier"
-                              />
-                            </div>
+                            )}
 
-                            <div
-                              className="result-card-feature"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Disability"
-                            >
-                              <img
-                                src="assets/images/features/disability.png"
-                                alt="Disability"
-                              />
-                            </div>
-
-                            <div
-                              className="result-card-feature"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="CCTV Cameras"
-                            >
-                              <img
-                                src="assets/images/features/cctv-camera.png"
-                                alt="CCTV Cameras"
-                              />
-                            </div>
-
-                            <div
-                              className="result-card-feature"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Fencing"
-                            >
-                              <img
-                                src="assets/images/features/fence.png"
-                                alt="Fencing"
-                              />
-                            </div>
-                          </div>
-                          <Divider className="mt-3 mb-3" />
-
-                          <div className="result-card-btn-area">
-                            <Button
-                              label="VIEW"
-                              severity="secondary"
-                              className="result-card-btn"
-                              onClick={() => {
-                                setSelectedVendor(quote);
-                                setShowViewModal(true);
-                              }}
-                            />
-                            <Button
-                              label="BOOK"
-                              className="custom-btn-primary result-card-btn"
-                              onClick={() => handleBooking(quote._id, quote.companyName, quote.dp, quote.finalQuote, quote.serviceType)}
-                            />
-                          </div>
-
-                          <div className="result-card-status-area">
                             <p>
-                              <i className="bi bi-eye-fill me-2"></i>
-                              13 Currently Viewing
+                              <i class="bi bi-lightning-fill me-2"></i>
+                              Cancellation Cover Available
                             </p>
                           </div>
                         </div>
-                      </article>
-                    </div>
-                  )
-                })
-              }
-            </div> : <h6>No Quotes found</h6>
-          }
+                      </div>
+                      <div className="result-card-body-area">
+                        <ul>
+                          {quote.facilities.map((facility, index) => {
+                            return <li key={index}>{facility}</li>;
+                          })}
+                        </ul>
+                      </div>
+                      <div className="result-card-footer-area">
+                        <Divider className="mt-3 mb-3" />
+                        <div className="result-card-feature-area">
+                          <div
+                            className="result-card-feature"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Secure Barrier"
+                          >
+                            <img
+                              src="assets/images/features/secure-barrier.png"
+                              alt="Secure Barrier"
+                            />
+                          </div>
+
+                          <div
+                            className="result-card-feature"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Disability"
+                          >
+                            <img
+                              src="assets/images/features/disability.png"
+                              alt="Disability"
+                            />
+                          </div>
+
+                          <div
+                            className="result-card-feature"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="CCTV Cameras"
+                          >
+                            <img
+                              src="assets/images/features/cctv-camera.png"
+                              alt="CCTV Cameras"
+                            />
+                          </div>
+
+                          <div
+                            className="result-card-feature"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Fencing"
+                          >
+                            <img
+                              src="assets/images/features/fence.png"
+                              alt="Fencing"
+                            />
+                          </div>
+                        </div>
+                        <Divider className="mt-3 mb-3" />
+
+                        <div className="result-card-btn-area">
+                          <Button
+                            label="VIEW"
+                            severity="secondary"
+                            className="result-card-btn"
+                            onClick={() => {
+                              setSelectedVendor(quote);
+                              setShowViewModal(true);
+                            }}
+                          />
+                          <Button
+                            label="BOOK"
+                            className="custom-btn-primary result-card-btn"
+                            onClick={() =>
+                              handleBooking(
+                                quote._id,
+                                quote.companyName,
+                                quote.dp,
+                                quote.finalQuote,
+                                quote.serviceType
+                              )
+                            }
+                          />
+                        </div>
+
+                        <div className="result-card-status-area">
+                          <p>
+                            <i className="bi bi-eye-fill me-2"></i>
+                            13 Currently Viewing
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <h6>No Quotes found</h6>
+          )}
         </div>
       </section>
 
@@ -643,14 +727,13 @@ const VendorList = () => {
                         options={airports}
                         optionLabel="name"
                         placeholder="Select a Airport"
-
-                        valueTemplate={selectedAirportTemplate}
-                        itemTemplate={airportOptionTemplate}
+                        // valueTemplate={selectedAirportTemplate}
+                        // itemTemplate={airportOptionTemplate}
                         className="w-full w-100 custom-form-dropdown"
                         invalid={showError}
                       />
                     </div>
-                    {(showError && !selectedAirport) && (
+                    {showError && !selectedAirport && (
                       <small className="text-danger form-error-msg text-sm-center">
                         This field is required
                       </small>
@@ -685,7 +768,7 @@ const VendorList = () => {
                       invalid={showError}
                     />
                   </div>
-                  {(showError && !dropOffDate) && (
+                  {showError && !dropOffDate && (
                     <small className="text-danger form-error-msg">
                       This field is required
                     </small>
@@ -714,7 +797,7 @@ const VendorList = () => {
                         /> */}
 
                     <Dropdown
-                      id='dropOffTime'
+                      id="dropOffTime"
                       value={dropOffTime}
                       onChange={(e) => setDropOffTime(e.value)}
                       options={times}
@@ -726,7 +809,7 @@ const VendorList = () => {
                       invalid={showError}
                     />
                   </div>
-                  {(showError && !dropOffTime) && (
+                  {showError && !dropOffTime && (
                     <small className="text-danger form-error-msg">
                       This field is required
                     </small>
@@ -747,7 +830,10 @@ const VendorList = () => {
                     <Calendar
                       id="pickupDate"
                       value={pickupDate}
-                      onChange={(e) => { setPickupDate(e.value); setPickupDateStr(e.value.toLocaleDateString('en-GB')) }}
+                      onChange={(e) => {
+                        setPickupDate(e.value);
+                        setPickupDateStr(e.value.toLocaleDateString("en-GB"));
+                      }}
                       placeholder="dd/mm/yyyy"
                       minDate={dropOffDate}
                       disabled={!dropOffDate}
@@ -756,7 +842,7 @@ const VendorList = () => {
                       invalid={showError}
                     />
                   </div>
-                  {(showError && !pickupDate) && (
+                  {showError && !pickupDate && (
                     <small className="text-danger form-error-msg">
                       This field is required
                     </small>
@@ -785,7 +871,7 @@ const VendorList = () => {
                         /> */}
 
                     <Dropdown
-                      id='pickupTime'
+                      id="pickupTime"
                       value={pickupTime}
                       onChange={(e) => setPickupTime(e.value)}
                       options={times}
@@ -797,7 +883,7 @@ const VendorList = () => {
                       invalid={showError}
                     />
                   </div>
-                  {(showError && !pickupTime) && (
+                  {showError && !pickupTime && (
                     <small className="text-danger form-error-msg">
                       This field is required
                     </small>
@@ -1089,7 +1175,11 @@ const VendorList = () => {
                           operator will not be liable in case you receive a
                           penalty for not paying the ULEZ charge.
                         </p> */}
-                    <div dangerouslySetInnerHTML={{ __html: selectedVendor?.overView }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: selectedVendor?.overView,
+                      }}
+                    />
                   </div>
                 </div>
                 {/*  */}
@@ -1310,7 +1400,11 @@ const VendorList = () => {
                             jackets and be expecting you.
                           </li>
                         </ul> */}
-                    <div dangerouslySetInnerHTML={{ __html: selectedVendor?.dropOffProcedure }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: selectedVendor?.dropOffProcedure,
+                      }}
+                    />
                   </div>
                 </div>
                 {/*  */}
@@ -1388,7 +1482,11 @@ const VendorList = () => {
                           be ready and waiting for you in Row R or S Off
                           Airport Parking Meet & Greet bays.
                         </p> */}
-                    <div dangerouslySetInnerHTML={{ __html: selectedVendor?.pickUpProcedure }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: selectedVendor?.pickUpProcedure,
+                      }}
+                    />
                   </div>
                 </div>
                 {/*  */}
@@ -1554,10 +1652,13 @@ const VendorList = () => {
                         </article> */}
 
                     <div className="no-data-area">
-                      <img src="assets/images/no-data/no-data-found.png" className='no-data-img' alt="" />
+                      <img
+                        src="assets/images/no-data/no-data-found.png"
+                        className="no-data-img"
+                        alt=""
+                      />
                       <h4>No review data!</h4>
                     </div>
-
                   </div>
                 </div>
                 {/*  */}
@@ -1619,15 +1720,23 @@ const VendorList = () => {
                   <p>Price</p>
                   <h5>
                     £ {selectedVendor?.finalQuote}
-                    {selectedVendor?.quote > 0 && <span>£ {selectedVendor.quote}</span>}
+                    {selectedVendor?.quote > 0 && (
+                      <span>£ {selectedVendor.quote}</span>
+                    )}
                   </h5>
                 </div>
 
                 <div className="detail-card-feature-area">
-                  {selectedVendor?.quote > 0 && <p>
-                    <i class="bi bi-hand-thumbs-up-fill me-2"></i>
-                    Save <span>£ {selectedVendor.quote - selectedVendor.finalQuote}</span> Today
-                  </p>}
+                  {selectedVendor?.quote > 0 && (
+                    <p>
+                      <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                      Save{" "}
+                      <span>
+                        £ {selectedVendor.quote - selectedVendor.finalQuote}
+                      </span>{" "}
+                      Today
+                    </p>
+                  )}
 
                   <p>
                     <i class="bi bi-lightning-fill me-2"></i>
@@ -1643,7 +1752,13 @@ const VendorList = () => {
                   // class="btn-close"
                   // aria-label="Close"
                   onClick={() => {
-                    handleBooking(selectedVendor?._id, selectedVendor?.companyName, selectedVendor?.dp, selectedVendor?.finalQuote, selectedVendor?.serviceType);
+                    handleBooking(
+                      selectedVendor?._id,
+                      selectedVendor?.companyName,
+                      selectedVendor?.dp,
+                      selectedVendor?.finalQuote,
+                      selectedVendor?.serviceType
+                    );
                     setShowViewModal(false);
                   }}
                 />
@@ -1657,6 +1772,6 @@ const VendorList = () => {
       <Footer />
     </>
   );
-}
+};
 
-export default withComponentName(VendorList, 'VenderList');
+export default withComponentName(VendorList, "VenderList");
