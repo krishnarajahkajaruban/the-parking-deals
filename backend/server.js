@@ -678,7 +678,7 @@ const sendEmailToUser = async (booking, user, type) => {
                 <p class="mb-3">
                     A booking may be cancelled up to 48 hours prior to drop off date except on certain non-flexible offers and
                     same day bookings which are
-                    non-refundable. All cancellations will incur a El 5 administration fee unless cancellation cover is
+                    non-refundable. All cancellations will incur a £15 administration fee unless cancellation cover is
                     purchased at time of booking.
                 </p>
 
