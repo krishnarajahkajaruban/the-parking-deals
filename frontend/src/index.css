@@ -2422,16 +2422,36 @@ button.custom-form-link:disabled {
   position: fixed;
   left: 0;
   right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 35px;
+  height: auto; /* Allow height to adjust */
 }
 
 .promotion-label h6 {
   margin-bottom: 0;
   font-size: 13px;
   color: #ffffff;
+  text-align: center; /* Ensure centered text */
+  line-height: 1.4; /* Adjust line height for better readability */
+}
+
+/* For screens between 0px and 480px */
+@media (max-width: 480px) {
+  .promotion-label h6 {
+    font-size: 10px; /* Smaller font size for very small screens */
+  }
+}
+
+/* For screens between 481px and 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .promotion-label h6 {
+    font-size: 11px; /* Slightly larger font for medium-sized screens */
+  }
+}
+
+/* For screens larger than 768px */
+@media (min-width: 769px) {
+  .promotion-label h6 {
+    font-size: 13px; /* Default font size */
+  }
 }
 
 .capitalize-first-letter::first-letter {
