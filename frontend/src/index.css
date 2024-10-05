@@ -2436,14 +2436,14 @@ button.custom-form-link:disabled {
 /* For screens between 0px and 480px */
 @media (max-width: 480px) {
   .promotion-label h6 {
-    font-size: 10px; /* Smaller font size for very small screens */
+    font-size: 13px; /* Smaller font size for very small screens */
   }
 }
 
 /* For screens between 481px and 768px */
 @media (min-width: 481px) and (max-width: 768px) {
   .promotion-label h6 {
-    font-size: 11px; /* Slightly larger font for medium-sized screens */
+    font-size: 13px; /* Slightly larger font for medium-sized screens */
   }
 }
 
