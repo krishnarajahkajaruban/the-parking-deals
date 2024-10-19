@@ -308,14 +308,20 @@ code {
   position: fixed;
   z-index: 999;
   width: 100%;
-  /* top: 35px; */
-  top: 0px;
+  top: 35px;
+  /* top: 0px; */
   left: 0;
   padding: 45px 0;
   /* background: transparent; */
   box-shadow: none;
   transition: ease 0.5s;
   background-color: transparent;
+}
+
+@media (max-width: 991px) {
+  .nav-section {
+    top: 30px;
+  }
 }
 
 .nav-section.scrolled {
@@ -825,8 +831,8 @@ code {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  /* margin-top: 35px; */
-  margin-top: 0px;
+  margin-top: 35px;
+  /* margin-top: 0px; */
 }
 
 .breadcrumb-title {
@@ -2414,7 +2420,7 @@ button.custom-form-link:disabled {
 
 .promotion-label {
   text-align: center;
-  padding: 10px;
+  padding: 8px;
   background-color: var(--color-secondary);
   width: 100%;
   top: 0;
@@ -2422,39 +2428,56 @@ button.custom-form-link:disabled {
   position: fixed;
   left: 0;
   right: 0;
-  height: auto; /* Allow height to adjust */
+  height: auto;
+  overflow: hidden;
 }
 
 .promotion-label h6 {
   margin-bottom: 0;
   font-size: 13px;
   color: #ffffff;
-  text-align: center; /* Ensure centered text */
-  line-height: 1.4; /* Adjust line height for better readability */
+  text-align: center;
+  line-height: 0;
+  white-space: nowrap;
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+  margin-bottom: 0;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 /* For screens between 0px and 480px */
 @media (max-width: 480px) {
   .promotion-label h6 {
-    font-size: 13px; /* Smaller font size for very small screens */
+    font-size: 13px;
+    /* Smaller font size for very small screens */
   }
 }
 
 /* For screens between 481px and 768px */
 @media (min-width: 481px) and (max-width: 768px) {
   .promotion-label h6 {
-    font-size: 13px; /* Slightly larger font for medium-sized screens */
+    font-size: 13px;
+    /* Slightly larger font for medium-sized screens */
   }
 }
 
 /* For screens larger than 768px */
 @media (min-width: 769px) {
   .promotion-label h6 {
-    font-size: 13px; /* Default font size */
+    font-size: 13px;
+    /* Default font size */
   }
 }
 
 .capitalize-first-letter::first-letter {
   text-transform: capitalize;
 }
-
