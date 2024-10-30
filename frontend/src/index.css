@@ -2420,7 +2420,7 @@ button.custom-form-link:disabled {
 
 .promotion-label {
   text-align: center;
-  padding: 8px;
+  padding: 6px;
   background-color: var(--color-secondary);
   width: 100%;
   top: 0;
@@ -2442,6 +2442,10 @@ button.custom-form-link:disabled {
   display: inline-block;
   animation: marquee 20s linear infinite;
   margin-bottom: 0;
+}
+
+.promotion-label:hover h6 {
+  animation-play-state: paused;
 }
 
 @keyframes marquee {

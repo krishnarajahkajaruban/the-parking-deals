@@ -102,6 +102,12 @@
     .account-agree-area label a {
         font-size: 13px;
     }
+
+    /*  */
+    .footer-logo-link {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 
@@ -680,5 +686,15 @@
 
     .breadcrumb-item {
         font-size: 15px;
+    }
+
+    .promotion-label {
+        padding: 4px;
+    }
+
+    /*  */
+    .footer-logo-link {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
