@@ -1146,13 +1146,13 @@ const Reservation = () => {
 
               <div className="col-12 mb-sm-4 mb-3">
                 <Button
-                  label="Add Vehicle"
+                  label="Add Another Vehicle"
                   className="aply-btn mt-3"
                   onClick={addVehicle}
                 />
                 {index !== 0 && (
                   <Button
-                    label="Remove Vehicle"
+                    label="Remove This Vehicle"
                     severity="danger"
                     onClick={() => removeVehicle(index)}
                     className="mt-3 ml-2 mx-2"

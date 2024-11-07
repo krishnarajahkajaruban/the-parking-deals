@@ -1313,13 +1313,13 @@ const Booking = () => {
                         </div>
                         <div className="col-12">
                           <Button
-                            label="Add Vehicle"
+                            label="Add Another Vehicle"
                             className="aply-btn mt-3"
                             onClick={addVehicle}
                           />
                           {index !== 0 && (
                             <Button
-                              label="Remove Vehicle"
+                              label="Remove This Vehicle"
                               onClick={() => removeVehicle(index)}
                               className="btn btn-danger mt-3 ml-2 mx-2"
                             />
