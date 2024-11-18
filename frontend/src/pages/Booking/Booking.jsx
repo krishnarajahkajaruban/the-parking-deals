@@ -1,28 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './Booking.css';
-import './Booking-responsive.css';
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
-import { InputIcon } from 'primereact/inputicon';
+import React, { useState, useEffect, useRef } from "react";
+import "./Booking.css";
+import "./Booking-responsive.css";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import { InputIcon } from "primereact/inputicon";
 
-import { Button } from 'primereact/button';
-import { Divider } from 'primereact/divider';
+import { Button } from "primereact/button";
+import { Divider } from "primereact/divider";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown } from "primereact/dropdown";
 import { Checkbox } from "primereact/checkbox";
 import { InputMask } from "primereact/inputmask";
-import { Password } from 'primereact/password';
-import { InputOtp } from 'primereact/inputotp';
+import { Password } from "primereact/password";
+import { InputOtp } from "primereact/inputotp";
 import { IconField } from "primereact/iconfield";
 
-import { Toast } from 'primereact/toast';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import api from '../../api';
-import { sendVerificationEmail, verifyOTP } from '../../utils/authUtil';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { setLogin } from '../../state';
+import { Toast } from "primereact/toast";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import api from "../../api";
+import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+import { setLogin } from "../../state";
 
 const Booking = () => {
   const location = useLocation();
@@ -43,41 +48,41 @@ const Booking = () => {
   const [seconds, setSeconds] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [departTerminal, setDepartTerminal] = useState();
   const depart_terminals = [
-    { name: 'Terminal 1' },
-    { name: 'Terminal 2' },
-    { name: 'Terminal 3' },
-    { name: 'Terminal 4' },
-    { name: 'Terminal 5' },
+    { name: "Terminal 1" },
+    { name: "Terminal 2" },
+    { name: "Terminal 3" },
+    { name: "Terminal 4" },
+    { name: "Terminal 5" },
   ];
 
   const [arrivalTerminal, setArrivalTerminal] = useState();
   const arrival_terminals = [
-    { name: 'Terminal 1' },
-    { name: 'Terminal 2' },
-    { name: 'Terminal 3' },
-    { name: 'Terminal 4' },
-    { name: 'Terminal 5' },
+    { name: "Terminal 1" },
+    { name: "Terminal 2" },
+    { name: "Terminal 3" },
+    { name: "Terminal 4" },
+    { name: "Terminal 5" },
   ];
 
   const titles = [
-    { name: 'Mr.' },
-    { name: 'Mrs.' },
-    { name: 'Ms.' },
-    { name: 'Miss.' },
+    { name: "Mr." },
+    { name: "Mrs." },
+    { name: "Ms." },
+    { name: "Miss." },
   ];
   const [title, setTitle] = useState(titles[0]);
 
   const [checkedSmsConfirmation, setCheckedSmsConfirmation] = useState(false);
-  const [checkedCancellationCover, setCheckedCancellationCover] = useState(false);
+  const [checkedCancellationCover, setCheckedCancellationCover] =
+    useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
 
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-
 
   const initalUserDetails = {
     email: "",
@@ -92,14 +97,14 @@ const Booking = () => {
     // city: "",
     // country: "",
     // postCode: "",
-    role: "User"
+    role: "User",
   };
 
   const initialTravelDetails = {
     departureTerminal: "",
     arrivalTerminal: "",
     // outBoundFlight: "",
-    inBoundFlight: ""
+    inBoundFlight: "",
   };
 
   const initialVehiclesDetails = [
@@ -107,8 +112,8 @@ const Booking = () => {
       regNo: "",
       color: "",
       make: "",
-      model: ""
-    }
+      model: "",
+    },
   ];
 
   const initialCardDetails = {
@@ -116,14 +121,16 @@ const Booking = () => {
     postCode: "",
     cardNo: "",
     expDate: "",
-    cvv: ""
+    cvv: "",
   };
 
   const [userDetails, setUserDetails] = useState(initalUserDetails);
   const [emailExist, setEmailExist] = useState(false);
   const [reSendLoading, setReSendLoading] = useState(false);
   const [travelDetails, setTravelDetails] = useState(initialTravelDetails);
-  const [vehiclesDetails, setVehiclesDetails] = useState(initialVehiclesDetails);
+  const [vehiclesDetails, setVehiclesDetails] = useState(
+    initialVehiclesDetails
+  );
   const [couponCode, setCouponCode] = useState(bookingDetails?.couponCode);
   const [cardDetails, setCardDetails] = useState(initialCardDetails);
   const [bookingCharge, setBookingCharge] = useState();
@@ -146,7 +153,7 @@ const Booking = () => {
       const cardElement = elements.getElement(CardElement);
 
       const { error, paymentMethod } = await stripe.createPaymentMethod({
-        type: 'card',
+        type: "card",
         card: cardElement,
       });
 
@@ -155,26 +162,30 @@ const Booking = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_BASEURL}/create-payment-intent`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount: 1000 }), // Amount in cents
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BASEURL}/create-payment-intent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ amount: 1000 }), // Amount in cents
+        }
+      );
 
       const { clientSecret } = await response.json();
 
-      const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: paymentMethod.id,
-      });
+      const { paymentIntent, error: confirmError } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: paymentMethod.id,
+        });
 
       if (confirmError) {
         setError(confirmError.message);
         return;
       }
 
-      if (paymentIntent.status === 'succeeded') {
+      if (paymentIntent.status === "succeeded") {
         setSuccess(true);
       }
     };
@@ -182,7 +193,9 @@ const Booking = () => {
     return (
       <form onSubmit={handleSubmit}>
         <CardElement />
-        <button type="submit" disabled={!stripe}>Pay</button>
+        <button type="submit" disabled={!stripe}>
+          Pay
+        </button>
         {/* <Button
         type='submit'
         label="CONFIRM BOOKING"
@@ -207,13 +220,14 @@ const Booking = () => {
   const calculatingBookingCharge = async () => {
     // setBookingCharge();
     try {
-      const response = await api.post("/api/user/calculate-total-booking-charge",
+      const response = await api.post(
+        "/api/user/calculate-total-booking-charge",
         {
           bookingQuote: bookingDetails?.bookingQuote,
           couponCode,
           smsConfirmation: checkedSmsConfirmation,
           cancellationCover: checkedCancellationCover,
-          numOfVehicle: vehiclesDetails.length
+          numOfVehicle: vehiclesDetails.length,
         }
       );
       console.log(response.data);
@@ -221,26 +235,31 @@ const Booking = () => {
     } catch (err) {
       console.log(err);
       toast.current.show({
-        severity: 'error',
-        summary: 'Error in Booking charge calculation!',
+        severity: "error",
+        summary: "Error in Booking charge calculation!",
         detail: err.response.data.error,
-        life: 3000
+        life: 3000,
       });
-    };
+    }
   };
 
   useEffect(() => {
     if (bookingDetails?.bookingQuote) {
-
       calculatingBookingCharge();
     }
-  }, [bookingDetails, checkedCancellationCover, checkedSmsConfirmation, vehiclesDetails]);
+  }, [
+    bookingDetails,
+    checkedCancellationCover,
+    checkedSmsConfirmation,
+    vehiclesDetails,
+  ]);
 
   const checkingCouponCodeValidity = async () => {
     try {
-      const response = await api.post("/api/user/checking-couponcode-validity",
+      const response = await api.post(
+        "/api/user/checking-couponcode-validity",
         {
-          couponCode
+          couponCode,
         }
       );
       console.log(response.data);
@@ -248,7 +267,7 @@ const Booking = () => {
     } catch (err) {
       console.log(err);
       setCouponValid(false);
-    };
+    }
   };
 
   useEffect(() => {
@@ -264,7 +283,9 @@ const Booking = () => {
       setShowError(false);
       setEmailExist(false);
       try {
-        const response = await api.post("/api/auth/check-user-registerd", { email: value });
+        const response = await api.post("/api/auth/check-user-registerd", {
+          email: value,
+        });
         console.log(response.data);
         setEmailExist(response.data?.emailExists);
       } catch (err) {
@@ -286,7 +307,10 @@ const Booking = () => {
   };
 
   const addVehicle = () => {
-    setVehiclesDetails([...vehiclesDetails, { regNo: '', make: '', model: '', color: '' }]);
+    setVehiclesDetails([
+      ...vehiclesDetails,
+      { regNo: "", make: "", model: "", color: "" },
+    ]);
   };
 
   const removeVehicle = (index) => {
@@ -299,21 +323,16 @@ const Booking = () => {
     setCardDetails({ ...cardDetails, [name]: value });
   };
 
+  const handleLogin = () => {};
 
-  const handleLogin = () => {
-
-  }
-
-  const handleRegister = () => {
-
-  }
+  const handleRegister = () => {};
 
   const handleApplyCoupon = () => {
     if (couponCode) {
       checkingCouponCodeValidity();
       calculatingBookingCharge();
-    };
-  }
+    }
+  };
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -333,7 +352,17 @@ const Booking = () => {
 
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
-    await verifyOTP(otp, setShowError, setOTP, userDetails.email, setLoading, setPage, toast, false, setVerified);
+    await verifyOTP(
+      otp,
+      setShowError,
+      setOTP,
+      userDetails.email,
+      setLoading,
+      setPage,
+      toast,
+      false,
+      setVerified
+    );
   };
 
   useEffect(() => {
@@ -360,24 +389,23 @@ const Booking = () => {
     } else if (page === 3) {
       setPage(2);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
   };
 
   const formatTime = (timeString) => {
-    const [hours, minutes] = timeString.split(':');
+    const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes}`;
   };
-
 
   const bookTheCarParkingSlot = async (details) => {
     console.log(details);
@@ -389,44 +417,40 @@ const Booking = () => {
       dispatch(
         setLogin({
           user: response.data.user,
-          token: response.data.token
+          token: response.data.token,
         })
       );
       setLoading(false);
       const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
       const result = await stripe.redirectToCheckout({
-        sessionId: response.data.id
+        sessionId: response.data.id,
       });
 
       console.log(result);
 
       toast.current.show({
-        severity: 'success',
-        summary: 'Booking Successful',
+        severity: "success",
+        summary: "Booking Successful",
         detail: "You have booked your parking slot successfully",
-        life: 3000
+        life: 3000,
       });
 
       setTimeout(() => {
         navigate("/");
       }, 2000);
-
-
     } catch (err) {
       console.log(err);
       toast.current.show({
-        severity: 'error',
-        summary: 'Failed to Book',
+        severity: "error",
+        summary: "Failed to Book",
         detail: err.response.data.error,
-        life: 3000
+        life: 3000,
       });
     } finally {
       setLoading(false);
     }
   };
-
-
 
   function validateUserDetails(userDetails, isUserPresent, doesEmailExist) {
     // Check if user is present
@@ -439,34 +463,44 @@ const Booking = () => {
       if (!userDetails.email || !userDetails.password) {
         setShowError(true);
         toast.current.show({
-          severity: 'error',
-          summary: 'Error in Your Details Submission',
+          severity: "error",
+          summary: "Error in Your Details Submission",
           detail: "Please fill all required fields!",
-          life: 3000
+          life: 3000,
         });
         return false;
       }
     } else {
       // Validate all required fields
-      if (!userDetails.email || !userDetails.firstName || !userDetails.password || !userDetails.confirmPassword || !userDetails.mobileNumber || !userDetails.title) {
+      if (
+        !userDetails.email ||
+        !userDetails.firstName ||
+        !userDetails.password ||
+        !userDetails.confirmPassword ||
+        !userDetails.mobileNumber ||
+        !userDetails.title
+      ) {
         setShowError(true);
         toast.current.show({
-          severity: 'error',
-          summary: 'Error in Your Details Submission',
+          severity: "error",
+          summary: "Error in Your Details Submission",
           detail: "Please fill all required fields!",
-          life: 3000
+          life: 3000,
         });
         return false;
       }
     }
 
     // Check if passwords match
-    if (!doesEmailExist && (userDetails.password !== userDetails.confirmPassword)) {
+    if (
+      !doesEmailExist &&
+      userDetails.password !== userDetails.confirmPassword
+    ) {
       toast.current.show({
-        severity: 'error',
-        summary: 'Error in Your Details Submission',
+        severity: "error",
+        summary: "Error in Your Details Submission",
         detail: "Password & Confirm Password do not match!",
-        life: 3000
+        life: 3000,
       });
       return false;
     }
@@ -474,10 +508,10 @@ const Booking = () => {
     // Check if password length is at least 8 characters
     if (userDetails.password.length < 8) {
       toast.current.show({
-        severity: 'error',
-        summary: 'Error in Your Details Submission',
+        severity: "error",
+        summary: "Error in Your Details Submission",
         detail: "Password must be at least 8 characters long!",
-        life: 3000
+        life: 3000,
       });
       return false;
     }
@@ -496,23 +530,25 @@ const Booking = () => {
     if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
       setShowError(true);
       toast.current.show({
-        severity: 'error',
-        summary: 'Error in Travel Detail Submission',
+        severity: "error",
+        summary: "Error in Travel Detail Submission",
         detail: "Please fill all required fields!",
-        life: 3000
+        life: 3000,
       });
       return;
     }
 
     // Check if all vehicle details are filled
-    const hasError = vehiclesDetails.some(vehicle => !vehicle.regNo || !vehicle.color);
+    const hasError = vehiclesDetails.some(
+      (vehicle) => !vehicle.regNo || !vehicle.color
+    );
     if (hasError) {
       setShowError(true);
       toast.current.show({
-        severity: 'error',
-        summary: 'Error in Vehicle Detail Submission',
+        severity: "error",
+        summary: "Error in Vehicle Detail Submission",
         detail: "Please fill all required fields!",
-        life: 3000
+        life: 3000,
       });
       return;
     }
@@ -520,10 +556,11 @@ const Booking = () => {
     // Check if terms and privacy policy are agreed
     if (!isAgreed) {
       toast.current.show({
-        severity: 'error',
-        summary: 'Error in Submission',
-        detail: "You have to agree to the Terms & Privacy Policy before the Booking",
-        life: 3000
+        severity: "error",
+        summary: "Error in Submission",
+        detail:
+          "You have to agree to the Terms & Privacy Policy before the Booking",
+        life: 3000,
       });
       return;
     }
@@ -536,7 +573,7 @@ const Booking = () => {
       userDetail = {
         email: userDetails.email,
         password: userDetails.password,
-        registeredStatus: true
+        registeredStatus: true,
       };
     } else {
       userDetail = {
@@ -569,7 +606,7 @@ const Booking = () => {
       bookingQuote: bookingDetails?.bookingQuote,
       couponCode: bookingDetails?.couponCode,
       smsConfirmation: checkedSmsConfirmation,
-      cancellationCover: checkedCancellationCover
+      cancellationCover: checkedCancellationCover,
     };
 
     bookTheCarParkingSlot(carParkingSlotBookingDetails);
@@ -652,7 +689,7 @@ const Booking = () => {
                                   value={userDetails.email}
                                   onChange={handleInputChange}
                                 />
-                                {(showError && !userDetails.email) && (
+                                {showError && !userDetails.email && (
                                   <small className="text-danger form-error-msg text-center">
                                     This field is required
                                   </small>
@@ -671,38 +708,38 @@ const Booking = () => {
                           <Divider className="divider" />
 
                           {/* for login */}
-                          {(emailExist &&
+                          {emailExist &&
                             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
                               userDetails.email
                             ) &&
-                            userDetails.email) && <div className="row">
-                              <div className="col-12 col-sm-6 col-xl-6 mx-auto">
-                                <div className="custom-form-group mb-3 mb-sm-4">
-                                  <label
-                                    htmlFor="email"
-                                    className="custom-form-label form-required text-center"
-                                  >
-                                    Password
-                                  </label>
-                                  <Password
-                                    id="password"
-                                    name='password'
-                                    value={userDetails.password}
-                                    className="custom-form-input text-center"
-                                    placeholder="Enter the Password"
-                                    onChange={handleInputChange
-                                    }
-                                    feedback={false}
-                                    toggleMask
-                                  />
-                                  {(showError && !userDetails.password) && (
-                                    <small className="text-danger form-error-msg">
-                                      This field is required
-                                    </small>
-                                  )}
-                                </div>
+                            userDetails.email && (
+                              <div className="row">
+                                <div className="col-12 col-sm-6 col-xl-6 mx-auto">
+                                  <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label
+                                      htmlFor="email"
+                                      className="custom-form-label form-required text-center"
+                                    >
+                                      Password
+                                    </label>
+                                    <Password
+                                      id="password"
+                                      name="password"
+                                      value={userDetails.password}
+                                      className="custom-form-input text-center"
+                                      placeholder="Enter the Password"
+                                      onChange={handleInputChange}
+                                      feedback={false}
+                                      toggleMask
+                                    />
+                                    {showError && !userDetails.password && (
+                                      <small className="text-danger form-error-msg">
+                                        This field is required
+                                      </small>
+                                    )}
+                                  </div>
 
-                                {/* <div className="custom-form-group contains-float-input pt-2 mb-1">
+                                  {/* <div className="custom-form-group contains-float-input pt-2 mb-1">
                                   <Button
                                     label="LOGIN"
                                     className="w-100 submit-button justify-content-center"
@@ -710,29 +747,31 @@ const Booking = () => {
                                     loading={loading}
                                   />
                                 </div> */}
+                                </div>
                               </div>
-                            </div>}
+                            )}
                           {/*  */}
 
                           {/* for create account */}
-                          {(page === 1 && !emailExist &&
-                            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                              userDetails.email
-                            ) &&
-                            userDetails.email) ? (
+                          {page === 1 &&
+                          !emailExist &&
+                          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                            userDetails.email
+                          ) &&
+                          userDetails.email ? (
                             <div className="row mt-4">
                               <div className="col-12">
                                 <h6 className="account-alert">
-                                  There is no account in this email,
-                                  please verify your email to create an
-                                  account.
+                                  There is no account in this email, please
+                                  verify your email to create an account.
                                 </h6>
                               </div>
                               <div className="col-12 col-sm-6 col-xl-6 mx-auto">
                                 <div className="custom-form-group contains-float-input pt-2 mb-1">
                                   <Button
-                                    label={`${loading ? "Processing..." : "VERIFY"
-                                      }`}
+                                    label={`${
+                                      loading ? "Processing..." : "VERIFY"
+                                    }`}
                                     className="w-100 submit-button justify-content-center"
                                     onClick={handleVerify}
                                     loading={loading}
@@ -772,7 +811,7 @@ const Booking = () => {
                                       }}
                                     />
                                   </div>
-                                  {(showError && !otp) && (
+                                  {showError && !otp && (
                                     <small className="text-danger form-error-msg text-center mt-3">
                                       This field is required
                                     </small>
@@ -781,12 +820,13 @@ const Booking = () => {
 
                                 <div className="custom-form-group contains-float-input mb-3">
                                   <Button
-                                    label={`${reSendLoading
-                                      ? "Processing..."
-                                      : loading
+                                    label={`${
+                                      reSendLoading
+                                        ? "Processing..."
+                                        : loading
                                         ? "Verifying..."
                                         : "VERIFY"
-                                      }`}
+                                    }`}
                                     className="w-100 submit-button justify-content-center"
                                     onClick={handleVerifyOTP}
                                     loading={loading}
@@ -812,11 +852,12 @@ const Booking = () => {
                                 </div>
                               </div>
                             </div>
-                          ) : (page === 3 && !emailExist &&
+                          ) : page === 3 &&
+                            !emailExist &&
                             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
                               userDetails.email
                             ) &&
-                            userDetails.email) ? (
+                            userDetails.email ? (
                             <div className="row mt-4">
                               {/* <div className="col-12">
                                 <button
@@ -838,22 +879,26 @@ const Booking = () => {
                                   </label>
                                   <Password
                                     id="password"
-                                    name='password'
+                                    name="password"
                                     value={userDetails.password}
                                     className="custom-form-input"
                                     placeholder="Enter the Password"
-                                    onChange={handleInputChange
-                                    }
+                                    onChange={handleInputChange}
                                     header={header}
                                     footer={footer}
                                     toggleMask
                                   />
-                                  {(showError && !userDetails.password) && (
+                                  {showError && !userDetails.password && (
                                     <small className="text-danger form-error-msg">
                                       This field is required
                                     </small>
                                   )}
-                                  <small className='text-danger form-error-msg'>{(userDetails.password.length < 8 && userDetails.password) ? "Password must be atleast 8 characters long" : ""}</small>
+                                  <small className="text-danger form-error-msg">
+                                    {userDetails.password.length < 8 &&
+                                    userDetails.password
+                                      ? "Password must be atleast 8 characters long"
+                                      : ""}
+                                  </small>
                                 </div>
                               </div>
 
@@ -867,21 +912,27 @@ const Booking = () => {
                                   </label>
                                   <Password
                                     id="confirmPassword"
-                                    name='confirmPassword'
+                                    name="confirmPassword"
                                     value={userDetails.confirmPassword}
                                     className="custom-form-input"
                                     placeholder="Confirm the Password"
-                                    onChange={handleInputChange
-                                    }
+                                    onChange={handleInputChange}
                                     feedback={false}
                                     toggleMask
                                   />
-                                  {(showError && !userDetails.confirmPassword) && (
-                                    <small className="text-danger form-error-msg">
-                                      This field is required
-                                    </small>
-                                  )}
-                                  <small className='text-danger text-capitalized form-error-message'>{(userDetails.password !== userDetails.confirmPassword && userDetails.confirmPassword) ? "Password & Confirm Password must be equal" : ""}</small>
+                                  {showError &&
+                                    !userDetails.confirmPassword && (
+                                      <small className="text-danger form-error-msg">
+                                        This field is required
+                                      </small>
+                                    )}
+                                  <small className="text-danger text-capitalized form-error-message">
+                                    {userDetails.password !==
+                                      userDetails.confirmPassword &&
+                                    userDetails.confirmPassword
+                                      ? "Password & Confirm Password must be equal"
+                                      : ""}
+                                  </small>
                                 </div>
                               </div>
 
@@ -899,97 +950,106 @@ const Booking = () => {
                           ) : null}
                           {/*  */}
                         </div>
-                        {(!emailExist &&
+                        {!emailExist &&
                           /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
                             userDetails.email
                           ) &&
-                          userDetails.email && !verified) && <>
-                            {/* Your Details */}
-                            <h4 className="booking-card-head">Your Details</h4>
+                          userDetails.email &&
+                          !verified && (
+                            <>
+                              {/* Your Details */}
+                              <h4 className="booking-card-head">
+                                Your Details
+                              </h4>
 
-                            <div className="row mt-4">
-                              <div className="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-2">
-                                <div className="custom-form-group mb-3 mb-sm-4">
-                                  <label
-                                    htmlFor="title"
-                                    className="custom-form-label form-required"
-                                  >
-                                    Title
-                                  </label>
-                                  <Dropdown
-                                    id="title"
-                                    value={{ name: userDetails.title }}
-                                    onChange={(e) => setUserDetails({ ...userDetails, title: e.value?.name })}
-                                    options={titles}
-                                    optionLabel="name"
-                                    placeholder="Select"
-                                    className="w-full w-100 custom-form-dropdown"
-                                  />
-                                  {(showError && !userDetails.title) && (
-                                    <small className="text-danger form-error-msg">
-                                      This field is required
-                                    </small>
-                                  )}
+                              <div className="row mt-4">
+                                <div className="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+                                  <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label
+                                      htmlFor="title"
+                                      className="custom-form-label form-required"
+                                    >
+                                      Title
+                                    </label>
+                                    <Dropdown
+                                      id="title"
+                                      value={{ name: userDetails.title }}
+                                      onChange={(e) =>
+                                        setUserDetails({
+                                          ...userDetails,
+                                          title: e.value?.name,
+                                        })
+                                      }
+                                      options={titles}
+                                      optionLabel="name"
+                                      placeholder="Select"
+                                      className="w-full w-100 custom-form-dropdown"
+                                    />
+                                    {showError && !userDetails.title && (
+                                      <small className="text-danger form-error-msg">
+                                        This field is required
+                                      </small>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div className="col-12 col-sm-9 col-md-9 col-lg-9 col-xl-5">
-                                <div className="custom-form-group mb-3 mb-sm-4">
-                                  <label
-                                    htmlFor="firstName"
-                                    className="custom-form-label form-required"
-                                  >
-                                    First Name
-                                  </label>
-                                  <InputText
-                                    id="firstName"
-                                    className="custom-form-input"
-                                    name="firstName"
-                                    placeholder="Enter First Name"
-                                    value={userDetails.firstName}
-                                    onChange={handleInputChange}
-                                  />
-                                  {(showError && !userDetails.firstName) && (
-                                    <small className="text-danger form-error-msg">
-                                      This field is required
-                                    </small>
-                                  )}
+                                <div className="col-12 col-sm-9 col-md-9 col-lg-9 col-xl-5">
+                                  <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label
+                                      htmlFor="firstName"
+                                      className="custom-form-label form-required"
+                                    >
+                                      First Name
+                                    </label>
+                                    <InputText
+                                      id="firstName"
+                                      className="custom-form-input"
+                                      name="firstName"
+                                      placeholder="Enter First Name"
+                                      value={userDetails.firstName}
+                                      onChange={handleInputChange}
+                                    />
+                                    {showError && !userDetails.firstName && (
+                                      <small className="text-danger form-error-msg">
+                                        This field is required
+                                      </small>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-9 offset-lg-3 offset-xl-0 col-xl-5">
-                                <div className="custom-form-group mb-3 mb-sm-4">
-                                  <label
-                                    htmlFor="lastName"
-                                    className="custom-form-label"
-                                  >
-                                    Last Name
-                                  </label>
-                                  <InputText
-                                    id="lastName"
-                                    className="custom-form-input"
-                                    name="lastName"
-                                    placeholder="Enter Last Name"
-                                    value={userDetails.lastName}
-                                    onChange={handleInputChange}
-                                  />
-                                  {/* {showError && (
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-9 offset-lg-3 offset-xl-0 col-xl-5">
+                                  <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label
+                                      htmlFor="lastName"
+                                      className="custom-form-label"
+                                    >
+                                      Last Name
+                                    </label>
+                                    <InputText
+                                      id="lastName"
+                                      className="custom-form-input"
+                                      name="lastName"
+                                      placeholder="Enter Last Name"
+                                      value={userDetails.lastName}
+                                      onChange={handleInputChange}
+                                    />
+                                    {/* {showError && (
                                         <small className="text-danger form-error-msg">
                                             This field is required
                                         </small>
                                         )} */}
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div className="col-12 col-sm-6 col-lg-6 col-xl-6">
-                                <div className="custom-form-group mb-3 mb-sm-4">
-                                  <label
-                                    htmlFor="mobileNumber"
-                                    className="custom-form-label form-required"
-                                  >
-                                    Mobile Number
-                                  </label>
-                                  {/* <InputMask
+                                <div className="col-12 col-sm-6 col-lg-6 col-xl-6">
+                                  <div className="custom-form-group mb-3 mb-sm-4">
+                                    <label
+                                      htmlFor="mobileNumber"
+                                      className="custom-form-label form-required"
+                                    >
+                                      Mobile Number
+                                    </label>
+                                    {/* <InputMask
                                     id="mobileNumber"
                                     className="custom-form-input"
                                     name="mobileNumber"
@@ -998,24 +1058,24 @@ const Booking = () => {
                                     value={userDetails.mobileNumber}
                                     onChange={handleInputChange}
                                   ></InputMask> */}
-                                  <InputText
-                                    id="mobileNumber"
-                                    keyfilter="num"
-                                    className="custom-form-input"
-                                    name="mobileNumber"
-                                    value={userDetails.mobileNumber}
-                                    onChange={handleInputChange}
-                                  />
-                                  {(showError && !userDetails.mobileNumber) && (
-                                    <small className="text-danger form-error-msg">
-                                      This field is required
-                                    </small>
-                                  )}
+                                    <InputText
+                                      id="mobileNumber"
+                                      keyfilter="num"
+                                      className="custom-form-input"
+                                      name="mobileNumber"
+                                      value={userDetails.mobileNumber}
+                                      onChange={handleInputChange}
+                                    />
+                                    {showError && !userDetails.mobileNumber && (
+                                      <small className="text-danger form-error-msg">
+                                        This field is required
+                                      </small>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
 
-                            {/* <div className="row">
+                              {/* <div className="row">
                               <div className="col-12">
                                 <label
                                   htmlFor="address"
@@ -1110,10 +1170,11 @@ const Booking = () => {
                                 </div>
                               </div>
                             </div> */}
-                            {/*  */}
+                              {/*  */}
 
-                            <Divider className="divider-margin" />
-                          </>}
+                              <Divider className="divider-margin" />
+                            </>
+                          )}
                       </>
                     )}
                     {/* Travel Details */}
@@ -1131,19 +1192,29 @@ const Booking = () => {
                           <Dropdown
                             id="departTerminal"
                             value={{ name: travelDetails.departureTerminal }}
-                            onChange={(e) => setTravelDetails({ ...travelDetails, departureTerminal: e.value?.name })}
+                            onChange={(e) =>
+                              setTravelDetails({
+                                ...travelDetails,
+                                departureTerminal: e.value?.name,
+                              })
+                            }
                             options={
-                              bookingDetails && Array.isArray(bookingDetails?.airportName.terminals)
-                                ? bookingDetails?.airportName.terminals?.map((ter) => {
-                                    return { name: ter };
-                                  })
+                              bookingDetails &&
+                              Array.isArray(
+                                bookingDetails?.airportName.terminals
+                              )
+                                ? bookingDetails?.airportName.terminals?.map(
+                                    (ter) => {
+                                      return { name: ter };
+                                    }
+                                  )
                                 : []
                             }
                             optionLabel="name"
                             placeholder="Select Terminal"
                             className="w-full w-100 custom-form-dropdown"
                           />
-                          {(showError && !travelDetails.departureTerminal) && (
+                          {showError && !travelDetails.departureTerminal && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -1162,19 +1233,29 @@ const Booking = () => {
                           <Dropdown
                             id="arrivalTerminal"
                             value={{ name: travelDetails.arrivalTerminal }}
-                            onChange={(e) => setTravelDetails({ ...travelDetails, arrivalTerminal: e.value?.name })}
+                            onChange={(e) =>
+                              setTravelDetails({
+                                ...travelDetails,
+                                arrivalTerminal: e.value?.name,
+                              })
+                            }
                             options={
-                              bookingDetails && Array.isArray(bookingDetails?.airportName.terminals)
-                                ? bookingDetails?.airportName.terminals?.map((ter) => {
-                                    return { name: ter };
-                                  })
+                              bookingDetails &&
+                              Array.isArray(
+                                bookingDetails?.airportName.terminals
+                              )
+                                ? bookingDetails?.airportName.terminals?.map(
+                                    (ter) => {
+                                      return { name: ter };
+                                    }
+                                  )
                                 : []
                             }
                             optionLabel="name"
                             placeholder="Select Terminal"
                             className="w-full w-100 custom-form-dropdown"
                           />
-                          {(showError && !travelDetails.arrivalTerminal) && (
+                          {showError && !travelDetails.arrivalTerminal && (
                             <small className="text-danger form-error-msg">
                               This field is required
                             </small>
@@ -1243,7 +1324,9 @@ const Booking = () => {
                               name="regNo"
                               placeholder="Enter Registration No."
                               value={vehicle.regNo}
-                              onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                              onChange={(event) =>
+                                handleInputVechicleDetailChange(index, event)
+                              }
                             />
                             {showError && !vehicle.regNo && (
                               <small className="text-danger form-error-msg">
@@ -1255,7 +1338,10 @@ const Booking = () => {
 
                         <div className="col-12 col-sm-6 col-xl-6">
                           <div className="custom-form-group mb-3 mb-sm-4">
-                            <label htmlFor={`make-${index}`} className="custom-form-label">
+                            <label
+                              htmlFor={`make-${index}`}
+                              className="custom-form-label"
+                            >
                               Make
                             </label>
                             <InputText
@@ -1264,7 +1350,9 @@ const Booking = () => {
                               name="make"
                               placeholder="Enter Make"
                               value={vehicle.make}
-                              onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                              onChange={(event) =>
+                                handleInputVechicleDetailChange(index, event)
+                              }
                             />
                           </div>
                         </div>
@@ -1283,7 +1371,9 @@ const Booking = () => {
                               name="model"
                               placeholder="Enter Model"
                               value={vehicle.model}
-                              onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                              onChange={(event) =>
+                                handleInputVechicleDetailChange(index, event)
+                              }
                             />
                           </div>
                         </div>
@@ -1302,7 +1392,9 @@ const Booking = () => {
                               name="color"
                               placeholder="Enter Color"
                               value={vehicle.color}
-                              onChange={(event) => handleInputVechicleDetailChange(index, event)}
+                              onChange={(event) =>
+                                handleInputVechicleDetailChange(index, event)
+                              }
                             />
                             {showError && !vehicle.color && (
                               <small className="text-danger form-error-msg">
@@ -1353,7 +1445,7 @@ const Booking = () => {
                             </label>
                           </div>
                         </div>
-                      </div> */} 
+                      </div> */}
 
                       <div className="col-12">
                         <div className="custom-form-group mb-0">
@@ -1362,18 +1454,18 @@ const Booking = () => {
                               inputId="cancellationCover"
                               onChange={(e) => {
                                 // setBookingCharge();
-                                setCheckedCancellationCover(e.checked)
-                              }
-                              }
+                                setCheckedCancellationCover(e.checked);
+                              }}
                               checked={checkedCancellationCover}
                               name="cancellationCover"
                               value="2"
                             />
-                            <label
-                              htmlFor="cancellationCover"
-                              className="ml-2"
-                            >
-                              Cancellation Cover   {(bookingCharge && bookingCharge?.cancellationCover > 0)? "- £"+bookingCharge?.cancellationCover : ""}
+                            <label htmlFor="cancellationCover" className="ml-2">
+                              Cancellation Cover{" "}
+                              {bookingCharge &&
+                              bookingCharge?.cancellationCover > 0
+                                ? "- £" + bookingCharge?.cancellationCover
+                                : ""}
                             </label>
                           </div>
                         </div>
@@ -1411,18 +1503,17 @@ const Booking = () => {
                               </small>
                             )} */}
 
-                          {(couponCode && couponValid) ? (
+                          {couponCode && couponValid ? (
                             <h6 className="coupon-valid success">
                               <i className="bi bi-check-circle-fill me-2"></i>
                               Coupon is valid.
-                            </h6>)
-                            : (couponCode && !couponValid) ? (
-                              <h6 className='coupon-valid error'>
-                                <i className='bi bi-x-circle-fill me-2'></i>
-                                Coupon is invalid.
-                              </h6>
-                            ) : null
-                          }
+                            </h6>
+                          ) : couponCode && !couponValid ? (
+                            <h6 className="coupon-valid error">
+                              <i className="bi bi-x-circle-fill me-2"></i>
+                              Coupon is invalid.
+                            </h6>
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -1432,7 +1523,9 @@ const Booking = () => {
 
                     <div className="total-price-area">
                       <h5 className="total-price-text">Total :</h5>
-                      <h5 className="total-price">£ {bookingCharge?.totalPayable || 0}</h5>
+                      <h5 className="total-price">
+                        £ {bookingCharge?.totalPayable || 0}
+                      </h5>
                     </div>
 
                     {/* <Divider className="divider-margin" /> */}
@@ -1712,52 +1805,82 @@ const Booking = () => {
                 <div className="total-detail-area">
                   <div className="total-detail">
                     <h5 className="total-detail-head">Booking Quote</h5>
-                    <h5 className="total-detail-price">£ {bookingCharge?.bookingQuote || bookingCharge?.bookingQuote}</h5>
+                    <h5 className="total-detail-price">
+                      £{" "}
+                      {bookingCharge?.bookingQuote ||
+                        bookingCharge?.bookingQuote}
+                    </h5>
                   </div>
 
                   <Divider className="divider-primary" />
 
                   <div className="total-detail">
                     <h5 className="total-detail-head">Booking Fee</h5>
-                    <h5 className="total-detail-price">£ {bookingCharge?.bookingFee || 0}</h5>
+                    <h5 className="total-detail-price">
+                      £ {bookingCharge?.bookingFee || 0}
+                    </h5>
                   </div>
 
-                  {checkedSmsConfirmation && <>
-                    <Divider className="divider-primary" />
+                  {checkedSmsConfirmation && (
+                    <>
+                      <Divider className="divider-primary" />
 
-                    <div className="total-detail">
-                      <h5 className="total-detail-head">SMS Confirmation</h5>
-                      <h5 className="total-detail-price">£ {bookingCharge?.smsConfirmation || 0}</h5>
-                    </div>
-                  </>}
+                      <div className="total-detail">
+                        <h5 className="total-detail-head">SMS Confirmation</h5>
+                        <h5 className="total-detail-price">
+                          £ {bookingCharge?.smsConfirmation || 0}
+                        </h5>
+                      </div>
+                    </>
+                  )}
 
-                  {(checkedCancellationCover && bookingCharge?.cancellationCover>0) && <>
-                    <Divider className="divider-primary" />
+                  {checkedCancellationCover &&
+                    bookingCharge?.cancellationCover > 0 && (
+                      <>
+                        <Divider className="divider-primary" />
 
-                    <div className="total-detail">
-                      <h5 className="total-detail-head">Cancellation Cover</h5>
-                      <h5 className="total-detail-price">£ {bookingCharge?.cancellationCover}</h5>
-                    </div>
-                  </>}
+                        <div className="total-detail">
+                          <h5 className="total-detail-head">
+                            Cancellation Cover
+                          </h5>
+                          <h5 className="total-detail-price">
+                            £ {bookingCharge?.cancellationCover}
+                          </h5>
+                        </div>
+                      </>
+                    )}
 
-                  {((couponCode && couponValid) || !couponCode) && <>
-                    <Divider className="divider-primary" />
+                  {((couponCode && couponValid) || !couponCode) && (
+                    <>
+                      <Divider className="divider-primary" />
 
-                    <div className="total-detail">
-                      <h5 className="total-detail-head text-bold">
-                        Total before discount
-                      </h5>
-                      {couponCode ? <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalBeforeDiscount || 0}</h5> : <h5 className="total-detail-price text-bold">-</h5>}
-                    </div>
+                      <div className="total-detail">
+                        <h5 className="total-detail-head text-bold">
+                          Total before discount
+                        </h5>
+                        {couponCode ? (
+                          <h5 className="total-detail-price text-bold">
+                            £ {bookingCharge?.totalBeforeDiscount || 0}
+                          </h5>
+                        ) : (
+                          <h5 className="total-detail-price text-bold">-</h5>
+                        )}
+                      </div>
 
-                    <Divider className="divider-primary" />
+                      <Divider className="divider-primary" />
 
-                    <div className="total-detail">
-                      <h5 className="total-detail-head">Coupon Discount</h5>
-                      {couponCode ? <h5 className="total-detail-price">- {bookingCharge?.couponDiscount || 0} %</h5> : <h5 className="total-detail-price">-</h5>}
-                    </div>
-                  </>}
-
+                      <div className="total-detail">
+                        <h5 className="total-detail-head">Coupon Discount</h5>
+                        {couponCode ? (
+                          <h5 className="total-detail-price">
+                            - {bookingCharge?.couponDiscount || 0} %
+                          </h5>
+                        ) : (
+                          <h5 className="total-detail-price">-</h5>
+                        )}
+                      </div>
+                    </>
+                  )}
 
                   <Divider className="divider-primary" />
 
@@ -1765,7 +1888,9 @@ const Booking = () => {
                     <h5 className="total-detail-head text-bold">
                       Total Payable
                     </h5>
-                    <h5 className="total-detail-price text-bold">£ {bookingCharge?.totalPayable || 0}</h5>
+                    <h5 className="total-detail-price text-bold">
+                      £ {bookingCharge?.totalPayable || 0}
+                    </h5>
                   </div>
                 </div>
               </article>
@@ -1777,6 +1902,6 @@ const Booking = () => {
       <Footer />
     </>
   );
-}
+};
 
 export default Booking;

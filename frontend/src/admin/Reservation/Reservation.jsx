@@ -200,20 +200,22 @@ const Reservation = () => {
       console.log(response.data);
 
       setLoading(false);
-      const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
+      // const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
-      const result = await stripe.redirectToCheckout({
-        sessionId: response.data.id,
-      });
+      // const result = await stripe.redirectToCheckout({
+      //   sessionId: response.data.id,
+      // });
 
-      console.log(result);
-
+      // console.log(result);
       toast.current.show({
         severity: "success",
         summary: "Booking Successful",
         detail: "You have booked a parking slot for customer successfully",
         life: 3000,
       });
+      setTimeout(() => {
+        navigate("/bookings");
+      }, 2000);
     } catch (err) {
       console.log(err);
       toast.current.show({
