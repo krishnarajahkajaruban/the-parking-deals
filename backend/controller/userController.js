@@ -13,6 +13,8 @@ const { handleUpload, deleteOldImage } = require("../utils/cloudinaryUtils");
 const ContactForm = require("../models/contact");
 const SubscribedEmail = require("../models/subcribedEmail");
 const moment = require("moment");
+const { sendEmailToUser, sendEmailToCompany } = require("../common/sendingmail");
+
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
@@ -324,7 +326,8 @@ const carParkingBookingDetail = async (req, res) => {
       mobileNumber,
       accessToken,
       registeredStatus,
-      adminBooking,
+      adminBookingWithPayment,
+      adminBookingWithOutPayment,
     } = userDetail;
 
     if (
@@ -351,6 +354,9 @@ const carParkingBookingDetail = async (req, res) => {
 
     let user;
     let token;
+
+    let adminBooking =
+      adminBookingWithPayment || adminBookingWithOutPayment || false;
 
     if (accessToken && !adminBooking) {
       try {
@@ -393,36 +399,36 @@ const carParkingBookingDetail = async (req, res) => {
       if (!user || (user && !["Admin", "Moderator"].includes(user.role))) {
         return res.status(404).json({ error: "Unauthorized" });
       }
-      const result = await register(
-        email,
-        title,
-        firstName,
-        lastName,
-        null,
-        null,
-        mobileNumber,
-        "Offline-User",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        user.id,
-        null,
-        null,
-        null
-      );
+      // const result = await register(
+      //   email,
+      //   title,
+      //   firstName,
+      //   lastName,
+      //   null,
+      //   null,
+      //   mobileNumber,
+      //   "Offline-User",
+      //   null,
+      //   null,
+      //   null,
+      //   null,
+      //   null,
+      //   null,
+      //   null,
+      //   null,
+      //   null,
+      //   null,
+      //   user.id,
+      //   null,
+      //   null,
+      //   null
+      // );
 
-      if (result.status !== 201) {
-        return res.status(result.status).json({ error: result.error });
-      }
+      // if (result.status !== 201) {
+      //   return res.status(result.status).json({ error: result.error });
+      // }
 
-      user = result.user;
+      // user = result.user;
     } else {
       const result = await register(
         email,
@@ -500,6 +506,15 @@ const carParkingBookingDetail = async (req, res) => {
       pickUpTime,
       companyId,
       userId: user._id || user.id,
+      ...(adminBooking && {
+        adminBookingUser: {
+          email,
+          title,
+          firstName,
+          lastName: lastName || '',
+          mobileNumber,
+        },
+      }),
       travelDetail,
       vehicleDetail,
       // cardDetail,
@@ -514,13 +529,13 @@ const carParkingBookingDetail = async (req, res) => {
       totalBeforeDiscount: bookingResult.totalBeforeDiscount,
       couponDiscount: bookingResult.couponDiscount,
       totalPayable: bookingResult.totalPayable,
-      status: "Pending",
+      status: adminBookingWithOutPayment ? "Paid" : "Pending",
     });
 
     await newCarParkingBooking.save();
 
     let session;
-    if (!adminBooking) {
+    if (!adminBookingWithOutPayment) {
       session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: [
@@ -548,14 +563,32 @@ const carParkingBookingDetail = async (req, res) => {
           : `${process.env.FRONTEND_URL}/booking`,
         metadata: {
           booking_id: newCarParkingBooking._id.toString(),
+          user: adminBooking ? newCarParkingBooking.adminBookingUser : user,
         },
       });
     }
 
+    if (adminBookingWithOutPayment) {
+      // Send emails to user and company
+      await Promise.all([
+        sendEmailToUser(
+          newCarParkingBooking,
+          newCarParkingBooking.adminBookingUser,
+          "Confirmed"
+        ),
+        sendEmailToCompany(
+          newCarParkingBooking,
+          newCarParkingBooking.adminBookingUser,
+          "Confirmed"
+        ),
+      ]);
+    }
+
     return res.status(201).json({
       newCarParkBooking: newCarParkingBooking.toObject(),
-      ...(!adminBooking && { id: session.id }),
-      user: user,
+      ...(!adminBookingWithOutPayment && { id: session.id }),
+      ...(adminBookingWithOutPayment && { mailStatus: true }),
+      ...(!adminBooking && { user }),
       token,
       message: "Car park booking created successfully!",
     });

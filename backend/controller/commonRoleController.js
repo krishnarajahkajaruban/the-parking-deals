@@ -97,19 +97,24 @@ const getAllBookings = async (req, res) => {
     }
 
     const bookingDetailsWithUserAndCompanyDetails = await Promise.all(
-      allBookings.map(async ({ userId, companyId, ...bookingDetail }) => {
-        const user = await User.findById(userId).lean();
-        const company = await User.findById(companyId).lean();
-        if (["Admin", "User", "Moderator", "Admin-User"].includes(role)) {
-          bookingDetail.user = user;
-          bookingDetail.company = company;
-        } else if (role === "Vendor") {
-          bookingDetail.user = user;
-        } else if (role === "User") {
-          bookingDetail.company = company;
+      allBookings.map(
+        async ({ userId, companyId, adminBookingUser, ...bookingDetail }) => {
+          const user = await User.findById(userId).lean();
+          const company = await User.findById(companyId).lean();
+
+          if (["Admin", "User", "Moderator", "Admin-User"].includes(role)) {
+            bookingDetail.user = adminBookingUser
+              ? { ...adminBookingUser, createdBy: userId }
+              : user;
+            bookingDetail.company = company;
+          } else if (role === "Vendor") {
+            bookingDetail.user = user;
+          } else if (role === "User") {
+            bookingDetail.company = company;
+          }
+          return bookingDetail;
         }
-        return bookingDetail;
-      })
+      )
     );
 
     // Calculate the remaining data count
@@ -200,13 +205,15 @@ const findAllVendors = async (req, res) => {
     console.log(allVendors.length);
     // If serviceType is provided and it's not 'All Parking', filter vendors by serviceType
     if (serviceType && serviceType !== "All Parking") {
-      allVendors = allVendors.filter((vendor) =>
-        vendor.serviceType === serviceType
+      allVendors = allVendors.filter(
+        (vendor) => vendor.serviceType === serviceType
       );
     }
 
     if (allVendors.length === 0) {
-      return res.status(404).json({ error: "No vendors found for the selected service type" });
+      return res
+        .status(404)
+        .json({ error: "No vendors found for the selected service type" });
     }
 
     // Fetch airport names for the vendors' airports
@@ -276,7 +283,6 @@ const findAllVendors = async (req, res) => {
     });
   }
 };
-
 
 /* get all airports */
 const getAllAirports = async (req, res) => {

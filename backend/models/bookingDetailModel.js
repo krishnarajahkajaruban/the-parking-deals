@@ -69,6 +69,30 @@ const cardDetailSchema = new Schema({
   }
 }, { _id: false } // Prevents creation of an _id field in this subdocument
 );
+
+const adminBookingUserSchema = new Schema({
+  email: {
+    type: String,
+    required: [true, "Email must be provided"]
+  },
+  title: {
+    type: String,
+    required: [true, "Title must be provided"],
+    enum: ["Mr.", "Mrs.", "Ms.", "Miss."]
+  },
+  firstName: {
+    type: String,
+    required: [true, "First name must be provided"]
+  },
+  lastname: {
+    type: String
+  },   
+  mobileNumber: {
+    type: Number,
+    required: [true, "Mobile number must be provided"]
+  }, 
+}, { _id: false } // Prevents creation of an _id field in this subdocument
+);
   
 // Define the main schema
 const bookingDetailSchema = new Schema(
@@ -106,6 +130,10 @@ const bookingDetailSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: User,
       required: [true, "User Id must be provided"]
+    },
+    adminBookingUser: {
+      type: adminBookingUserSchema,
+      required: false // Explicitly mark it as optional
     },
     travelDetail: travelDetailSchema,
     vehicleDetail: [vehicleDetailSchema],
