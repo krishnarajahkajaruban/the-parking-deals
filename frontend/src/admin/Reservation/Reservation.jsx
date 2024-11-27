@@ -172,6 +172,9 @@ const Reservation = () => {
   const [showAddDataModal, setShowAddDataModal] = useState(false);
   const [airportName, setAirportName] = useState("");
   const [showAddError, setShowAddError] = useState(false);
+  const [adminBookingWithOutPayment, setAdminBookingWithOutPayment] =
+    useState(false);
+  const [adminBookingWithPayment, setAdminBookingWithPayment] = useState(false);
 
   function validateUserDetails(userDetails) {
     // Validate all required fields
@@ -188,6 +191,8 @@ const Reservation = () => {
         detail: "Please fill all required fields!",
         life: 3000,
       });
+      setAdminBookingWithPayment(false);
+      setAdminBookingWithOutPayment(false);
       return false;
     }
     return true; // All validations passed
@@ -200,20 +205,24 @@ const Reservation = () => {
       console.log(response.data);
 
       setLoading(false);
-      const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
+      if (adminBookingWithPayment) {
+        const stripe = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
-      const result = await stripe.redirectToCheckout({
-        sessionId: response.data.id,
-      });
+        const result = await stripe.redirectToCheckout({
+          sessionId: response.data.id,
+        });
 
-      console.log(result);
-
+        console.log(result);
+      }
       toast.current.show({
         severity: "success",
         summary: "Booking Successful",
         detail: "You have booked a parking slot for customer successfully",
         life: 3000,
       });
+      setTimeout(() => {
+        navigate("/bookings");
+      }, 2000);
     } catch (err) {
       console.log(err);
       toast.current.show({
@@ -224,10 +233,12 @@ const Reservation = () => {
       });
     } finally {
       setBookingLoading(false);
+      setAdminBookingWithPayment(false);
+      setAdminBookingWithOutPayment(false);
     }
   };
 
-  const handleBooking = () => {
+  const handleBooking = (type) => {
     setShowError(false);
     if (!validateUserDetails(customerDetails)) {
       return; // Exit if validation fails
@@ -242,6 +253,8 @@ const Reservation = () => {
         detail: "Please fill all required fields!",
         life: 3000,
       });
+      setAdminBookingWithPayment(false);
+      setAdminBookingWithOutPayment(false);
       return;
     }
 
@@ -257,6 +270,8 @@ const Reservation = () => {
         detail: "Please fill all required fields!",
         life: 3000,
       });
+      setAdminBookingWithPayment(false);
+      setAdminBookingWithOutPayment(false);
       return;
     }
 
@@ -266,7 +281,9 @@ const Reservation = () => {
       lastName: customerDetails.lastName,
       mobileNumber: customerDetails.mobileNumber,
       title: customerDetails.title,
-      adminBooking: true,
+      adminBookingWithPayment: type === "adminBookingWitPayment" ? true : false,
+      adminBookingWithOutPayment:
+        type === "adminBookingWithOutPayment" ? true : false,
       accessToken: token,
     };
 
@@ -428,19 +445,19 @@ const Reservation = () => {
   const handleCustomerInputChange = async (e) => {
     const { name, value } = e.target;
     setCustomerDetails({ ...customerDetails, [name]: value });
-    if (name === "email") {
-      setShowError(false);
-      setEmailExist(false);
-      try {
-        const response = await api.post("/api/auth/check-user-registerd", {
-          email: value,
-        });
-        console.log(response.data);
-        setEmailExist(response.data?.emailExists);
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    // if (name === "email") {
+    //   setShowError(false);
+    //   setEmailExist(false);
+    //   try {
+    //     const response = await api.post("/api/auth/check-user-registerd", {
+    //       email: value,
+    //     });
+    //     console.log(response.data);
+    //     setEmailExist(response.data?.emailExists);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
   };
 
   useEffect(() => {
@@ -1202,14 +1219,31 @@ const Reservation = () => {
             </div>
           </div>
         </div>
-
-        <div className="text-end mt-4 pb-5">
-          <Button
-            label="CONFIRM BOOKING"
-            className="aply-btn"
-            loading={bookingLoading}
-            onClick={handleBooking}
-          />
+        <div className="d-flex justify-content-end">
+          <div className="text-end mt-4 pb-5 me-2">
+            <Button
+              label="CONFIRM BOOKING WITH PAYMENT"
+              className="aply-btn"
+              loading={adminBookingWithPayment && bookingLoading}
+              onClick={() => {
+                setAdminBookingWithPayment(true);
+                handleBooking('adminBookingWithPayment');
+              }}
+              disabled={adminBookingWithOutPayment}
+            />
+          </div>
+          <div className="text-end mt-4 pb-5">
+            <Button
+              label="CONFIRM BOOKING WITHOUT PAYMENT"
+              className="aply-btn"
+              loading={adminBookingWithOutPayment && bookingLoading}
+              onClick={() => {
+                setAdminBookingWithOutPayment(true);
+                handleBooking('adminBookingWithOutPayment');
+              }}
+              disabled={adminBookingWithPayment}
+            />
+          </div>
         </div>
       </div>
 

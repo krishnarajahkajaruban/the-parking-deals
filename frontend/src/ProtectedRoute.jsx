@@ -48,7 +48,7 @@ const ProtectedRoute = ({ children }) => {
     if (!isAuth && !isAuthPage) {
         if (['/change-password', '/dashboard'].includes(pathname)) {
             return <Navigate to="/sign-in" />;
-        } else if (pathname.startsWith('/admin-dashboard') || pathname.startsWith('/reservation') || pathname.startsWith('/bookings') || pathname.startsWith('/users') || pathname.startsWith('/customers') || pathname.startsWith('/vendors') || pathname.startsWith('/airports') || pathname.startsWith('/vendors/bookings/')) {
+        } else if (pathname.startsWith('/admin-dashboard') || pathname.startsWith('/reservation') || pathname.startsWith('/bookings') || pathname.startsWith('/users') || pathname.startsWith('/customers') || pathname.startsWith('/vendors') || pathname.startsWith('/airports') || pathname.startsWith('/vendors/bookings/') || pathname.startsWith('/extras')) {
             return <Navigate to="/admin-login" />;
         }
     }
