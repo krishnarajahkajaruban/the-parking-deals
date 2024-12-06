@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import ReactGA from "react-ga";
 // import Home from './pages/Home/Home';
 // import AboutUs from './pages/AboutUs/AboutUs';
 import Signin from './pages/Signin/Signin';
@@ -59,6 +60,9 @@ const Vendors = React.lazy(() => import('./admin/Vendors/Vendors'));
 const Airports = React.lazy(() => import('./admin/Airports/Airports'));
 const VendorsBookings = React.lazy(() => import('./admin/Vendors/VendorBookings'));
 const Extras = React.lazy(() => import('./admin/Extras/Extras'));
+
+const MEASUREMENT_ID = process.env.REACT_APP_MEASUREMENT_ID;
+ReactGA.initialize(MEASUREMENT_ID);
 
 
 function App() {

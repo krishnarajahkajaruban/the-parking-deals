@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import api from "../../api";
 import { sendVerificationEmail, verifyOTP } from "../../utils/authUtil";
 import { loadStripe } from "@stripe/stripe-js";
+import ReactGA from "react-ga";
 import {
   Elements,
   CardElement,
@@ -428,6 +429,13 @@ const Booking = () => {
       });
 
       console.log(result);
+
+      ReactGA.event({
+        category: 'CAR PARK BOOKING',
+        action: 'booking',
+        label: 'online_booking',
+        value: response.data?.totalPayable
+      });
 
       toast.current.show({
         severity: "success",

@@ -28,6 +28,7 @@ import { Toast } from "primereact/toast";
 import Footer from "../../components/Footer";
 import { getBookingChargesWithCouponCodeAndCorrespondingDiscount } from "../../utils/chargesAndCouponCode";
 // import { SocketContext } from '../../context/SocketContext';
+import ReactGA from "react-ga";
 
 const Home = () => {
   // const socket = useContext(SocketContext);
@@ -256,6 +257,12 @@ const Home = () => {
 
   const capitalizeFirstLetter = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1);
+
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname);
+  }, []) 
+  
 
   return (
     <>
