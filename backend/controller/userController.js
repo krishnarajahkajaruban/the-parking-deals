@@ -534,6 +534,8 @@ const carParkingBookingDetail = async (req, res) => {
 
     await newCarParkingBooking.save();
 
+    console.log(newCarParkingBooking._id.toString())
+
     let session;
     if (!adminBookingWithOutPayment) {
       session = await stripe.checkout.sessions.create({
@@ -563,7 +565,17 @@ const carParkingBookingDetail = async (req, res) => {
           : `${process.env.FRONTEND_URL}/booking`,
         metadata: {
           booking_id: newCarParkingBooking._id.toString(),
-          user: adminBooking ? newCarParkingBooking.adminBookingUser : user,
+          user: JSON.stringify(
+            adminBooking
+              ? newCarParkingBooking.adminBookingUser
+              : {
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                mobileNumber: user.mobileNumber,
+                title: user.title
+              }
+          ),
         },
       });
     }
@@ -652,7 +664,7 @@ const calculatingTotalBookingCharge = async (
           bookingFee +
           smsConfirmationCharge +
           cancellationCoverCharge) *
-          100
+        100
       ) / 100;
     const discountAmount = totalBeforeDiscount * (couponDiscount / 100);
     const totalPayable =
@@ -1063,9 +1075,8 @@ const createContactOrFaqForm = async (req, res) => {
     }
 
     res.status(201).json({
-      message: `${
-        type === "contact" ? "Contact" : type === "faq" ? "FAQ" : ""
-      } Form submitted successfully!`,
+      message: `${type === "contact" ? "Contact" : type === "faq" ? "FAQ" : ""
+        } Form submitted successfully!`,
       form: form.toObject(),
     });
   } catch (err) {

@@ -245,7 +245,7 @@ const Reservation = () => {
     }
 
     // Check if travel details are filled
-    if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
+    if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal || !travelDetails.inBoundFlight) {
       setShowError(true);
       toast.current.show({
         severity: "error",
@@ -588,9 +588,9 @@ const Reservation = () => {
                   options={
                     Array.isArray(airports)
                       ? airports.map((airport) => ({
-                          ...airport,
-                          name: capitalizeFirstLetter(airport.name),
-                        }))
+                        ...airport,
+                        name: capitalizeFirstLetter(airport.name),
+                      }))
                       : []
                   }
                   optionLabel="name"
@@ -937,7 +937,7 @@ const Reservation = () => {
                 )}
                 <small className="text-danger form-error-msg">
                   {!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerDetails.email) &&
-                  customerDetails.email
+                    customerDetails.email
                     ? "Enter valid email"
                     : ""}
                 </small>
@@ -973,8 +973,8 @@ const Reservation = () => {
                   options={
                     selectedAirport && Array.isArray(selectedAirport.terminals)
                       ? selectedAirport.terminals?.map((ter) => {
-                          return { name: ter };
-                        })
+                        return { name: ter };
+                      })
                       : []
                   }
                   optionLabel="name"
@@ -1011,8 +1011,8 @@ const Reservation = () => {
                   options={
                     selectedAirport && Array.isArray(selectedAirport.terminals)
                       ? selectedAirport.terminals?.map((ter) => {
-                          return { name: ter };
-                        })
+                        return { name: ter };
+                      })
                       : []
                   }
                   optionLabel="name"
@@ -1031,7 +1031,7 @@ const Reservation = () => {
 
             <div className="col-12 col-xl-4 col-sm-6">
               <div className="custom-form-group mb-sm-0 mb-0">
-                <label htmlFor="inBoundFlight" className="custom-form-label">
+                <label htmlFor="inBoundFlight" className="custom-form-label form-required">
                   Inbound Flight/Vessel:{" "}
                 </label>
                 <InputText
@@ -1044,9 +1044,11 @@ const Reservation = () => {
                   onChange={handleInputTravelDetailChange}
                 />
 
-                {/* {showError &&
-                                    <small className="text-danger form-error-msg">This field is required</small>
-                                } */}
+                {showError && !travelDetails.inBoundFlight && (
+                  <small className="text-danger form-error-msg">
+                    This field is required
+                  </small>
+                )}
               </div>
             </div>
           </div>
@@ -1212,8 +1214,8 @@ const Reservation = () => {
                   {loading
                     ? "calculating..."
                     : bookingCharge
-                    ? "£" + bookingCharge?.totalPayable
-                    : "£0"}
+                      ? "£" + bookingCharge?.totalPayable
+                      : "£0"}
                 </h5>
               </div>
             </div>

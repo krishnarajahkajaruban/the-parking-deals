@@ -105,20 +105,20 @@ const Header = () => {
                 <div class="loader"></div>
             </div> */}
       <header>
-        {/* {(couponCodeAndDiscount && couponCodeAndDiscount?.bannerStatus) && (
-            <div className="promotion-label">
-              <h6>
-                Use <b>{couponCodeAndDiscount.couponCode}</b> promo code to get{" "}
-                {couponCodeAndDiscount.discount}% off for your bookings
-              </h6>
-            </div>
-          )} */}
+        {(couponCodeAndDiscount && couponCodeAndDiscount?.bannerStatus) && (
+          <div className="promotion-label">
+            <h6>
+              Use <b>{couponCodeAndDiscount.couponCode}</b> promo code to get{" "}
+              {couponCodeAndDiscount.discount}% off for your bookings
+            </h6>
+          </div>
+        )}
 
-        <div className="promotion-label">
+        {/* <div className="promotion-label">
           <h6>
           <b>We’re expanding!</b> Now offering parking at <b>Luton, Birmingham, and Heathrow</b> airports. Enjoy easy, reliable service at all three locations. <b>Book now!</b>
           </h6>
-        </div>
+        </div> */}
         <nav className={`nav-section ${scrolled ? "scrolled" : ""}`}>
           <div className="container-md">
             <div className="row">
@@ -143,11 +143,10 @@ const Header = () => {
                     <li className="nav-link-item">
                       <button
                         onClick={() => goToLink("/about-us")}
-                        className={`nav-link ${
-                          window.location.pathname === "/about-us"
+                        className={`nav-link ${window.location.pathname === "/about-us"
                             ? "active"
                             : ""
-                        }`}
+                          }`}
                       >
                         About
                       </button>
@@ -156,11 +155,10 @@ const Header = () => {
                     <li className="nav-link-item">
                       <button
                         onClick={() => goToLink("/services")}
-                        className={`nav-link ${
-                          window.location.pathname === "/services"
+                        className={`nav-link ${window.location.pathname === "/services"
                             ? "active"
                             : ""
-                        }`}
+                          }`}
                       >
                         Services
                       </button>
@@ -169,11 +167,10 @@ const Header = () => {
                     <li className="nav-link-item">
                       <button
                         onClick={() => goToLink("/contact-us")}
-                        className={`nav-link ${
-                          window.location.pathname === "/contact-us"
+                        className={`nav-link ${window.location.pathname === "/contact-us"
                             ? "active"
                             : ""
-                        }`}
+                          }`}
                       >
                         Contact
                       </button>
@@ -223,16 +220,14 @@ const Header = () => {
                             <h6>{user?.firstName || "---------"}</h6>
                           </div>
                           <i
-                            className={`bi bi-chevron-down ${
-                              isOpen ? "rotate" : ""
-                            }`}
+                            className={`bi bi-chevron-down ${isOpen ? "rotate" : ""
+                              }`}
                           ></i>
                           <Ripple />
                         </button>
                         <ul
-                          className={`profile-dropdown-menu ${
-                            isOpen ? "open" : ""
-                          }`}
+                          className={`profile-dropdown-menu ${isOpen ? "open" : ""
+                            }`}
                         >
                           <div className="profile-dropdown-detail">
                             <div className="profile-dropdown-image-area">
@@ -307,9 +302,8 @@ const Header = () => {
             <li className="menu-link-item">
               <button
                 onClick={() => goToLink("/")}
-                className={`menu-link ${
-                  window.location.pathname === "/" ? "active" : ""
-                }`}
+                className={`menu-link ${window.location.pathname === "/" ? "active" : ""
+                  }`}
               >
                 Home
               </button>
@@ -317,9 +311,8 @@ const Header = () => {
             <li className="menu-link-item">
               <button
                 onClick={() => goToLink("/about-us")}
-                className={`menu-link ${
-                  window.location.pathname === "/about-us" ? "active" : ""
-                }`}
+                className={`menu-link ${window.location.pathname === "/about-us" ? "active" : ""
+                  }`}
               >
                 About
               </button>
@@ -327,9 +320,8 @@ const Header = () => {
             <li className="menu-link-item">
               <button
                 onClick={() => goToLink("/services")}
-                className={`menu-link ${
-                  window.location.pathname === "/services" ? "active" : ""
-                }`}
+                className={`menu-link ${window.location.pathname === "/services" ? "active" : ""
+                  }`}
               >
                 Services
               </button>
@@ -337,9 +329,8 @@ const Header = () => {
             <li className="menu-link-item">
               <button
                 onClick={() => goToLink("/contact-us")}
-                className={`menu-link ${
-                  window.location.pathname === "/contact-us" ? "active" : ""
-                }`}
+                className={`menu-link ${window.location.pathname === "/contact-us" ? "active" : ""
+                  }`}
               >
                 Contact
               </button>

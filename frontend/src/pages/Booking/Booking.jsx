@@ -324,9 +324,9 @@ const Booking = () => {
     setCardDetails({ ...cardDetails, [name]: value });
   };
 
-  const handleLogin = () => {};
+  const handleLogin = () => { };
 
-  const handleRegister = () => {};
+  const handleRegister = () => { };
 
   const handleApplyCoupon = () => {
     if (couponCode) {
@@ -535,7 +535,7 @@ const Booking = () => {
     }
 
     // Check if travel details are filled
-    if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal) {
+    if (!travelDetails.departureTerminal || !travelDetails.arrivalTerminal || !travelDetails.inBoundFlight) {
       setShowError(true);
       toast.current.show({
         severity: "error",
@@ -762,11 +762,11 @@ const Booking = () => {
 
                           {/* for create account */}
                           {page === 1 &&
-                          !emailExist &&
-                          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                            userDetails.email
-                          ) &&
-                          userDetails.email ? (
+                            !emailExist &&
+                            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                              userDetails.email
+                            ) &&
+                            userDetails.email ? (
                             <div className="row mt-4">
                               <div className="col-12">
                                 <h6 className="account-alert">
@@ -777,9 +777,8 @@ const Booking = () => {
                               <div className="col-12 col-sm-6 col-xl-6 mx-auto">
                                 <div className="custom-form-group contains-float-input pt-2 mb-1">
                                   <Button
-                                    label={`${
-                                      loading ? "Processing..." : "VERIFY"
-                                    }`}
+                                    label={`${loading ? "Processing..." : "VERIFY"
+                                      }`}
                                     className="w-100 submit-button justify-content-center"
                                     onClick={handleVerify}
                                     loading={loading}
@@ -828,13 +827,12 @@ const Booking = () => {
 
                                 <div className="custom-form-group contains-float-input mb-3">
                                   <Button
-                                    label={`${
-                                      reSendLoading
+                                    label={`${reSendLoading
                                         ? "Processing..."
                                         : loading
-                                        ? "Verifying..."
-                                        : "VERIFY"
-                                    }`}
+                                          ? "Verifying..."
+                                          : "VERIFY"
+                                      }`}
                                     className="w-100 submit-button justify-content-center"
                                     onClick={handleVerifyOTP}
                                     loading={loading}
@@ -903,7 +901,7 @@ const Booking = () => {
                                   )}
                                   <small className="text-danger form-error-msg">
                                     {userDetails.password.length < 8 &&
-                                    userDetails.password
+                                      userDetails.password
                                       ? "Password must be atleast 8 characters long"
                                       : ""}
                                   </small>
@@ -937,7 +935,7 @@ const Booking = () => {
                                   <small className="text-danger text-capitalized form-error-message">
                                     {userDetails.password !==
                                       userDetails.confirmPassword &&
-                                    userDetails.confirmPassword
+                                      userDetails.confirmPassword
                                       ? "Password & Confirm Password must be equal"
                                       : ""}
                                   </small>
@@ -1208,14 +1206,14 @@ const Booking = () => {
                             }
                             options={
                               bookingDetails &&
-                              Array.isArray(
-                                bookingDetails?.airportName.terminals
-                              )
+                                Array.isArray(
+                                  bookingDetails?.airportName.terminals
+                                )
                                 ? bookingDetails?.airportName.terminals?.map(
-                                    (ter) => {
-                                      return { name: ter };
-                                    }
-                                  )
+                                  (ter) => {
+                                    return { name: ter };
+                                  }
+                                )
                                 : []
                             }
                             optionLabel="name"
@@ -1249,14 +1247,14 @@ const Booking = () => {
                             }
                             options={
                               bookingDetails &&
-                              Array.isArray(
-                                bookingDetails?.airportName.terminals
-                              )
+                                Array.isArray(
+                                  bookingDetails?.airportName.terminals
+                                )
                                 ? bookingDetails?.airportName.terminals?.map(
-                                    (ter) => {
-                                      return { name: ter };
-                                    }
-                                  )
+                                  (ter) => {
+                                    return { name: ter };
+                                  }
+                                )
                                 : []
                             }
                             optionLabel="name"
@@ -1294,7 +1292,7 @@ const Booking = () => {
                         <div className="custom-form-group mb-0">
                           <label
                             htmlFor="inBoundFlight"
-                            className="custom-form-label"
+                            className="custom-form-label form-required"
                           >
                             Inbound Flight/Vessel
                           </label>
@@ -1306,6 +1304,11 @@ const Booking = () => {
                             onChange={handleInputTravelDetailChange}
                             placeholder="Enter Inbound"
                           />
+                          {showError && !travelDetails.inBoundFlight && (
+                            <small className="text-danger form-error-msg">
+                              This field is required
+                            </small>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1471,7 +1474,7 @@ const Booking = () => {
                             <label htmlFor="cancellationCover" className="ml-2">
                               Cancellation Cover{" "}
                               {bookingCharge &&
-                              bookingCharge?.cancellationCover > 0
+                                bookingCharge?.cancellationCover > 0
                                 ? "- £" + bookingCharge?.cancellationCover
                                 : ""}
                             </label>
