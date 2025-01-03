@@ -19,7 +19,7 @@ const travelDetailSchema = new Schema({
   },
   inBoundFlight: {
     type: String,
-    default: "",
+    required: [true, "Inbound flight must be provided"],
   },
 }, { _id: false } // Prevents creation of an _id field in this subdocument
 );

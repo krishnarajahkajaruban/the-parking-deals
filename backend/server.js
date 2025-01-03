@@ -122,7 +122,7 @@ async function handleCheckoutSession(session) {
     console.log(session);
     const booking_id = session.metadata.booking_id;
     const stripePaymentId = session.id;
-    const bookingUser = session.metadata.user;
+    const bookingUser = JSON.parse(session.metadata.user);
 
     console.log(`Booking ID: ${booking_id}`);
     console.log(`Stripe Payment ID: ${stripePaymentId}`);
@@ -182,7 +182,7 @@ async function handlePaymentFailure(paymentIntent) {
     console.log(paymentIntent);
     const booking_id = paymentIntent.metadata.booking_id;
     const stripePaymentId = paymentIntent.id;
-    const bookingUser = session.metadata.user;
+    const bookingUser = JSON.parse(session.metadata.user);
 
     console.log(`Booking ID: ${booking_id}`);
     console.log(`Stripe Payment ID: ${stripePaymentId}`);
