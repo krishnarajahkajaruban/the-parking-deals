@@ -48,7 +48,7 @@ const Home = () => {
   const today = new Date();
   const [dropOffTime, setDropOffTime] = useState(null);
   const [pickupTime, setPickupTime] = useState(null);
-  const [couponCode, setCouponCode] = useState("WLCME");
+  const [couponCode, setCouponCode] = useState("");
 
   const airports = useSelector((state) => state.vendor.airport);
   const couponCodeObj = useSelector(
