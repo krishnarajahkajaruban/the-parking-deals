@@ -203,6 +203,20 @@
     font-weight: 500 !important;
 }
 
+.percentage {
+    margin-left: 10px;
+    font-size: 18px;
+    background-color: #ffffff;
+    text-wrap: nowrap;
+    padding: 3px 8px;
+    border-radius: 6px;
+    color: #008f3b !important;
+    box-shadow: 0px 5px 20px rgba(34, 32, 87, 0.07);
+    vertical-align: middle;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+}
+
 
 .result-card-sub {
     display: block;
@@ -721,7 +735,7 @@
     cursor: pointer;
 }
 
-.show-data-head i{
+.show-data-head i {
     position: relative !important;
     transform: none !important;
     color: #37348b;

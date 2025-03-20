@@ -369,4 +369,8 @@
     .tab-detail-image-content .p-image {
         flex-basis: calc(50% - 10px) !important;
     }
+
+    .percentage {
+        font-size: 16px;
+    }
 }

@@ -112,6 +112,8 @@ const VendorList = () => {
     { time: "23:30" },
   ];
 
+  const [discountPercentage, setDiscountPercentage] = useState(30);
+
   const parseTime = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
     const date = new Date();
@@ -362,6 +364,13 @@ const VendorList = () => {
 
   console.log(selectedAirport);
 
+  const handleCalculateDiscountPercentage = (finalQuote, quote) => {
+    if (!quote || !finalQuote || quote <= finalQuote) return "0";
+
+    const discountPercentage = ((quote - finalQuote) / quote) * 100;
+    return discountPercentage.toFixed(2);
+  };
+
   return (
     <>
       {!quoteInfo && <Navigate to="/" />}
@@ -565,6 +574,13 @@ const VendorList = () => {
                             {quote.quote > 0 && (
                               <span className="cut-price ms-3">
                                 £ {quote.quote}
+                              </span>
+                            )}
+
+                            {quote?.quote > 0 && quote?.finalQuote < quote?.quote && (
+                              <span className="percentage">
+                                {/* -{handleCalculateDiscountPercentage(quote?.finalQuote ?? 0, quote?.quote ?? 0)}% */}
+                                -{discountPercentage}%
                               </span>
                             )}
                           </h3>
@@ -1722,6 +1738,13 @@ const VendorList = () => {
                     £ {selectedVendor?.finalQuote}
                     {selectedVendor?.quote > 0 && (
                       <span>£ {selectedVendor.quote}</span>
+                    )}
+
+                    {selectedVendor?.quote > 0 && selectedVendor?.finalQuote < selectedVendor?.quote && (
+                      <span className="percentage">
+                        {/* -{handleCalculateDiscountPercentage(selectedVendor?.finalQuote ?? 0, selectedVendor?.quote ?? 0)}% */}
+                        -{discountPercentage}%
+                      </span>
                     )}
                   </h5>
                 </div>
