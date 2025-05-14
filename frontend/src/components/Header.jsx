@@ -105,20 +105,20 @@ const Header = () => {
                 <div class="loader"></div>
             </div> */}
       <header>
-        {(couponCodeAndDiscount && couponCodeAndDiscount?.bannerStatus) && (
+        {/* {(couponCodeAndDiscount && couponCodeAndDiscount?.bannerStatus) && (
           <div className="promotion-label">
             <h6>
               Use <b>{couponCodeAndDiscount.couponCode}</b> promo code to get{" "}
               {couponCodeAndDiscount.discount}% off for your bookings
             </h6>
           </div>
-        )}
+        )} */}
 
-        {/* <div className="promotion-label">
+        <div className="promotion-label">
           <h6>
-          <b>We’re expanding!</b> Now offering parking at <b>Luton, Birmingham, and Heathrow</b> airports. Enjoy easy, reliable service at all three locations. <b>Book now!</b>
+          <b>Spring into Savings!</b> Enjoy <b>30% Off</b> for All Customers – Limited Time Only!🌸✨<b>Book now!</b>
           </h6>
-        </div> */}
+        </div>
         <nav className={`nav-section ${scrolled ? "scrolled" : ""}`}>
           <div className="container-md">
             <div className="row">
