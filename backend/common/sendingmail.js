@@ -268,7 +268,7 @@ const sendEmailToUser = async (booking, user, type) => {
                               <tr>
                                   <th>Booked By</th>
                                   <td>${user.title} ${user.firstName} ${
-      user.lastname
+      user.lastname || ""
     }</td>
                                   <th>Flying From</th>
                                   <td>${booking.airportName}</td>
@@ -773,7 +773,7 @@ const sendEmailToCompany = async (booking, user, type) => {
                               <tr>
                                   <th>Booked By</th>
                                   <td>${user.title} ${user.firstName} ${
-      user.lastname
+      user.lastname || ""
     }</td>
                                   <th>Flying From</th>
                                   <td>${booking.airportName}</td>

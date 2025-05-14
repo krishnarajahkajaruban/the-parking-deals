@@ -511,7 +511,7 @@ const carParkingBookingDetail = async (req, res) => {
           email,
           title,
           firstName,
-          lastName: lastName || '',
+          lastname: lastName || '',
           mobileNumber,
         },
       }),
@@ -571,7 +571,7 @@ const carParkingBookingDetail = async (req, res) => {
               : {
                 email: user.email,
                 firstName: user.firstName,
-                lastName: user.lastName,
+                lastname: user.lastName,
                 mobileNumber: user.mobileNumber,
                 title: user.title
               }
