@@ -1742,8 +1742,8 @@ const VendorList = () => {
 
                     {selectedVendor?.quote > 0 && selectedVendor?.finalQuote < selectedVendor?.quote && (
                       <span className="percentage">
-                        {/* -{handleCalculateDiscountPercentage(selectedVendor?.finalQuote ?? 0, selectedVendor?.quote ?? 0)}% */}
-                        -{discountPercentage}%
+                        -{handleCalculateDiscountPercentage(selectedVendor?.finalQuote ?? 0, selectedVendor?.quote ?? 0)}%
+                        {/* -{discountPercentage}% */}
                       </span>
                     )}
                   </h5>
