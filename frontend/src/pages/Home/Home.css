@@ -87,7 +87,7 @@
     width: 50%;
 }
 
-.custom-card-header-head{
+.custom-card-header-head {
     color: #d12788;
     font-size: 25px;
     font-weight: 700;
@@ -98,4 +98,15 @@
 
 .section-heading.text-lg-start::after {
     margin-left: 0 !important;
+}
+
+
+.about_title_input {
+    outline-offset: none;
+    font-size: 35px;
+    font-weight: 700;
+    display: block;
+    max-width: max-content;
+    height: min-content;
+    border: none;
 }
