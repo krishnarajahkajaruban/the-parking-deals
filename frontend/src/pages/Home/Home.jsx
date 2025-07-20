@@ -261,8 +261,8 @@ const Home = () => {
 
   useEffect(() => {
     ReactGA.pageview(window.location.pathname);
-  }, []) 
-  
+  }, [])
+
 
   return (
     <>
@@ -547,9 +547,9 @@ const Home = () => {
                               options={
                                 Array.isArray(airports)
                                   ? airports.map((airport) => ({
-                                      ...airport,
-                                      name: capitalizeFirstLetter(airport.name),
-                                    }))
+                                    ...airport,
+                                    name: capitalizeFirstLetter(airport.name),
+                                  }))
                                   : []
                               }
                               optionLabel="name"
