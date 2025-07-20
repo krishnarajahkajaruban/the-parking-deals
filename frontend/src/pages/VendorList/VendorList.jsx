@@ -368,7 +368,7 @@ const VendorList = () => {
     if (!quote || !finalQuote || quote <= finalQuote) return "0";
 
     const discountPercentage = ((quote - finalQuote) / quote) * 100;
-    return discountPercentage.toFixed(2);
+    return Math.round(discountPercentage).toString();
   };
 
   return (
@@ -579,8 +579,8 @@ const VendorList = () => {
 
                             {quote?.quote > 0 && quote?.finalQuote < quote?.quote && (
                               <span className="percentage">
-                                {/* -{handleCalculateDiscountPercentage(quote?.finalQuote ?? 0, quote?.quote ?? 0)}% */}
-                                -{discountPercentage}%
+                                -{handleCalculateDiscountPercentage(quote?.finalQuote ?? 0, quote?.quote ?? 0)}%
+                                {/* -{discountPercentage}% */}
                               </span>
                             )}
                           </h3>
@@ -1742,8 +1742,8 @@ const VendorList = () => {
 
                     {selectedVendor?.quote > 0 && selectedVendor?.finalQuote < selectedVendor?.quote && (
                       <span className="percentage">
-                        {/* -{handleCalculateDiscountPercentage(selectedVendor?.finalQuote ?? 0, selectedVendor?.quote ?? 0)}% */}
-                        -{discountPercentage}%
+                        -{handleCalculateDiscountPercentage(selectedVendor?.finalQuote ?? 0, selectedVendor?.quote ?? 0)}%
+                        {/* -{discountPercentage}% */}
                       </span>
                     )}
                   </h5>
