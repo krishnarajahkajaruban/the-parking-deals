@@ -688,12 +688,12 @@ const VendorList = () => {
                           />
                         </div>
 
-                        <div className="result-card-status-area">
+{/*                         <div className="result-card-status-area">
                           <p>
                             <i className="bi bi-eye-fill me-2"></i>
                             13 Currently Viewing
                           </p>
-                        </div>
+                        </div> */}
                       </div>
                     </article>
                   </div>
