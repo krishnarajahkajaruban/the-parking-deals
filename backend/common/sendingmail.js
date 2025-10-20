@@ -149,6 +149,26 @@ const sendEmailToUser = async (booking, user, type) => {
                       color: #000;
                       margin-bottom: 15px;
                   }
+
+                 .text-highlight {
+                    background-color: #ccffff;
+                    max-width: max-content;
+                    padding: 5px 8px;
+                    border: 1px solid red;
+
+                }
+
+                .text-decoration-underline {
+                    text-decoration: underline;
+                }
+
+                .text-red {
+                    color: red;
+                }
+
+                h4{
+                    font-size: 17px;
+                }
   
                   .booking_info_area a {
                       color: #d12788;
@@ -364,372 +384,556 @@ const sendEmailToUser = async (booking, user, type) => {
                     Directions and Instructions:
                 </h5>
 
+                ${((company.companyName).toLowerCase() === "luton 247 meet & greet" || (company.companyName).toLowerCase() === "airport parking bay meet & greet luton") ? (
+                    `
+                        <p class="mb-3 text-bold">Meet & Greet service</p>
 
-            ${((company.companyName).toLowerCase() === "luton 247 meet & greet" || (company.companyName).toLowerCase() === "airport parking bay meet & greet luton") ? (
-            `
-                <p class="mb-3 text-bold">Meet & Greet service</p>
+                        <p class="mb-2">
+                            Secure off-site parking
+                        </p>
 
-                <p class="mb-2">
-                    Secure off-site parking
-                </p>
+                        <p class="mb-2">
+                            Repable, punctual & professional staff
+                        </p>
 
-                <p class="mb-2">
-                    Repable, punctual & professional staff
-                </p>
+                        <p class="mb-2">
+                            24/7 service
+                        </p>
 
-                <p class="mb-2">
-                    24/7 service
-                </p>
+                        <p class="mb-2">
+                            A <span class="text-bold">£10</span> exit fee is payable upon return (card or cash accepted)
+                        </p>
 
-                <p class="mb-2">
-                    A <span class="text-bold">£10</span> exit fee is payable upon return (card or cash accepted)
-                </p>
+                        <p class="mb-2">
+                            <span class="text-bold">£20</span> per additional day applies for overstays
+                        </p>
 
-                <p class="mb-2">
-                    <span class="text-bold">£20</span> per additional day applies for overstays
-                </p>
+                        <p class="mb-2">
+                            Vehicles may be moved up to 4–5 miles to our other secure car park compound during busy periods
+                            for operational reasons
+                        </p>
 
-                <p class="mb-2">
-                    Vehicles may be moved up to 4–5 miles to our other secure car park compound during busy periods
-                    for operational reasons
-                </p>
 
+                        <p class="mb-3 mt-4 text-bold">Meet & Greet – Customer Instructions</p>
 
-                <p class="mb-3 mt-4 text-bold">Meet & Greet – Customer Instructions</p>
+                        <p class="mb-2">
+                            Authorised Operator at Luton Airport | Secure Off-Site Parking
+                        </p>
 
-                <p class="mb-2">
-                    Authorised Operator at Luton Airport | Secure Off-Site Parking
-                </p>
+                        <p class="mb-2">
+                            What is Off-Site Meet & Greet?
+                        </p>
 
-                <p class="mb-2">
-                    What is Off-Site Meet & Greet?
-                </p>
+                        <p class="mb-2 ms-3 text-bold">
+                            Drop your car at Car Park 1 – Level 3
+                        </p>
 
-                <p class="mb-2 ms-3 text-bold">
-                    Drop your car at Car Park 1 – Level 3
-                </p>
+                        <p class="mb-2 ms-3">
+                            Our driver parks it in our private, off-site facility
+                        </p>
 
-                <p class="mb-2 ms-3">
-                    Our driver parks it in our private, off-site facility
-                </p>
+                        <p class="mb-2 ms-3">
+                            We return your car to the same location upon your return
+                        </p>
 
-                <p class="mb-2 ms-3">
-                    We return your car to the same location upon your return
-                </p>
+                        <p class="mb-2 ms-3">
+                            No need for shuttles – terminal convenience at a better rate
+                        </p>
 
-                <p class="mb-2 ms-3">
-                    No need for shuttles – terminal convenience at a better rate
-                </p>
 
+                        <p class="mb-3 mt-4 text-bold">Drop-Off Instructions:</p>
 
-                <p class="mb-3 mt-4 text-bold">Drop-Off Instructions:</p>
+                        <p class="mb-2 text-bold">
+                            Call us 30 minutes before arrival:
+                            <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
+                                class="text-bold font-17">07534 185858</a>
+                        </p>
 
-                <p class="mb-2 text-bold">
-                    Call us 30 minutes before arrival:
-                    <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
-                        class="text-bold font-17">07534 185858</a>
-                </p>
+                        <p class="mb-2">
+                            Follow signs to <span class="text-bold text-underlined">Car Park 1, Level 3</span>
+                        </p>
 
-                <p class="mb-2">
-                    Follow signs to <span class="text-bold text-underlined">Car Park 1, Level 3</span>
-                </p>
+                        <p class="mb-2">
+                            Look for the <span class="text-bold">"Offsite Meet & Greet"</span> signage and our Airport Parking Bay desk
+                        </p>
 
-                <p class="mb-2">
-                    Look for the <span class="text-bold">"Offsite Meet & Greet"</span> signage and our Airport Parking Bay desk
-                </p>
+                        <p class="mb-2">
+                            Park in any available bay and meet our staff in hi-vis
+                        </p>
 
-                <p class="mb-2">
-                    Park in any available bay and meet our staff in hi-vis
-                </p>
+                        <p class="mb-2">
+                            Show booking confirmation to our staff
+                        </p>
 
-                <p class="mb-2">
-                    Show booking confirmation to our staff
-                </p>
+                        <p class="mb-2">
+                            Sign the handover form and retain your copy
+                        </p>
 
-                <p class="mb-2">
-                    Sign the handover form and retain your copy
-                </p>
 
+                        <p class="mb-3 mt-4 text-bold">Return Instructions:</p>
 
-                <p class="mb-3 mt-4 text-bold">Return Instructions:</p>
+                        <p class="mb-2">
+                            Call us twice:
+                        </p>
 
-                <p class="mb-2">
-                    Call us twice:
-                </p>
+                        <p class="mb-2">
+                            When your flight lands
+                        </p>
 
-                <p class="mb-2">
-                    When your flight lands
-                </p>
+                        <p class="mb-2">
+                            Once you’ve cleared Customs
+                        </p>
 
-                <p class="mb-2">
-                    Once you’ve cleared Customs
-                </p>
+                        <p class="mb-2">
+                            Your vehicle will be returned to <span class="text-bold">Car Park 1 – Level 3</span>
+                        </p>
+
+                        <p class="mb-2">
+                            <span class="text-bold">£10</span> exit fee is required for the airport car
+                            park – payable by card or cash
+                        </p>
+
+                        <p class="mb-2">
+                            Late returns are charged £20 per additional calendar day
+                        </p>
+
+
+                        <p class="mb-3 mt-4 text-bold">Vehicle Conditions:</p>
+
+                        <p class="mb-2">
+                            Vehicle must be taxed, MOT-certified, and roadworthy
+                        </p>
+
+                        <p class="mb-2">
+                            Tyres must meet legal tread depth
+                        </p>
+
+                        <p class="mb-2">
+                            All valuables must be removed – we do not accept liability for items left in the vehicle
+                        </p>
+
+                        <p class="mb-2">
+                            Ensure washer fluid and fuel are topped up
+                        </p>
+
+                        <p class="mb-2">
+                            Keep a spare key with you
+                        </p>
+
+                        <p class="mb-2">
+                            <span class="text-underlined">
+                                Note:Since we are a booking agency, we deal with changing reservations, dates, and other details. If you
+                                would like more information, please send us an email.
+                            </span>
+                            <br>
+                            <a class="text-bold" href="mailto:info@theparkingdeals.co.uk">(info@theparkingdeals.co.uk)</a>
+                        </p>
+
+                        <p class="mb-3 mt-4 text-bold">Disclaimer :</p>
+
+                        <p class="text-bold mb-2">
+                            We act as booking agent and we do not take vehicles from any airport. The service provider takes the vehicle
+                            and they park it in their own car park. You need to call the service provider on your departure and return
+                            day. Any issues regarding parking service (Delay, Damage etc. ) must be discussed with the service provider.
+                        </p>
+
+                        <p class="text-bold mb-2">
+                            Any complaints over delay or damages must be sent via email. <br>
+                            <a class="text-bold" href="mailto:info@airportparkingbay.co.uk">(info@airportparkingbay.co.uk)</a>
+                        </p>
+
+                        <p class="mb-3 mt-4">
+                            Contact Details (24/7): <br>
+                            <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
+                                class="text-bold font-17">07534 185858</a>
+                        </p>
+                    `
+                ) : company.companyName.toLowerCase() === "airport parking bay park & ride" ? (
+                    `
+                        <p class="mb-3 text-bold">Park & Ride service</p>
+
+                        <p class="mb-2">
+                            1 mile from Luton Airport
+                        </p>
+
+                        <p class="mb-2">
+                            Airport transfer included
+                        </p>
+
+                        <p class="mb-2">
+                            Frequent drop-off and pick-up at the terminal
+                        </p>
+
+                        <p class="mb-2">
+                            Secure car park
+                        </p>
 
-                <p class="mb-2">
-                    Your vehicle will be returned to <span class="text-bold">Car Park 1 – Level 3</span>
-                </p>
+                        <p class="mb-2">
+                            Customer must leave their vehicle key with us for secure storage and handling
+                        </p>
 
-                <p class="mb-2">
-                    <span class="text-bold">£10</span> exit fee is required for the airport car
-                    park – payable by card or cash
-                </p>
-
-                <p class="mb-2">
-                    Late returns are charged £20 per additional calendar day
-                </p>
-
-
-                <p class="mb-3 mt-4 text-bold">Vehicle Conditions:</p>
-
-                <p class="mb-2">
-                    Vehicle must be taxed, MOT-certified, and roadworthy
-                </p>
-
-                <p class="mb-2">
-                    Tyres must meet legal tread depth
-                </p>
-
-                <p class="mb-2">
-                    All valuables must be removed – we do not accept liability for items left in the vehicle
-                </p>
-
-                <p class="mb-2">
-                    Ensure washer fluid and fuel are topped up
-                </p>
-
-                <p class="mb-2">
-                    Keep a spare key with you
-                </p>
-
-                <p class="mb-2">
-                    <span class="text-underlined">
-                        Note:Since we are a booking agency, we deal with changing reservations, dates, and other details. If you
-                        would like more information, please send us an email.
-                    </span>
-                    <br>
-                    <a class="text-bold" href="mailto:info@theparkingdeals.co.uk">(info@theparkingdeals.co.uk)</a>
-                </p>
-
-                <p class="mb-3 mt-4 text-bold">Disclaimer :</p>
-
-                <p class="text-bold mb-2">
-                    We act as booking agent and we do not take vehicles from any airport. The service provider takes the vehicle
-                    and they park it in their own car park. You need to call the service provider on your departure and return
-                    day. Any issues regarding parking service (Delay, Damage etc. ) must be discussed with the service provider.
-                </p>
-
-                <p class="text-bold mb-2">
-                    Any complaints over delay or damages must be sent via email. <br>
-                    <a class="text-bold" href="mailto:info@airportparkingbay.co.uk">(info@airportparkingbay.co.uk)</a>
-                </p>
-
-                <p class="mb-3 mt-4">
-                    Contact Details (24/7): <br>
-                    <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
-                        class="text-bold font-17">07534 185858</a>
-                </p>
-            `
-        ) : company.companyName.toLowerCase() === "airport parking bay park & ride" ? (
-            `
-                <p class="mb-3 text-bold">Park & Ride service</p>
+                        <p class="mb-2">
+                            Vehicles may be moved up to 4–5 miles to our other secure car park during busy periods
+                        </p>
 
-                <p class="mb-2">
-                    1 mile from Luton Airport
-                </p>
+                        <p class="mb-2">
+                            <span class="text-bold">£20</span> per additional day will be charged for overstays
+                        </p>
 
-                <p class="mb-2">
-                    Airport transfer included
-                </p>
 
-                <p class="mb-2">
-                    Frequent drop-off and pick-up at the terminal
-                </p>
+                        <p class="mb-3 mt-4 text-bold">Park & Ride – Customer Instructions</p>
 
-                <p class="mb-2">
-                    Secure car park
-                </p>
+                        <p class="mb-2">
+                            Secure Gated Parking – Luton Airport
+                        </p>
 
-                <p class="mb-2">
-                    Customer must leave their vehicle key with us for secure storage and handling
-                </p>
+                        <p class="mb-2 mt-4 text-bold">
+                            Before You Arrive:
+                        </p>
 
-                <p class="mb-2">
-                    Vehicles may be moved up to 4–5 miles to our other secure car park during busy periods
-                </p>
-
-                <p class="mb-2">
-                    <span class="text-bold">£20</span> per additional day will be charged for overstays
-                </p>
-
-
-                <p class="mb-3 mt-4 text-bold">Park & Ride – Customer Instructions</p>
-
-                <p class="mb-2">
-                    Secure Gated Parking – Luton Airport
-                </p>
-
-                <p class="mb-2 mt-4 text-bold">
-                    Before You Arrive:
-                </p>
-
-                <p class="mb-3">
-                    Car Park Address: <br>
-                    <span class="text-bold font-17">No. 2 Guildford Street, Luton, LU1 2NR </span><br>
-                    <a
-                        href="https://www.google.com/maps/search/51.880825,+-0.411919?entry=tts&g_ep=EgoyMDI1MDYxNy4wIPu8ASoASAFQAw%3D%3D&skid=ccb5b830-56e9-440c-89e0-a6d42df4142b">
-                        Google Maps
-                    </a>
-                </p>
-
-                <p class="mb-2">
-                    Look for the yellow "Private Car Park" sign on the left before the roundabout
-                </p>
-
-                <p class="mb-2 text-bold">
-                    Call us 30 minutes before arrival:
-                    <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
-                        class="text-bold font-17">07534 185858</a>
-                </p>
-
-
-                <p class="mb-3 mt-4 text-bold">On Arrival:</p>
-
-                <p class="mb-2">
-                    Park in any space inside the gated compound
-                </p>
-
-                <p class="mb-2">
-                    Stay with your luggage while waiting for the shuttle
-                </p>
-
-                <p class="mb-2">
-                    Hand over your vehicle key to our staff for secure parking
-                </p>
-
-                <p class="mb-2">
-                    Vehicles may be moved up to 4–5 miles to our other secure car park during busy periods
-                </p>
-
-                <p class="mb-2">
-                    Shuttle transfer takes approx. 5–10 minutes
-                </p>
-
-                <p class="mb-2">
-                    Max 4 passengers per vehicle
-                </p>
-
-                <p class="mb-2">
-                    No child seats provided – please bring your own if needed
-                </p>
-
-
-                <p class="mb-3 mt-4 text-bold">Return Instructions:</p>
-
-                <p class="mb-2">
-                    Call us twice:
-                </p>
-
-                <p class="mb-2">
-                    When your flight lands
-                </p>
-
-                <p class="mb-2">
-                    Once you’ve cleared Customs
-                </p>
-
-                <p class="mb-2">
-                    You will be collected from <span class="text-bold">Car Park 1 – Level 0</span> (same drop-off point)
-                </p>
-
-                <p class="mb-2">
-                    We’ll return you to the car park for vehicle and key collection
-                </p>
-
-
-                <p class="mt-4 mb-3 text-bold">
-                    Important Notes:
-                </p>
-
-                <p class="mb-2">
-                    Arrive at least 4 hours before your flight
-                </p>
-
-                <p class="mb-2">
-                    Allow 30–45 minutes extra during busy times
-                </p>
-
-                <p class="mb-2">
-                    All valuables must be removed – we do not accept liability for items left in the vehicle
-                </p>
-
-                <p class="mb-2">
-                    Vehicles over 2m in height will incur a £50 surcharge
-                </p>
-
-                <p class="mb-2">
-                    Late returns will incur £20 per additional day
-                </p>
-
-                <p class="mb-2">
-                    <span class="text-underlined">
-                        Note:Since we are a booking agency, we deal with changing reservations, dates, and other details. If you
-                        would like more information, please send us an email.
-                    </span>
-                    <br>
-                    <a class="text-bold" href="mailto:info@theparkingdeals.co.uk">(info@theparkingdeals.co.uk)</a>
-                </p>
-
-                <p class="mb-3 mt-4 text-bold">Disclaimer :</p>
-
-                <p class="text-bold mb-2">
-                    We act as booking agent and we do not take vehicles from any airport. The service provider takes the vehicle
-                    and they park it in their own car park. You need to call the service provider on your departure and return
-                    day. Any issues regarding parking service (Delay, Damage etc. ) must be discussed with the service provider.
-                </p>
-
-                <p class="text-bold mb-2">
-                    Any complaints over delay or damages must be sent via email.<br>
-                    <a class="text-bold" href="mailto:info@airportparkingbay.co.uk">(info@airportparkingbay.co.uk)</a>
-                </p>
-
-                <p class="mb-2 mt-4">
-                    Contact Details (24/7): <br>
-                    <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
-                        class="text-bold font-17">07534 185858</a>
-                </p>
-
-                <p class="mb-2">
-                    Admin & bookings:
-                    <a class="text-bold" href="mailto:info@airportparkingbay.co.uk">info@airportparkingbay.co.uk</a>
-                </p>
-            `
-        ) : (
-            `
-                <p class="mb-3 text-bold">Arrival Procedure</p>
-                <p>
-                    Please call us 20 minutes prior arriving to the airport on
-                    <span>${company.mobileNumber}</span>.
-                    <br>
-                    Please follow signs for Multi-Storey car park (LU2 9QT Height Restrictions 2.1m or 6ft 8in) and drive to the
-                    barrier, you need to take a
-                    ticket after the barrier follow the sign for Level 3 or off airport parking meet & greet drop off point pull
-                    into a bay, where you will find our
-                    driver waiting for you, and please give your ticket and the key to the driver. Will ask you to check your
-                    vehicle and sign the paperwork for
-                    handover.
-                </p>
-
-                <p class="mb-3 mt-4 text-bold">Return Procedure</p>
-                <p>
-                    On your safe retum, we require you to call us twice on 07534185858 or 07534185856. Once as soon as you land
-                    and the other as soon
-                    as you collected your luggage.
-                </p>
-                <p class="mt-2">
-                    You will be required to pay per £5.OO (15mins) Change to validate car park Entry & Exit Fee.
-                </p>
-            `
-        )}
+                        <p class="mb-3">
+                            Car Park Address: <br>
+                            <span class="text-bold font-17">No. 2 Guildford Street, Luton, LU1 2NR </span><br>
+                            <a
+                                href="https://www.google.com/maps/search/51.880825,+-0.411919?entry=tts&g_ep=EgoyMDI1MDYxNy4wIPu8ASoASAFQAw%3D%3D&skid=ccb5b830-56e9-440c-89e0-a6d42df4142b">
+                                Google Maps
+                            </a>
+                        </p>
+
+                        <p class="mb-2">
+                            Look for the yellow "Private Car Park" sign on the left before the roundabout
+                        </p>
+
+                        <p class="mb-2 text-bold">
+                            Call us 30 minutes before arrival:
+                            <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
+                                class="text-bold font-17">07534 185858</a>
+                        </p>
+
+
+                        <p class="mb-3 mt-4 text-bold">On Arrival:</p>
+
+                        <p class="mb-2">
+                            Park in any space inside the gated compound
+                        </p>
+
+                        <p class="mb-2">
+                            Stay with your luggage while waiting for the shuttle
+                        </p>
+
+                        <p class="mb-2">
+                            Hand over your vehicle key to our staff for secure parking
+                        </p>
+
+                        <p class="mb-2">
+                            Vehicles may be moved up to 4–5 miles to our other secure car park during busy periods
+                        </p>
+
+                        <p class="mb-2">
+                            Shuttle transfer takes approx. 5–10 minutes
+                        </p>
+
+                        <p class="mb-2">
+                            Max 4 passengers per vehicle
+                        </p>
+
+                        <p class="mb-2">
+                            No child seats provided – please bring your own if needed
+                        </p>
+
+
+                        <p class="mb-3 mt-4 text-bold">Return Instructions:</p>
+
+                        <p class="mb-2">
+                            Call us twice:
+                        </p>
+
+                        <p class="mb-2">
+                            When your flight lands
+                        </p>
+
+                        <p class="mb-2">
+                            Once you’ve cleared Customs
+                        </p>
+
+                        <p class="mb-2">
+                            You will be collected from <span class="text-bold">Car Park 1 – Level 0</span> (same drop-off point)
+                        </p>
+
+                        <p class="mb-2">
+                            We’ll return you to the car park for vehicle and key collection
+                        </p>
+
+
+                        <p class="mt-4 mb-3 text-bold">
+                            Important Notes:
+                        </p>
+
+                        <p class="mb-2">
+                            Arrive at least 4 hours before your flight
+                        </p>
+
+                        <p class="mb-2">
+                            Allow 30–45 minutes extra during busy times
+                        </p>
+
+                        <p class="mb-2">
+                            All valuables must be removed – we do not accept liability for items left in the vehicle
+                        </p>
+
+                        <p class="mb-2">
+                            Vehicles over 2m in height will incur a £50 surcharge
+                        </p>
+
+                        <p class="mb-2">
+                            Late returns will incur £20 per additional day
+                        </p>
+
+                        <p class="mb-2">
+                            <span class="text-underlined">
+                                Note:Since we are a booking agency, we deal with changing reservations, dates, and other details. If you
+                                would like more information, please send us an email.
+                            </span>
+                            <br>
+                            <a class="text-bold" href="mailto:info@theparkingdeals.co.uk">(info@theparkingdeals.co.uk)</a>
+                        </p>
+
+                        <p class="mb-3 mt-4 text-bold">Disclaimer :</p>
+
+                        <p class="text-bold mb-2">
+                            We act as booking agent and we do not take vehicles from any airport. The service provider takes the vehicle
+                            and they park it in their own car park. You need to call the service provider on your departure and return
+                            day. Any issues regarding parking service (Delay, Damage etc. ) must be discussed with the service provider.
+                        </p>
+
+                        <p class="text-bold mb-2">
+                            Any complaints over delay or damages must be sent via email.<br>
+                            <a class="text-bold" href="mailto:info@airportparkingbay.co.uk">(info@airportparkingbay.co.uk)</a>
+                        </p>
+
+                        <p class="mb-2 mt-4">
+                            Contact Details (24/7): <br>
+                            <a href="tel:07534 185856" class="text-bold font-17">07534 185856</a> / <a href="tel:07534 185858"
+                                class="text-bold font-17">07534 185858</a>
+                        </p>
+
+                        <p class="mb-2">
+                            Admin & bookings:
+                            <a class="text-bold" href="mailto:info@airportparkingbay.co.uk">info@airportparkingbay.co.uk</a>
+                        </p>
+                    `
+                ) : company.companyName.toLowerCase() === "kangaroo parking" ? (
+                    `
+                        <h4 class="text-red mb-3">
+                            Important: Please note that you are advised to call the service provider on 07413818425 quoting your booking reference
+                            number when you are 20-30 minutes away from the airport.
+                        </h4>
+
+                        <h4 class="text-red mb-3">
+                            ULEZ policy
+                        </h4>
+
+                        <h4 class="text-red mb-3">
+                            If your vehicle does not meet the emissions standards, you will have to pay a charge of £12.50. Please make sure to
+                            setup AUTO PAY when coming to the airport to avoid any penalty tickets as your car will move in between our compounds
+                            during the stay. The operator will not be liable in case you receive a penalty for not paying the ULEZ charge.
+                        </h4>
+
+                        <p class="text-red mb-4">
+                            All the vehicles must have Up to date tax and MOT, we are not liable for any charges occurred due to above. Please check
+                            your tax and mot before hand over the car to us.
+                        </p>
+
+                        <p class="mb-3 text-bold">Meet & Greet service</p>
+
+                        <p class="mb-3 text-bold">Terminal 2 - Departure Instructions</p>
+
+                        <p class="mb-3 text-decoration-underline text-bold text-highlight">"Customer has to pay for the entry and exit fee".</p>
+
+                        <p class="mb-2">
+                            From the M25 exit at Junction 14, follow the signs for Terminals 1, 2 & 3 all the way round following onto the
+                            Western Perimeter Road.
+                            Go through the main tunnel to the Central Terminal Area for Terminals 1, 2 & 3.
+                        </p>
+
+                        <p class="mb-2">
+                            Exiting the tunnel, keep right, passing the Central Bus Station, joining the final approaches to Terminal 2 on
+                            Cosmopolitan Way.
+                            Please keep to the right, as the road to Terminal 2 will move away from building before turning back as the road
+                            ramps up to Terminal 2 Departures & the Short Stay 2 car park on Constellation Way.
+                        </p>
+
+                        <p class="mb-2">
+                            Once you are on the rising ramp, continue to keep right as the ramp will lead directly into the "Short stay car
+                            park" entry barriers.
+                        </p>
+
+                        <p class="mb-2">
+                            Please make sure you are in lane 5 or 6, (towards the ticket machine), which will take you to Level 4 of the
+                            Short
+                            Stay car park.
+                            Take a ticket at the barrier and enter the carp ark.
+                        </p>
+
+                        <p class="mb-2">
+                            Once you enter the car park on Level 4, keep to the RIGHT following the signs for 'Off Airport Parking Meet &
+                            Greet'
+                            and then please park your car in "Row B".
+                        </p>
+
+                        <p class="mb-2">
+                            Here you will see our chauffeurs waiting for you.
+                        </p>
+
+                        <p class="mt-5 mb-3 text-bold">Terminal 2 Return Instructions</p>
+
+                        <p class="mb-2">
+                            On your return, once you have collected your luggage and are about to clear Customs, please call the number
+                            provided
+                            when your car was dropped off.
+                        </p>
+
+                        <p class="mb-2 mb-5">
+                            Make your way to the same place where you dropped the vehicle off, (Level 4 of the Short Stay car park) and your
+                            car
+                            will be ready and waiting for you in Row B next to the lift/pay machine
+                        </p>
+
+                        <p class="mb-3 text-bold">Terminal 3 - sat-nav postcode: TW6 1QG</p>
+
+                        <p class="mb-3 text-bold">Terminal 3 - Departure Instructions</p>
+
+                        <p class="mb-3 text-decoration-underline text-bold text-highlight">"Customer has to pay for the entry and exit fee".</p>
+
+                        <p class="mb-2">
+                            From the M25 exit at Junction 14, follow the signs for Terminals 1, 2 & 3 all the way round following onto the
+                            Western Perimeter Road.
+                        </p>
+
+                        <p class="mb-2">
+                            Go through the main tunnel to the Central Terminal Area for Terminals 1, 2 & 3.
+                        </p>
+
+                        <p class="mb-2">
+                            Exiting the tunnel, keep in the 1st lane and follow signs for Terminal 3 Short Stay Carpark (Carpark 3).
+                        </p>
+
+                        <p class="mb-2">
+                            Take a ticket from the barrier and follow signs to Level 4, then please park your car in "Row A".
+                        </p>
+
+                        <p class="mb-5">
+                            Here you will see our chauffeurs waiting for you.
+                        </p>
+
+                        <p class="mb-3 text-bold">Terminal 3 Return Instructions</p>
+
+                        <p class="mb-2">
+                            On your return, once you have collected your luggage and are about to clear Customs, please call the number
+                            provided
+                            when your car was dropped off.
+                        </p>
+
+                        <p class="mb-5">
+                            As you arrive in the arrivals, just before the Exit door on the Right Hand Side, please take the lift to Level 4
+                            Short Stay Car Park and your car will be ready and waiting for you in ROW A.
+                        </p>
+
+                        <p class="mb-3 text-bold">Terminal 4 - sat-nav postcode: TW6 3XA</p>
+
+                        <p class="mb-3 text-bold">Terminal 4 - Departure Instructions</p>
+
+                        <p class="mb-4 text-decoration-underline text-bold text-highlight">"Customer has to pay for the entry and exit fee".</p>
+
+                        <p class="mb-2">
+                            Please follow directions to the Short Stay car park and then drive up to Level 2. Look for the "Off Airport Meet
+                            and
+                            Greet' sign at Row F, bay number 50 to 60.
+                        </p>
+
+                        <p class="mb-2">
+                            Please have your email booking confirmation ready, together with your return flight details.
+                        </p>
+
+                        <p class="mb-5">
+                            Here you will see our chauffeurs waiting for you.
+                        </p>
+
+                        <p class="mb-3 text-bold">Terminal 4 Return Instructions.</p>
+
+                        <p class="mb-5">
+                            On your return, once you have collected your luggage and are about to clear Customs, please call the number
+                            provided
+                            when your car was dropped off. Walk back to the Short Stay car park (Level 2, Row F,Bay number 50 to 60 ) where
+                            your
+                            car will be ready and waiting for you.
+                        </p>
+
+                        <p class="mb-3 text-bold">Terminal 5 - sat-nav postcode: TW6 2GA</p>
+
+                        <p class="mb-3 text-bold">Terminal 5 - Departure Instructions</p>
+
+                        <p class="mb-4 text-decoration-underline text-bold text-highlight">"Customer has to pay for the entry and exit fee".</p>
+
+                        <p class="mb-2">
+                            Please follow the signs for the "Short Stay car park", which is located on the right hand side of the ramp, as
+                            you
+                            take the exit for Terminal 5 from the roundabout.
+                        </p>
+
+                        <p class="mb-2">
+                            On arrival at the Short Stay car park, please move to the left hand lane, following directions to "LEVEL 4".
+                        </p>
+
+                        <p class="mb-2">
+                            Take a ticket from the barrier and make your way to Zones "R-S". Please Park your car in these designated areas,
+                            sign posted as "Off Airport Meet & Greet"
+                        </p>
+
+                        <p class="mb-5">
+                            Here you will see our chauffeurs waiting for you.
+                        </p>
+
+                        <p class="mb-3 text-bold">Terminal 5 Return Instructions</p>
+
+                        <p class="mb-2">
+                            On your return, once you have collected your luggage and are about to clear Customs, please call the number
+                            provided
+                            when your car was dropped off.
+                        </p>
+
+                        <p class="mb-2">
+                            Make your way to where you dropped the car off, (Level 4, Short Stay car park), where your car will be ready and
+                            waiting for you in Row R OR S.
+                        </p>
+                    `
+                ) : (
+                    `
+                        <p class="mb-3 text-bold">Arrival Procedure</p>
+                        <p>
+                            Please call us 20 minutes prior arriving to the airport on
+                            <span>${company.mobileNumber}</span>.
+                            <br>
+                            Please follow signs for Multi-Storey car park (LU2 9QT Height Restrictions 2.1m or 6ft 8in) and drive to the
+                            barrier, you need to take a
+                            ticket after the barrier follow the sign for Level 3 or off airport parking meet & greet drop off point pull
+                            into a bay, where you will find our
+                            driver waiting for you, and please give your ticket and the key to the driver. Will ask you to check your
+                            vehicle and sign the paperwork for
+                            handover.
+                        </p>
+
+                        <p class="mb-3 mt-4 text-bold">Return Procedure</p>
+                        <p>
+                            On your safe retum, we require you to call us twice on 07534185858 or 07534185856. Once as soon as you land
+                            and the other as soon
+                            as you collected your luggage.
+                        </p>
+                        <p class="mt-2">
+                            You will be required to pay per £5.OO (15mins) Change to validate car park Entry & Exit Fee.
+                        </p>
+                    `
+                )}
 
                 <p class="mb-3 mt-4 text-bold">ATTENTION</p>
                 <p>
