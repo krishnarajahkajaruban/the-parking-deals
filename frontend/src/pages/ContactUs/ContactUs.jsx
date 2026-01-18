@@ -134,8 +134,10 @@ const ContactUs = () => {
                   exceptional customer service. If you have any questions, need
                   assistance with your reservation, or have any feedback, our
                   customer service team is here to help. You can reach us by
-                  email at <a href="mailto:">info@theparkingdeals.uk</a> or by
-                  phone at <a href="tel:">07777135649</a>. Our team ensure your
+                  email at <a href="mailto:">info@theparkingdeals.uk</a> 
+                  {/* or by
+                  phone at <a href="tel:">07777135649</a>. */}
+                   Our team ensure your
                   experience with us is seamless and satisfactory. For
                   additional support, you can also visit our website at{" "}
                   <a
@@ -194,7 +196,7 @@ const ContactUs = () => {
                           </a>
                         </div>
 
-                        <div className="contact-content" data-aos="fade-left">
+                        {/* <div className="contact-content" data-aos="fade-left">
                           <i className="bi bi-telephone-fill"></i>
                           <a
                             href="tel:07777135649"
@@ -202,7 +204,7 @@ const ContactUs = () => {
                           >
                             07777135649
                           </a>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>

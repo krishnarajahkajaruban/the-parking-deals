@@ -358,11 +358,11 @@ const sendEmailToUser = async (booking, user, type) => {
                     issues regarding the parking service (delay, damage etc.) please contact your service provider.
                 </p>
 
-                <p class="mt-2">
-                    <b>
-                        Complaint Number: <a href="tel::07777135649">07777135649</a>
-                    </b>
-                </p>
+                // <p class="mt-2">
+                //     <b>
+                //         Complaint Number: <a href="tel::07777135649">07777135649</a>
+                //     </b>
+                // </p>
                 <p class="mt-2">
                     <b>
                         Complaint Email: <a href="mailto:info@theparkingdeals.co.uk">info@theparkingdeals.co.uk</a>
@@ -999,10 +999,10 @@ const sendEmailToUser = async (booking, user, type) => {
                     full terms on our website
                 </p>
 
-                <p>
-                    If you have any further queries or if you need any help with your booking, please contact us on
-                    <a href="tel:tel:07777135649">tel:07777135649</a>
-                </p>
+                // <p>
+                //     If you have any further queries or if you need any help with your booking, please contact us on
+                //     <a href="tel:tel:07777135649">tel:07777135649</a>
+                // </p>
 
                 <h6 class="mt-5 booking_footer_text">
                     The Parking Deals is a trading name of Air Travel Extras Limited. The Parking Deals uses 3rd party payment
@@ -1036,9 +1036,9 @@ const sendEmailToUser = async (booking, user, type) => {
                     </b>
                 </p>
 
-                <p class="mt-2">
-                    <b><a href="tel:07777135649">07777135649</a></b>
-                </p>
+                // <p class="mt-2">
+                //     <b><a href="tel:07777135649">07777135649</a></b>
+                // </p>
 
                 <hr class="mt-4">
 
@@ -1401,9 +1401,9 @@ const sendEmailToCompany = async (booking, user, type) => {
                       </b>
                   </p>
   
-                  <p class="mt-2">
-                      <b><a href="tel:07777135649">07777135649</a></b>
-                  </p>
+                //   <p class="mt-2">
+                //       <b><a href="tel:07777135649">07777135649</a></b>
+                //   </p>
   
                   <hr class="mt-4">
               </div>
