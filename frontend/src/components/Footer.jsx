@@ -182,7 +182,7 @@ const Footer = () => {
                       Contact
                     </h6>
                     <ul className="footer-link-area contact-detail">
-                      <li className="footer-link-item">
+                      {/* <li className="footer-link-item">
                         <a
                           href="tel:07777135649"
                           className="footer-link with-icon"
@@ -192,7 +192,7 @@ const Footer = () => {
                           </div>
                           <span>07777135649</span>
                         </a>
-                      </li>
+                      </li> */}
                       <li className="footer-link-item">
                         <a
                           href="mailto:info@theparkingdeals.co.uk"

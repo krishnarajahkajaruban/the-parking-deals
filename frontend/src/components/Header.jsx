@@ -116,7 +116,7 @@ const Header = () => {
 
         <div className="promotion-label">
           <h6>
-          <b>Spring into Savings!</b> Enjoy <b>30% Off</b> for All Customers – Limited Time Only!🌸✨<b>Book now!</b>
+          {/* <b>Spring into Savings!</b> Enjoy <b>30% Off</b> for All Customers – Limited Time Only!🌸✨<b>Book now!</b> */}
           </h6>
         </div>
         <nav className={`nav-section ${scrolled ? "scrolled" : ""}`}>

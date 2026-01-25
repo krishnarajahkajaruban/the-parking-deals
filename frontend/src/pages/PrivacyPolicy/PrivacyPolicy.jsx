@@ -297,10 +297,10 @@ const PrivacyPolicy = () => {
                     <a href="mailto:">info@theparkingdeals.uk</a>
                   </div>
 
-                  <div className="content-contact-detail">
+                  {/* <div className="content-contact-detail">
                     <i className="bi bi-telephone-fill"></i>
                     <a href="tel:">07777135649</a>
-                  </div>
+                  </div> */}
                 </div>
               </article>
             </div>

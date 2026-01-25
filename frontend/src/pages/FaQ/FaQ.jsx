@@ -124,7 +124,7 @@ const FaQ = () => {
                       fees. To cancel or modify your reservation, contact our
                       customer service team at{" "}
                       <a href="mailto:">info@theparkingdeals.uk</a>,{" "}
-                      <a href="tel:">07777135649</a>.
+                      {/* <a href="tel:">07777135649</a>. */}
                     </p>
                   </AccordionTab>
 
